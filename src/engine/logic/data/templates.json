@@ -1,0 +1,1436 @@
+{
+  "1": {
+    "meta": {
+      "levelName": "La fuerza tranquila",
+      "animal": "Oso Perezoso",
+      "icon": "🦥",
+      "stars": 1,
+      "color": "#10b981",
+      "description": "",
+      "finalMessage": "¡Felicidades! Aprendes despacio pero con mucha fuerza. Ya eres un Oso Perezoso lector."
+    },
+    "order": [
+      "question_sentence",
+      "complete_sentence",
+      "order_sentence",
+      "read_with_audio",
+      "IMAGE_WORD_MATCH",
+      "CHOOSE_CORRECT_WORD"
+    ],
+    "stageMeta": {
+      "question_sentence": {
+        "title": "Descubre la frase correcta"
+      },
+      "complete_sentence": {
+        "title": "Completa con la palabra mágica"
+      },
+      "complete_sentence_extra": {
+        "title": "Escoge la palabra exacta"
+      },
+      "order_sentence": {
+        "title": "Ordena las palabras para formar la frase"
+      },
+      "read_with_audio": {
+        "title": ""
+      },
+      "IMAGE_WORD_MATCH": {
+        "title": "Une dibujo con palabra"
+      },
+      "CHOOSE_CORRECT_WORD": {
+        "title": "Elige la palabra correcta"
+      }
+    },
+    "subtypes": {
+      "question_sentence": [
+        {
+          "id": "L1-QS-1",
+          "type": "question_sentence",
+          "question": "¿Dónde descansa el búho?",
+          "sentence": "El búho duerme en el árbol.",
+          "options": [
+            "En el árbol.",
+            "En el lago brillante"
+          ],
+          "correct": "En el árbol.",
+          "audio": null,
+          "image": "/images/L1/buho.PNG",
+          "hint": "Lee la frase completa y busca el lugar mencionado.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-QS-2",
+          "type": "question_sentence",
+          "question": "¿Qué hace la luciérnaga?",
+          "sentence": "La luciérnaga ilumina la noche.",
+          "options": [
+            "Canta la noche",
+            "Ilumina la noche"
+          ],
+          "correct": "Ilumina la noche",
+          "image": "/images/L1/luciernaga.PNG",
+          "hint": "Piensa en lo que hace una luciérnaga.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-QS-3",
+          "type": "question_sentence",
+          "question": "¿Qué encuentra el oso perezoso?",
+          "sentence": "El oso perezoso encuentra una flor azul.",
+          "options": [
+            "Una flor azul",
+            "Una luna roja"
+          ],
+          "correct": "Una flor azul",
+          "image": "/images/L1/florazul.PNG",
+          "hint": "Observa el objeto final de la frase.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-QS-4",
+          "type": "question_sentence",
+          "question": "¿Quién abraza al perro?",
+          "sentence": "El niño abraza al perro alegre.",
+          "options": [
+            "El gato",
+            "El niño"
+          ],
+          "correct": "El niño",
+          "image": "/images/L1/nino.PNG",
+          "hint": "Lee el sujeto del verbo 'abraza'.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "IMAGE_WORD_MATCH": [
+        {
+          "id": "L1-IWM-1",
+          "type": "IMAGE_WORD_MATCH",
+          "prompt": "Selecciona la palabra que nombra la imagen",
+          "image": "/images/L1/sapo.PNG",
+          "options": [
+            "sapo",
+            "saco",
+            "sopa"
+          ],
+          "correct": "sapo",
+          "emoji": "🐸",
+          "hint": "Observa la primera sílaba."
+        },
+        {
+          "id": "L1-IWM-2",
+          "type": "IMAGE_WORD_MATCH",
+          "prompt": "Selecciona la palabra que nombra la imagen",
+          "image": "/images/L1/sol.PNG",
+          "options": [
+            "sol",
+            "sal",
+            "sul"
+          ],
+          "correct": "sol",
+          "emoji": "🌞",
+          "hint": "Suena a luz."
+        }
+      ],
+      "CHOOSE_CORRECT_WORD": [
+        {
+          "id": "L1-CCW-1",
+          "type": "CHOOSE_CORRECT_WORD",
+          "prompt": "Elige la palabra correcta",
+          "image": "/images/L1/luna.PNG",
+          "options": [
+            "luna",
+            "lupa",
+            "puma"
+          ],
+          "correct": "luna",
+          "hint": "Mira el dibujo."
+        },
+        {
+          "id": "L1-CCW-2",
+          "type": "CHOOSE_CORRECT_WORD",
+          "prompt": "Elige la palabra correcta",
+          "image": "/images/L1/mesa.PNG",
+          "options": [
+            "mesa",
+            "misa",
+            "masa"
+          ],
+          "correct": "mesa",
+          "hint": "Se usa para comer."
+        }
+      ],
+      "complete_sentence": [
+        {
+          "id": "L1-CS-1",
+          "type": "complete_sentence",
+          "prompt": "El hada ____ la puerta secreta.",
+          "options": [
+            "abre",
+            "baila"
+          ],
+          "correct": "abre",
+          "audio": null,
+          "image": "/images/L1/hada.PNG",
+          "hint": "Piensa en lo que se hace con una puerta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-2",
+          "type": "complete_sentence",
+          "prompt": "La nube ____ gotas.",
+          "options": [
+            "deja",
+            "cocina"
+          ],
+          "correct": "deja",
+          "audio": null,
+          "image": "/images/L1/nube.PNG",
+          "hint": "Las nubes dejan algo que cae del cielo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-3",
+          "type": "complete_sentence",
+          "prompt": "El oso ____ con calma.",
+          "options": [
+            "camina",
+            "pinta"
+          ],
+          "correct": "camina",
+          "audio": null,
+          "image": "/images/L1/oso.PNG",
+          "hint": "Recuerda que es un oso tranquilo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-4",
+          "type": "complete_sentence",
+          "prompt": "La hoja ____ al viento.",
+          "options": [
+            "flota",
+            "canta"
+          ],
+          "correct": "flota",
+          "audio": null,
+          "image": "/images/L1/hoja.PNG",
+          "hint": "¿Qué hace una hoja en el aire?",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-5",
+          "type": "complete_sentence",
+          "prompt": "El río ____ un canto suave.",
+          "options": [
+            "susurra",
+            "corre"
+          ],
+          "correct": "susurra",
+          "audio": null,
+          "image": "/images/L1/rio.PNG",
+          "hint": "Piensa en un sonido tranquilo de agua.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-6",
+          "type": "complete_sentence",
+          "prompt": "La luna ____ la noche.",
+          "options": [
+            "ilumina",
+            "bebe"
+          ],
+          "correct": "ilumina",
+          "audio": null,
+          "image": "/images/L1/luna.PNG",
+          "hint": "Busca la acción que da luz.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-7",
+          "type": "complete_sentence",
+          "prompt": "El colibrí ____ flores mágicas.",
+          "options": [
+            "visita",
+            "baila"
+          ],
+          "correct": "visita",
+          "audio": null,
+          "image": "/images/L1/colibri.PNG",
+          "hint": "¿Qué hace un colibrí con las flores?",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-8",
+          "type": "complete_sentence",
+          "prompt": "La campana ____ el recreo.",
+          "options": [
+            "anuncia",
+            "rompe"
+          ],
+          "correct": "anuncia",
+          "audio": null,
+          "image": "/images/L1/campana.PNG",
+          "hint": "Recuerda qué hace la campana en la escuela.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "order_sentence": [
+        {
+          "id": "L1-OS-1",
+          "type": "order_sentence",
+          "words": [
+            "La",
+            "estrella",
+            "brilla"
+          ],
+          "correctOrder": [
+            "La",
+            "estrella",
+            "brilla"
+          ],
+          "audio": null,
+          "image": "/images/L1/estrella.PNG",
+          "hint": "Comienza con el artículo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-OS-2",
+          "type": "order_sentence",
+          "words": [
+            "el",
+            "cuento",
+            "termina",
+            "feliz"
+          ],
+          "correctOrder": [
+            "El",
+            "cuento",
+            "termina",
+            "feliz"
+          ],
+          "audio": null,
+          "image": "/images/L1/cuento.PNG",
+          "hint": "Coloca 'El' al inicio.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-OS-3",
+          "type": "order_sentence",
+          "words": [
+            "La",
+            "niña",
+            "abre",
+            "el",
+            "cofre"
+          ],
+          "correctOrder": [
+            "La",
+            "niña",
+            "abre",
+            "el",
+            "cofre"
+          ],
+          "audio": null,
+          "image": "/images/L1/cofre.PNG",
+          "hint": "Sujeto primero, luego acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-OS-4",
+          "type": "order_sentence",
+          "words": [
+            "El",
+            "viento",
+            "sopla",
+            "suave"
+          ],
+          "correctOrder": [
+            "El",
+            "viento",
+            "sopla",
+            "suave"
+          ],
+          "audio": null,
+          "image": "/images/L1/viento.PNG",
+          "hint": "Respeta el orden natural de sujeto y verbo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "read_with_audio": [
+        {
+          "id": "L1-RW-1",
+          "type": "read_with_audio",
+          "text": "El faro guía a los barcos perdidos.",
+          "instruction": "Lee la frase con ritmo tranquilo. Si quieres, escucha el audio.",
+          "correct": "done",
+          "audio": null,
+          "image": "/images/L1/faro.PNG",
+          "hint": "Respira y lee despacio cada palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-RW-2",
+          "type": "read_with_audio",
+          "text": "La campana anuncia el recreo.",
+          "instruction": "Lee en voz alta. Pulsa escuchar si prefieres.",
+          "correct": "done",
+          "audio": null,
+          "image": "/images/L1/campana.PNG",
+          "hint": "Observa las sílabas: cam-pa-na.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-RW-3",
+          "type": "read_with_audio",
+          "text": "Las hojas viajan con el viento.",
+          "instruction": "Imagina el movimiento mientras lees.",
+          "correct": "done",
+          "audio": null,
+          "image": "/images/L1/hoja.PNG",
+          "hint": "Marca con el dedo cada palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-RW-4",
+          "type": "read_with_audio",
+          "text": "El río canta para el bosque.",
+          "instruction": "Lee tú mismo y disfruta del ritmo.",
+          "correct": "done",
+          "audio": null,
+          "image": "/images/L1/rio.PNG",
+          "hint": "Pronuncia lentamente las sílabas.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ]
+    },
+    "legacySubtypes": {
+      "complete_sentence_extra": [
+        {
+          "id": "L1-CS-5",
+          "type": "complete_sentence",
+          "prompt": "El río ____ suave.",
+          "options": [
+            "susurra",
+            "corre"
+          ],
+          "correct": "corre",
+          "audio": null,
+          "image": "/images/level1/rio.PNG",
+          "hint": "Piensa en un sonido tranquilo de agua.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-6",
+          "type": "complete_sentence",
+          "prompt": "La luna ____ la noche.",
+          "options": [
+            "ilumina",
+            "bebe"
+          ],
+          "correct": "ilumina",
+          "audio": null,
+          "image": "/images/level1/luna.PNG",
+          "hint": "Busca la acción que da luz.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-7",
+          "type": "complete_sentence",
+          "prompt": "El colibrí ____ las flores.",
+          "options": [
+            "visita",
+            "baila"
+          ],
+          "correct": "visita",
+          "audio": null,
+          "image": "/images/level1/colibri.PNG",
+          "hint": "¿Qué hace un colibrí con las flores?",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-CS-8",
+          "type": "complete_sentence",
+          "prompt": "La campana ____ el recreo.",
+          "options": [
+            "anuncia",
+            "rompe"
+          ],
+          "correct": "anuncia",
+          "audio": null,
+          "image": "/images/level1/campana.PNG",
+          "hint": "Recuerda qué hace la campana en la escuela.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ]
+    }
+  },
+  "2": {
+    "meta": {
+      "levelName": "Entender palabras mágicas",
+      "animal": "Zorro Astuto",
+      "icon": "",
+      "stars": 2,
+      "color": "#f97316",
+      "description": "Reconoce sinónimos, antónimos y significados con astucia.",
+      "finalMessage": "¡Qué mente tan rápida! Ya eres un Zorro Sabio."
+    },
+    "order": [
+      "multiple_choice",
+      "pair_synonyms",
+      "pair_antonyms",
+      "UNSCRAMBLE_WORD",
+      "COMPLETE_WORD"
+    ],
+    "stageMeta": {
+      "multiple_choice": {
+        "title": "Elegir la palabra mágica",
+        "goal": "Identificar la palabra que nombra el dibujo."
+      },
+      "pair_synonyms": {
+        "title": "Unir palabras gemelas",
+        "goal": "Relacionar palabras con significado parecido."
+      },
+      "pair_antonyms": {
+        "title": "Encontrar el opuesto mágico",
+        "goal": "Identificar palabras contrarias."
+      },
+      "UNSCRAMBLE_WORD": {
+        "title": "Ordena la palabra",
+        "goal": "Formar la palabra correcta."
+      },
+      "COMPLETE_WORD": {
+        "title": "Completa la palabra",
+        "goal": "Rellena las letras faltantes."
+      },
+      "PUZZLE_ORDER": {
+        "title": "Rompecabezas de palabra",
+        "goal": "Ordena las piezas para completar."
+      }
+    },
+    "subtypes": {
+      "multiple_choice": [
+        {
+          "id": "L2-MC-1",
+          "type": "multiple_choice",
+          "question": "Encierra el nombre correcto del dibujo: sol",
+          "options": [
+            "sol",
+            "sal",
+            "sul"
+          ],
+          "correct": "sol",
+          "audio": null,
+          "image": "/images/L2/sol.PNG",
+          "imageAlt": "Sol",
+          "emoji": "",
+          "hint": "Fíjate en la vocal que suena en medio (o).",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-MC-2",
+          "type": "multiple_choice",
+          "question": "Encierra el nombre correcto del dibujo: sapo",
+          "options": [
+            "sipo",
+            "supo",
+            "sapo"
+          ],
+          "correct": "sapo",
+          "audio": null,
+          "image": "/images/L2/sapo.PNG",
+          "imageAlt": "Sapo",
+          "emoji": "",
+          "hint": "Escucha el sonido de la primera y la última sílaba: sa-po.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-MC-3",
+          "type": "multiple_choice",
+          "question": "Encierra el nombre correcto del dibujo: sopa",
+          "options": [
+            "sepa",
+            "sopa",
+            "sipa"
+          ],
+          "correct": "sopa",
+          "audio": null,
+          "image": "/images/L2/sopa.PNG",
+          "imageAlt": "Sopa",
+          "emoji": "",
+          "hint": "Busca la sílaba central que suena 'o'.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-MC-4",
+          "type": "multiple_choice",
+          "question": "Encierra el nombre correcto del dibujo: mesa",
+          "options": [
+            "mesa",
+            "misa",
+            "masa"
+          ],
+          "correct": "mesa",
+          "audio": null,
+          "image": "/images/L2/mesa.PNG",
+          "imageAlt": "Mesa",
+          "emoji": "",
+          "hint": "Pon atención al sonido de la primera vocal (e).",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-MC-5",
+          "type": "multiple_choice",
+          "question": "Encierra el nombre correcto del dibujo: oso",
+          "options": [
+            "osu",
+            "eso",
+            "oso"
+          ],
+          "correct": "oso",
+          "audio": null,
+          "image": "/images/L2/oso.PNG",
+          "imageAlt": "Oso",
+          "emoji": "",
+          "hint": "Suena igual al decirlo y escribirlo: o-so.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-MC-6",
+          "type": "multiple_choice",
+          "question": "Encierra el nombre correcto del dibujo: pato",
+          "options": [
+            "mato",
+            "pato",
+            "gato"
+          ],
+          "correct": "pato",
+          "audio": null,
+          "image": "/images/L2/default.png",
+          "imageAlt": "Pato",
+          "emoji": "🦆",
+          "hint": "La palabra empieza como 'pa' de pato.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-MC-7",
+          "type": "multiple_choice",
+          "question": "Encierra el nombre correcto del dibujo: luna",
+          "options": [
+            "lupa",
+            "luna",
+            "puma"
+          ],
+          "correct": "luna",
+          "audio": null,
+          "image": "/images/L2/default.png",
+          "imageAlt": "Luna",
+          "emoji": "🌙",
+          "hint": "Escucha el sonido 'lu-na' al decirlo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "UNSCRAMBLE_WORD": [
+        {
+          "id": "L2-UW-1",
+          "type": "UNSCRAMBLE_WORD",
+          "letters": ["S", "O", "P", "A"],
+          "solution": "SOPA",
+          "hint": "Comida caliente."
+        },
+        {
+          "id": "L2-UW-2",
+          "type": "UNSCRAMBLE_WORD",
+          "letters": ["G", "A", "T", "O"],
+          "solution": "GATO",
+          "hint": "Un animal doméstico."
+        }
+      ],
+      "PUZZLE_ORDER": [
+        {
+          "id": "L2-PZ-1",
+          "type": "PUZZLE_ORDER",
+          "prompt": "Ordena las piezas para formar la palabra",
+          "segments": ["SO", "PA"],
+          "correctOrder": ["SO", "PA"],
+          "hint": "Comida caliente."
+        },
+        {
+          "id": "L2-PZ-2",
+          "type": "PUZZLE_ORDER",
+          "prompt": "Ordena las piezas para formar la palabra",
+          "segments": ["GA", "TO"],
+          "correctOrder": ["GA", "TO"],
+          "hint": "Animal doméstico."
+        }
+      ],
+      "COMPLETE_WORD": [
+        {
+          "id": "L2-CW-1",
+          "type": "COMPLETE_WORD",
+          "prompt": "Completa la palabra: s_p_",
+          "solution": "sapo",
+          "hint": "Salta y vive en el agua."
+        },
+        {
+          "id": "L2-CW-2",
+          "type": "COMPLETE_WORD",
+          "prompt": "Completa la palabra: l_n_",
+          "solution": "luna",
+          "hint": "Brilla de noche."
+        }
+      ],
+      "pair_synonyms": [
+        {
+          "id": "L2-PS-1",
+          "type": "pair_synonyms",
+          "pairs": [
+            {
+              "word": "alegre 😀",
+              "match": "contento 😊"
+            },
+            {
+              "word": "valiente 🦁",
+              "match": "audaz 🦊"
+            },
+            {
+              "word": "rápido 🏃‍♂️💨",
+              "match": "veloz ⚡️"
+            }
+          ],
+          "audio": null,
+          "image": "/images/L2/l2-ps-1.png",
+          "hint": "Busca parejas que compartan significado.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-PS-2",
+          "type": "pair_synonyms",
+          "pairs": [
+            {
+              "word": "tranquilo 🧘",
+              "match": "calmado 😌"
+            },
+            {
+              "word": "brillante ✨",
+              "match": "luminoso 🌟"
+            },
+            {
+              "word": "fuerte 💪",
+              "match": "robusto 🛡️"
+            }
+          ],
+          "audio": null,
+          "image": "/images/L2/l2-ps-2.png",
+          "hint": "Observa cómo cada palabra describe lo mismo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-PS-3",
+          "type": "pair_synonyms",
+          "pairs": [
+            {
+              "word": "1️⃣",
+              "match": "uno"
+            },
+            {
+              "word": "2️⃣",
+              "match": "dos"
+            },
+            {
+              "word": "3️⃣",
+              "match": "tres"
+            },
+            {
+              "word": "4️⃣",
+              "match": "cuatro"
+            }
+          ],
+          "audio": null,
+          "image": "/images/L2/default.png",
+          "hint": "Une el número con su nombre escrito.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "pair_antonyms": [
+        {
+          "id": "L2-PA-1",
+          "type": "pair_antonyms",
+          "pairs": [
+            {
+              "word": "claro ☀️",
+              "match": "oscuro 🌙"
+            },
+            {
+              "word": "ordenado 📚",
+              "match": "desordenado 🌀"
+            },
+            {
+              "word": "fuerte 💪",
+              "match": "débil 🪶"
+            }
+          ],
+          "audio": null,
+          "image": "/images/L2/l2-pa-1.png",
+          "hint": "Une palabras que significan lo contrario.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L2-PA-2",
+          "type": "pair_antonyms",
+          "pairs": [
+            {
+              "word": "feliz 😊",
+              "match": "triste 😢"
+            },
+            {
+              "word": "grande 🦁",
+              "match": "pequeño 🐭"
+            },
+            {
+              "word": "rápido 🏃‍♂️💨",
+              "match": "lento 🐢"
+            }
+          ],
+          "audio": null,
+          "image": "/images/L2/l2-pa-2.png",
+          "hint": "Recuerda: el opuesto crea equilibrio mágico.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ]
+    }
+  },
+  "3": {
+    "meta": {
+      "levelName": "Escuchar y elegir",
+      "animal": "Mono Curioso",
+      "icon": "🐒",
+      "stars": 3,
+      "color": "#8b5cf6",
+      "description": "Comprende frases escuchando o leyendo con atención.",
+      "finalMessage": "¡Genial! Tus ojos y tus oídos trabajan juntos. Eres un Mono Habilidoso."
+    },
+    "order": [
+      "sentence_selection",
+      "audio_question",
+      "SYLLABLE_ORDER"
+    ],
+    "stageMeta": {
+      "sentence_selection": {
+        "title": "¿Qué frase es correcta?",
+        "goal": "Elegir la frase que tiene sentido."
+      },
+      "audio_question": {
+        "title": "Pregunta curiosa",
+        "goal": "Responder tras escuchar o leer la pregunta."
+      },
+      "SYLLABLE_ORDER": {
+        "title": "Ordena las sílabas",
+        "goal": "Formar la palabra correcta con sílabas."
+      }
+    },
+    "subtypes": {
+      "sentence_selection": [
+        {
+          "id": "L3-SS-1",
+          "type": "sentence_selection",
+          "prompt": "Elige la frase que describe mejor lo que ves en tu mente.",
+          "options": [
+            "El mono lee un mapa",
+            "El mapa lee un mono"
+          ],
+          "correct": "El mono lee un mapa",
+          "audio": null,
+          "image": "/images/L3/l3-ss-1.png",
+          "hint": "Busca la frase con orden lógico sujeto-verbo-objeto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L3-SS-2",
+          "type": "sentence_selection",
+          "prompt": "Escoge la frase que te suena natural.",
+          "options": [
+            "La lluvia canta suave",
+            "Canta suave la lluvia"
+          ],
+          "correct": "La lluvia canta suave",
+          "audio": "/assets/audio/level3/lluvia-ss2.mp3",
+          "image": "/images/L3/l3-ss-2.png",
+          "hint": "Piensa en cómo dirías la frase a un amigo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L3-SS-3",
+          "type": "sentence_selection",
+          "prompt": "¿Cuál frase cuenta una acción realista?",
+          "options": [
+            "El libro abre la ventana",
+            "La niña abre la ventana"
+          ],
+          "correct": "La niña abre la ventana",
+          "audio": null,
+          "image": "/images/L3/l3-ss-3.png",
+          "hint": "Elige la frase con personajes que pueden realizar la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "SYLLABLE_ORDER": [
+        {
+          "id": "L3-SO-1",
+          "type": "SYLLABLE_ORDER",
+          "syllables": ["sa", "po"],
+          "correctOrder": ["sa", "po"],
+          "hint": "Animal que salta."
+        },
+        {
+          "id": "L3-SO-2",
+          "type": "SYLLABLE_ORDER",
+          "syllables": ["lu", "na"],
+          "correctOrder": ["lu", "na"],
+          "hint": "Brilla en la noche."
+        }
+      ],
+      "audio_question": [
+        {
+          "id": "L3-AQ-1",
+          "type": "audio_question",
+          "question": "¿Qué animal cruza el puente?",
+          "context": "En el bosque mágico, un animal cruza con cuidado el puente brillante.",
+          "options": [
+            "Un conejo",
+            "Un pez"
+          ],
+          "correct": "Un conejo",
+          "audio": null,
+          "image": "/images/L3/l3-aq-1.png",
+          "hint": "Lee el contexto si no hay audio disponible.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "Un conejo",
+            "Un pez",
+            "Una nube"
+          ]
+        },
+        {
+          "id": "L3-AQ-2",
+          "type": "audio_question",
+          "question": "¿Qué busca el mono curioso?",
+          "context": "El mono curioso busca su mochila verde para la clase de magia.",
+          "options": [
+            "Su mochila verde",
+            "Su sombrero rojo"
+          ],
+          "correct": "Su mochila verde",
+          "audio": null,
+          "image": "/images/L3/l3-aq-2.png",
+          "hint": "Si no escuchas audio, lee el texto 'context'.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "Su mochila verde",
+            "Su sombrero rojo",
+            "Su pluma azul"
+          ]
+        },
+        {
+          "id": "L3-AQ-3",
+          "type": "audio_question",
+          "question": "¿Qué hacen los amigos al final?",
+          "context": "Después de la aventura, los amigos toman té de estrellas.",
+          "options": [
+            "Toman té de estrellas",
+            "Duermen bajo el árbol"
+          ],
+          "correct": "Toman té de estrellas",
+          "audio": null,
+          "image": "/images/L3/l3-aq-3.png",
+          "hint": "Busca pistas en la última parte del texto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "Toman té de estrellas",
+            "Duermen bajo el árbol",
+            "Saltan sobre las nubes"
+          ]
+        }
+      ]
+    }
+  },
+  "4": {
+    "meta": {
+      "levelName": "Escribir con magia",
+      "animal": "Mono Avanzado",
+      "icon": "🐵",
+      "stars": 4,
+      "color": "#34d399",
+      "description": "Produce palabras y frases mágicas guiado por tu imaginación.",
+      "finalMessage": "¡Lo haces súper bien! Tu mano y tu mente escriben juntas. Eres un Mono Súper Lector."
+    },
+    "order": [
+      "audio_write",
+      "text_write",
+      "READ_AND_ANSWER"
+    ],
+    "stageMeta": {
+      "audio_write": {
+        "title": "Dictado encantado",
+        "goal": "Escuchar o leer la frase y escribirla correctamente."
+      },
+      "text_write": {
+        "title": "Escritura creativa",
+        "goal": "Redactar frases siguiendo indicaciones mágicas."
+      },
+      "READ_AND_ANSWER": {
+        "title": "Lee y responde",
+        "goal": "Responder tras leer un breve texto."
+      }
+    },
+    "subtypes": {
+      "audio_write": [
+        {
+          "id": "L4-AW-1",
+          "type": "audio_write",
+          "instruction": "Escribe la palabra que escuchas o lees:",
+          "fallbackText": "Escribe: luciérnaga",
+          "answer": "luciérnaga",
+          "audio": null,
+          "image": "/images/L4/l4-aw-1.png",
+          "hint": "Recuerda colocar la tilde correcta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L4-AW-2",
+          "type": "audio_write",
+          "instruction": "Escribe la frase completa.",
+          "fallbackText": "Escribe: El dragón sopla nubes de algodón.",
+          "answer": "El dragón sopla nubes de algodón.",
+          "audio": "/assets/audio/level4/dragon-aw2.mp3",
+          "image": "/images/L4/l4-aw-2.png",
+          "hint": "Empieza con mayúscula y termina con punto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "READ_AND_ANSWER": [
+        {
+          "id": "L4-RA-1",
+          "type": "READ_AND_ANSWER",
+          "text": "El oso Simón vive en una cueva y come miel dulce.",
+          "options": [
+            "En una cueva",
+            "En un árbol"
+          ],
+          "correct": "En una cueva",
+          "hint": "Busca dónde vive."
+        },
+        {
+          "id": "L4-RA-2",
+          "type": "READ_AND_ANSWER",
+          "text": "La vaca Lola camina al río para beber agua fresca.",
+          "options": [
+            "Beber agua",
+            "Dormir en la casa"
+          ],
+          "correct": "Beber agua",
+          "hint": "¿Qué hace en el río?"
+        }
+      ],
+      "text_write": [
+        {
+          "id": "L4-TW-1",
+          "type": "text_write",
+          "instruction": "Escribe una frase que incluya la palabra 'magia'.",
+          "placeholder": "Tu frase con magia...",
+          "answerPattern": "magia",
+          "audio": null,
+          "image": "/images/L4/l4-tw-1.png",
+          "hint": "Asegúrate de usar la palabra mágica.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L4-TW-2",
+          "type": "text_write",
+          "instruction": "Escribe el nombre de la figura o símbolo: 🔺",
+          "placeholder": "Ej: triángulo",
+          "answer": "triángulo",
+          "audio": null,
+          "image": "/images/L4/l4-tw-2.png",
+          "hint": "Piensa en la forma geométrica del símbolo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L4-TW-3",
+          "type": "text_write",
+          "instruction": "Ordena las letras y escribe la palabra: lvase",
+          "placeholder": "Ej: ?",
+          "answer": "selva",
+          "audio": null,
+          "image": "/images/L4/l4-tw-3.png",
+          "hint": "Piensa en un lugar lleno de árboles.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L4-TW-4",
+          "type": "text_write",
+          "instruction": "Ordena las letras y escribe la palabra: oglob",
+          "placeholder": "Ej: ?",
+          "answer": "globo",
+          "audio": null,
+          "image": "/images/L4/l4-tw-4.png",
+          "hint": "Se infla para flotar en el aire.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L4-TW-5",
+          "type": "text_write",
+          "instruction": "Completa la palabra: L_n_s (día de la semana)",
+          "placeholder": "Escribe la palabra completa",
+          "answer": "lunes",
+          "audio": null,
+          "image": "/images/L4/l4-tw-5.png",
+          "hint": "Empieza la semana.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ]
+    }
+  },
+  "5": {
+    "meta": {
+      "levelName": "El maestro del tiempo",
+      "animal": "Elefante Sabiondo",
+      "icon": "🐘",
+      "stars": 5,
+      "color": "#1d4ed8",
+      "description": "Domina tiempos verbales, acentos y signos mágicos.",
+      "finalMessage": "🎓 ¡Enhorabuena! Has terminado la Escuela Mágica de Animales. Te has convertido en un Elefante Sabiondo."
+    },
+    "order": [
+      "tense_classify",
+      "singular_plural",
+      "accent_game",
+      "punctuation_game",
+      "final_exam"
+    ],
+    "stageMeta": {
+      "tense_classify": {
+        "title": "Adivina el tiempo verbal",
+        "goal": "Identificar si la frase está en pasado, presente o futuro."
+      },
+      "singular_plural": {
+        "title": "Transforma la forma",
+        "goal": "Relacionar palabras en singular con su plural."
+      },
+      "accent_game": {
+        "title": "Tildes mágicas",
+        "goal": "Colocar la tilde en la sílaba correcta."
+      },
+      "punctuation_game": {
+        "title": "Señales encantadas",
+        "goal": "Elegir el signo de puntuación adecuado."
+      },
+      "final_exam": {
+        "title": "Examen del elefante sabio",
+        "goal": "Integrar lo aprendido sobre tiempos y signos."
+      }
+    },
+    "subtypes": {
+      "tense_classify": [
+        {
+          "id": "L5-TC-1",
+          "type": "tense_classify",
+          "sentence": "Ayer dibujé una estrella brillante.",
+          "options": [
+            "Pasado",
+            "Presente"
+          ],
+          "correct": "Pasado",
+          "audio": null,
+          "image": "/images/L5/l5-tc-1.png",
+          "hint": "Observa la palabra 'ayer'.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ]
+        },
+        {
+          "id": "L5-TC-2",
+          "type": "tense_classify",
+          "sentence": "Hoy comparto mi cuaderno mágico.",
+          "options": [
+            "Presente",
+            "Pasado"
+          ],
+          "correct": "Presente",
+          "audio": null,
+          "image": "/images/L5/l5-tc-2.png",
+          "hint": "La acción ocurre en este momento.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ]
+        },
+        {
+          "id": "L5-TC-3",
+          "type": "tense_classify",
+          "sentence": "Mañana estudiaré los hechizos nuevos.",
+          "options": [
+            "Futuro",
+            "Pasado"
+          ],
+          "correct": "Futuro",
+          "audio": null,
+          "image": "/images/L5/l5-tc-3.png",
+          "hint": "Si dice 'mañana', piensa en el futuro.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ]
+        }
+      ],
+      "singular_plural": [
+        {
+          "id": "L5-SP-1",
+          "type": "singular_plural",
+          "pairs": [
+            {
+              "singular": "luz 🔆",
+              "plural": "luces 🔅"
+            },
+            {
+              "singular": "hada 🧚",
+              "plural": "hadas 🧚‍♀️"
+            },
+            {
+              "singular": "canción 🎵",
+              "plural": "canciones 🎶"
+            },
+            {
+              "singular": "árbol 🌳",
+              "plural": "árboles 🌲"
+            },
+            {
+              "singular": "pez 🐟",
+              "plural": "peces 🐠"
+            }
+          ],
+          "audio": null,
+          "image": "/images/L5/l5-sp-1.png",
+          "hint": "Observa cómo cambian las terminaciones al plural.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "accent_game": [
+        {
+          "id": "L5-AG-1",
+          "type": "accent_game",
+          "word": "melodia",
+          "syllables": [
+            "me",
+            "lo",
+            "di",
+            "a"
+          ],
+          "correctSyllable": "di",
+          "accentType": "Aguda",
+          "audio": null,
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Recuerda: melodía lleva tilde en la sílaba fuerte.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L5-AG-2",
+          "type": "accent_game",
+          "word": "fantasia",
+          "syllables": [
+            "fan",
+            "ta",
+            "si",
+            "a"
+          ],
+          "correctSyllable": "si",
+          "accentType": "Aguda",
+          "audio": null,
+          "image": "/images/L5/l5-ag-2.png",
+          "hint": "Imagina dónde suena más fuerte la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ],
+      "punctuation_game": [
+        {
+          "id": "L5-PG-1",
+          "type": "punctuation_game",
+          "sentence": "Que sorpresa verte aqui",
+          "options": [
+            "¡",
+            "¿"
+          ],
+          "correct": "¡",
+          "audio": null,
+          "image": "/images/L5/l5-pg-1.png",
+          "hint": "La frase expresa sorpresa.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "¡",
+            "¿",
+            ".",
+            ","
+          ]
+        },
+        {
+          "id": "L5-PG-2",
+          "type": "punctuation_game",
+          "sentence": "Como te llamas",
+          "options": [
+            "¿",
+            "¡"
+          ],
+          "correct": "¿",
+          "audio": null,
+          "image": "/images/L5/l5-pg-2.png",
+          "hint": "Es una pregunta, necesita signos interrogativos.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "¡",
+            "¿",
+            ".",
+            ","
+          ]
+        },
+        {
+          "id": "L5-PG-3",
+          "type": "punctuation_game",
+          "sentence": "Gracias por ayudarme",
+          "options": [
+            ".",
+            "¡"
+          ],
+          "correct": ".",
+          "audio": null,
+          "image": "/images/L5/l5-pg-3.png",
+          "hint": "Una afirmación termina con punto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "¡",
+            "¿",
+            ".",
+            ","
+          ]
+        }
+      ],
+      "final_exam": [
+        {
+          "id": "L5-FE-1",
+          "type": "final_exam",
+          "question": "¿Qué tiempo verbal usa la frase: \"Mañana cantaré con el coro\"?",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Futuro",
+          "audio": null,
+          "image": "/images/L5/l5-fe-1.png",
+          "hint": "Busca palabras que indiquen futuro.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        },
+        {
+          "id": "L5-FE-2",
+          "type": "final_exam",
+          "question": "Elige el signo que completa la frase: \"¿Vienes a la clase de magia\"",
+          "options": [
+            "¿",
+            "¡",
+            "."
+          ],
+          "correct": "¿",
+          "audio": null,
+          "image": "/images/L5/l5-fe-2.png",
+          "hint": "Coloca el signo inicial correcto para una pregunta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "optionsLegacy": [
+            "¿",
+            "¡",
+            ".",
+            ","
+          ]
+        },
+        {
+          "id": "L5-FE-3",
+          "type": "final_exam",
+          "question": "¿Dónde colocarías la tilde en la palabra 'musica'?",
+          "options": [
+            "música",
+            "musíca",
+            "mùsica"
+          ],
+          "correct": "música",
+          "audio": null,
+          "image": "/images/L5/l5-fe-3.png",
+          "hint": "Piensa en cómo suena la sílaba fuerte.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Paleta pastel kawaii */
+  --color-green-light: #c9efc3;
+  --color-green: #8fd47e;
+  --color-green-dark: #4a9d61;
+  --color-yellow: #fcefb4;
+  --color-yellow-warm: #ffde7b;
+  --color-cream: #f8f7e8;
+  --color-rose: #ffc8d0;
+  --color-orange: #f4b26a;
+  --color-sky: #cce9ff;
+
+  --pad-sm: 0.75rem;
+  --pad-md: 1.2rem;
+  --pad-lg: 2rem;
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 28px;
+}
+
+/* Layout base */
+html,
+body,
+#app {
+  height: 100%;
+  background: linear-gradient(180deg, #f8f7e8 0%, #ddf6dc 40%, #f8f7e8 100%);
+  color: #0f172a;
+  font-family: 'Baloo 2', 'Nunito Rounded', 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+/* Accesibilidad: foco visible */
+:focus-visible {
+  outline: 3px solid var(--color-green);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Botones base */
+.btn {
+  padding: 0.95rem 1.6rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  color: #0f172a;
+  background: var(--color-green);
+  border: 2px solid var(--color-green-dark);
+  box-shadow: 0 6px 14px rgba(79, 159, 95, 0.35);
+  transition: 0.3s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn-primary {
+  background: var(--color-green);
+  border-color: var(--color-green-dark);
+  color: #0f172a;
+}
+.btn-secondary {
+  background: var(--color-green);
+  border-color: var(--color-green-dark);
+  color: #0f172a;
+  box-shadow: 0 6px 14px rgba(79, 159, 95, 0.35);
+}
+.btn-ghost {
+  background: var(--color-cream);
+  border-color: rgba(0, 0, 0, 0.05);
+  color: #0f172a;
+}
+.btn-icon {
+  padding: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.btn-icon img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.nav-icons-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 12px;
+  background: transparent;
+}
+
+/* Tarjetas */
+.card {
+  background: var(--color-cream);
+  border-radius: var(--radius-md);
+  padding: var(--pad-md);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footer-wave {
+  position: relative;
+  background: linear-gradient(180deg, #c9efc3 0%, #8fd47e 100%);
+  clip-path: ellipse(100% 120% at 50% 0%);
+  color: #0f172a;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
