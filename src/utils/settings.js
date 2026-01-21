@@ -1,5 +1,5 @@
 const SETTINGS_KEY = 'juegoLeo_settings'
-const DEFAULT_SETTINGS = { sfx: true }
+const DEFAULT_SETTINGS = { sfx: true, music: true, introPlayed: false }
 
 export function loadSettings() {
   if (typeof window === 'undefined') return { ...DEFAULT_SETTINGS }
@@ -28,7 +28,13 @@ export function saveSettings(next = {}) {
   return merged
 }
 
+export function updateSettings(patch = {}) {
+  const current = loadSettings()
+  return saveSettings({ ...current, ...patch })
+}
+
 export default {
   loadSettings,
-  saveSettings
+  saveSettings,
+  updateSettings
 }
