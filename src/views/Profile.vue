@@ -10,11 +10,29 @@
         <span>Fecha de nacimiento</span>
         <input v-model="child.birthdate" type="date" class="w-full px-4 py-3 border rounded-2xl" />
       </label>
+      <label class="block">
+        <span>Email</span>
+        <input
+          v-model="child.email"
+          type="email"
+          inputmode="email"
+          class="w-full px-4 py-3 border rounded-2xl"
+          placeholder="familia@correo.com"
+        />
+      </label>
       <div class="flex items-center gap-3">
         <button class="btn btn-primary" type="button" @click="save">Guardar</button>
         <p v-if="successMessage" class="text-emerald-700 font-semibold">{{ successMessage }}</p>
         <p v-else-if="errorMessage" class="text-red-600 font-semibold">{{ errorMessage }}</p>
       </div>
+      <button
+        v-if="child.email"
+        class="btn btn-ghost w-full justify-center"
+        type="button"
+        @click="sendMailto"
+      >
+        Enviar resumen por email
+      </button>
     </div>
 
     <div class="card grid md:grid-cols-2 gap-4">
@@ -30,6 +48,12 @@
           {{ currentLevel.progress.totalStages }}
         </p>
         <p v-else>¡Aún no has comenzado una aventura!</p>
+        <div v-if="progressSnapshot" class="mt-3 text-sm text-slate-600 space-y-1">
+          <p class="font-semibold text-slate-800">Registro guardado:</p>
+          <p>Estrellas: {{ progressSnapshot.stars }} · Puntos: {{ progressSnapshot.points }}</p>
+          <p>Etapa: {{ progressSnapshot.stageLabel }}</p>
+          <p>Última actualización: {{ formatDate(progressSnapshot.updatedAt) }}</p>
+        </div>
       </div>
     </div>
 
@@ -66,7 +90,8 @@ profile.loadProfile()
 
 const child = reactive({
   name: '',
-  birthdate: ''
+  birthdate: '',
+  email: ''
 })
 
 const successMessage = ref('')
@@ -98,10 +123,18 @@ watch(
   },
   { immediate: true }
 )
+watch(
+  () => profile.childEmail,
+  (value) => {
+    child.email = value || child.email
+  },
+  { immediate: true }
+)
 
 onMounted(() => {
   if (!child.name) child.name = profile.childName || game.child?.name || ''
   if (!child.birthdate) child.birthdate = profile.childBirthdate || game.child?.birthdate || ''
+  if (!child.email) child.email = profile.childEmail || ''
 })
 
 function save() {
@@ -109,6 +142,7 @@ function save() {
   successMessage.value = ''
   const name = child.name?.trim?.() || ''
   const birthdate = child.birthdate || ''
+  const email = child.email?.trim?.() || ''
   if (name.length < 2) {
     errorMessage.value = 'El nombre debe tener al menos 2 caracteres.'
     return
@@ -117,10 +151,39 @@ function save() {
     errorMessage.value = 'La fecha no puede ser futura.'
     return
   }
+  if (email && !/\S+@\S+\.\S+/.test(email)) {
+    errorMessage.value = 'Ingresa un email válido.'
+    return
+  }
 
-  profile.saveProfile({ name, birthdate })
+  const progressSnapshot = buildSnapshot()
+
+  profile.saveProfile({ name, birthdate, email, progressSnapshot })
   game.setChild({ name, birthdate })
   successMessage.value = 'Guardado'
+}
+
+const progressSnapshot = computed(() => profile.progressSnapshot)
+
+function buildSnapshot() {
+  const snapshotLevel = currentLevel.value
+  return {
+    stars: game.stars || 0,
+    points: game.points || 0,
+    stageLabel: snapshotLevel
+      ? `${snapshotLevel.levelName} · etapa ${snapshotLevel.progress.nextStage}/${snapshotLevel.progress.totalStages}`
+      : 'Sin aventuras todavía',
+    updatedAt: new Date().toISOString()
+  }
+}
+
+function sendMailto() {
+  if (!child.email) return
+  const snapshot = buildSnapshot()
+  const body = encodeURIComponent(
+    `Hola,\n\nAquí está tu progreso en Juego-Leo:\n- Estrellas: ${snapshot.stars}\n- Puntos: ${snapshot.points}\n- ${snapshot.stageLabel}\n\n¡Sigue jugando!`
+  )
+  window.location.href = `mailto:${child.email}?subject=Progreso%20en%20Juego-Leo&body=${body}`
 }
 </script>
 
