@@ -60,7 +60,7 @@
         :key="habitat.id"
         class="map-node"
         tabindex="0"
-        :class="nodeClass(habitat, index)"
+        :class="[nodeClass(habitat, index), { 'map-node--pulse': recentlyUnlocked === habitat.id }]"
         :style="nodeStyle(habitat.coords)"
       >
         <div class="node-label">
@@ -93,11 +93,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
 import { useProfileStore } from '../store/profileStore'
 import { getLevelDefinition, listLevels } from '../engine/logic/utils/validateTemplates'
+import { playSfx } from '../utils/sfx'
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
 import Mono from '../assets/characters/Mono.png'
@@ -169,6 +170,9 @@ const game = useGameStore()
 game.load?.()
 const profile = useProfileStore()
 profile.loadProfile?.()
+const recentlyUnlocked = ref(null)
+const unlockStatus = ref(new Map())
+let unlockTimer = null
 
 const levelIds = listLevels()
   .map(Number)
@@ -210,6 +214,30 @@ const enrichedHabitats = computed(() => {
   return result
 })
 
+watch(
+  () => enrichedHabitats.value.map((h) => ({ id: h.id, unlocked: h.unlocked })),
+  (current) => {
+    if (!current?.length) return
+    if (!unlockStatus.value.size) {
+      const baseline = new Map()
+      current.forEach((item) => baseline.set(item.id, item.unlocked))
+      unlockStatus.value = baseline
+      return
+    }
+    const updated = new Map(unlockStatus.value)
+    current.forEach((item) => {
+      const wasUnlocked = updated.get(item.id)
+      updated.set(item.id, item.unlocked)
+      const wasTracked = wasUnlocked !== undefined
+      if (item.unlocked && (wasUnlocked === false || (!wasTracked && unlockStatus.value.size))) {
+        triggerUnlockFx(item.id)
+      }
+    })
+    unlockStatus.value = updated
+  },
+  { deep: true, immediate: true }
+)
+
 const pathPoints = computed(() => {
   const pts = enrichedHabitats.value
     .map((h) => `${h.coords.x},${h.coords.y}`)
@@ -246,6 +274,17 @@ const mapCanvasStyle = computed(() => ({
   boxShadow: 'inset 0 0 40px rgba(34, 139, 34, 0.26)',
   backgroundColor: '#cfe9ff'
 }))
+
+function triggerUnlockFx(id) {
+  recentlyUnlocked.value = id
+  playSfx('unlock')
+  if (unlockTimer) {
+    clearTimeout(unlockTimer)
+  }
+  unlockTimer = setTimeout(() => {
+    recentlyUnlocked.value = null
+  }, 1800)
+}
 
 function nodeStyle(coords) {
   return {
@@ -680,6 +719,13 @@ function formatDate(date) {
 .map-node.active .node-icon-wrap img {
   filter: drop-shadow(0 12px 26px rgba(250, 204, 21, 0.55));
 }
+.map-node--pulse .node-icon-wrap {
+  animation: unlockGlow 1.4s ease;
+  box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.35);
+}
+.map-node--pulse .node-base {
+  animation: unlockBase 1.4s ease;
+}
 .map-node.locked {
   opacity: 0.6;
 }
@@ -690,6 +736,34 @@ function formatDate(date) {
   }
   50% {
     box-shadow: 0 0 40px rgba(250, 204, 21, 0.6);
+  }
+}
+@keyframes unlockGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.3);
+    transform: translateY(-2px) scale(0.96);
+  }
+  60% {
+    box-shadow: 0 0 40px rgba(250, 204, 21, 0.7);
+    transform: translateY(-10px) scale(1.04);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0);
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes unlockBase {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(250, 204, 21, 0.25));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 12px 24px rgba(250, 204, 21, 0.45));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(250, 204, 21, 0));
   }
 }
 @keyframes float {
@@ -743,6 +817,13 @@ function formatDate(date) {
 }
 .log-empty {
   color: #94a3b8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-node--pulse .node-icon-wrap,
+  .map-node--pulse .node-base {
+    animation: none;
+  }
 }
 
 @media (max-width: 768px) {
