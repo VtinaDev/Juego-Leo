@@ -34,6 +34,14 @@
         </div>
 
         <div class="ml-auto flex gap-3 nav-icons-wrapper">
+          <button
+            v-if="canInstall"
+            class="btn btn-ghost install-btn"
+            type="button"
+            @click="requestInstall"
+          >
+            Instalar
+          </button>
           <RouterLink class="btn btn-icon" to="/levels" aria-label="Niveles">
             <img src="/icons/order.PNG" alt="Niveles" />
           </RouterLink>
@@ -67,15 +75,49 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const canInstall = ref(false)
+let deferredPrompt = null
 
 const levelNumber = computed(() => {
   const raw = route.params.levelId ?? route.params.level ?? 1
   const parsed = Number(raw)
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1
+})
+
+function handleBeforeInstall(event) {
+  event.preventDefault()
+  deferredPrompt = event
+  canInstall.value = true
+}
+
+function requestInstall() {
+  if (!deferredPrompt) return
+  deferredPrompt.prompt()
+  deferredPrompt.userChoice?.finally?.(() => {
+    canInstall.value = false
+    deferredPrompt = null
+  })
+}
+
+onMounted(() => {
+  if (typeof window === 'undefined') return
+  const installed =
+    window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone
+  if (installed) return
+  window.addEventListener('beforeinstallprompt', handleBeforeInstall)
+  window.addEventListener('appinstalled', () => {
+    canInstall.value = false
+    deferredPrompt = null
+  })
+})
+
+onBeforeUnmount(() => {
+  if (typeof window === 'undefined') return
+  window.removeEventListener('beforeinstallprompt', handleBeforeInstall)
 })
 </script>
 
@@ -156,6 +198,21 @@ const levelNumber = computed(() => {
   font-weight: 800;
   color: #5a3b1a;
   font-size: 1.05rem;
+ }
+ .install-btn {
+  min-height: auto;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  color: #0f172a !important;
+  background: linear-gradient(145deg, #e0f2fe, #c7d2fe);
+  border: 1px solid rgba(14, 165, 233, 0.35);
+  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.15);
+ }
+ .header-transparent .install-btn {
+  background: linear-gradient(145deg, #e0f2fe, #c7d2fe);
+  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.18);
+  border-color: rgba(14, 165, 233, 0.35);
  }
 
 @keyframes floatIcon {
