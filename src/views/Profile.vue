@@ -10,7 +10,11 @@
         <span>Fecha de nacimiento</span>
         <input v-model="child.birthdate" type="date" class="w-full px-4 py-3 border rounded-2xl" />
       </label>
-      <button class="btn btn-primary" type="button" @click="save">Guardar</button>
+      <div class="flex items-center gap-3">
+        <button class="btn btn-primary" type="button" @click="save">Guardar</button>
+        <p v-if="successMessage" class="text-emerald-700 font-semibold">{{ successMessage }}</p>
+        <p v-else-if="errorMessage" class="text-red-600 font-semibold">{{ errorMessage }}</p>
+      </div>
     </div>
 
     <div class="card grid md:grid-cols-2 gap-4">
@@ -50,16 +54,23 @@
 </template>
 
 <script setup>
-import { reactive, watch, computed } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useGameStore } from '../store/gameStore'
+import { useProfileStore } from '../store/profileStore'
 
 const game = useGameStore()
 game.load()
 
+const profile = useProfileStore()
+profile.loadProfile()
+
 const child = reactive({
-  name: game.child?.name || '',
-  birthdate: game.child?.birthdate || ''
+  name: '',
+  birthdate: ''
 })
+
+const successMessage = ref('')
+const errorMessage = ref('')
 
 const timeline = computed(() => game.levelTimeline)
 const currentLevel = computed(() => timeline.value.find((item) => item.progress.percent < 1))
@@ -72,16 +83,44 @@ function formatDate(date) {
 watch(
   () => game.child,
   (value) => {
-    if (value) {
-      child.name = value.name || ''
-      child.birthdate = value.birthdate || ''
-    }
+    if (!value) return
+    if (!child.name) child.name = value.name || ''
+    if (!child.birthdate) child.birthdate = value.birthdate || ''
   },
   { deep: true, immediate: true }
 )
 
+watch(
+  () => [profile.childName, profile.childBirthdate],
+  ([name, birthdate]) => {
+    child.name = name || child.name
+    child.birthdate = birthdate || child.birthdate
+  },
+  { immediate: true }
+)
+
+onMounted(() => {
+  if (!child.name) child.name = profile.childName || game.child?.name || ''
+  if (!child.birthdate) child.birthdate = profile.childBirthdate || game.child?.birthdate || ''
+})
+
 function save() {
-  game.setChild({ ...child })
+  errorMessage.value = ''
+  successMessage.value = ''
+  const name = child.name?.trim?.() || ''
+  const birthdate = child.birthdate || ''
+  if (name.length < 2) {
+    errorMessage.value = 'El nombre debe tener al menos 2 caracteres.'
+    return
+  }
+  if (birthdate && new Date(birthdate) > new Date()) {
+    errorMessage.value = 'La fecha no puede ser futura.'
+    return
+  }
+
+  profile.saveProfile({ name, birthdate })
+  game.setChild({ name, birthdate })
+  successMessage.value = 'Guardado'
 }
 </script>
 

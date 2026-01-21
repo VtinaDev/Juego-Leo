@@ -96,6 +96,7 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
+import { useProfileStore } from '../store/profileStore'
 import { getLevelDefinition, listLevels } from '../engine/logic/utils/validateTemplates'
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
@@ -166,6 +167,8 @@ const LEVEL_CHARACTERS = {
 
 const game = useGameStore()
 game.load?.()
+const profile = useProfileStore()
+profile.loadProfile?.()
 
 const levelIds = listLevels()
   .map(Number)
@@ -214,7 +217,7 @@ const pathPoints = computed(() => {
   return pts
 })
 
-const childName = computed(() => game.child?.name || '')
+const childName = computed(() => profile.childName || game.child?.name || '')
 const childInitials = computed(() => (childName.value ? childName.value[0]?.toUpperCase() : '⭐'))
 
 const activityLog = computed(() => {
