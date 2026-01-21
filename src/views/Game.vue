@@ -172,29 +172,27 @@
 
             <!-- Leer con o sin audio (L1) -->
             <section v-else-if="current.type === 'read_with_audio'" class="space-y-4">
-              <div class="reading-box" :class="{ 'reading-animated': readingPulse }">
-                <img
-                  src="/icons/audio.PNG"
-                  alt="Audio"
-                  class="audio-icon-static"
-                  role="button"
-                  tabindex="0"
-                  @click="handleReadingIconClick"
-                  @keyup.enter.space="handleReadingIconClick"
+              <div class="reading-box" :class="{ 'reading-animated': readingHighlight }">
+                <SyllableHighlighter :text="readingText" :highlight="readingHighlightIndex" />
+              </div>
+              <div class="flex flex-wrap gap-3 items-center">
+                <AudioPlayer
+                  v-if="current.audio"
+                  :src="readingAudioSrc"
+                  aria-label="Escuchar frase"
+                  @play="handleReadingPlay"
+                  @pause="handleReadingPause"
+                  @ended="handleReadingEnded"
                 />
-                <p class="reading-phrase m-0">
-                  <span
-                    v-for="(syllable, idx) in syllableSegments"
-                    :key="`${idx}-${syllable.text}`"
-                    class="reading-syllable"
-                    :class="{
-                      'reading-syllable--active': idx === activeSyllable && !syllable.isGap,
-                      'reading-syllable--gap': syllable.isGap
-                    }"
-                  >
-                    {{ syllable.text }}
-                  </span>
-                </p>
+                <button
+                  v-else
+                  class="btn btn-ghost reading-cta"
+                  type="button"
+                  @click="handleReadingIconClick"
+                >
+                  <img src="/icons/audio.PNG" alt="" class="audio-icon-static" />
+                  <span>Escuchar frase</span>
+                </button>
               </div>
               <p v-if="!current.audio" class="text-sm text-gray-500">
                 Lee la frase tú mismo 🪄
@@ -683,7 +681,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useBillingStore } from '../store/billingStore'
 import { useGameStore } from '../store/gameStore'
@@ -694,6 +692,8 @@ import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
 import ExerciseShell from '../components/ExerciseShell.vue'
 import DragDropBoard from '../components/DragDropBoard.vue'
 import AudioButton from '../components/AudioButton.vue'
+import AudioPlayer from '../components/AudioPlayer.vue'
+import SyllableHighlighter from '../components/SyllableHighlighter.vue'
 
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
@@ -713,7 +713,7 @@ const confettiPieces = Array.from({ length: 100 }, (_, i) => ({
 }))
 const showConfetti = ref(false)
 let confettiTimer = null
-const readingPulse = ref(false)
+const readingHighlight = ref(false)
 let readingTimer = null
 let syllableTimer = null
 let activeAudioEl = null
@@ -722,9 +722,16 @@ const READING_AUDIO_PACE = 0.85
 const TTS_SLOW_RATE = 0.82
 const TTS_CHEERFUL_PITCH = 1.3
 const { speak, stop: stopTts, isSpeaking } = useTTS()
+const prefersReducedMotion = ref(false)
 
 billing.load?.()
 game.load?.()
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }
+})
 
 // Permite leer /game/:level/:stage o /game/:levelId/:stageId
 const level = computed(() => Number(route.params.levelId ?? route.params.level ?? 1))
@@ -804,7 +811,7 @@ watch(
 watch(
   () => current.value?.id,
   () => {
-    activeSyllable.value = -1
+    resetReadingHighlight()
   }
 )
 const leftOptions = computed(() => leftOptionsShuffled.value)
@@ -899,6 +906,8 @@ const readingText = computed(() => {
   return normalizeReadingText(current.value?.text || current.value?.sentence || current.value?.prompt || '')
 })
 
+const readingAudioSrc = computed(() => resolveAsset(current.value?.audio))
+
 const syllableSegments = computed(() => {
   return segmentTextIntoSyllables(readingText.value)
 })
@@ -977,6 +986,7 @@ const showExerciseNarration = computed(() => {
   if ((level.value === 4 || level.value === 5) && stage.value === 1) return false
   return true
 })
+const readingHighlightIndex = computed(() => (readingHighlight.value ? 0 : -1))
 
 const hideLevelVisuals = computed(() => [2, 3, 4, 5].includes(level.value))
 const isLevelFour = computed(() => level.value === 4)
@@ -1201,7 +1211,7 @@ function startReadingPulse(autoStopMs) {
   if (readingTimer) clearTimeout(readingTimer)
   const firstIdx = syllableSegments.value.findIndex((segment) => !segment.isGap)
   activeSyllable.value = firstIdx
-  readingPulse.value = true
+  readingHighlight.value = true
   const duration = autoStopMs ?? getEstimatedReadingDurationMs()
   readingTimer = window.setTimeout(() => {
     stopReadingPulse()
@@ -1216,13 +1226,17 @@ function stopReadingPulse() {
     activeAudioEl.currentTime = 0
     activeAudioEl = null
   }
+  resetReadingHighlight()
+}
+
+function resetReadingHighlight() {
+  readingHighlight.value = false
+  activeSyllable.value = -1
   clearSyllableTicker()
   if (readingTimer) {
     clearTimeout(readingTimer)
     readingTimer = null
   }
-  readingPulse.value = false
-  activeSyllable.value = -1
 }
 
 function handleTtsBoundary(event) {
@@ -1269,6 +1283,21 @@ async function handleReadingIconClick() {
   if (current.value?.audio) {
     handleAudioClick(current.value.audio)
   }
+}
+
+function handleReadingPlay() {
+  const estimate = getEstimatedReadingDurationMs()
+  const effective = getEffectiveDurationMs(estimate, READING_AUDIO_PACE)
+  startReadingPulse(effective)
+  startSyllableTickerForDuration(effective)
+}
+
+function handleReadingPause() {
+  resetReadingHighlight()
+}
+
+function handleReadingEnded() {
+  stopReadingPulse()
 }
 
 function clearSyllableTicker() {
@@ -1601,6 +1630,12 @@ function shuffleArray(arr) {
 .reading-box .audio-button {
   flex-shrink: 0;
 }
+.reading-cta {
+  gap: 0.5rem;
+  min-height: 0;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
 .audio-icon-static {
   width: 48px;
   height: 48px;
@@ -1640,6 +1675,11 @@ function shuffleArray(arr) {
   50% {
     transform: scale(1.02);
     text-shadow: 0 3px 12px rgba(255, 206, 86, 0.7);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-animated {
+    animation: none;
   }
 }
 .exercise-body {

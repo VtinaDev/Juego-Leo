@@ -25,6 +25,8 @@ const props = defineProps({
   ariaLabel: { type: String, default: 'Reproductor de audio' }
 })
 
+const emit = defineEmits(['play', 'pause', 'ended'])
+
 const playing = ref(false)
 const position = ref(0)
 const duration = ref(0)
@@ -45,14 +47,17 @@ function attachSound() {
   sound.on('play', () => {
     playing.value = true
     duration.value = sound.duration()
+    emit('play')
   })
   sound.on('pause', () => {
     playing.value = false
     position.value = sound.seek() || 0
+    emit('pause')
   })
   sound.on('end', () => {
     playing.value = false
     position.value = duration.value
+    emit('ended')
   })
 
   if (props.autoplay) {
