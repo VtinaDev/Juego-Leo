@@ -35,6 +35,30 @@ if (typeof window !== 'undefined') {
 //  LÓGICA DEL VALIDADOR (idéntica a tu versión funcional)
 // -------------------------------------------------------------
 
+function warnDuplicateStageImages(levelKey, levelConfig) {
+  if (typeof window === 'undefined') return
+  if (!import.meta?.env?.DEV) return
+  const order = Array.isArray(levelConfig.order)
+    ? levelConfig.order
+    : Object.keys(levelConfig.subtypes ?? {})
+  let previousImage = null
+  order.forEach((subtypeKey, idx) => {
+    const firstImage = levelConfig.subtypes?.[subtypeKey]?.[0]?.image || null
+    if (firstImage && previousImage && firstImage === previousImage) {
+      console.warn(
+        `[Juego Leo] Imagen repetida entre las etapas ${idx} y ${idx + 1} del nivel ${levelKey}: ${firstImage}`
+      )
+    }
+    if (firstImage) {
+      previousImage = firstImage
+    }
+  })
+}
+
+if (typeof window !== 'undefined' && import.meta?.env?.DEV && manifest) {
+  Object.entries(manifest).forEach(([levelKey, levelConfig]) => warnDuplicateStageImages(levelKey, levelConfig))
+}
+
 const REQUIRED_FIELDS_BY_TYPE = {
   question_sentence: [['question', 'prompt', 'sentence'], 'options', ['correct', 'answer']],
   complete_sentence: [['prompt', 'question', 'sentence'], 'options', ['correct', 'answer']],

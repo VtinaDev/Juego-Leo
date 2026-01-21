@@ -109,29 +109,29 @@
           "id": "L1-IWM-1",
           "type": "IMAGE_WORD_MATCH",
           "prompt": "Selecciona la palabra que nombra la imagen",
-          "image": "/images/L1/sapo.PNG",
+          "image": "/images/level1/estrella.PNG",
           "options": [
-            "sapo",
-            "saco",
-            "sopa"
+            "estrella",
+            "estela",
+            "estreno"
           ],
-          "correct": "sapo",
-          "emoji": "🐸",
-          "hint": "Observa la primera sílaba."
+          "correct": "estrella",
+          "emoji": "✨",
+          "hint": "Piensa en lo que brilla en el cielo."
         },
         {
           "id": "L1-IWM-2",
           "type": "IMAGE_WORD_MATCH",
           "prompt": "Selecciona la palabra que nombra la imagen",
-          "image": "/images/L1/sol.PNG",
+          "image": "/images/level1/campana.PNG",
           "options": [
-            "sol",
-            "sal",
-            "sul"
+            "campana",
+            "camino",
+            "camisa"
           ],
-          "correct": "sol",
-          "emoji": "🌞",
-          "hint": "Suena a luz."
+          "correct": "campana",
+          "emoji": "🔔",
+          "hint": "Suena para avisar."
         }
       ],
       "CHOOSE_CORRECT_WORD": [
@@ -139,27 +139,27 @@
           "id": "L1-CCW-1",
           "type": "CHOOSE_CORRECT_WORD",
           "prompt": "Elige la palabra correcta",
-          "image": "/images/L1/luna.PNG",
+          "image": "/images/level1/cuento.PNG",
           "options": [
-            "luna",
-            "lupa",
-            "puma"
+            "cuento",
+            "cuadro",
+            "cuello"
           ],
-          "correct": "luna",
-          "hint": "Mira el dibujo."
+          "correct": "cuento",
+          "hint": "Historias para dormir."
         },
         {
           "id": "L1-CCW-2",
           "type": "CHOOSE_CORRECT_WORD",
           "prompt": "Elige la palabra correcta",
-          "image": "/images/L1/mesa.PNG",
+          "image": "/images/level1/faro.PNG",
           "options": [
-            "mesa",
-            "misa",
-            "masa"
+            "faro",
+            "feria",
+            "foca"
           ],
-          "correct": "mesa",
-          "hint": "Se usa para comer."
+          "correct": "faro",
+          "hint": "Guía a los barcos de noche."
         }
       ],
       "complete_sentence": [
