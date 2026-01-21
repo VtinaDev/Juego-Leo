@@ -29,7 +29,6 @@ export const useGameStore = defineStore('game', {
     points: 0,
     stars: 0,
     stages: {},
-    lastUnlockedStageKey: '',
     child: {
       name: '',
       birthdate: ''
@@ -110,13 +109,7 @@ export const useGameStore = defineStore('game', {
       this.stars = 0
       this.stages = {}
       this.child = { name: '', birthdate: '' }
-      this.lastUnlockedStageKey = ''
       this.save()
     },
-
-    setLastUnlockedStage(key) {
-      this.lastUnlockedStageKey = key || ''
-      this.save()
-    }
   },
 })

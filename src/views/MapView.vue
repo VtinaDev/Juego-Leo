@@ -60,10 +60,7 @@
         :key="habitat.id"
         class="map-node"
         tabindex="0"
-        :class="[
-          nodeClass(habitat, index),
-          { 'map-node--pulse': recentlyUnlocked === habitat.id && !prefersReducedMotion }
-        ]"
+        :class="[nodeClass(habitat, index), { 'map-node--pulse': recentlyUnlocked === habitat.id }]"
         :style="nodeStyle(habitat.coords)"
       >
         <div class="node-label">
@@ -102,7 +99,6 @@ import { useGameStore } from '../store/gameStore'
 import { useProfileStore } from '../store/profileStore'
 import { getLevelDefinition, listLevels } from '../engine/logic/utils/validateTemplates'
 import { playSfx } from '../utils/sfx'
-import { loadSettings } from '../utils/settings'
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
 import Mono from '../assets/characters/Mono.png'
@@ -177,10 +173,6 @@ profile.loadProfile?.()
 const recentlyUnlocked = ref(null)
 const unlockStatus = ref(new Map())
 let unlockTimer = null
-const lastSeenStages = ref(new Map())
-const prefersReducedMotion = typeof window !== 'undefined'
-  ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  : false
 
 const levelIds = listLevels()
   .map(Number)
@@ -246,27 +238,6 @@ watch(
   { deep: true, immediate: true }
 )
 
-watch(
-  enrichedHabitats,
-  (list) => {
-    if (!Array.isArray(list)) return
-    const nextMap = new Map(lastSeenStages.value)
-    list.forEach((habitat) => {
-      const prevStage = nextMap.has(habitat.id) ? nextMap.get(habitat.id) : habitat.progress.nextStage
-      const currentStage = habitat.progress.nextStage
-      nextMap.set(habitat.id, currentStage)
-      const stageKey = `${habitat.id}-${currentStage}`
-      const hasAdvanced = currentStage > prevStage
-      if (hasAdvanced && game.lastUnlockedStageKey !== stageKey) {
-        triggerUnlockFx(stageKey)
-        game.setLastUnlockedStage(stageKey)
-      }
-    })
-    lastSeenStages.value = nextMap
-  },
-  { deep: true, immediate: true }
-)
-
 const pathPoints = computed(() => {
   const pts = enrichedHabitats.value
     .map((h) => `${h.coords.x},${h.coords.y}`)
@@ -304,27 +275,15 @@ const mapCanvasStyle = computed(() => ({
   backgroundColor: '#cfe9ff'
 }))
 
-function triggerUnlockFx(stageKey) {
-  recentlyUnlocked.value = parseInt(stageKey.split('-')[0], 10)
-  triggerSparkleSound()
-  triggerRiveUnlock(stageKey)
+function triggerUnlockFx(id) {
+  recentlyUnlocked.value = id
+  playSfx('unlock')
   if (unlockTimer) {
     clearTimeout(unlockTimer)
   }
   unlockTimer = setTimeout(() => {
     recentlyUnlocked.value = null
   }, 1800)
-}
-
-function triggerSparkleSound() {
-  const settings = loadSettings()
-  if (!settings.sfx) return
-  const audio = new Audio('/audio/unlock.mp3')
-  audio.play().catch(() => playSfx('unlock'))
-}
-
-function triggerRiveUnlock(stageKey) {
-  console.info('[Rive placeholder] trigger unlock animation for stage', stageKey)
 }
 
 function nodeStyle(coords) {
