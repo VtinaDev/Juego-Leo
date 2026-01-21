@@ -42,12 +42,6 @@
           >
             Instalar
           </button>
-          <RouterLink class="btn btn-icon" to="/levels" aria-label="Niveles">
-            <img src="/icons/order.PNG" alt="Niveles" />
-          </RouterLink>
-          <RouterLink class="btn btn-icon" to="/mapview" aria-label="Mapa">
-            <img src="/icons/mapa.PNG" alt="Mapa" />
-          </RouterLink>
           <RouterLink class="btn btn-icon" to="/profile" aria-label="Perfil">
             <img src="/icons/perfil.PNG" alt="Perfil" />
           </RouterLink>
