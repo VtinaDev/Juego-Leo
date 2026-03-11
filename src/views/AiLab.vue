@@ -11,6 +11,7 @@
     />
 
     <div class="actions">
+      <button type="button" @click="handleGenerateMockBatch">Generate Mock Batch</button>
       <button type="button" @click="handleValidate">Validate</button>
       <button type="button" @click="handleDownload" :disabled="!canDownload">Download JSON</button>
     </div>
@@ -50,6 +51,7 @@ import { computed, ref } from 'vue'
 import type { AIReadingExercise } from '../lib/ai/schemas/exerciseSchema'
 import { validateGeneratedExercise } from '../lib/ai/utils/validateGeneratedExercise'
 import { downloadJson } from '../lib/ai/utils/downloadJson'
+import { MockLLMClient } from '../lib/ai/clients/MockLLMClient'
 
 type ExerciseValidationView = {
   index: number
@@ -129,6 +131,15 @@ function handleValidate() {
 function handleDownload() {
   if (!canDownload.value) return
   downloadJson({ exercises: parsedExercises.value }, 'ai-generated-exercises.json')
+}
+
+async function handleGenerateMockBatch() {
+  resetValidationState()
+  const client = new MockLLMClient()
+  const response = await client.generateStructuredJson({
+    user: 'Generate a sample batch of reading exercises for children.'
+  })
+  rawJson.value = JSON.stringify(response.data, null, 2)
 }
 </script>
 
