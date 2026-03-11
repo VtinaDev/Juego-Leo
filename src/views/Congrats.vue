@@ -183,7 +183,7 @@ function repeatStage() {
 }
 
 function goToLevels() {
-  router.push({ name: 'Levels' })
+  router.push({ name: 'MapView' })
 }
 </script>
 

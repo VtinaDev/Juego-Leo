@@ -1,0 +1,344 @@
+row_id,level,stage,exercise_id,subtype,type,role,field,target_path,text
+1,1,1,L1-QS-1,question_sentence,question_sentence,narration,question,public/audio/exercises/L1/L1-QS-1/narration_question.mp3,¿Dónde descansa el búho?
+2,1,1,L1-QS-1,question_sentence,question_sentence,narration,sentence,public/audio/exercises/L1/L1-QS-1/narration_sentence.mp3,El búho duerme en el árbol.
+3,1,1,L1-QS-1,question_sentence,question_sentence,response,correct,public/audio/exercises/L1/L1-QS-1/response_correct.mp3,En el árbol.
+4,1,1,L1-QS-1,question_sentence,question_sentence,response,options[0],public/audio/exercises/L1/L1-QS-1/response_options[0].mp3,En el árbol.
+5,1,1,L1-QS-1,question_sentence,question_sentence,response,options[1],public/audio/exercises/L1/L1-QS-1/response_options[1].mp3,En el lago brillante
+6,1,1,L1-QS-1,question_sentence,question_sentence,hint,hint,public/audio/exercises/L1/L1-QS-1/hint_hint.mp3,Lee la frase completa y busca el lugar mencionado.
+7,1,1,L1-QS-2,question_sentence,question_sentence,narration,question,public/audio/exercises/L1/L1-QS-2/narration_question.mp3,¿Qué hace la luciérnaga?
+8,1,1,L1-QS-2,question_sentence,question_sentence,narration,sentence,public/audio/exercises/L1/L1-QS-2/narration_sentence.mp3,La luciérnaga ilumina la noche.
+9,1,1,L1-QS-2,question_sentence,question_sentence,response,correct,public/audio/exercises/L1/L1-QS-2/response_correct.mp3,Ilumina la noche
+10,1,1,L1-QS-2,question_sentence,question_sentence,response,options[0],public/audio/exercises/L1/L1-QS-2/response_options[0].mp3,Canta la noche
+11,1,1,L1-QS-2,question_sentence,question_sentence,response,options[1],public/audio/exercises/L1/L1-QS-2/response_options[1].mp3,Ilumina la noche
+12,1,1,L1-QS-2,question_sentence,question_sentence,hint,hint,public/audio/exercises/L1/L1-QS-2/hint_hint.mp3,Piensa en lo que hace una luciérnaga.
+13,1,1,L1-QS-3,question_sentence,question_sentence,narration,question,public/audio/exercises/L1/L1-QS-3/narration_question.mp3,¿Qué encuentra el oso perezoso?
+14,1,1,L1-QS-3,question_sentence,question_sentence,narration,sentence,public/audio/exercises/L1/L1-QS-3/narration_sentence.mp3,El oso perezoso encuentra una flor azul.
+15,1,1,L1-QS-3,question_sentence,question_sentence,response,correct,public/audio/exercises/L1/L1-QS-3/response_correct.mp3,Una flor azul
+16,1,1,L1-QS-3,question_sentence,question_sentence,response,options[0],public/audio/exercises/L1/L1-QS-3/response_options[0].mp3,Una flor azul
+17,1,1,L1-QS-3,question_sentence,question_sentence,response,options[1],public/audio/exercises/L1/L1-QS-3/response_options[1].mp3,Una luna roja
+18,1,1,L1-QS-3,question_sentence,question_sentence,hint,hint,public/audio/exercises/L1/L1-QS-3/hint_hint.mp3,Observa el objeto final de la frase.
+19,1,1,L1-QS-4,question_sentence,question_sentence,narration,question,public/audio/exercises/L1/L1-QS-4/narration_question.mp3,¿Quién abraza al perro?
+20,1,1,L1-QS-4,question_sentence,question_sentence,narration,sentence,public/audio/exercises/L1/L1-QS-4/narration_sentence.mp3,El niño abraza al perro alegre.
+21,1,1,L1-QS-4,question_sentence,question_sentence,response,correct,public/audio/exercises/L1/L1-QS-4/response_correct.mp3,El niño
+22,1,1,L1-QS-4,question_sentence,question_sentence,response,options[0],public/audio/exercises/L1/L1-QS-4/response_options[0].mp3,El gato
+23,1,1,L1-QS-4,question_sentence,question_sentence,response,options[1],public/audio/exercises/L1/L1-QS-4/response_options[1].mp3,El niño
+24,1,1,L1-QS-4,question_sentence,question_sentence,hint,hint,public/audio/exercises/L1/L1-QS-4/hint_hint.mp3,Lee el sujeto del verbo 'abraza'.
+25,1,2,L1-CS-1,complete_sentence,complete_sentence,narration,prompt,public/audio/exercises/L1/L1-CS-1/narration_prompt.mp3,El hada ____ la puerta secreta.
+26,1,2,L1-CS-1,complete_sentence,complete_sentence,response,correct,public/audio/exercises/L1/L1-CS-1/response_correct.mp3,abre
+27,1,2,L1-CS-1,complete_sentence,complete_sentence,response,options[0],public/audio/exercises/L1/L1-CS-1/response_options[0].mp3,abre
+28,1,2,L1-CS-1,complete_sentence,complete_sentence,response,options[1],public/audio/exercises/L1/L1-CS-1/response_options[1].mp3,baila
+29,1,2,L1-CS-1,complete_sentence,complete_sentence,hint,hint,public/audio/exercises/L1/L1-CS-1/hint_hint.mp3,Piensa en lo que se hace con una puerta.
+30,1,2,L1-CS-2,complete_sentence,complete_sentence,narration,prompt,public/audio/exercises/L1/L1-CS-2/narration_prompt.mp3,La nube ____ gotas.
+31,1,2,L1-CS-2,complete_sentence,complete_sentence,response,correct,public/audio/exercises/L1/L1-CS-2/response_correct.mp3,deja
+32,1,2,L1-CS-2,complete_sentence,complete_sentence,response,options[0],public/audio/exercises/L1/L1-CS-2/response_options[0].mp3,deja
+33,1,2,L1-CS-2,complete_sentence,complete_sentence,response,options[1],public/audio/exercises/L1/L1-CS-2/response_options[1].mp3,cocina
+34,1,2,L1-CS-2,complete_sentence,complete_sentence,hint,hint,public/audio/exercises/L1/L1-CS-2/hint_hint.mp3,Las nubes dejan algo que cae del cielo.
+35,1,2,L1-CS-3,complete_sentence,complete_sentence,narration,prompt,public/audio/exercises/L1/L1-CS-3/narration_prompt.mp3,El oso ____ con calma.
+36,1,2,L1-CS-3,complete_sentence,complete_sentence,response,correct,public/audio/exercises/L1/L1-CS-3/response_correct.mp3,camina
+37,1,2,L1-CS-3,complete_sentence,complete_sentence,response,options[0],public/audio/exercises/L1/L1-CS-3/response_options[0].mp3,camina
+38,1,2,L1-CS-3,complete_sentence,complete_sentence,response,options[1],public/audio/exercises/L1/L1-CS-3/response_options[1].mp3,pinta
+39,1,2,L1-CS-3,complete_sentence,complete_sentence,hint,hint,public/audio/exercises/L1/L1-CS-3/hint_hint.mp3,Recuerda que es un oso tranquilo.
+40,1,2,L1-CS-4,complete_sentence,complete_sentence,narration,prompt,public/audio/exercises/L1/L1-CS-4/narration_prompt.mp3,La hoja ____ al viento.
+41,1,2,L1-CS-4,complete_sentence,complete_sentence,response,correct,public/audio/exercises/L1/L1-CS-4/response_correct.mp3,flota
+42,1,2,L1-CS-4,complete_sentence,complete_sentence,response,options[0],public/audio/exercises/L1/L1-CS-4/response_options[0].mp3,flota
+43,1,2,L1-CS-4,complete_sentence,complete_sentence,response,options[1],public/audio/exercises/L1/L1-CS-4/response_options[1].mp3,canta
+44,1,2,L1-CS-4,complete_sentence,complete_sentence,hint,hint,public/audio/exercises/L1/L1-CS-4/hint_hint.mp3,¿Qué hace una hoja en el aire?
+45,1,2,L1-CS-5,complete_sentence,complete_sentence,narration,prompt,public/audio/exercises/L1/L1-CS-5/narration_prompt.mp3,El río ____ un canto suave.
+46,1,2,L1-CS-5,complete_sentence,complete_sentence,response,correct,public/audio/exercises/L1/L1-CS-5/response_correct.mp3,susurra
+47,1,2,L1-CS-5,complete_sentence,complete_sentence,response,options[0],public/audio/exercises/L1/L1-CS-5/response_options[0].mp3,susurra
+48,1,2,L1-CS-5,complete_sentence,complete_sentence,response,options[1],public/audio/exercises/L1/L1-CS-5/response_options[1].mp3,corre
+49,1,2,L1-CS-5,complete_sentence,complete_sentence,hint,hint,public/audio/exercises/L1/L1-CS-5/hint_hint.mp3,Piensa en un sonido tranquilo de agua.
+50,1,2,L1-CS-6,complete_sentence,complete_sentence,narration,prompt,public/audio/exercises/L1/L1-CS-6/narration_prompt.mp3,La luna ____ la noche.
+51,1,2,L1-CS-6,complete_sentence,complete_sentence,response,correct,public/audio/exercises/L1/L1-CS-6/response_correct.mp3,ilumina
+52,1,2,L1-CS-6,complete_sentence,complete_sentence,response,options[0],public/audio/exercises/L1/L1-CS-6/response_options[0].mp3,ilumina
+53,1,2,L1-CS-6,complete_sentence,complete_sentence,response,options[1],public/audio/exercises/L1/L1-CS-6/response_options[1].mp3,bebe
+54,1,2,L1-CS-6,complete_sentence,complete_sentence,hint,hint,public/audio/exercises/L1/L1-CS-6/hint_hint.mp3,Busca la acción que da luz.
+55,1,2,L1-CS-7,complete_sentence,complete_sentence,narration,prompt,public/audio/exercises/L1/L1-CS-7/narration_prompt.mp3,El colibrí ____ flores mágicas.
+56,1,2,L1-CS-7,complete_sentence,complete_sentence,response,correct,public/audio/exercises/L1/L1-CS-7/response_correct.mp3,visita
+57,1,2,L1-CS-7,complete_sentence,complete_sentence,response,options[0],public/audio/exercises/L1/L1-CS-7/response_options[0].mp3,visita
+58,1,2,L1-CS-7,complete_sentence,complete_sentence,response,options[1],public/audio/exercises/L1/L1-CS-7/response_options[1].mp3,baila
+59,1,2,L1-CS-7,complete_sentence,complete_sentence,hint,hint,public/audio/exercises/L1/L1-CS-7/hint_hint.mp3,¿Qué hace un colibrí con las flores?
+60,1,2,L1-CS-8,complete_sentence,complete_sentence,narration,prompt,public/audio/exercises/L1/L1-CS-8/narration_prompt.mp3,La campana ____ el recreo.
+61,1,2,L1-CS-8,complete_sentence,complete_sentence,response,correct,public/audio/exercises/L1/L1-CS-8/response_correct.mp3,anuncia
+62,1,2,L1-CS-8,complete_sentence,complete_sentence,response,options[0],public/audio/exercises/L1/L1-CS-8/response_options[0].mp3,anuncia
+63,1,2,L1-CS-8,complete_sentence,complete_sentence,response,options[1],public/audio/exercises/L1/L1-CS-8/response_options[1].mp3,rompe
+64,1,2,L1-CS-8,complete_sentence,complete_sentence,hint,hint,public/audio/exercises/L1/L1-CS-8/hint_hint.mp3,Recuerda qué hace la campana en la escuela.
+65,1,3,L1-OS-1,order_sentence,order_sentence,narration,correctOrder[0],public/audio/exercises/L1/L1-OS-1/narration_correctOrder[0].mp3,La
+66,1,3,L1-OS-1,order_sentence,order_sentence,narration,correctOrder[1],public/audio/exercises/L1/L1-OS-1/narration_correctOrder[1].mp3,estrella
+67,1,3,L1-OS-1,order_sentence,order_sentence,narration,correctOrder[2],public/audio/exercises/L1/L1-OS-1/narration_correctOrder[2].mp3,brilla
+68,1,3,L1-OS-1,order_sentence,order_sentence,hint,hint,public/audio/exercises/L1/L1-OS-1/hint_hint.mp3,Comienza con el artículo.
+69,1,3,L1-OS-2,order_sentence,order_sentence,narration,correctOrder[0],public/audio/exercises/L1/L1-OS-2/narration_correctOrder[0].mp3,El
+70,1,3,L1-OS-2,order_sentence,order_sentence,narration,correctOrder[1],public/audio/exercises/L1/L1-OS-2/narration_correctOrder[1].mp3,cuento
+71,1,3,L1-OS-2,order_sentence,order_sentence,narration,correctOrder[2],public/audio/exercises/L1/L1-OS-2/narration_correctOrder[2].mp3,termina
+72,1,3,L1-OS-2,order_sentence,order_sentence,narration,correctOrder[3],public/audio/exercises/L1/L1-OS-2/narration_correctOrder[3].mp3,feliz
+73,1,3,L1-OS-2,order_sentence,order_sentence,hint,hint,public/audio/exercises/L1/L1-OS-2/hint_hint.mp3,Coloca 'El' al inicio.
+74,1,3,L1-OS-3,order_sentence,order_sentence,narration,correctOrder[0],public/audio/exercises/L1/L1-OS-3/narration_correctOrder[0].mp3,La
+75,1,3,L1-OS-3,order_sentence,order_sentence,narration,correctOrder[1],public/audio/exercises/L1/L1-OS-3/narration_correctOrder[1].mp3,niña
+76,1,3,L1-OS-3,order_sentence,order_sentence,narration,correctOrder[2],public/audio/exercises/L1/L1-OS-3/narration_correctOrder[2].mp3,abre
+77,1,3,L1-OS-3,order_sentence,order_sentence,narration,correctOrder[3],public/audio/exercises/L1/L1-OS-3/narration_correctOrder[3].mp3,el
+78,1,3,L1-OS-3,order_sentence,order_sentence,narration,correctOrder[4],public/audio/exercises/L1/L1-OS-3/narration_correctOrder[4].mp3,cofre
+79,1,3,L1-OS-3,order_sentence,order_sentence,hint,hint,public/audio/exercises/L1/L1-OS-3/hint_hint.mp3,"Sujeto primero, luego acción."
+80,1,3,L1-OS-4,order_sentence,order_sentence,narration,correctOrder[0],public/audio/exercises/L1/L1-OS-4/narration_correctOrder[0].mp3,El
+81,1,3,L1-OS-4,order_sentence,order_sentence,narration,correctOrder[1],public/audio/exercises/L1/L1-OS-4/narration_correctOrder[1].mp3,viento
+82,1,3,L1-OS-4,order_sentence,order_sentence,narration,correctOrder[2],public/audio/exercises/L1/L1-OS-4/narration_correctOrder[2].mp3,sopla
+83,1,3,L1-OS-4,order_sentence,order_sentence,narration,correctOrder[3],public/audio/exercises/L1/L1-OS-4/narration_correctOrder[3].mp3,suave
+84,1,3,L1-OS-4,order_sentence,order_sentence,hint,hint,public/audio/exercises/L1/L1-OS-4/hint_hint.mp3,Respeta el orden natural de sujeto y verbo.
+85,1,4,L1-RW-1,read_with_audio,read_with_audio,narration,instruction,public/audio/exercises/L1/L1-RW-1/narration_instruction.mp3,"Lee la frase con ritmo tranquilo. Si quieres, escucha el audio."
+86,1,4,L1-RW-1,read_with_audio,read_with_audio,narration,text,public/audio/exercises/L1/L1-RW-1/narration_text.mp3,El faro guía a los barcos perdidos.
+87,1,4,L1-RW-1,read_with_audio,read_with_audio,response,correct,public/audio/exercises/L1/L1-RW-1/response_correct.mp3,done
+88,1,4,L1-RW-1,read_with_audio,read_with_audio,hint,hint,public/audio/exercises/L1/L1-RW-1/hint_hint.mp3,Respira y lee despacio cada palabra.
+89,1,4,L1-RW-2,read_with_audio,read_with_audio,narration,instruction,public/audio/exercises/L1/L1-RW-2/narration_instruction.mp3,Lee en voz alta. Pulsa escuchar si prefieres.
+90,1,4,L1-RW-2,read_with_audio,read_with_audio,narration,text,public/audio/exercises/L1/L1-RW-2/narration_text.mp3,La campana anuncia el recreo.
+91,1,4,L1-RW-2,read_with_audio,read_with_audio,response,correct,public/audio/exercises/L1/L1-RW-2/response_correct.mp3,done
+92,1,4,L1-RW-2,read_with_audio,read_with_audio,hint,hint,public/audio/exercises/L1/L1-RW-2/hint_hint.mp3,Observa las sílabas: cam-pa-na.
+93,1,4,L1-RW-3,read_with_audio,read_with_audio,narration,instruction,public/audio/exercises/L1/L1-RW-3/narration_instruction.mp3,Imagina el movimiento mientras lees.
+94,1,4,L1-RW-3,read_with_audio,read_with_audio,narration,text,public/audio/exercises/L1/L1-RW-3/narration_text.mp3,Las hojas viajan con el viento.
+95,1,4,L1-RW-3,read_with_audio,read_with_audio,response,correct,public/audio/exercises/L1/L1-RW-3/response_correct.mp3,done
+96,1,4,L1-RW-3,read_with_audio,read_with_audio,hint,hint,public/audio/exercises/L1/L1-RW-3/hint_hint.mp3,Marca con el dedo cada palabra.
+97,1,4,L1-RW-4,read_with_audio,read_with_audio,narration,instruction,public/audio/exercises/L1/L1-RW-4/narration_instruction.mp3,Lee tú mismo y disfruta del ritmo.
+98,1,4,L1-RW-4,read_with_audio,read_with_audio,narration,text,public/audio/exercises/L1/L1-RW-4/narration_text.mp3,El río canta para el bosque.
+99,1,4,L1-RW-4,read_with_audio,read_with_audio,response,correct,public/audio/exercises/L1/L1-RW-4/response_correct.mp3,done
+100,1,4,L1-RW-4,read_with_audio,read_with_audio,hint,hint,public/audio/exercises/L1/L1-RW-4/hint_hint.mp3,Pronuncia lentamente las sílabas.
+101,1,5,L1-IWM-1,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,narration,prompt,public/audio/exercises/L1/L1-IWM-1/narration_prompt.mp3,Selecciona la palabra que nombra la imagen
+102,1,5,L1-IWM-1,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,response,correct,public/audio/exercises/L1/L1-IWM-1/response_correct.mp3,estrella
+103,1,5,L1-IWM-1,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,response,options[0],public/audio/exercises/L1/L1-IWM-1/response_options[0].mp3,estrella
+104,1,5,L1-IWM-1,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,response,options[1],public/audio/exercises/L1/L1-IWM-1/response_options[1].mp3,estela
+105,1,5,L1-IWM-1,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,response,options[2],public/audio/exercises/L1/L1-IWM-1/response_options[2].mp3,estreno
+106,1,5,L1-IWM-1,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,hint,hint,public/audio/exercises/L1/L1-IWM-1/hint_hint.mp3,Piensa en lo que brilla en el cielo.
+107,1,5,L1-IWM-2,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,narration,prompt,public/audio/exercises/L1/L1-IWM-2/narration_prompt.mp3,Selecciona la palabra que nombra la imagen
+108,1,5,L1-IWM-2,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,response,correct,public/audio/exercises/L1/L1-IWM-2/response_correct.mp3,campana
+109,1,5,L1-IWM-2,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,response,options[0],public/audio/exercises/L1/L1-IWM-2/response_options[0].mp3,campana
+110,1,5,L1-IWM-2,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,response,options[1],public/audio/exercises/L1/L1-IWM-2/response_options[1].mp3,camino
+111,1,5,L1-IWM-2,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,response,options[2],public/audio/exercises/L1/L1-IWM-2/response_options[2].mp3,camisa
+112,1,5,L1-IWM-2,IMAGE_WORD_MATCH,IMAGE_WORD_MATCH,hint,hint,public/audio/exercises/L1/L1-IWM-2/hint_hint.mp3,Suena para avisar.
+113,1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,narration,prompt,public/audio/exercises/L1/L1-CCW-1/narration_prompt.mp3,Elige la palabra correcta
+114,1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,correct,public/audio/exercises/L1/L1-CCW-1/response_correct.mp3,cuento
+115,1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,options[0],public/audio/exercises/L1/L1-CCW-1/response_options[0].mp3,cuento
+116,1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,options[1],public/audio/exercises/L1/L1-CCW-1/response_options[1].mp3,cuadro
+117,1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,options[2],public/audio/exercises/L1/L1-CCW-1/response_options[2].mp3,cuello
+118,1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,hint,hint,public/audio/exercises/L1/L1-CCW-1/hint_hint.mp3,Historias para dormir.
+119,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,narration,prompt,public/audio/exercises/L1/L1-CCW-2/narration_prompt.mp3,Elige la palabra correcta
+120,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,correct,public/audio/exercises/L1/L1-CCW-2/response_correct.mp3,faro
+121,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,options[0],public/audio/exercises/L1/L1-CCW-2/response_options[0].mp3,faro
+122,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,options[1],public/audio/exercises/L1/L1-CCW-2/response_options[1].mp3,feria
+123,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,options[2],public/audio/exercises/L1/L1-CCW-2/response_options[2].mp3,foca
+124,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,hint,hint,public/audio/exercises/L1/L1-CCW-2/hint_hint.mp3,Guía a los barcos de noche.
+125,2,1,L2-MC-1,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-1/narration_question.mp3,Encierra el nombre correcto del dibujo: sol
+126,2,1,L2-MC-1,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-1/response_correct.mp3,sol
+127,2,1,L2-MC-1,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-1/response_options[0].mp3,sol
+128,2,1,L2-MC-1,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-1/response_options[1].mp3,sal
+129,2,1,L2-MC-1,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-1/response_options[2].mp3,sul
+130,2,1,L2-MC-1,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-1/hint_hint.mp3,Fíjate en la vocal que suena en medio (o).
+131,2,1,L2-MC-2,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-2/narration_question.mp3,Encierra el nombre correcto del dibujo: sapo
+132,2,1,L2-MC-2,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-2/response_correct.mp3,sapo
+133,2,1,L2-MC-2,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-2/response_options[0].mp3,sipo
+134,2,1,L2-MC-2,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-2/response_options[1].mp3,supo
+135,2,1,L2-MC-2,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-2/response_options[2].mp3,sapo
+136,2,1,L2-MC-2,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-2/hint_hint.mp3,Escucha el sonido de la primera y la última sílaba: sa-po.
+137,2,1,L2-MC-3,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-3/narration_question.mp3,Encierra el nombre correcto del dibujo: sopa
+138,2,1,L2-MC-3,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-3/response_correct.mp3,sopa
+139,2,1,L2-MC-3,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-3/response_options[0].mp3,sepa
+140,2,1,L2-MC-3,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-3/response_options[1].mp3,sopa
+141,2,1,L2-MC-3,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-3/response_options[2].mp3,sipa
+142,2,1,L2-MC-3,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-3/hint_hint.mp3,Busca la sílaba central que suena 'o'.
+143,2,1,L2-MC-4,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-4/narration_question.mp3,Encierra el nombre correcto del dibujo: mesa
+144,2,1,L2-MC-4,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-4/response_correct.mp3,mesa
+145,2,1,L2-MC-4,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-4/response_options[0].mp3,mesa
+146,2,1,L2-MC-4,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-4/response_options[1].mp3,misa
+147,2,1,L2-MC-4,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-4/response_options[2].mp3,masa
+148,2,1,L2-MC-4,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-4/hint_hint.mp3,Pon atención al sonido de la primera vocal (e).
+149,2,1,L2-MC-5,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-5/narration_question.mp3,Encierra el nombre correcto del dibujo: oso
+150,2,1,L2-MC-5,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-5/response_correct.mp3,oso
+151,2,1,L2-MC-5,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-5/response_options[0].mp3,osu
+152,2,1,L2-MC-5,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-5/response_options[1].mp3,eso
+153,2,1,L2-MC-5,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-5/response_options[2].mp3,oso
+154,2,1,L2-MC-5,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-5/hint_hint.mp3,Suena igual al decirlo y escribirlo: o-so.
+155,2,1,L2-MC-6,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-6/narration_question.mp3,Encierra el nombre correcto del dibujo: pato
+156,2,1,L2-MC-6,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-6/response_correct.mp3,pato
+157,2,1,L2-MC-6,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-6/response_options[0].mp3,mato
+158,2,1,L2-MC-6,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-6/response_options[1].mp3,pato
+159,2,1,L2-MC-6,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-6/response_options[2].mp3,gato
+160,2,1,L2-MC-6,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-6/hint_hint.mp3,La palabra empieza como 'pa' de pato.
+161,2,1,L2-MC-7,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-7/narration_question.mp3,Encierra el nombre correcto del dibujo: luna
+162,2,1,L2-MC-7,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-7/response_correct.mp3,luna
+163,2,1,L2-MC-7,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-7/response_options[0].mp3,lupa
+164,2,1,L2-MC-7,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-7/response_options[1].mp3,luna
+165,2,1,L2-MC-7,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-7/response_options[2].mp3,puma
+166,2,1,L2-MC-7,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-7/hint_hint.mp3,Escucha el sonido 'lu-na' al decirlo.
+167,2,2,L2-PS-1,pair_synonyms,pair_synonyms,narration,pairs[0].word,public/audio/exercises/L2/L2-PS-1/narration_pairs[0].word.mp3,alegre 😀
+168,2,2,L2-PS-1,pair_synonyms,pair_synonyms,response,pairs[0].match,public/audio/exercises/L2/L2-PS-1/response_pairs[0].match.mp3,contento 😊
+169,2,2,L2-PS-1,pair_synonyms,pair_synonyms,narration,pairs[1].word,public/audio/exercises/L2/L2-PS-1/narration_pairs[1].word.mp3,valiente 🦁
+170,2,2,L2-PS-1,pair_synonyms,pair_synonyms,response,pairs[1].match,public/audio/exercises/L2/L2-PS-1/response_pairs[1].match.mp3,audaz 🦊
+171,2,2,L2-PS-1,pair_synonyms,pair_synonyms,narration,pairs[2].word,public/audio/exercises/L2/L2-PS-1/narration_pairs[2].word.mp3,rápido 🏃‍♂️💨
+172,2,2,L2-PS-1,pair_synonyms,pair_synonyms,response,pairs[2].match,public/audio/exercises/L2/L2-PS-1/response_pairs[2].match.mp3,veloz ⚡️
+173,2,2,L2-PS-1,pair_synonyms,pair_synonyms,hint,hint,public/audio/exercises/L2/L2-PS-1/hint_hint.mp3,Busca parejas que compartan significado.
+174,2,2,L2-PS-2,pair_synonyms,pair_synonyms,narration,pairs[0].word,public/audio/exercises/L2/L2-PS-2/narration_pairs[0].word.mp3,tranquilo 🧘
+175,2,2,L2-PS-2,pair_synonyms,pair_synonyms,response,pairs[0].match,public/audio/exercises/L2/L2-PS-2/response_pairs[0].match.mp3,calmado 😌
+176,2,2,L2-PS-2,pair_synonyms,pair_synonyms,narration,pairs[1].word,public/audio/exercises/L2/L2-PS-2/narration_pairs[1].word.mp3,brillante ✨
+177,2,2,L2-PS-2,pair_synonyms,pair_synonyms,response,pairs[1].match,public/audio/exercises/L2/L2-PS-2/response_pairs[1].match.mp3,luminoso 🌟
+178,2,2,L2-PS-2,pair_synonyms,pair_synonyms,narration,pairs[2].word,public/audio/exercises/L2/L2-PS-2/narration_pairs[2].word.mp3,fuerte 💪
+179,2,2,L2-PS-2,pair_synonyms,pair_synonyms,response,pairs[2].match,public/audio/exercises/L2/L2-PS-2/response_pairs[2].match.mp3,robusto 🛡️
+180,2,2,L2-PS-2,pair_synonyms,pair_synonyms,hint,hint,public/audio/exercises/L2/L2-PS-2/hint_hint.mp3,Observa cómo cada palabra describe lo mismo.
+181,2,2,L2-PS-3,pair_synonyms,pair_synonyms,narration,pairs[0].word,public/audio/exercises/L2/L2-PS-3/narration_pairs[0].word.mp3,1️⃣
+182,2,2,L2-PS-3,pair_synonyms,pair_synonyms,response,pairs[0].match,public/audio/exercises/L2/L2-PS-3/response_pairs[0].match.mp3,uno
+183,2,2,L2-PS-3,pair_synonyms,pair_synonyms,narration,pairs[1].word,public/audio/exercises/L2/L2-PS-3/narration_pairs[1].word.mp3,2️⃣
+184,2,2,L2-PS-3,pair_synonyms,pair_synonyms,response,pairs[1].match,public/audio/exercises/L2/L2-PS-3/response_pairs[1].match.mp3,dos
+185,2,2,L2-PS-3,pair_synonyms,pair_synonyms,narration,pairs[2].word,public/audio/exercises/L2/L2-PS-3/narration_pairs[2].word.mp3,3️⃣
+186,2,2,L2-PS-3,pair_synonyms,pair_synonyms,response,pairs[2].match,public/audio/exercises/L2/L2-PS-3/response_pairs[2].match.mp3,tres
+187,2,2,L2-PS-3,pair_synonyms,pair_synonyms,narration,pairs[3].word,public/audio/exercises/L2/L2-PS-3/narration_pairs[3].word.mp3,4️⃣
+188,2,2,L2-PS-3,pair_synonyms,pair_synonyms,response,pairs[3].match,public/audio/exercises/L2/L2-PS-3/response_pairs[3].match.mp3,cuatro
+189,2,2,L2-PS-3,pair_synonyms,pair_synonyms,hint,hint,public/audio/exercises/L2/L2-PS-3/hint_hint.mp3,Une el número con su nombre escrito.
+190,2,3,L2-PA-1,pair_antonyms,pair_antonyms,narration,pairs[0].word,public/audio/exercises/L2/L2-PA-1/narration_pairs[0].word.mp3,claro ☀️
+191,2,3,L2-PA-1,pair_antonyms,pair_antonyms,response,pairs[0].match,public/audio/exercises/L2/L2-PA-1/response_pairs[0].match.mp3,oscuro 🌙
+192,2,3,L2-PA-1,pair_antonyms,pair_antonyms,narration,pairs[1].word,public/audio/exercises/L2/L2-PA-1/narration_pairs[1].word.mp3,ordenado 📚
+193,2,3,L2-PA-1,pair_antonyms,pair_antonyms,response,pairs[1].match,public/audio/exercises/L2/L2-PA-1/response_pairs[1].match.mp3,desordenado 🌀
+194,2,3,L2-PA-1,pair_antonyms,pair_antonyms,narration,pairs[2].word,public/audio/exercises/L2/L2-PA-1/narration_pairs[2].word.mp3,fuerte 💪
+195,2,3,L2-PA-1,pair_antonyms,pair_antonyms,response,pairs[2].match,public/audio/exercises/L2/L2-PA-1/response_pairs[2].match.mp3,débil 🪶
+196,2,3,L2-PA-1,pair_antonyms,pair_antonyms,hint,hint,public/audio/exercises/L2/L2-PA-1/hint_hint.mp3,Une palabras que significan lo contrario.
+197,2,3,L2-PA-2,pair_antonyms,pair_antonyms,narration,pairs[0].word,public/audio/exercises/L2/L2-PA-2/narration_pairs[0].word.mp3,feliz 😊
+198,2,3,L2-PA-2,pair_antonyms,pair_antonyms,response,pairs[0].match,public/audio/exercises/L2/L2-PA-2/response_pairs[0].match.mp3,triste 😢
+199,2,3,L2-PA-2,pair_antonyms,pair_antonyms,narration,pairs[1].word,public/audio/exercises/L2/L2-PA-2/narration_pairs[1].word.mp3,grande 🦁
+200,2,3,L2-PA-2,pair_antonyms,pair_antonyms,response,pairs[1].match,public/audio/exercises/L2/L2-PA-2/response_pairs[1].match.mp3,pequeño 🐭
+201,2,3,L2-PA-2,pair_antonyms,pair_antonyms,narration,pairs[2].word,public/audio/exercises/L2/L2-PA-2/narration_pairs[2].word.mp3,rápido 🏃‍♂️💨
+202,2,3,L2-PA-2,pair_antonyms,pair_antonyms,response,pairs[2].match,public/audio/exercises/L2/L2-PA-2/response_pairs[2].match.mp3,lento 🐢
+203,2,3,L2-PA-2,pair_antonyms,pair_antonyms,hint,hint,public/audio/exercises/L2/L2-PA-2/hint_hint.mp3,Recuerda: el opuesto crea equilibrio mágico.
+204,2,4,L2-UW-1,UNSCRAMBLE_WORD,UNSCRAMBLE_WORD,response,solution,public/audio/exercises/L2/L2-UW-1/response_solution.mp3,SOPA
+205,2,4,L2-UW-1,UNSCRAMBLE_WORD,UNSCRAMBLE_WORD,hint,hint,public/audio/exercises/L2/L2-UW-1/hint_hint.mp3,Comida caliente.
+206,2,4,L2-UW-2,UNSCRAMBLE_WORD,UNSCRAMBLE_WORD,response,solution,public/audio/exercises/L2/L2-UW-2/response_solution.mp3,GATO
+207,2,4,L2-UW-2,UNSCRAMBLE_WORD,UNSCRAMBLE_WORD,hint,hint,public/audio/exercises/L2/L2-UW-2/hint_hint.mp3,Un animal doméstico.
+208,2,5,L2-CW-1,COMPLETE_WORD,COMPLETE_WORD,narration,prompt,public/audio/exercises/L2/L2-CW-1/narration_prompt.mp3,Completa la palabra: s_p_
+209,2,5,L2-CW-1,COMPLETE_WORD,COMPLETE_WORD,response,solution,public/audio/exercises/L2/L2-CW-1/response_solution.mp3,sapo
+210,2,5,L2-CW-1,COMPLETE_WORD,COMPLETE_WORD,hint,hint,public/audio/exercises/L2/L2-CW-1/hint_hint.mp3,Salta y vive en el agua.
+211,2,5,L2-CW-2,COMPLETE_WORD,COMPLETE_WORD,narration,prompt,public/audio/exercises/L2/L2-CW-2/narration_prompt.mp3,Completa la palabra: l_n_
+212,2,5,L2-CW-2,COMPLETE_WORD,COMPLETE_WORD,response,solution,public/audio/exercises/L2/L2-CW-2/response_solution.mp3,luna
+213,2,5,L2-CW-2,COMPLETE_WORD,COMPLETE_WORD,hint,hint,public/audio/exercises/L2/L2-CW-2/hint_hint.mp3,Brilla de noche.
+214,3,1,L3-SS-1,sentence_selection,sentence_selection,narration,prompt,public/audio/exercises/L3/L3-SS-1/narration_prompt.mp3,Elige la frase que describe mejor lo que ves en tu mente.
+215,3,1,L3-SS-1,sentence_selection,sentence_selection,response,correct,public/audio/exercises/L3/L3-SS-1/response_correct.mp3,El mono lee un mapa
+216,3,1,L3-SS-1,sentence_selection,sentence_selection,response,options[0],public/audio/exercises/L3/L3-SS-1/response_options[0].mp3,El mono lee un mapa
+217,3,1,L3-SS-1,sentence_selection,sentence_selection,response,options[1],public/audio/exercises/L3/L3-SS-1/response_options[1].mp3,El mapa lee un mono
+218,3,1,L3-SS-1,sentence_selection,sentence_selection,hint,hint,public/audio/exercises/L3/L3-SS-1/hint_hint.mp3,Busca la frase con orden lógico sujeto-verbo-objeto.
+219,3,1,L3-SS-2,sentence_selection,sentence_selection,narration,prompt,public/audio/exercises/L3/L3-SS-2/narration_prompt.mp3,Escoge la frase que te suena natural.
+220,3,1,L3-SS-2,sentence_selection,sentence_selection,response,correct,public/audio/exercises/L3/L3-SS-2/response_correct.mp3,La lluvia canta suave
+221,3,1,L3-SS-2,sentence_selection,sentence_selection,response,options[0],public/audio/exercises/L3/L3-SS-2/response_options[0].mp3,La lluvia canta suave
+222,3,1,L3-SS-2,sentence_selection,sentence_selection,response,options[1],public/audio/exercises/L3/L3-SS-2/response_options[1].mp3,Canta suave la lluvia
+223,3,1,L3-SS-2,sentence_selection,sentence_selection,hint,hint,public/audio/exercises/L3/L3-SS-2/hint_hint.mp3,Piensa en cómo dirías la frase a un amigo.
+224,3,1,L3-SS-3,sentence_selection,sentence_selection,narration,prompt,public/audio/exercises/L3/L3-SS-3/narration_prompt.mp3,¿Cuál frase cuenta una acción realista?
+225,3,1,L3-SS-3,sentence_selection,sentence_selection,response,correct,public/audio/exercises/L3/L3-SS-3/response_correct.mp3,La niña abre la ventana
+226,3,1,L3-SS-3,sentence_selection,sentence_selection,response,options[0],public/audio/exercises/L3/L3-SS-3/response_options[0].mp3,El libro abre la ventana
+227,3,1,L3-SS-3,sentence_selection,sentence_selection,response,options[1],public/audio/exercises/L3/L3-SS-3/response_options[1].mp3,La niña abre la ventana
+228,3,1,L3-SS-3,sentence_selection,sentence_selection,hint,hint,public/audio/exercises/L3/L3-SS-3/hint_hint.mp3,Elige la frase con personajes que pueden realizar la acción.
+229,3,2,L3-AQ-1,audio_question,audio_question,narration,question,public/audio/exercises/L3/L3-AQ-1/narration_question.mp3,¿Qué animal cruza el puente?
+230,3,2,L3-AQ-1,audio_question,audio_question,narration,context,public/audio/exercises/L3/L3-AQ-1/narration_context.mp3,"En el bosque mágico, un animal cruza con cuidado el puente brillante."
+231,3,2,L3-AQ-1,audio_question,audio_question,response,correct,public/audio/exercises/L3/L3-AQ-1/response_correct.mp3,Un conejo
+232,3,2,L3-AQ-1,audio_question,audio_question,response,options[0],public/audio/exercises/L3/L3-AQ-1/response_options[0].mp3,Un conejo
+233,3,2,L3-AQ-1,audio_question,audio_question,response,options[1],public/audio/exercises/L3/L3-AQ-1/response_options[1].mp3,Un pez
+234,3,2,L3-AQ-1,audio_question,audio_question,hint,hint,public/audio/exercises/L3/L3-AQ-1/hint_hint.mp3,Lee el contexto si no hay audio disponible.
+235,3,2,L3-AQ-2,audio_question,audio_question,narration,question,public/audio/exercises/L3/L3-AQ-2/narration_question.mp3,¿Qué busca el mono curioso?
+236,3,2,L3-AQ-2,audio_question,audio_question,narration,context,public/audio/exercises/L3/L3-AQ-2/narration_context.mp3,El mono curioso busca su mochila verde para la clase de magia.
+237,3,2,L3-AQ-2,audio_question,audio_question,response,correct,public/audio/exercises/L3/L3-AQ-2/response_correct.mp3,Su mochila verde
+238,3,2,L3-AQ-2,audio_question,audio_question,response,options[0],public/audio/exercises/L3/L3-AQ-2/response_options[0].mp3,Su mochila verde
+239,3,2,L3-AQ-2,audio_question,audio_question,response,options[1],public/audio/exercises/L3/L3-AQ-2/response_options[1].mp3,Su sombrero rojo
+240,3,2,L3-AQ-2,audio_question,audio_question,hint,hint,public/audio/exercises/L3/L3-AQ-2/hint_hint.mp3,"Si no escuchas audio, lee el texto 'context'."
+241,3,2,L3-AQ-3,audio_question,audio_question,narration,question,public/audio/exercises/L3/L3-AQ-3/narration_question.mp3,¿Qué hacen los amigos al final?
+242,3,2,L3-AQ-3,audio_question,audio_question,narration,context,public/audio/exercises/L3/L3-AQ-3/narration_context.mp3,"Después de la aventura, los amigos toman té de estrellas."
+243,3,2,L3-AQ-3,audio_question,audio_question,response,correct,public/audio/exercises/L3/L3-AQ-3/response_correct.mp3,Toman té de estrellas
+244,3,2,L3-AQ-3,audio_question,audio_question,response,options[0],public/audio/exercises/L3/L3-AQ-3/response_options[0].mp3,Toman té de estrellas
+245,3,2,L3-AQ-3,audio_question,audio_question,response,options[1],public/audio/exercises/L3/L3-AQ-3/response_options[1].mp3,Duermen bajo el árbol
+246,3,2,L3-AQ-3,audio_question,audio_question,hint,hint,public/audio/exercises/L3/L3-AQ-3/hint_hint.mp3,Busca pistas en la última parte del texto.
+247,3,3,L3-SO-1,SYLLABLE_ORDER,SYLLABLE_ORDER,narration,correctOrder[0],public/audio/exercises/L3/L3-SO-1/narration_correctOrder[0].mp3,sa
+248,3,3,L3-SO-1,SYLLABLE_ORDER,SYLLABLE_ORDER,narration,correctOrder[1],public/audio/exercises/L3/L3-SO-1/narration_correctOrder[1].mp3,po
+249,3,3,L3-SO-1,SYLLABLE_ORDER,SYLLABLE_ORDER,narration,syllables[0],public/audio/exercises/L3/L3-SO-1/narration_syllables[0].mp3,sa
+250,3,3,L3-SO-1,SYLLABLE_ORDER,SYLLABLE_ORDER,narration,syllables[1],public/audio/exercises/L3/L3-SO-1/narration_syllables[1].mp3,po
+251,3,3,L3-SO-1,SYLLABLE_ORDER,SYLLABLE_ORDER,hint,hint,public/audio/exercises/L3/L3-SO-1/hint_hint.mp3,Animal que salta.
+252,3,3,L3-SO-2,SYLLABLE_ORDER,SYLLABLE_ORDER,narration,correctOrder[0],public/audio/exercises/L3/L3-SO-2/narration_correctOrder[0].mp3,lu
+253,3,3,L3-SO-2,SYLLABLE_ORDER,SYLLABLE_ORDER,narration,correctOrder[1],public/audio/exercises/L3/L3-SO-2/narration_correctOrder[1].mp3,na
+254,3,3,L3-SO-2,SYLLABLE_ORDER,SYLLABLE_ORDER,narration,syllables[0],public/audio/exercises/L3/L3-SO-2/narration_syllables[0].mp3,lu
+255,3,3,L3-SO-2,SYLLABLE_ORDER,SYLLABLE_ORDER,narration,syllables[1],public/audio/exercises/L3/L3-SO-2/narration_syllables[1].mp3,na
+256,3,3,L3-SO-2,SYLLABLE_ORDER,SYLLABLE_ORDER,hint,hint,public/audio/exercises/L3/L3-SO-2/hint_hint.mp3,Brilla en la noche.
+257,4,1,L4-AW-1,audio_write,audio_write,narration,instruction,public/audio/exercises/L4/L4-AW-1/narration_instruction.mp3,Escribe la palabra que escuchas o lees:
+258,4,1,L4-AW-1,audio_write,audio_write,narration,fallbackText,public/audio/exercises/L4/L4-AW-1/narration_fallbackText.mp3,Escribe: luciérnaga
+259,4,1,L4-AW-1,audio_write,audio_write,response,answer,public/audio/exercises/L4/L4-AW-1/response_answer.mp3,luciérnaga
+260,4,1,L4-AW-1,audio_write,audio_write,hint,hint,public/audio/exercises/L4/L4-AW-1/hint_hint.mp3,Recuerda colocar la tilde correcta.
+261,4,1,L4-AW-2,audio_write,audio_write,narration,instruction,public/audio/exercises/L4/L4-AW-2/narration_instruction.mp3,Escribe la frase completa.
+262,4,1,L4-AW-2,audio_write,audio_write,narration,fallbackText,public/audio/exercises/L4/L4-AW-2/narration_fallbackText.mp3,Escribe: El dragón sopla nubes de algodón.
+263,4,1,L4-AW-2,audio_write,audio_write,response,answer,public/audio/exercises/L4/L4-AW-2/response_answer.mp3,El dragón sopla nubes de algodón.
+264,4,1,L4-AW-2,audio_write,audio_write,hint,hint,public/audio/exercises/L4/L4-AW-2/hint_hint.mp3,Empieza con mayúscula y termina con punto.
+265,4,2,L4-TW-1,text_write,text_write,narration,instruction,public/audio/exercises/L4/L4-TW-1/narration_instruction.mp3,Escribe una frase que incluya la palabra 'magia'.
+266,4,2,L4-TW-1,text_write,text_write,response,answerPattern,public/audio/exercises/L4/L4-TW-1/response_answerPattern.mp3,magia
+267,4,2,L4-TW-1,text_write,text_write,hint,hint,public/audio/exercises/L4/L4-TW-1/hint_hint.mp3,Asegúrate de usar la palabra mágica.
+268,4,2,L4-TW-2,text_write,text_write,narration,instruction,public/audio/exercises/L4/L4-TW-2/narration_instruction.mp3,Escribe el nombre de la figura o símbolo: 🔺
+269,4,2,L4-TW-2,text_write,text_write,response,answer,public/audio/exercises/L4/L4-TW-2/response_answer.mp3,triángulo
+270,4,2,L4-TW-2,text_write,text_write,hint,hint,public/audio/exercises/L4/L4-TW-2/hint_hint.mp3,Piensa en la forma geométrica del símbolo.
+271,4,2,L4-TW-3,text_write,text_write,narration,instruction,public/audio/exercises/L4/L4-TW-3/narration_instruction.mp3,Ordena las letras y escribe la palabra: lvase
+272,4,2,L4-TW-3,text_write,text_write,response,answer,public/audio/exercises/L4/L4-TW-3/response_answer.mp3,selva
+273,4,2,L4-TW-3,text_write,text_write,hint,hint,public/audio/exercises/L4/L4-TW-3/hint_hint.mp3,Piensa en un lugar lleno de árboles.
+274,4,2,L4-TW-4,text_write,text_write,narration,instruction,public/audio/exercises/L4/L4-TW-4/narration_instruction.mp3,Ordena las letras y escribe la palabra: oglob
+275,4,2,L4-TW-4,text_write,text_write,response,answer,public/audio/exercises/L4/L4-TW-4/response_answer.mp3,globo
+276,4,2,L4-TW-4,text_write,text_write,hint,hint,public/audio/exercises/L4/L4-TW-4/hint_hint.mp3,Se infla para flotar en el aire.
+277,4,2,L4-TW-5,text_write,text_write,narration,instruction,public/audio/exercises/L4/L4-TW-5/narration_instruction.mp3,Completa la palabra: L_n_s (día de la semana)
+278,4,2,L4-TW-5,text_write,text_write,response,answer,public/audio/exercises/L4/L4-TW-5/response_answer.mp3,lunes
+279,4,2,L4-TW-5,text_write,text_write,hint,hint,public/audio/exercises/L4/L4-TW-5/hint_hint.mp3,Empieza la semana.
+280,4,3,L4-RA-1,READ_AND_ANSWER,READ_AND_ANSWER,narration,text,public/audio/exercises/L4/L4-RA-1/narration_text.mp3,El oso Simón vive en una cueva y come miel dulce.
+281,4,3,L4-RA-1,READ_AND_ANSWER,READ_AND_ANSWER,response,correct,public/audio/exercises/L4/L4-RA-1/response_correct.mp3,En una cueva
+282,4,3,L4-RA-1,READ_AND_ANSWER,READ_AND_ANSWER,response,options[0],public/audio/exercises/L4/L4-RA-1/response_options[0].mp3,En una cueva
+283,4,3,L4-RA-1,READ_AND_ANSWER,READ_AND_ANSWER,response,options[1],public/audio/exercises/L4/L4-RA-1/response_options[1].mp3,En un árbol
+284,4,3,L4-RA-1,READ_AND_ANSWER,READ_AND_ANSWER,hint,hint,public/audio/exercises/L4/L4-RA-1/hint_hint.mp3,Busca dónde vive.
+285,4,3,L4-RA-2,READ_AND_ANSWER,READ_AND_ANSWER,narration,text,public/audio/exercises/L4/L4-RA-2/narration_text.mp3,La vaca Lola camina al río para beber agua fresca.
+286,4,3,L4-RA-2,READ_AND_ANSWER,READ_AND_ANSWER,response,correct,public/audio/exercises/L4/L4-RA-2/response_correct.mp3,Beber agua
+287,4,3,L4-RA-2,READ_AND_ANSWER,READ_AND_ANSWER,response,options[0],public/audio/exercises/L4/L4-RA-2/response_options[0].mp3,Beber agua
+288,4,3,L4-RA-2,READ_AND_ANSWER,READ_AND_ANSWER,response,options[1],public/audio/exercises/L4/L4-RA-2/response_options[1].mp3,Dormir en la casa
+289,4,3,L4-RA-2,READ_AND_ANSWER,READ_AND_ANSWER,hint,hint,public/audio/exercises/L4/L4-RA-2/hint_hint.mp3,¿Qué hace en el río?
+290,5,1,L5-TC-1,tense_classify,tense_classify,narration,sentence,public/audio/exercises/L5/L5-TC-1/narration_sentence.mp3,Ayer dibujé una estrella brillante.
+291,5,1,L5-TC-1,tense_classify,tense_classify,response,correct,public/audio/exercises/L5/L5-TC-1/response_correct.mp3,Pasado
+292,5,1,L5-TC-1,tense_classify,tense_classify,response,options[0],public/audio/exercises/L5/L5-TC-1/response_options[0].mp3,Pasado
+293,5,1,L5-TC-1,tense_classify,tense_classify,response,options[1],public/audio/exercises/L5/L5-TC-1/response_options[1].mp3,Presente
+294,5,1,L5-TC-1,tense_classify,tense_classify,hint,hint,public/audio/exercises/L5/L5-TC-1/hint_hint.mp3,Observa la palabra 'ayer'.
+295,5,1,L5-TC-2,tense_classify,tense_classify,narration,sentence,public/audio/exercises/L5/L5-TC-2/narration_sentence.mp3,Hoy comparto mi cuaderno mágico.
+296,5,1,L5-TC-2,tense_classify,tense_classify,response,correct,public/audio/exercises/L5/L5-TC-2/response_correct.mp3,Presente
+297,5,1,L5-TC-2,tense_classify,tense_classify,response,options[0],public/audio/exercises/L5/L5-TC-2/response_options[0].mp3,Presente
+298,5,1,L5-TC-2,tense_classify,tense_classify,response,options[1],public/audio/exercises/L5/L5-TC-2/response_options[1].mp3,Pasado
+299,5,1,L5-TC-2,tense_classify,tense_classify,hint,hint,public/audio/exercises/L5/L5-TC-2/hint_hint.mp3,La acción ocurre en este momento.
+300,5,1,L5-TC-3,tense_classify,tense_classify,narration,sentence,public/audio/exercises/L5/L5-TC-3/narration_sentence.mp3,Mañana estudiaré los hechizos nuevos.
+301,5,1,L5-TC-3,tense_classify,tense_classify,response,correct,public/audio/exercises/L5/L5-TC-3/response_correct.mp3,Futuro
+302,5,1,L5-TC-3,tense_classify,tense_classify,response,options[0],public/audio/exercises/L5/L5-TC-3/response_options[0].mp3,Futuro
+303,5,1,L5-TC-3,tense_classify,tense_classify,response,options[1],public/audio/exercises/L5/L5-TC-3/response_options[1].mp3,Pasado
+304,5,1,L5-TC-3,tense_classify,tense_classify,hint,hint,public/audio/exercises/L5/L5-TC-3/hint_hint.mp3,"Si dice 'mañana', piensa en el futuro."
+305,5,2,L5-SP-1,singular_plural,singular_plural,narration,pairs[0].singular,public/audio/exercises/L5/L5-SP-1/narration_pairs[0].singular.mp3,luz 🔆
+306,5,2,L5-SP-1,singular_plural,singular_plural,response,pairs[0].plural,public/audio/exercises/L5/L5-SP-1/response_pairs[0].plural.mp3,luces 🔅
+307,5,2,L5-SP-1,singular_plural,singular_plural,narration,pairs[1].singular,public/audio/exercises/L5/L5-SP-1/narration_pairs[1].singular.mp3,hada 🧚
+308,5,2,L5-SP-1,singular_plural,singular_plural,response,pairs[1].plural,public/audio/exercises/L5/L5-SP-1/response_pairs[1].plural.mp3,hadas 🧚‍♀️
+309,5,2,L5-SP-1,singular_plural,singular_plural,narration,pairs[2].singular,public/audio/exercises/L5/L5-SP-1/narration_pairs[2].singular.mp3,canción 🎵
+310,5,2,L5-SP-1,singular_plural,singular_plural,response,pairs[2].plural,public/audio/exercises/L5/L5-SP-1/response_pairs[2].plural.mp3,canciones 🎶
+311,5,2,L5-SP-1,singular_plural,singular_plural,narration,pairs[3].singular,public/audio/exercises/L5/L5-SP-1/narration_pairs[3].singular.mp3,árbol 🌳
+312,5,2,L5-SP-1,singular_plural,singular_plural,response,pairs[3].plural,public/audio/exercises/L5/L5-SP-1/response_pairs[3].plural.mp3,árboles 🌲
+313,5,2,L5-SP-1,singular_plural,singular_plural,narration,pairs[4].singular,public/audio/exercises/L5/L5-SP-1/narration_pairs[4].singular.mp3,pez 🐟
+314,5,2,L5-SP-1,singular_plural,singular_plural,response,pairs[4].plural,public/audio/exercises/L5/L5-SP-1/response_pairs[4].plural.mp3,peces 🐠
+315,5,2,L5-SP-1,singular_plural,singular_plural,hint,hint,public/audio/exercises/L5/L5-SP-1/hint_hint.mp3,Observa cómo cambian las terminaciones al plural.
+316,5,3,L5-AG-1,accent_game,accent_game,narration,syllables[0],public/audio/exercises/L5/L5-AG-1/narration_syllables[0].mp3,me
+317,5,3,L5-AG-1,accent_game,accent_game,narration,syllables[1],public/audio/exercises/L5/L5-AG-1/narration_syllables[1].mp3,lo
+318,5,3,L5-AG-1,accent_game,accent_game,narration,syllables[2],public/audio/exercises/L5/L5-AG-1/narration_syllables[2].mp3,di
+319,5,3,L5-AG-1,accent_game,accent_game,hint,hint,public/audio/exercises/L5/L5-AG-1/hint_hint.mp3,Recuerda: melodía lleva tilde en la sílaba fuerte.
+320,5,3,L5-AG-2,accent_game,accent_game,narration,syllables[0],public/audio/exercises/L5/L5-AG-2/narration_syllables[0].mp3,fan
+321,5,3,L5-AG-2,accent_game,accent_game,narration,syllables[1],public/audio/exercises/L5/L5-AG-2/narration_syllables[1].mp3,ta
+322,5,3,L5-AG-2,accent_game,accent_game,narration,syllables[2],public/audio/exercises/L5/L5-AG-2/narration_syllables[2].mp3,si
+323,5,3,L5-AG-2,accent_game,accent_game,hint,hint,public/audio/exercises/L5/L5-AG-2/hint_hint.mp3,Imagina dónde suena más fuerte la palabra.
+324,5,4,L5-PG-1,punctuation_game,punctuation_game,narration,sentence,public/audio/exercises/L5/L5-PG-1/narration_sentence.mp3,Que sorpresa verte aqui
+325,5,4,L5-PG-1,punctuation_game,punctuation_game,hint,hint,public/audio/exercises/L5/L5-PG-1/hint_hint.mp3,La frase expresa sorpresa.
+326,5,4,L5-PG-2,punctuation_game,punctuation_game,narration,sentence,public/audio/exercises/L5/L5-PG-2/narration_sentence.mp3,Como te llamas
+327,5,4,L5-PG-2,punctuation_game,punctuation_game,hint,hint,public/audio/exercises/L5/L5-PG-2/hint_hint.mp3,"Es una pregunta, necesita signos interrogativos."
+328,5,4,L5-PG-3,punctuation_game,punctuation_game,narration,sentence,public/audio/exercises/L5/L5-PG-3/narration_sentence.mp3,Gracias por ayudarme
+329,5,4,L5-PG-3,punctuation_game,punctuation_game,hint,hint,public/audio/exercises/L5/L5-PG-3/hint_hint.mp3,Una afirmación termina con punto.
+330,5,5,L5-FE-1,final_exam,final_exam,narration,question,public/audio/exercises/L5/L5-FE-1/narration_question.mp3,"¿Qué tiempo verbal usa la frase: ""Mañana cantaré con el coro""?"
+331,5,5,L5-FE-1,final_exam,final_exam,response,correct,public/audio/exercises/L5/L5-FE-1/response_correct.mp3,Futuro
+332,5,5,L5-FE-1,final_exam,final_exam,response,options[0],public/audio/exercises/L5/L5-FE-1/response_options[0].mp3,Pasado
+333,5,5,L5-FE-1,final_exam,final_exam,response,options[1],public/audio/exercises/L5/L5-FE-1/response_options[1].mp3,Presente
+334,5,5,L5-FE-1,final_exam,final_exam,response,options[2],public/audio/exercises/L5/L5-FE-1/response_options[2].mp3,Futuro
+335,5,5,L5-FE-1,final_exam,final_exam,hint,hint,public/audio/exercises/L5/L5-FE-1/hint_hint.mp3,Busca palabras que indiquen futuro.
+336,5,5,L5-FE-2,final_exam,final_exam,narration,question,public/audio/exercises/L5/L5-FE-2/narration_question.mp3,"Elige el signo que completa la frase: ""¿Vienes a la clase de magia"""
+337,5,5,L5-FE-2,final_exam,final_exam,hint,hint,public/audio/exercises/L5/L5-FE-2/hint_hint.mp3,Coloca el signo inicial correcto para una pregunta.
+338,5,5,L5-FE-3,final_exam,final_exam,narration,question,public/audio/exercises/L5/L5-FE-3/narration_question.mp3,¿Dónde colocarías la tilde en la palabra 'musica'?
+339,5,5,L5-FE-3,final_exam,final_exam,response,correct,public/audio/exercises/L5/L5-FE-3/response_correct.mp3,música
+340,5,5,L5-FE-3,final_exam,final_exam,response,options[0],public/audio/exercises/L5/L5-FE-3/response_options[0].mp3,música
+341,5,5,L5-FE-3,final_exam,final_exam,response,options[1],public/audio/exercises/L5/L5-FE-3/response_options[1].mp3,musíca
+342,5,5,L5-FE-3,final_exam,final_exam,response,options[2],public/audio/exercises/L5/L5-FE-3/response_options[2].mp3,mùsica
+343,5,5,L5-FE-3,final_exam,final_exam,hint,hint,public/audio/exercises/L5/L5-FE-3/hint_hint.mp3,Piensa en cómo suena la sílaba fuerte.

@@ -8,7 +8,10 @@ export interface TTSSpeakOptions {
   onBoundary?: (event: SpeechSynthesisEvent) => void
 }
 
+import { VOICE_PRESET, pickPreferredVoice } from '../engine/audio/voiceProfile'
+
 const isSpeaking = ref(false)
+let cachedVoiceName: string | null = null
 
 function getSpeechSynthesis(): SpeechSynthesis | null {
   if (typeof window === 'undefined') return null
@@ -61,49 +64,9 @@ function waitForVoices(): Promise<SpeechSynthesisVoice[]> {
 }
 
 function pickVoice(voices: SpeechSynthesisVoice[], lang = 'es-ES'): SpeechSynthesisVoice | null {
-  if (!voices || voices.length === 0) return null
-  const normalizedLang = lang.toLowerCase()
-  const baseLang = normalizedLang.split('-')[0]
-
-  const spanishVoices = voices.filter((v) => {
-    const voiceLang = (v.lang || '').toLowerCase()
-    return voiceLang.startsWith(baseLang)
-  })
-
-  const femaleHints = [
-    'niña',
-    'girl',
-    'female',
-    'woman',
-    'nena',
-    'chica',
-    'lady',
-    'mujer'
-  ]
-  const childHints = ['kids', 'kid', 'niño', 'niñ', 'child', 'chico', 'young', 'teen', 'joven', 'peque', 'little']
-  const softHints = ['soft', 'calm', 'natural', 'fun', 'happy', 'alegre', 'diver', 'sweet']
-  const spanishHints = ['español', 'espanol', 'castilian', 'castellano', 'latam', 'mex', 'mx', 'es-']
-  const maleHints = ['male', 'man', 'hombre', 'masc']
-
-  const scoreVoice = (voice: SpeechSynthesisVoice) => {
-    const lower = voice.name.toLowerCase()
-    let score = 0
-    if (femaleHints.some((p) => lower.includes(p))) score += 4
-    if (childHints.some((p) => lower.includes(p))) score += 3
-    if (softHints.some((p) => lower.includes(p))) score += 1
-    if (spanishHints.some((p) => lower.includes(p))) score += 1
-    if (maleHints.some((p) => lower.includes(p))) score -= 4
-    return score
-  }
-
-  if (spanishVoices.length > 0) {
-    const sorted = [...spanishVoices].sort((a, b) => scoreVoice(b) - scoreVoice(a))
-    const top = sorted[0]
-    if (top && scoreVoice(top) >= 0) return top
-    return top || spanishVoices[0]
-  }
-
-  return null
+  const { voice, name } = pickPreferredVoice(voices, lang, cachedVoiceName || undefined)
+  if (voice) cachedVoiceName = name || cachedVoiceName
+  return voice
 }
 
 export function useTTS() {
@@ -119,10 +82,11 @@ export function useTTS() {
     const utterance = new SpeechSynthesisUtterance(text)
     const voices = await waitForVoices()
 
-  const lang = options.lang || 'es-ES'
+  const lang = options.lang || VOICE_PRESET.lang
   utterance.lang = lang
-  utterance.rate = options.rate ?? 0.92
-  utterance.pitch = options.pitch ?? 1.2
+  // Voz infantil alegre: clara y animada, sin sonar acelerada
+  utterance.rate = options.rate ?? VOICE_PRESET.rate
+  utterance.pitch = options.pitch ?? VOICE_PRESET.pitch
   utterance.volume = options.volume ?? 1
 
     const voice = pickVoice(voices, lang)

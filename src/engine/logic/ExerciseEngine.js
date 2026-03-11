@@ -221,7 +221,7 @@ export function useExerciseEngine(options = {}) {
 
   const { triggerCelebration: runCelebration } = useCelebration()
   const { showFeedback } = useFeedback()
-  const { playPositive, playEncouragement } = useReinforcementVoice()
+  const { playPositive, playPositiveAndWait, playEncouragement } = useReinforcementVoice()
   const audio = useAudio()
 
   const loading = ref(false)
@@ -256,6 +256,16 @@ export function useExerciseEngine(options = {}) {
   const isPlaying = audio.isPlaying
 
   let loadToken = 0
+  let autoAdvanceToken = 0
+  let autoAdvanceDelayTimer = null
+
+  function cancelPendingAutoAdvance() {
+    autoAdvanceToken += 1
+    if (autoAdvanceDelayTimer) {
+      clearTimeout(autoAdvanceDelayTimer)
+      autoAdvanceDelayTimer = null
+    }
+  }
 
   function resetResults(exerciseCount) {
     exerciseResults.value = Array.from({ length: exerciseCount }, () => ({
@@ -270,6 +280,7 @@ export function useExerciseEngine(options = {}) {
   }
 
   async function loadStage() {
+    cancelPendingAutoAdvance()
     const level = Number(unref(levelRef) ?? 1)
     const stage = Number(unref(stageRef) ?? 1)
     const token = ++loadToken
@@ -393,17 +404,41 @@ function applyStatus(entry, meta = {}) {
     const ok = evaluateAnswer(exercise, answer)
 
     if (ok) {
+      const shouldAutoAdvance = meta.autoAdvance ?? true
+      const waitPositiveCue = shouldAutoAdvance && (meta.awaitPositiveCue ?? true) && meta.playPositive !== false
+
       recordResult('ok', {
         ...meta,
+        playPositive: waitPositiveCue ? false : meta.playPositive,
         awardPoints: meta.awardPoints ?? true,
         incrementAttempt: true,
         triggerCelebration: true,
         showFeedback: false
       })
-      if (meta.autoAdvance ?? true) {
-        setTimeout(() => {
-          advance()
-        }, meta.advanceDelay ?? 450)
+
+      if (shouldAutoAdvance) {
+        const runToken = ++autoAdvanceToken
+        const delayMs = meta.advanceDelay ?? 450
+        let scheduled = false
+
+        const scheduleAdvance = () => {
+          if (scheduled || runToken !== autoAdvanceToken) return
+          scheduled = true
+          if (autoAdvanceDelayTimer) clearTimeout(autoAdvanceDelayTimer)
+          autoAdvanceDelayTimer = setTimeout(() => {
+            if (runToken !== autoAdvanceToken) return
+            autoAdvanceDelayTimer = null
+            advance()
+          }, delayMs)
+        }
+
+        if (waitPositiveCue) {
+          playPositiveAndWait({ timeoutMs: meta.maxCueWaitMs ?? 2200 }).then(() => {
+            scheduleAdvance()
+          })
+        } else {
+          scheduleAdvance()
+        }
       }
     } else {
       const attempts = exerciseResults.value[index.value]?.attempts ?? 0
@@ -460,6 +495,7 @@ function applyStatus(entry, meta = {}) {
 
   function goTo(idx) {
     if (idx < 0 || idx >= exercises.value.length) return
+    cancelPendingAutoAdvance()
     stopAllMedia()
     index.value = idx
     const entry = exerciseResults.value[index.value]

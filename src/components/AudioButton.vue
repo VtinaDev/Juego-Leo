@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance, onBeforeUnmount } from 'vue'
 import { useTTS, isTTSSupported } from '../composables/useTTS'
+import { getAudioSettings, playSfx, playVoice, unlockAudio } from '../engine/audio/audioManager'
 import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
 
 const props = defineProps<{
@@ -47,6 +48,11 @@ const resolvedText = computed(() => {
 })
 
 async function handleClick() {
+  unlockAudio()
+  playSfx('click')
+  const audioSettings = getAudioSettings()
+  if (!audioSettings.voiceEnabled) return
+
   if (isSpeaking.value) {
     stop()
     emit('tts-end')
@@ -55,14 +61,14 @@ async function handleClick() {
 
   const text = resolvedText.value
   const hasTTSSupport = isTTSSupported()
-  const ttsConfig = (props.exercise && (props.exercise as any).tts) || {}
 
   if (text && hasTTSSupport) {
     emit('tts-start')
     await speak(text, {
-      lang: props.lang || ttsConfig.lang,
-      rate: props.rate ?? ttsConfig.rate,
-      pitch: props.pitch ?? ttsConfig.pitch,
+      lang: props.lang,
+      rate: props.rate,
+      pitch: props.pitch,
+      volume: audioSettings.voiceVolume,
       onBoundary: (event) => emit('tts-boundary', event)
     })
     emit('tts-end')
@@ -77,8 +83,7 @@ async function handleClick() {
         'onFallbackAudio' in (instance.vnode.props as Record<string, unknown>))
 
     if (!hasListener) {
-      const audio = new Audio(props.audioSrc)
-      audio.play().catch(() => null)
+      playVoice(props.audioSrc)
     }
   }
 }

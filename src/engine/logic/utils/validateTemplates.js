@@ -2,33 +2,14 @@
 //  VALIDATE TEMPLATES — versión compatible con Vite + Node
 // -------------------------------------------------------------
 
-// Detectar entorno: navegador (Vite) vs Node (test-level, scripts)
 let manifest = {}
 
-if (typeof window !== 'undefined') {
-  // 👉 EJECUTÁNDOSE EN VITE/NAVEGADOR
-  try {
-    manifest = await import('../data/templates.json').then(m => m.default)
-  } catch (err) {
-    console.error("❌ No se pudo cargar templates.json en Vite:", err)
-    manifest = {}
-  }
-} else {
-  // 👉 EJECUTÁNDOSE EN NODE
-  const fs = await import('fs')
-  const path = await import('path')
-  const { fileURLToPath } = await import('url')
-
-  const __filename = fileURLToPath(import.meta.url)
-  const __dirname = path.dirname(__filename)
-
-  const manifestPath = path.resolve(__dirname, '../data/templates.json')
-  try {
-    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
-  } catch (err) {
-    console.error("❌ No se pudo cargar templates.json en Node:", err)
-    manifest = {}
-  }
+try {
+  const loaded = await import('../data/templates.json')
+  manifest = loaded?.default ?? loaded ?? {}
+} catch (error) {
+  console.error('❌ No se pudo cargar templates.json:', error)
+  manifest = {}
 }
 
 // -------------------------------------------------------------

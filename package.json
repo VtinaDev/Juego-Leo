@@ -1,6 +1,9 @@
 {
   "type": "module",
   "scripts": {
+    "validate:audio": "node scripts/validateAudioPaths.js",
+    "validate:content": "node scripts/validateContentAssets.js",
+    "prebuild": "npm run validate:audio && npm run validate:content",
     "gen:images": "node scripts/generateImages.js",
     "gen:images:dry": "node scripts/generateImages.js --dry",
     "gen:images:overwrite": "node scripts/generateImages.js --overwrite",
@@ -10,6 +13,7 @@
     "gen.images": "ENABLE_AI_IMAGES=1 node scripts/generateImages.js",
     "gen.images.dry": "node scripts/generateImages.js --dry",
     "gen.missing": "ENABLE_AI_IMAGES=1 node scripts/generateMissingImages.js",
+    "generate-word-timings": "node scripts/audio/generateWordTimings.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

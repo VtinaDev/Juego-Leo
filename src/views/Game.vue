@@ -105,7 +105,10 @@
               <img src="/icons/back.PNG" alt="Respuesta incorrecta" class="status-icon" />
             </div>
             <!-- ========= VISUAL COMÚN (todos los niveles) ========= -->
-            <div v-if="hasVisual && !hideLevelVisuals && !isLevelFour" class="exercise-visual">
+            <div
+              v-if="hasVisual && !hideLevelVisuals && !isLevelFour && current.type !== 'IMAGE_WORD_MATCH'"
+              class="exercise-visual"
+            >
               <img
                 v-if="currentImageSrc && !imageLoadFailed"
                 :src="currentImageSrc"
@@ -127,9 +130,16 @@
 
             <!-- Pregunta sobre frase (L1) -->
             <section v-if="current.type === 'question_sentence'">
-              <p class="text-2xl font-semibold mb-4 leading-snug text-slate-700">
-                {{ questionMaskedSentence }}
-              </p>
+              <SentenceAudioRow
+                :text="questionMaskedSentence"
+                :speak-text="current.sentence"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-4 leading-snug text-slate-700"
+                :align-center="true"
+                aria-label="Escuchar frase"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -137,6 +147,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -145,7 +157,16 @@
 
             <!-- Completar frase (L1) -->
             <section v-else-if="current.type === 'complete_sentence'">
-              <p class="text-2xl font-semibold mb-4 leading-snug">{{ current.prompt }}</p>
+              <SentenceAudioRow
+                :text="current.prompt"
+                :speak-text="fillBlank(current.prompt, current.correct || current.answer)"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-4 leading-snug"
+                :align-center="true"
+                aria-label="Escuchar frase"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -153,6 +174,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -172,27 +195,39 @@
 
             <!-- Leer con o sin audio (L1) -->
             <section v-else-if="current.type === 'read_with_audio'" class="space-y-4">
-              <div class="reading-box" :class="{ 'reading-animated': readingHighlight }">
-                <SyllableHighlighter :text="readingText" :highlight="readingHighlightIndex" />
-              </div>
-              <div class="flex flex-wrap gap-3 items-center">
-                <AudioPlayer
-                  v-if="current.audio"
-                  :src="readingAudioSrc"
-                  aria-label="Escuchar frase"
-                  @play="handleReadingPlay"
-                  @pause="handleReadingPause"
-                  @ended="handleReadingEnded"
+              <div
+                class="reading-box"
+                :class="{
+                  'reading-box--flat': isFuerzaTranquilaStage4of6
+                }"
+              >
+                <SyllableHighlighter
+                  :text="readingText"
+                  :segments="syllableSegments"
+                  :highlight="-1"
+                  :jump-mode="false"
                 />
-                <button
-                  v-else
-                  class="btn btn-ghost reading-cta"
-                  type="button"
-                  @click="handleReadingIconClick"
-                >
-                  <img src="/icons/audio.PNG" alt="" class="audio-icon-static" />
-                  <span>Escuchar frase</span>
-                </button>
+                <div class="reading-audio-inline inside-box">
+                  <AudioPlayer
+                    v-if="current.audio"
+                    :src="readingAudioSrc"
+                    :rate="READING_AUDIO_PACE"
+                    aria-label="Escuchar frase"
+                    @play="handleReadingPlay"
+                    @pause="handleReadingPause"
+                    @ended="handleReadingEnded"
+                    @progress="handleReadingProgress"
+                  />
+                  <button
+                    v-else
+                    class="btn btn-ghost reading-cta icon-only"
+                    type="button"
+                    aria-label="Escuchar frase"
+                    @click="handleReadingIconClick"
+                  >
+                    <img src="/icons/audio.PNG" alt="" class="audio-icon-static" />
+                  </button>
+                </div>
               </div>
               <p v-if="!current.audio" class="text-sm text-gray-500">
                 Lee la frase tú mismo 🪄
@@ -206,9 +241,15 @@
 
             <!-- Opción múltiple genérica (L2, L3, L5...) -->
             <section v-else-if="current.type === 'multiple_choice'">
-              <p class="text-2xl font-semibold mb-3 leading-snug">
-                {{ current.question || current.prompt }}
-              </p>
+              <SentenceAudioRow
+                :text="current.question || current.prompt"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-3 leading-snug"
+                :align-center="true"
+                aria-label="Escuchar pregunta"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div v-if="current.image || current.emoji" class="choice-visual">
                 <img
                   v-if="current.image"
@@ -226,6 +267,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -323,9 +366,15 @@
             </section>
 
             <section v-else-if="current.type === 'COMPLETE_WORD'">
-              <p class="text-xl font-semibold mb-3 leading-snug text-center">
-                {{ current.prompt || 'Completa la palabra' }}
-              </p>
+              <SentenceAudioRow
+                :text="current.prompt || 'Completa la palabra'"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-xl font-semibold mb-3 leading-snug text-center"
+                :align-center="true"
+                aria-label="Escuchar enunciado"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="text-center">
                 <input
                   v-model="textAnswer"
@@ -340,9 +389,15 @@
             </section>
 
             <section v-else-if="current.type === 'CHOOSE_CORRECT_WORD'">
-              <p class="text-2xl font-semibold mb-3 leading-snug text-center">
-                {{ current.prompt || current.question }}
-              </p>
+              <SentenceAudioRow
+                :text="current.prompt || current.question"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-3 leading-snug text-center"
+                :align-center="true"
+                aria-label="Escuchar enunciado"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -350,6 +405,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -409,9 +466,6 @@
             </section>
 
             <section v-else-if="current.type === 'IMAGE_WORD_MATCH'">
-              <p class="text-xl font-semibold mb-3 leading-snug text-center">
-                {{ current.prompt || 'Elige la palabra correcta' }}
-              </p>
               <div v-if="current.image" class="choice-visual">
                 <img
                   :src="resolveAsset(current.image)"
@@ -420,6 +474,15 @@
                   @error="$event.target.style.display = 'none'"
                 />
               </div>
+              <SentenceAudioRow
+                :text="current.prompt || 'Elige la palabra correcta'"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-xl font-semibold mb-3 leading-snug text-center"
+                :align-center="true"
+                aria-label="Escuchar enunciado"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -427,6 +490,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -434,9 +499,15 @@
             </section>
 
             <section v-else-if="current.type === 'READ_AND_ANSWER'">
-              <p class="text-lg font-semibold mb-3 leading-snug text-left reading-paragraph">
-                {{ current.text || current.context || current.reading }}
-              </p>
+              <SentenceAudioRow
+                :text="current.text || current.context || current.reading"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-lg font-semibold mb-3 leading-snug text-left reading-paragraph"
+                :align-center="true"
+                aria-label="Escuchar texto"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -444,6 +515,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -454,9 +527,15 @@
 
             <!-- Seleccionar frase que tiene sentido -->
             <section v-else-if="current.type === 'sentence_selection'">
-              <p class="text-2xl font-semibold mb-4 leading-snug">
-                {{ current.prompt || 'Elige la frase que tenga más sentido.' }}
-              </p>
+              <SentenceAudioRow
+                :text="current.prompt || 'Elige la frase que tenga más sentido.'"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-4 leading-snug"
+                :align-center="true"
+                aria-label="Escuchar enunciado"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -464,6 +543,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -472,9 +553,15 @@
 
             <!-- Pregunta con contexto / audio -->
             <section v-else-if="current.type === 'audio_question'">
-              <p class="text-2xl font-semibold mb-3 leading-snug text-slate-700">
-                {{ current.question }}
-              </p>
+              <SentenceAudioRow
+                :text="current.question"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-3 leading-snug text-slate-700"
+                :align-center="true"
+                aria-label="Escuchar pregunta"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div v-if="current.image" class="choice-visual">
                 <img
                   :src="resolveAsset(current.image)"
@@ -490,6 +577,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -528,9 +617,15 @@
 
             <!-- Escritura creativa / guiada -->
             <section v-else-if="current.type === 'text_write'">
-              <p class="text-xl font-semibold mb-3 leading-snug">
-                {{ current.instruction || 'Escribe una frase.' }}
-              </p>
+              <SentenceAudioRow
+                :text="current.instruction || 'Escribe una frase.'"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-xl font-semibold mb-3 leading-snug"
+                :align-center="true"
+                aria-label="Escuchar enunciado"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <textarea
                 v-model="textAnswer"
                 rows="3"
@@ -551,9 +646,15 @@
 
             <!-- Clasificar tiempos verbales -->
             <section v-else-if="current.type === 'tense_classify'">
-              <p class="text-2xl font-semibold mb-4 leading-snug">
-                {{ current.sentence || current.prompt }}
-              </p>
+              <SentenceAudioRow
+                :text="current.sentence || current.prompt"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-4 leading-snug"
+                :align-center="true"
+                aria-label="Escuchar frase"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -561,6 +662,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -610,6 +713,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleAccentClick(syllable)"
+                  @mouseenter="handleOptionPreview(syllable)"
+                  @focus="handleOptionPreview(syllable)"
                 >
                   {{ syllable }}
                 </button>
@@ -618,9 +723,15 @@
 
             <!-- Signos de puntuación -->
             <section v-else-if="current.type === 'punctuation_game'">
-              <p class="text-2xl font-semibold mb-4 leading-snug">
-                {{ current.sentence }}
-              </p>
+              <SentenceAudioRow
+                :text="current.sentence"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-4 leading-snug"
+                :align-center="true"
+                aria-label="Escuchar frase"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <p class="text-sm text-gray-500 mb-2">
                 Elige el signo correcto para esta frase.
               </p>
@@ -631,6 +742,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -639,9 +752,15 @@
 
             <!-- Examen final (opción múltiple) -->
             <section v-else-if="current.type === 'final_exam'">
-              <p class="text-2xl font-semibold mb-4 leading-snug">
-                {{ current.question || current.prompt }}
-              </p>
+              <SentenceAudioRow
+                :text="current.question || current.prompt"
+                :exercise="current"
+                :audio-src="current.audio"
+                text-class="text-2xl font-semibold mb-4 leading-snug"
+                :align-center="true"
+                aria-label="Escuchar enunciado"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -649,6 +768,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
+                  @mouseenter="handleOptionPreview(option)"
+                  @focus="handleOptionPreview(option)"
                 >
                   {{ option }}
                 </button>
@@ -687,13 +808,17 @@ import { useBillingStore } from '../store/billingStore'
 import { useGameStore } from '../store/gameStore'
 import { useExerciseEngine } from '../engine/logic/ExerciseEngine'
 import { useTTS, isTTSSupported } from '../composables/useTTS'
+import exerciseWordTimings from '../engine/logic/audio/exerciseWordTimings.json'
 import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
+import { getAudioSettings, playSfx, playVoice, playVoiceCue, unlockAudio, stopMusic } from '../engine/audio/audioManager'
+import { VOICE_PRESET } from '../engine/audio/voiceProfile'
 
 import ExerciseShell from '../components/ExerciseShell.vue'
 import DragDropBoard from '../components/DragDropBoard.vue'
 import AudioButton from '../components/AudioButton.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
 import SyllableHighlighter from '../components/SyllableHighlighter.vue'
+import SentenceAudioRow from '../components/SentenceAudioRow.vue'
 
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
@@ -716,13 +841,16 @@ let confettiTimer = null
 const readingHighlight = ref(false)
 let readingTimer = null
 let syllableTimer = null
+let syllableStepTimeouts = []
 let activeAudioEl = null
 let audioTimeUpdateHandler = null
-const READING_AUDIO_PACE = 0.85
+let lastReadingProgress = 0
+const READING_AUDIO_PACE = 0.76
 const TTS_SLOW_RATE = 0.82
 const TTS_CHEERFUL_PITCH = 1.3
 const { speak, stop: stopTts, isSpeaking } = useTTS()
 const prefersReducedMotion = ref(false)
+let lastOptionPreviewAt = 0
 
 billing.load?.()
 game.load?.()
@@ -731,6 +859,8 @@ onMounted(() => {
   if (typeof window !== 'undefined') {
     prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   }
+  // Silencia la música global al entrar al modo ejercicios
+  stopMusic(260)
 })
 
 // Permite leer /game/:level/:stage o /game/:levelId/:stageId
@@ -902,6 +1032,35 @@ function splitWordIntoSyllables(word = '', vowels = '') {
   return syllables
 }
 
+function segmentTextIntoWords(text = '') {
+  const segments = []
+  let cursor = 0
+  const parts = text.split(/(\s+)/)
+
+  for (const part of parts) {
+    if (!part) continue
+    if (/^\s+$/.test(part)) {
+      segments.push({ text: part, isGap: true, start: cursor, end: cursor + part.length })
+      cursor += part.length
+      continue
+    }
+    segments.push({ text: part, isGap: false, start: cursor, end: cursor + part.length })
+    cursor += part.length
+  }
+
+  return segments
+}
+
+function isFuerzaTranquilaStage4of6Now() {
+  const stageNumber = Number(stage.value ?? 0)
+  const totalStages = Number(stageContext.value?.totalStages ?? 0)
+  const levelName = String(stageContext.value?.levelMeta?.levelName || '').trim().toLowerCase()
+  const isTargetLevel = level.value === 1 || levelName === 'la fuerza tranquila'
+  const isTargetStage = stageNumber === 4
+  const isTargetTotal = totalStages === 0 || totalStages === 6
+  return isTargetLevel && isTargetStage && isTargetTotal
+}
+
 const readingText = computed(() => {
   return normalizeReadingText(current.value?.text || current.value?.sentence || current.value?.prompt || '')
 })
@@ -909,11 +1068,136 @@ const readingText = computed(() => {
 const readingAudioSrc = computed(() => resolveAsset(current.value?.audio))
 
 const syllableSegments = computed(() => {
+  if (isFuerzaTranquilaStage4of6Now()) {
+    return segmentTextIntoWords(readingText.value)
+  }
   return segmentTextIntoSyllables(readingText.value)
 })
 const spokenSegments = computed(() =>
   syllableSegments.value.map((segment, idx) => ({ ...segment, idx })).filter((segment) => !segment.isGap)
 )
+
+function normalizeWordToken(value = '') {
+  return String(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, '')
+}
+
+function normalizeSentenceForLookup(text = '') {
+  return String(text || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]+/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+const resolvedWordTimingEntry = computed(() => {
+  const timings = exerciseWordTimings || {}
+  const lineIdCandidates = [
+    current.value?.lineId,
+    current.value?.line_id,
+    current.value?.rowId,
+    current.value?.row_id
+  ]
+    .map((value) => String(value ?? '').trim())
+    .filter(Boolean)
+
+  for (const lineId of lineIdCandidates) {
+    if (timings[lineId]) return timings[lineId]
+  }
+
+  const currentNormalizedText = normalizeSentenceForLookup(readingText.value)
+  if (!currentNormalizedText) return null
+
+  const entries = Object.values(timings)
+  const byText = entries.find(
+    (entry) => normalizeSentenceForLookup(entry?.text || '') === currentNormalizedText
+  )
+  return byText || null
+})
+
+const resolvedWordTimingMap = computed(() => {
+  const entry = resolvedWordTimingEntry.value
+  const timingWords = Array.isArray(entry?.wordTimings) ? entry.wordTimings : []
+  if (!timingWords.length) return []
+
+  const segments = spokenSegments.value
+  if (!segments.length) return []
+
+  const mapped = []
+  let segCursor = 0
+  let fallbackCursor = 0
+
+  for (const timing of timingWords) {
+    const target = normalizeWordToken(timing?.word || '')
+    if (!target) continue
+
+    let matchIdx = -1
+    for (let i = segCursor; i < segments.length; i += 1) {
+      if (normalizeWordToken(segments[i].text) === target) {
+        matchIdx = i
+        break
+      }
+    }
+
+    if (matchIdx === -1) {
+      matchIdx = Math.min(fallbackCursor, segments.length - 1)
+    }
+
+    const segment = segments[matchIdx]
+    if (!segment) continue
+
+    mapped.push({
+      idx: segment.idx,
+      start: Number(timing.start),
+      end: Number(timing.end)
+    })
+
+    segCursor = Math.max(segCursor, matchIdx + 1)
+    fallbackCursor = Math.max(fallbackCursor, matchIdx + 1)
+  }
+
+  return mapped.filter((item) => Number.isFinite(item.start) && Number.isFinite(item.end))
+})
+
+const isFaroReadingExercise = computed(() => {
+  const exerciseId = String(current.value?.id || '').trim().toUpperCase()
+  const normalizedText = normalizeReadingText(current.value?.text || '')
+    .toLowerCase()
+    .replace(/\.$/, '')
+  return exerciseId === 'L1-RW-1' || normalizedText === 'el faro guía a los barcos perdidos'
+})
+
+const spokenSyllableTimeline = computed(() => {
+  const full = syllableSegments.value
+  const spoken = spokenSegments.value
+  if (!spoken.length) return []
+
+  const weights = spoken.map((segment) => {
+    // Base por longitud de sílaba + micro pausa por espacios/puntuación cercanos.
+    const base = Math.max(1, String(segment.text || '').length)
+    const nextFull = full[segment.idx + 1]
+    const gapBoost = nextFull?.isGap ? Math.min(2, String(nextFull.text || '').length * 0.35) : 0
+    const punctuationBoost = /[.,;:!?]/.test(String(segment.text || '')) ? 0.8 : 0
+    return base + gapBoost + punctuationBoost
+  })
+
+  const totalWeight = weights.reduce((acc, value) => acc + value, 0)
+  if (totalWeight <= 0) return []
+
+  let cumulative = 0
+  return spoken.map((segment, i) => {
+    cumulative += weights[i]
+    return {
+      idx: segment.idx,
+      endProgress: cumulative / totalWeight
+    }
+  })
+})
 
 const levelCharacters = {
   1: Perezoso,
@@ -927,13 +1211,68 @@ watch(
   () => currentStatus.value,
   (status) => {
     if (status === 'ok') {
+      unlockAudio()
+      playSfx('correct')
       showConfetti.value = true
       if (confettiTimer) clearTimeout(confettiTimer)
       confettiTimer = setTimeout(() => {
         showConfetti.value = false
       }, 4500)
+    } else if (status === 'fail') {
+      unlockAudio()
+      playSfx('wrong')
     }
   }
+)
+
+function cueForExerciseType(type) {
+  const map = {
+    audio_question: 'listen',
+    audio_choice: 'listen',
+    audio_sentence: 'listen',
+    audio_question_answer: 'listen',
+    read_with_audio: 'read',
+    audio_write: 'read'
+  }
+  return map[type] || 'choose'
+}
+
+const isFuerzaTranquilaStage4of6 = computed(() => isFuerzaTranquilaStage4of6Now())
+const isStage1of4 = computed(() => {
+  const stageNumber = Number(stage.value ?? 0)
+  const totalStages = Number(stageContext.value?.totalStages ?? 0)
+  return stageNumber === 1 && totalStages === 4
+})
+
+function shouldPlayListenCueAtStageStart() {
+  return isFuerzaTranquilaStage4of6.value
+}
+
+watch(
+  () => stage.value,
+  () => {
+    unlockAudio()
+    playSfx('click')
+    playVoiceCue('start')
+    if (shouldPlayListenCueAtStageStart()) {
+      playVoiceCue('listen')
+    }
+  }
+)
+
+watch(
+  () => current.value?.id,
+  () => {
+    const id = current.value?.id
+    if (!id) return
+    const audioSettings = getAudioSettings()
+    if (!audioSettings.voiceEnabled) return
+    const cue = cueForExerciseType(current.value?.type)
+    if (cue === 'listen') return
+    unlockAudio()
+    playVoiceCue(cue)
+  },
+  { immediate: true }
 )
 
 const sadCharacters = {
@@ -968,6 +1307,7 @@ const stageLabel = computed(() => {
 })
 
 const blankSymbol = '_____'
+const blankRegex = /_{3,}/g
 const textAnswer = ref('')
 
 const levelHeading = computed(() => {
@@ -980,13 +1320,19 @@ const levelTitleLabel = computed(() => {
   return context?.levelMeta?.levelName ?? 'Escuela Mágica'
 })
 
+function fillBlank(text, replacement) {
+  if (!text || !replacement) return text
+  return text.replace(blankRegex, replacement)
+}
+
 const showExerciseNarration = computed(() => {
-  // Oculta el recuadro de audio en nivel 1 (La fuerza tranquila) y en la etapa 1/4 (nivel 4) y 1/5 (nivel 5)
+  // Oculta el recuadro de audio en nivel 1 (La fuerza tranquila), en la etapa 1/4 (nivel 4) y 1/5 (nivel 5)
   if (level.value === 1) return false
+  if (level.value === 2 && stage.value === 1) return false
+  if (level.value === 2 && stage.value === 5) return false
   if ((level.value === 4 || level.value === 5) && stage.value === 1) return false
   return true
 })
-const readingHighlightIndex = computed(() => (readingHighlight.value ? 0 : -1))
 
 const hideLevelVisuals = computed(() => [2, 3, 4, 5].includes(level.value))
 const isLevelFour = computed(() => level.value === 4)
@@ -1005,6 +1351,8 @@ const questionMaskedSentence = computed(() => {
 // UNSCRAMBLE
 const unscrambleAttempt = ref('')
 function handleUnscramble(letter) {
+  unlockAudio()
+  playSfx('click')
   unscrambleAttempt.value += letter
 }
 function resetUnscramble() {
@@ -1012,6 +1360,8 @@ function resetUnscramble() {
 }
 function submitUnscramble() {
   if (!current.value) return
+  unlockAudio()
+  playSfx('click')
   checkAnswer(unscrambleAttempt.value, { autoAdvance: true })
   unscrambleAttempt.value = ''
 }
@@ -1019,6 +1369,8 @@ function submitUnscramble() {
 // SYLLABLE ORDER
 const syllableAttempt = ref([])
 function handleSyllableSelect(syllable) {
+  unlockAudio()
+  playSfx('click')
   syllableAttempt.value = [...syllableAttempt.value, syllable]
 }
 function resetSyllableAttempt() {
@@ -1026,6 +1378,8 @@ function resetSyllableAttempt() {
 }
 function submitSyllableOrder() {
   if (!current.value) return
+  unlockAudio()
+  playSfx('click')
   checkAnswer(syllableAttempt.value, { autoAdvance: true })
   syllableAttempt.value = []
 }
@@ -1033,6 +1387,8 @@ function submitSyllableOrder() {
 // PUZZLE ORDER
 const puzzleAttempt = ref([])
 function handlePuzzleSelect(segment) {
+  unlockAudio()
+  playSfx('click')
   puzzleAttempt.value = [...puzzleAttempt.value, segment]
 }
 function resetPuzzleAttempt() {
@@ -1040,6 +1396,8 @@ function resetPuzzleAttempt() {
 }
 function submitPuzzleOrder() {
   if (!current.value) return
+  unlockAudio()
+  playSfx('click')
   checkAnswer(puzzleAttempt.value, { autoAdvance: true })
   puzzleAttempt.value = []
 }
@@ -1049,6 +1407,8 @@ function handleStageComplete(summary) {
     ...summary,
     done: true
   })
+  unlockAudio()
+  playSfx('unlock')
 
   const isFinalLevel = summary.level === 5
   const finishedLastStage = summary.totalStages
@@ -1069,39 +1429,77 @@ function handleStageComplete(summary) {
 }
 
 function handleSimpleOption(option) {
+  unlockAudio()
+  playSfx('click')
   checkAnswer(option, { autoAdvance: true })
 }
 
+function resolveOptionText(option) {
+  if (typeof option === 'string' || typeof option === 'number') return String(option)
+  if (!option) return ''
+  return (
+    option.label ||
+    option.text ||
+    option.word ||
+    option.sentence ||
+    option.prompt ||
+    option.title ||
+    ''
+  )
+}
+
+function handleOptionPreview(option) {
+  const now = Date.now()
+  if (now - lastOptionPreviewAt < 420) return
+  lastOptionPreviewAt = now
+  const audioSettings = getAudioSettings()
+  if (!audioSettings.voiceEnabled) return
+  const text = resolveOptionText(option)
+  if (!text) return
+  unlockAudio()
+  playVoice(text, { rate: VOICE_PRESET.rate, pitch: VOICE_PRESET.pitch, lang: VOICE_PRESET.lang, volume: audioSettings.voiceVolume })
+}
+
 function handleSimpleOrder(ok) {
-  recordResult(ok ? 'ok' : 'fail', {
-    awardPoints: ok,
-    incrementAttempt: true,
-    triggerCelebration: ok,
-    showFeedback: !ok
-  })
   if (ok) {
-    setTimeout(() => next(), 450)
+    const expected = current.value?.correctOrder ?? current.value?.correct ?? []
+    checkAnswer(expected, { autoAdvance: true })
+    return
   }
+  recordResult('fail', {
+    awardPoints: false,
+    incrementAttempt: true,
+    triggerCelebration: false,
+    showFeedback: true
+  })
 }
 
 function handleReadConfirm() {
   const expected = current.value?.correct ?? 'done'
+  unlockAudio()
+  playSfx('click')
   checkAnswer(expected, { autoAdvance: true })
 }
 
 function handlePairClick(pair) {
   if (!pair) return
+  unlockAudio()
+  playSfx('click')
   const left = pair.word || pair.singular || pair.statement || ''
   const right = pair.match || pair.synonym || pair.antonym || pair.plural || pair.response || ''
   checkAnswer({ left, right }, { autoAdvance: true })
 }
 
 function selectLeft(word) {
+  unlockAudio()
+  playSfx('click')
   selectedLeft.value = word
 }
 
 function handlePairMatch(option) {
   if (!selectedLeft.value) return
+  unlockAudio()
+  playSfx('click')
   const pairTypes = ['singular_plural', 'pair_synonyms', 'pair_antonyms']
   const isPairType = pairTypes.includes(current.value?.type)
   const payload = { left: selectedLeft.value, right: option }
@@ -1111,6 +1509,7 @@ function handlePairMatch(option) {
     const isCorrect = expected === option
 
     if (isCorrect) {
+      playSfx('correct')
       const remaining = currentPairs.value.filter((p) => {
         const left = p.word || p.singular || p.statement || ''
         const right = p.match || p.synonym || p.antonym || p.plural || p.response || ''
@@ -1122,6 +1521,7 @@ function handlePairMatch(option) {
       selectedLeft.value = ''
       return
     }
+    playSfx('wrong')
     checkAnswer(payload, { autoAdvance: false })
     selectedLeft.value = ''
     return
@@ -1154,6 +1554,12 @@ function playSimpleAudio(src, onEnd) {
     onEnd?.()
     return
   }
+  const audioSettings = getAudioSettings()
+  if (!audioSettings.voiceEnabled) {
+    onEnd?.()
+    return
+  }
+  unlockAudio()
   stopAllMedia()
   if (activeAudioEl) {
     activeAudioEl.pause()
@@ -1174,6 +1580,10 @@ function playSimpleAudio(src, onEnd) {
 }
 
 function handleAudioClick(audio) {
+  const audioSettings = getAudioSettings()
+  if (!audioSettings.voiceEnabled) return
+  unlockAudio()
+  playSfx('click')
   clearAudioListeners()
   const estimate = getEstimatedReadingDurationMs()
   const effectiveEstimate = getEffectiveDurationMs(estimate, READING_AUDIO_PACE)
@@ -1212,10 +1622,11 @@ function startReadingPulse(autoStopMs) {
   const firstIdx = syllableSegments.value.findIndex((segment) => !segment.isGap)
   activeSyllable.value = firstIdx
   readingHighlight.value = true
-  const duration = autoStopMs ?? getEstimatedReadingDurationMs()
-  readingTimer = window.setTimeout(() => {
-    stopReadingPulse()
-  }, duration)
+  if (Number.isFinite(autoStopMs) && autoStopMs > 0) {
+    readingTimer = window.setTimeout(() => {
+      stopReadingPulse()
+    }, autoStopMs)
+  }
 }
 
 function stopReadingPulse() {
@@ -1232,6 +1643,7 @@ function stopReadingPulse() {
 function resetReadingHighlight() {
   readingHighlight.value = false
   activeSyllable.value = -1
+  lastReadingProgress = 0
   clearSyllableTicker()
   if (readingTimer) {
     clearTimeout(readingTimer)
@@ -1254,28 +1666,62 @@ function handleTtsBoundary(event) {
 }
 
 async function handleReadingIconClick() {
+  unlockAudio()
+  playSfx('click')
+  const audioSettings = getAudioSettings()
+  if (!audioSettings.voiceEnabled) return
+
   if (isSpeaking.value) {
     stopReadingPulse()
     return
   }
 
   const text = readingText.value
-  const ttsConfig = current.value?.tts || {}
   const canUseTts = text && isTTSSupported()
 
   if (canUseTts) {
     const estimate = Math.round(getEstimatedReadingDurationMs() * 1.15)
-    const rate = ttsConfig.rate ?? TTS_SLOW_RATE
-    const pitch = ttsConfig.pitch ?? TTS_CHEERFUL_PITCH
+    const rate = TTS_SLOW_RATE
+    const pitch = VOICE_PRESET.pitch
     const effectiveEstimate = getEffectiveDurationMs(estimate, rate || 1)
-    startReadingPulse(effectiveEstimate)
-    startSyllableTickerForDuration(effectiveEstimate)
+    const useFixedFaroSchedule = isFaroReadingExercise.value
+    // En TTS, el fin real lo marca onend; evitamos cortar antes por estimación.
+    startReadingPulse()
+    clearSyllableTicker()
+    let gotBoundary = false
+    let ttsFallbackTimer = null
+
+    if (useFixedFaroSchedule) {
+      // Margen extra para que el salto no se "caiga" antes de terminar la locución.
+      startFaroSyllableSchedule(Math.round(effectiveEstimate * 1.22))
+      gotBoundary = true
+    } else {
+      ttsFallbackTimer = window.setTimeout(() => {
+        if (!gotBoundary) {
+          startSyllableTickerForDuration(effectiveEstimate)
+        }
+      }, 450)
+    }
+
     await speak(text, {
-      lang: ttsConfig.lang,
+      lang: VOICE_PRESET.lang,
       rate,
       pitch,
-      onBoundary: handleTtsBoundary
+      volume: audioSettings.voiceVolume,
+      onBoundary: (event) => {
+        if (useFixedFaroSchedule) return
+        gotBoundary = true
+        if (ttsFallbackTimer) {
+          clearTimeout(ttsFallbackTimer)
+          ttsFallbackTimer = null
+        }
+        handleTtsBoundary(event)
+      }
     })
+    if (ttsFallbackTimer) {
+      clearTimeout(ttsFallbackTimer)
+      ttsFallbackTimer = null
+    }
     stopReadingPulse()
     return
   }
@@ -1286,17 +1732,30 @@ async function handleReadingIconClick() {
 }
 
 function handleReadingPlay() {
+  // En ejercicios con audio real, la sílaba activa debe venir solo del progreso del audio.
+  clearSyllableTicker()
   const estimate = getEstimatedReadingDurationMs()
   const effective = getEffectiveDurationMs(estimate, READING_AUDIO_PACE)
+  lastReadingProgress = 0
   startReadingPulse(effective)
-  startSyllableTickerForDuration(effective)
+}
+
+function handleReadingProgress(payload = {}) {
+  if (!readingHighlight.value) return
+  // Evita que un ticker residual (de otros modos) compita con la sincronía real del audio.
+  if (syllableTimer) clearSyllableTicker()
+  const progress = Number(payload?.progress)
+  if (!Number.isFinite(progress)) return
+  syncActiveSyllableByProgress(progress)
 }
 
 function handleReadingPause() {
+  lastReadingProgress = 0
   resetReadingHighlight()
 }
 
 function handleReadingEnded() {
+  lastReadingProgress = 0
   stopReadingPulse()
 }
 
@@ -1304,6 +1763,10 @@ function clearSyllableTicker() {
   if (syllableTimer) {
     clearInterval(syllableTimer)
     syllableTimer = null
+  }
+  if (syllableStepTimeouts.length) {
+    syllableStepTimeouts.forEach((timeoutId) => clearTimeout(timeoutId))
+    syllableStepTimeouts = []
   }
 }
 
@@ -1339,18 +1802,87 @@ function startSyllableTickerForDuration(durationMs) {
   }, interval)
 }
 
-function syncActiveSyllableByProgress(progress) {
+function normalizeSyllableToken(token = '') {
+  return String(token)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zñü]/gi, '')
+    .toLowerCase()
+}
+
+function faroSyllableWeight(token = '') {
+  const normalized = normalizeSyllableToken(token)
+  const weights = {
+    el: 1.0,
+    faro: 1.35,
+    guia: 1.4,
+    a: 0.85,
+    los: 0.95,
+    barcos: 1.45,
+    perdidos: 1.65
+  }
+  return weights[normalized] ?? Math.max(0.95, normalized.length * 0.2)
+}
+
+function startFaroSyllableSchedule(durationMs) {
+  clearSyllableTicker()
   const segments = spokenSegments.value
-  if (!segments.length) return
+  if (!segments.length || !durationMs) return
+
+  const weights = segments.map((segment) => faroSyllableWeight(segment.text))
+  const totalWeight = weights.reduce((acc, value) => acc + value, 0)
+  if (totalWeight <= 0) return
+
+  activeSyllable.value = segments[0].idx
+  let elapsed = 0
+  for (let i = 1; i < segments.length; i += 1) {
+    elapsed += (weights[i - 1] / totalWeight) * durationMs
+    const timeoutId = window.setTimeout(() => {
+      activeSyllable.value = segments[i].idx
+    }, Math.round(elapsed))
+    syllableStepTimeouts.push(timeoutId)
+  }
+}
+
+function syncActiveSyllableByProgress(progress) {
+  const timingMap = resolvedWordTimingMap.value
+  if (timingMap.length && isFuerzaTranquilaStage4of6Now()) {
+    const lastTimedWord = timingMap[timingMap.length - 1]
+    const audioDuration = Number(lastTimedWord?.end ?? 0)
+    if (audioDuration > 0) {
+      const clamped = Math.min(1, Math.max(0, progress))
+      const monotonic = Math.max(lastReadingProgress, clamped)
+      lastReadingProgress = monotonic
+      const timeSec = monotonic * audioDuration
+      const active =
+        timingMap.find((item) => timeSec >= item.start && timeSec < item.end) ||
+        timingMap.find((item) => timeSec < item.start) ||
+        timingMap[timingMap.length - 1]
+      if (active) {
+        activeSyllable.value = active.idx
+        return
+      }
+    }
+  }
+
+  const timeline = spokenSyllableTimeline.value
+  if (!timeline.length) return
   const clamped = Math.min(1, Math.max(0, progress))
-  const idx = Math.min(segments.length - 1, Math.floor(clamped * segments.length))
-  activeSyllable.value = segments[idx].idx
+  // Evita saltos hacia atrás por jitter del reproductor.
+  const monotonic = Math.max(lastReadingProgress, clamped)
+  lastReadingProgress = monotonic
+  const next = timeline.find((entry) => monotonic <= entry.endProgress) || timeline[timeline.length - 1]
+  activeSyllable.value = next.idx
 }
 
 watch(
   () => current.value?.id,
   () => {
-    // reset highlighting when exercise changes
+    // Limpieza fuerte al cambiar ejercicio para evitar timers/audio residuales fuera de fase.
+    resetReadingHighlight()
+    stopTts()
+    clearAudioListeners()
+    lastReadingProgress = 0
     activeSyllable.value = -1
   }
 )
@@ -1394,9 +1926,17 @@ function resolveAsset(path) {
   // Permite URLs absolutas y data URIs
   if (/^(https?:|data:)/i.test(path)) return path
 
+  // Rutas absolutas de public
+  if (path.startsWith('/')) return path
+
   // Si empieza por /public → cargar desde el servidor
   if (path.startsWith('public/')) {
     return '/' + path.replace('public/', '')
+  }
+
+  // Si empieza por audio/ o icons/ → cargar desde public
+  if (path.startsWith('audio/') || path.startsWith('icons/')) {
+    return '/' + path
   }
 
   // Si empieza por images/ o /images → cargar desde public/images
@@ -1515,18 +2055,21 @@ function shuffleArray(arr) {
   display: grid;
   place-items: center;
   margin: 0 auto 1rem;
-  width: 100%;
-  max-width: 520px;
+  width: auto;
+  max-width: 340px;
   padding: 0;
   background: transparent;
   box-shadow: none;
+  border-radius: 24px;
+  overflow: hidden;
 }
 .choice-visual-img {
   width: 100%;
-  max-height: 340px;
+  max-height: 280px;
   object-fit: contain;
   background: transparent;
   box-shadow: none;
+  border-radius: 24px;
 }
 .choice-emoji {
   font-size: 3rem;
@@ -1534,9 +2077,9 @@ function shuffleArray(arr) {
 }
 .exercise-visual {
   width: 100%;
-  max-width: 360px;
-  margin: 0 auto;
-  border-radius: 14px;
+  max-width: 340px;
+  margin: 0 auto 1rem;
+  border-radius: 24px;
   box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
   background: #f8fafc;
   display: block;
@@ -1549,7 +2092,7 @@ function shuffleArray(arr) {
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 0;
+  border-radius: 24px;
 }
 .visual-fallback {
   background: linear-gradient(135deg, rgba(147, 197, 253, 0.8), rgba(165, 180, 252, 0.95));
@@ -1602,6 +2145,15 @@ function shuffleArray(arr) {
 .reading-animated {
   animation: syllablePulse 0.8s ease-in-out infinite;
 }
+.reading-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+.reading-audio-inline.inside-box {
+  margin-left: auto;
+}
 .reading-syllable {
   display: inline-block;
   border-bottom: 2px solid transparent;
@@ -1621,20 +2173,57 @@ function shuffleArray(arr) {
 .reading-box {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 1rem 1.25rem;
-  border-radius: 18px;
+  gap: 0.40rem;
+  padding: 0.7rem 0.7rem;
+  border-radius: 14px;
   background: #ffffff;
-  box-shadow: 0 10px 24px rgba(251, 191, 36, 0.16);
+  box-shadow: 0 8px 10px rgba(251, 191, 36, 0.14);
+}
+.reading-box--flat {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.reading-box--flat :deep(.reading-phrase) {
+  width: 100%;
+  text-align: center;
+}
+.reading-box--flat .reading-audio-inline.inside-box {
+  margin-left: 0;
 }
 .reading-box .audio-button {
   flex-shrink: 0;
+}
+.reading-audio-inline {
+  display: flex;
+  align-items: center;
 }
 .reading-cta {
   gap: 0.5rem;
   min-height: 0;
   padding: 0.75rem 1rem;
   font-size: 1rem;
+}
+.reading-cta.icon-only {
+  padding: 0;
+  min-height: unset;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  opacity: 0.78;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  margin: 0;
+}
+.reading-cta.icon-only:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.reading-cta.icon-only:active {
+  opacity: 0.95;
+  transform: translateY(0);
 }
 .audio-icon-static {
   width: 48px;
@@ -1680,6 +2269,15 @@ function shuffleArray(arr) {
 @media (prefers-reduced-motion: reduce) {
   .reading-animated {
     animation: none;
+  }
+}
+@media (max-width: 768px) {
+  .reading-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .reading-audio-inline {
+    justify-content: flex-start;
   }
 }
 .exercise-body {

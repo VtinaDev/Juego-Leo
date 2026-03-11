@@ -2,19 +2,19 @@ import { Howl } from 'howler'
 
 const SOUND_DEFS = {
   correct: {
-    src: ['/assets/sounds/correct.mp3'],
+    src: ['/audio/sfx/correct.wav'],
     volume: 0.7
   },
   error: {
-    src: ['/assets/sounds/error.mp3'],
+    src: ['/audio/sfx/wrong.wav'],
     volume: 0.4
   },
   celebration: {
-    src: ['/assets/sounds/celebration.mp3'],
+    src: ['/audio/sfx/confetti.wav'],
     volume: 0.7
   },
   gentleVoice: {
-    src: ['/assets/sounds/try_again.mp3'],
+    src: ['/audio/voice/exercise-try-again.mp3'],
     volume: 0.6
   }
 }

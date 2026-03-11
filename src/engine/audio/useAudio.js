@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { AudioManager } from './AudioManager'
+import { AudioManager } from './audioManager'
 import { VoiceInput } from './VoiceInput'
 
 const audioManager = new AudioManager()

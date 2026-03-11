@@ -1,0 +1,11 @@
+row_id,event_key,target_path,variant_group,language,voice_style,pace,pitch,spoken_text,studio_prompt
+1,intro,public/audio/voice/intro.mp3,intro,es-CO,warm_storyteller,0.96,0.98,"Hola, bienvenido a Juego y Leo. Vamos a aprender jugando.","Child-friendly female latin spanish voice, warm and close, natural smile, clear articulation, no robotic tone, short pause after greeting"
+2,start,public/audio/voice/start.mp3,start,es-CO,energetic_guide,1.00,1.02,"Comencemos. Tu aventura empieza ahora.","Encouraging teacher voice for kids, energetic but soft, natural prosody, no synthetic cadence"
+3,choose,public/audio/voice/choose.mp3,choose,es-CO,gentle_instruction,0.98,1.00,"Elige la opcion correcta.","Instructional but kind, concise, clear consonants, playful confidence"
+4,listen,public/audio/voice/listen.mp3,listen,es-CO,focused_instruction,0.95,0.99,"Escucha con atencion.","Calm focus cue for children, short and clear, friendly authority"
+5,read,public/audio/voice/read.mp3,read,es-CO,reading_coach,0.94,0.99,"Lee con calma y a tu ritmo.","Reading coach voice, patient, warm, very natural breathing"
+6,breath,public/audio/voice/breath.mp3,breath,es-CO,calming_support,0.90,0.97,"Respira profundo. Vamos paso a paso.","Calming emotional support cue for children, soft and reassuring"
+7,retry,public/audio/voice/try.mp3,retry,es-CO,encouraging_retry,0.96,1.00,"Intentalo otra vez. Tu puedes.","Supportive retry cue, optimistic and personal, avoid monotone"
+8,success,public/audio/voice/succes.mp3,success,es-CO,celebratory_soft,1.02,1.04,"Muy bien, lo lograste.","Celebration cue for child success, joyful but not loud"
+9,positive1,public/audio/voice/positive1.mp3,positive,es-CO,positive_feedback,1.03,1.03,"Excelente trabajo.","Short positive feedback, bright smile in voice, natural"
+11,positive3,public/audio/voice/positive3.mp3,positive,es-CO,positive_feedback,1.00,1.01,"Sigue asi, vas muy bien.","Longer praise variation, warm and authentic"

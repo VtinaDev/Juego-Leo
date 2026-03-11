@@ -62,6 +62,8 @@
         tabindex="0"
         :class="[nodeClass(habitat, index), { 'map-node--pulse': recentlyUnlocked === habitat.id }]"
         :style="nodeStyle(habitat.coords)"
+        @mouseenter="handleHabitatHover(habitat.id)"
+        @focus="handleHabitatHover(habitat.id)"
       >
         <div class="node-label">
           <p class="node-title">{{ habitat.levelName }}</p>
@@ -86,6 +88,22 @@
         </div>
 
         <span class="node-base" :style="{ backgroundColor: habitat.color }" />
+
+        <div v-if="habitat.unlocked" class="stage-chips">
+          <RouterLink
+            v-for="stage in stagesFor(habitat)"
+            :key="`stage-${habitat.id}-${stage.num}`"
+            :to="`/game/${habitat.id}/${stage.num}`"
+            class="stage-chip"
+            :class="{
+              'stage-chip--done': stage.state === 'done',
+              'stage-chip--next': stage.state === 'next'
+            }"
+            :aria-label="`Ir a nivel ${habitat.id}, etapa ${stage.num}`"
+          >
+            {{ stage.num }}
+          </RouterLink>
+        </div>
       </div>
     </div>
 
@@ -93,12 +111,14 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
 import { useProfileStore } from '../store/profileStore'
+import { useBillingStore } from '../store/billingStore'
 import { getLevelDefinition, listLevels } from '../engine/logic/utils/validateTemplates'
 import { playSfx } from '../utils/sfx'
+import { playMusic, stopMusic } from '../engine/audio/audioManager'
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
 import Mono from '../assets/characters/Mono.png'
@@ -166,13 +186,24 @@ const LEVEL_CHARACTERS = {
   5: ElefanteGraduado
 }
 
+const HABITAT_SFX = {
+  1: 'sloth',
+  2: 'fox',
+  3: 'monkey',
+  4: 'elephant',
+  5: 'elephant'
+}
+
 const game = useGameStore()
 game.load?.()
+const billing = useBillingStore()
+billing.load?.()
 const profile = useProfileStore()
 profile.loadProfile?.()
 const recentlyUnlocked = ref(null)
 const unlockStatus = ref(new Map())
 let unlockTimer = null
+const lastHoverSound = new Map()
 
 const levelIds = listLevels()
   .map(Number)
@@ -189,8 +220,10 @@ const enrichedHabitats = computed(() => {
     const meta = def?.meta ?? {}
     const theme = HABITATS[id] ?? {}
     const progress = game.getLevelProgress(id)
-    const previousComplete = index === 0 ? true : result[index - 1]?.progress.percent === 1
-    const unlocked = index === 0 || previousComplete
+    const previous = result[result.length - 1]
+    const previousComplete = id === 1 ? true : (previous?.progress?.percent ?? 0) === 1
+    const unlockedByPlan = billing.canAccessLevel?.(id) ?? true
+    const unlocked = id === 1 || (previousComplete && unlockedByPlan)
     const isComplete = progress.percent === 1
     const cta = isComplete ? 'Revivir aventura' : unlocked ? 'Continuar' : 'Bloqueado'
     const progressLabel = isComplete ? 'Completado' : progress.nextStage
@@ -213,6 +246,17 @@ const enrichedHabitats = computed(() => {
   })
   return result
 })
+
+function stagesFor(habitat) {
+  const total = Number(habitat?.progress?.totalStages) || 3
+  const done = Number(habitat?.progress?.completedStages) || 0
+  const next = Number(habitat?.progress?.nextStage) || Math.min(done + 1, total)
+  return Array.from({ length: total }, (_, i) => {
+    const num = i + 1
+    const state = num <= done ? 'done' : num === next ? 'next' : 'locked'
+    return { num, state }
+  })
+}
 
 watch(
   () => enrichedHabitats.value.map((h) => ({ id: h.id, unlocked: h.unlocked })),
@@ -293,6 +337,16 @@ function nodeStyle(coords) {
   }
 }
 
+function handleHabitatHover(id) {
+  const soundKey = HABITAT_SFX[id]
+  if (!soundKey) return
+  const now = Date.now()
+  const last = lastHoverSound.get(id) || 0
+  if (now - last < 650) return
+  lastHoverSound.set(id, now)
+  playSfx(soundKey)
+}
+
 function habitatStyle(habitat) {
   const size = 36
   const background = getHabitatBackground(habitat)
@@ -363,6 +417,14 @@ function formatDate(date) {
   if (!date) return 'Reciente'
   return new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short' }).format(new Date(date))
 }
+
+onMounted(() => {
+  playMusic('nature', { loop: true })
+})
+
+onBeforeUnmount(() => {
+  stopMusic(200)
+})
 </script>
 
 <style scoped>
@@ -633,6 +695,45 @@ function formatDate(date) {
   width: 132px;
   z-index: 2;
   pointer-events: auto;
+}
+.stage-chips {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.stage-chip {
+  min-width: 28px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #f3f4f6;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 0.78rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+.stage-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
+}
+.stage-chip--done {
+  background: #dcfce7;
+  border-color: #22c55e;
+  color: #166534;
+}
+.stage-chip--next {
+  background: #eef2ff;
+  border-color: #6366f1;
+  color: #312e81;
+}
+.stage-chip:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
 }
 .map-node:hover .node-label,
 .map-node:focus-within .node-label {

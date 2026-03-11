@@ -632,7 +632,7 @@
           ],
           "correct": "pato",
           "audio": null,
-          "image": "/images/L2/default.png",
+          "image": "/images/L2/pato.png",
           "imageAlt": "Pato",
           "emoji": "🦆",
           "hint": "La palabra empieza como 'pa' de pato.",
@@ -650,7 +650,7 @@
           ],
           "correct": "luna",
           "audio": null,
-          "image": "/images/L2/default.png",
+          "image": "/images/L2/luna.png",
           "imageAlt": "Luna",
           "emoji": "🌙",
           "hint": "Escucha el sonido 'lu-na' al decirlo.",
@@ -662,14 +662,24 @@
         {
           "id": "L2-UW-1",
           "type": "UNSCRAMBLE_WORD",
-          "letters": ["S", "O", "P", "A"],
+          "letters": [
+            "S",
+            "O",
+            "P",
+            "A"
+          ],
           "solution": "SOPA",
           "hint": "Comida caliente."
         },
         {
           "id": "L2-UW-2",
           "type": "UNSCRAMBLE_WORD",
-          "letters": ["G", "A", "T", "O"],
+          "letters": [
+            "G",
+            "A",
+            "T",
+            "O"
+          ],
           "solution": "GATO",
           "hint": "Un animal doméstico."
         }
@@ -679,16 +689,28 @@
           "id": "L2-PZ-1",
           "type": "PUZZLE_ORDER",
           "prompt": "Ordena las piezas para formar la palabra",
-          "segments": ["SO", "PA"],
-          "correctOrder": ["SO", "PA"],
+          "segments": [
+            "SO",
+            "PA"
+          ],
+          "correctOrder": [
+            "SO",
+            "PA"
+          ],
           "hint": "Comida caliente."
         },
         {
           "id": "L2-PZ-2",
           "type": "PUZZLE_ORDER",
           "prompt": "Ordena las piezas para formar la palabra",
-          "segments": ["GA", "TO"],
-          "correctOrder": ["GA", "TO"],
+          "segments": [
+            "GA",
+            "TO"
+          ],
+          "correctOrder": [
+            "GA",
+            "TO"
+          ],
           "hint": "Animal doméstico."
         }
       ],
@@ -888,7 +910,7 @@
             "Canta suave la lluvia"
           ],
           "correct": "La lluvia canta suave",
-          "audio": "/assets/audio/level3/lluvia-ss2.mp3",
+          "audio": "/audio/voice/exercise-listen.mp3",
           "image": "/images/L3/l3-ss-2.png",
           "hint": "Piensa en cómo dirías la frase a un amigo.",
           "onCorrect": "celebrate",
@@ -914,15 +936,27 @@
         {
           "id": "L3-SO-1",
           "type": "SYLLABLE_ORDER",
-          "syllables": ["sa", "po"],
-          "correctOrder": ["sa", "po"],
+          "syllables": [
+            "sa",
+            "po"
+          ],
+          "correctOrder": [
+            "sa",
+            "po"
+          ],
           "hint": "Animal que salta."
         },
         {
           "id": "L3-SO-2",
           "type": "SYLLABLE_ORDER",
-          "syllables": ["lu", "na"],
-          "correctOrder": ["lu", "na"],
+          "syllables": [
+            "lu",
+            "na"
+          ],
+          "correctOrder": [
+            "lu",
+            "na"
+          ],
           "hint": "Brilla en la noche."
         }
       ],
@@ -1042,7 +1076,7 @@
           "instruction": "Escribe la frase completa.",
           "fallbackText": "Escribe: El dragón sopla nubes de algodón.",
           "answer": "El dragón sopla nubes de algodón.",
-          "audio": "/assets/audio/level4/dragon-aw2.mp3",
+          "audio": "/audio/voice/exercise-read.mp3",
           "image": "/images/L4/l4-aw-2.png",
           "hint": "Empieza con mayúscula y termina con punto.",
           "onCorrect": "celebrate",

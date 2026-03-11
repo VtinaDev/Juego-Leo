@@ -1,0 +1,135 @@
+[L1-EL1-QS-1] ¿Dónde descansa el búho?
+[L1-EL1-QS-1] El búho duerme en el árbol.
+[L1-EL1-QS-1] Lee la frase completa y busca el lugar mencionado.
+[L1-EL1-QS-2] ¿Qué hace la luciérnaga?
+[L1-EL1-QS-2] La luciérnaga ilumina la noche.
+[L1-EL1-QS-2] Piensa en lo que hace una luciérnaga.
+[L1-EL1-QS-3] ¿Qué encuentra el oso perezoso?
+[L1-EL1-QS-3] El oso perezoso encuentra una flor azul.
+[L1-EL1-QS-3] Observa el objeto final de la frase.
+[L1-EL1-QS-4] ¿Quién abraza al perro?
+[L1-EL1-QS-4] El niño abraza al perro alegre.
+[L1-EL1-QS-4] Lee el sujeto del verbo 'abraza'.
+[L1-EL1-CS-1] El hada ____ la puerta secreta.
+[L1-EL1-CS-1] Piensa en lo que se hace con una puerta.
+[L1-EL1-CS-2] La nube ____ gotas.
+[L1-EL1-CS-2] Las nubes dejan algo que cae del cielo.
+[L1-EL1-CS-3] El oso ____ con calma.
+[L1-EL1-CS-3] Recuerda que es un oso tranquilo.
+[L1-EL1-CS-4] La hoja ____ al viento.
+[L1-EL1-CS-4] ¿Qué hace una hoja en el aire?
+[L1-EL1-CS-5] El río ____ un canto suave.
+[L1-EL1-CS-5] Piensa en un sonido tranquilo de agua.
+[L1-EL1-CS-6] La luna ____ la noche.
+[L1-EL1-CS-6] Busca la acción que da luz.
+[L1-EL1-CS-7] El colibrí ____ flores mágicas.
+[L1-EL1-CS-7] ¿Qué hace un colibrí con las flores?
+[L1-EL1-CS-8] La campana ____ el recreo.
+[L1-EL1-CS-8] Recuerda qué hace la campana en la escuela.
+[L1-EL1-OS-1] Comienza con el artículo.
+[L1-EL1-OS-2] Coloca 'El' al inicio.
+[L1-EL1-OS-3] Sujeto primero, luego acción.
+[L1-EL1-OS-4] Respeta el orden natural de sujeto y verbo.
+[L1-EL1-RW-1] Lee la frase con ritmo tranquilo. Si quieres, escucha el audio.
+[L1-EL1-RW-1] El faro guía a los barcos perdidos.
+[L1-EL1-RW-1] Respira y lee despacio cada palabra.
+[L1-EL1-RW-2] Lee en voz alta. Pulsa escuchar si prefieres.
+[L1-EL1-RW-2] La campana anuncia el recreo.
+[L1-EL1-RW-2] Observa las sílabas: cam-pa-na.
+[L1-EL1-RW-3] Imagina el movimiento mientras lees.
+[L1-EL1-RW-3] Las hojas viajan con el viento.
+[L1-EL1-RW-3] Marca con el dedo cada palabra.
+[L1-EL1-RW-4] Lee tú mismo y disfruta del ritmo.
+[L1-EL1-RW-4] El río canta para el bosque.
+[L1-EL1-RW-4] Pronuncia lentamente las sílabas.
+[L1-EL1-IWM-1] Selecciona la palabra que nombra la imagen
+[L1-EL1-IWM-1] Piensa en lo que brilla en el cielo.
+[L1-EL1-IWM-2] Selecciona la palabra que nombra la imagen
+[L1-EL1-IWM-2] Suena para avisar.
+[L1-EL1-CCW-1] Elige la palabra correcta
+[L1-EL1-CCW-1] Historias para dormir.
+[L1-EL1-CCW-2] Elige la palabra correcta
+[L1-EL1-CCW-2] Guía a los barcos de noche.
+[L2-EL2-MC-1] Encierra el nombre correcto del dibujo: sol
+[L2-EL2-MC-1] Fíjate en la vocal que suena en medio (o).
+[L2-EL2-MC-2] Encierra el nombre correcto del dibujo: sapo
+[L2-EL2-MC-2] Escucha el sonido de la primera y la última sílaba: sa-po.
+[L2-EL2-MC-3] Encierra el nombre correcto del dibujo: sopa
+[L2-EL2-MC-3] Busca la sílaba central que suena 'o'.
+[L2-EL2-MC-4] Encierra el nombre correcto del dibujo: mesa
+[L2-EL2-MC-4] Pon atención al sonido de la primera vocal (e).
+[L2-EL2-MC-5] Encierra el nombre correcto del dibujo: oso
+[L2-EL2-MC-5] Suena igual al decirlo y escribirlo: o-so.
+[L2-EL2-MC-6] Encierra el nombre correcto del dibujo: pato
+[L2-EL2-MC-6] La palabra empieza como 'pa' de pato.
+[L2-EL2-MC-7] Encierra el nombre correcto del dibujo: luna
+[L2-EL2-MC-7] Escucha el sonido 'lu-na' al decirlo.
+[L2-EL2-PS-1] Busca parejas que compartan significado.
+[L2-EL2-PS-2] Observa cómo cada palabra describe lo mismo.
+[L2-EL2-PS-3] Une el número con su nombre escrito.
+[L2-EL2-PA-1] Une palabras que significan lo contrario.
+[L2-EL2-PA-2] Recuerda: el opuesto crea equilibrio mágico.
+[L2-EL2-UW-1] Comida caliente.
+[L2-EL2-UW-2] Un animal doméstico.
+[L2-EL2-CW-1] Completa la palabra: s_p_
+[L2-EL2-CW-1] Salta y vive en el agua.
+[L2-EL2-CW-2] Completa la palabra: l_n_
+[L2-EL2-CW-2] Brilla de noche.
+[L3-EL3-SS-1] Elige la frase que describe mejor lo que ves en tu mente.
+[L3-EL3-SS-1] Busca la frase con orden lógico sujeto-verbo-objeto.
+[L3-EL3-SS-2] Escoge la frase que te suena natural.
+[L3-EL3-SS-2] Piensa en cómo dirías la frase a un amigo.
+[L3-EL3-SS-3] ¿Cuál frase cuenta una acción realista?
+[L3-EL3-SS-3] Elige la frase con personajes que pueden realizar la acción.
+[L3-EL3-AQ-1] ¿Qué animal cruza el puente?
+[L3-EL3-AQ-1] En el bosque mágico, un animal cruza con cuidado el puente brillante.
+[L3-EL3-AQ-1] Lee el contexto si no hay audio disponible.
+[L3-EL3-AQ-2] ¿Qué busca el mono curioso?
+[L3-EL3-AQ-2] El mono curioso busca su mochila verde para la clase de magia.
+[L3-EL3-AQ-2] Si no escuchas audio, lee el texto 'context'.
+[L3-EL3-AQ-3] ¿Qué hacen los amigos al final?
+[L3-EL3-AQ-3] Después de la aventura, los amigos toman té de estrellas.
+[L3-EL3-AQ-3] Busca pistas en la última parte del texto.
+[L3-EL3-SO-1] Animal que salta.
+[L3-EL3-SO-2] Brilla en la noche.
+[L4-EL4-AW-1] Escribe la palabra que escuchas o lees:
+[L4-EL4-AW-1] Escribe: luciérnaga
+[L4-EL4-AW-1] Recuerda colocar la tilde correcta.
+[L4-EL4-AW-2] Escribe la frase completa.
+[L4-EL4-AW-2] Escribe: El dragón sopla nubes de algodón.
+[L4-EL4-AW-2] Empieza con mayúscula y termina con punto.
+[L4-EL4-TW-1] Escribe una frase que incluya la palabra 'magia'.
+[L4-EL4-TW-1] Asegúrate de usar la palabra mágica.
+[L4-EL4-TW-2] Escribe el nombre de la figura o símbolo: 🔺
+[L4-EL4-TW-2] Piensa en la forma geométrica del símbolo.
+[L4-EL4-TW-3] Ordena las letras y escribe la palabra: lvase
+[L4-EL4-TW-3] Piensa en un lugar lleno de árboles.
+[L4-EL4-TW-4] Ordena las letras y escribe la palabra: oglob
+[L4-EL4-TW-4] Se infla para flotar en el aire.
+[L4-EL4-TW-5] Completa la palabra: L_n_s (día de la semana)
+[L4-EL4-TW-5] Empieza la semana.
+[L4-EL4-RA-1] El oso Simón vive en una cueva y come miel dulce.
+[L4-EL4-RA-1] Busca dónde vive.
+[L4-EL4-RA-2] La vaca Lola camina al río para beber agua fresca.
+[L4-EL4-RA-2] ¿Qué hace en el río?
+[L5-EL5-TC-1] Ayer dibujé una estrella brillante.
+[L5-EL5-TC-1] Observa la palabra 'ayer'.
+[L5-EL5-TC-2] Hoy comparto mi cuaderno mágico.
+[L5-EL5-TC-2] La acción ocurre en este momento.
+[L5-EL5-TC-3] Mañana estudiaré los hechizos nuevos.
+[L5-EL5-TC-3] Si dice 'mañana', piensa en el futuro.
+[L5-EL5-SP-1] Observa cómo cambian las terminaciones al plural.
+[L5-EL5-AG-1] Recuerda: melodía lleva tilde en la sílaba fuerte.
+[L5-EL5-AG-2] Imagina dónde suena más fuerte la palabra.
+[L5-EL5-PG-1] Que sorpresa verte aqui
+[L5-EL5-PG-1] La frase expresa sorpresa.
+[L5-EL5-PG-2] Como te llamas
+[L5-EL5-PG-2] Es una pregunta, necesita signos interrogativos.
+[L5-EL5-PG-3] Gracias por ayudarme
+[L5-EL5-PG-3] Una afirmación termina con punto.
+[L5-EL5-FE-1] ¿Qué tiempo verbal usa la frase: "Mañana cantaré con el coro"?
+[L5-EL5-FE-1] Busca palabras que indiquen futuro.
+[L5-EL5-FE-2] Elige el signo que completa la frase: "¿Vienes a la clase de magia"
+[L5-EL5-FE-2] Coloca el signo inicial correcto para una pregunta.
+[L5-EL5-FE-3] ¿Dónde colocarías la tilde en la palabra 'musica'?
+[L5-EL5-FE-3] Piensa en cómo suena la sílaba fuerte.

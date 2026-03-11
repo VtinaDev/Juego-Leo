@@ -21,11 +21,12 @@ import { Howl } from 'howler'
 
 const props = defineProps({
   src: { type: String, required: true },
+  rate: { type: Number, default: 1 },
   autoplay: { type: Boolean, default: false },
   ariaLabel: { type: String, default: 'Reproductor de audio' }
 })
 
-const emit = defineEmits(['play', 'pause', 'ended'])
+const emit = defineEmits(['play', 'pause', 'ended', 'progress'])
 
 const playing = ref(false)
 const position = ref(0)
@@ -44,6 +45,9 @@ function attachSound() {
   cleanupSound()
 
   sound = new Howl({ src: [props.src], html5: true })
+  if (Number.isFinite(props.rate) && props.rate > 0) {
+    sound.rate(props.rate)
+  }
   sound.on('play', () => {
     playing.value = true
     duration.value = sound.duration()
@@ -72,9 +76,17 @@ function startTick() {
   stopTick()
   tickHandle = window.setInterval(() => {
     if (sound && playing.value) {
-      position.value = sound.seek() || 0
+      const nextPosition = Number(sound.seek() || 0)
+      position.value = nextPosition
+      const totalDuration = Number(duration.value || sound.duration() || 0)
+      const progress = totalDuration > 0 ? Math.min(1, Math.max(0, nextPosition / totalDuration)) : 0
+      emit('progress', {
+        position: nextPosition,
+        duration: totalDuration,
+        progress
+      })
     }
-  }, 250)
+  }, 120)
 }
 
 function stopTick() {
@@ -114,6 +126,14 @@ watch(
   () => props.src,
   () => {
     attachSound()
+  }
+)
+
+watch(
+  () => props.rate,
+  (nextRate) => {
+    if (!sound || !Number.isFinite(nextRate) || nextRate <= 0) return
+    sound.rate(nextRate)
   }
 )
 </script>

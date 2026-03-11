@@ -7,9 +7,18 @@
     <div class="grid md:grid-cols-4 gap-4">
       <div class="card">
         <h3 class="text-xl font-bold">Prueba</h3>
-        <p class="text-sm">7 días gratuitos</p>
-        <button class="btn btn-primary mt-3" type="button" @click="openDemo('trial')">
-          Activar prueba
+        <p class="text-sm" v-if="billing.trialActive">
+          Prueba activa · {{ billing.trialDaysLeft }} días restantes
+        </p>
+        <p class="text-sm" v-else-if="billing.trialExpired">Prueba finalizada</p>
+        <p class="text-sm" v-else>7 días gratuitos</p>
+        <button
+          class="btn btn-primary mt-3"
+          type="button"
+          :disabled="trialButtonDisabled"
+          @click="openTrial"
+        >
+          {{ trialButtonLabel }}
         </button>
       </div>
       <div class="card">
@@ -102,11 +111,27 @@ const demoLabel = computed(() => {
   return names[billing.demoPlanId] || 'Plan demo'
 })
 
+const trialButtonDisabled = computed(() => billing.trialActive || billing.trialExpired)
+const trialButtonLabel = computed(() => {
+  if (billing.trialActive) return 'Prueba en curso'
+  if (billing.trialExpired) return 'Prueba finalizada'
+  return 'Activar prueba'
+})
+
 onMounted(() => {
   if (typeof window === 'undefined') return
   const stored = localStorage.getItem('juegoLeo_waitlist_email')
   if (stored) email.value = stored
 })
+
+function openTrial() {
+  const started = billing.startTrial()
+  if (!started) return
+  selectedPlan.value = 'trial'
+  saved.value = false
+  error.value = ''
+  showModal.value = true
+}
 
 function openDemo(planId) {
   billing.startDemoPlan(planId)

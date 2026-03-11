@@ -1,0 +1,136 @@
+level,stage,exercise_id,subtype,field,text
+1,1,L1-QS-1,question_sentence,question,¿Dónde descansa el búho?
+1,1,L1-QS-1,question_sentence,sentence,El búho duerme en el árbol.
+1,1,L1-QS-1,question_sentence,hint,Lee la frase completa y busca el lugar mencionado.
+1,1,L1-QS-2,question_sentence,question,¿Qué hace la luciérnaga?
+1,1,L1-QS-2,question_sentence,sentence,La luciérnaga ilumina la noche.
+1,1,L1-QS-2,question_sentence,hint,Piensa en lo que hace una luciérnaga.
+1,1,L1-QS-3,question_sentence,question,¿Qué encuentra el oso perezoso?
+1,1,L1-QS-3,question_sentence,sentence,El oso perezoso encuentra una flor azul.
+1,1,L1-QS-3,question_sentence,hint,Observa el objeto final de la frase.
+1,1,L1-QS-4,question_sentence,question,¿Quién abraza al perro?
+1,1,L1-QS-4,question_sentence,sentence,El niño abraza al perro alegre.
+1,1,L1-QS-4,question_sentence,hint,Lee el sujeto del verbo 'abraza'.
+1,2,L1-CS-1,complete_sentence,prompt,El hada ____ la puerta secreta.
+1,2,L1-CS-1,complete_sentence,hint,Piensa en lo que se hace con una puerta.
+1,2,L1-CS-2,complete_sentence,prompt,La nube ____ gotas.
+1,2,L1-CS-2,complete_sentence,hint,Las nubes dejan algo que cae del cielo.
+1,2,L1-CS-3,complete_sentence,prompt,El oso ____ con calma.
+1,2,L1-CS-3,complete_sentence,hint,Recuerda que es un oso tranquilo.
+1,2,L1-CS-4,complete_sentence,prompt,La hoja ____ al viento.
+1,2,L1-CS-4,complete_sentence,hint,¿Qué hace una hoja en el aire?
+1,2,L1-CS-5,complete_sentence,prompt,El río ____ un canto suave.
+1,2,L1-CS-5,complete_sentence,hint,Piensa en un sonido tranquilo de agua.
+1,2,L1-CS-6,complete_sentence,prompt,La luna ____ la noche.
+1,2,L1-CS-6,complete_sentence,hint,Busca la acción que da luz.
+1,2,L1-CS-7,complete_sentence,prompt,El colibrí ____ flores mágicas.
+1,2,L1-CS-7,complete_sentence,hint,¿Qué hace un colibrí con las flores?
+1,2,L1-CS-8,complete_sentence,prompt,La campana ____ el recreo.
+1,2,L1-CS-8,complete_sentence,hint,Recuerda qué hace la campana en la escuela.
+1,3,L1-OS-1,order_sentence,hint,Comienza con el artículo.
+1,3,L1-OS-2,order_sentence,hint,Coloca 'El' al inicio.
+1,3,L1-OS-3,order_sentence,hint,"Sujeto primero, luego acción."
+1,3,L1-OS-4,order_sentence,hint,Respeta el orden natural de sujeto y verbo.
+1,4,L1-RW-1,read_with_audio,instruction,"Lee la frase con ritmo tranquilo. Si quieres, escucha el audio."
+1,4,L1-RW-1,read_with_audio,text,El faro guía a los barcos perdidos.
+1,4,L1-RW-1,read_with_audio,hint,Respira y lee despacio cada palabra.
+1,4,L1-RW-2,read_with_audio,instruction,Lee en voz alta. Pulsa escuchar si prefieres.
+1,4,L1-RW-2,read_with_audio,text,La campana anuncia el recreo.
+1,4,L1-RW-2,read_with_audio,hint,Observa las sílabas: cam-pa-na.
+1,4,L1-RW-3,read_with_audio,instruction,Imagina el movimiento mientras lees.
+1,4,L1-RW-3,read_with_audio,text,Las hojas viajan con el viento.
+1,4,L1-RW-3,read_with_audio,hint,Marca con el dedo cada palabra.
+1,4,L1-RW-4,read_with_audio,instruction,Lee tú mismo y disfruta del ritmo.
+1,4,L1-RW-4,read_with_audio,text,El río canta para el bosque.
+1,4,L1-RW-4,read_with_audio,hint,Pronuncia lentamente las sílabas.
+1,5,L1-IWM-1,IMAGE_WORD_MATCH,prompt,Selecciona la palabra que nombra la imagen
+1,5,L1-IWM-1,IMAGE_WORD_MATCH,hint,Piensa en lo que brilla en el cielo.
+1,5,L1-IWM-2,IMAGE_WORD_MATCH,prompt,Selecciona la palabra que nombra la imagen
+1,5,L1-IWM-2,IMAGE_WORD_MATCH,hint,Suena para avisar.
+1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,prompt,Elige la palabra correcta
+1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,hint,Historias para dormir.
+1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,prompt,Elige la palabra correcta
+1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,hint,Guía a los barcos de noche.
+2,1,L2-MC-1,multiple_choice,question,Encierra el nombre correcto del dibujo: sol
+2,1,L2-MC-1,multiple_choice,hint,Fíjate en la vocal que suena en medio (o).
+2,1,L2-MC-2,multiple_choice,question,Encierra el nombre correcto del dibujo: sapo
+2,1,L2-MC-2,multiple_choice,hint,Escucha el sonido de la primera y la última sílaba: sa-po.
+2,1,L2-MC-3,multiple_choice,question,Encierra el nombre correcto del dibujo: sopa
+2,1,L2-MC-3,multiple_choice,hint,Busca la sílaba central que suena 'o'.
+2,1,L2-MC-4,multiple_choice,question,Encierra el nombre correcto del dibujo: mesa
+2,1,L2-MC-4,multiple_choice,hint,Pon atención al sonido de la primera vocal (e).
+2,1,L2-MC-5,multiple_choice,question,Encierra el nombre correcto del dibujo: oso
+2,1,L2-MC-5,multiple_choice,hint,Suena igual al decirlo y escribirlo: o-so.
+2,1,L2-MC-6,multiple_choice,question,Encierra el nombre correcto del dibujo: pato
+2,1,L2-MC-6,multiple_choice,hint,La palabra empieza como 'pa' de pato.
+2,1,L2-MC-7,multiple_choice,question,Encierra el nombre correcto del dibujo: luna
+2,1,L2-MC-7,multiple_choice,hint,Escucha el sonido 'lu-na' al decirlo.
+2,2,L2-PS-1,pair_synonyms,hint,Busca parejas que compartan significado.
+2,2,L2-PS-2,pair_synonyms,hint,Observa cómo cada palabra describe lo mismo.
+2,2,L2-PS-3,pair_synonyms,hint,Une el número con su nombre escrito.
+2,3,L2-PA-1,pair_antonyms,hint,Une palabras que significan lo contrario.
+2,3,L2-PA-2,pair_antonyms,hint,Recuerda: el opuesto crea equilibrio mágico.
+2,4,L2-UW-1,UNSCRAMBLE_WORD,hint,Comida caliente.
+2,4,L2-UW-2,UNSCRAMBLE_WORD,hint,Un animal doméstico.
+2,5,L2-CW-1,COMPLETE_WORD,prompt,Completa la palabra: s_p_
+2,5,L2-CW-1,COMPLETE_WORD,hint,Salta y vive en el agua.
+2,5,L2-CW-2,COMPLETE_WORD,prompt,Completa la palabra: l_n_
+2,5,L2-CW-2,COMPLETE_WORD,hint,Brilla de noche.
+3,1,L3-SS-1,sentence_selection,prompt,Elige la frase que describe mejor lo que ves en tu mente.
+3,1,L3-SS-1,sentence_selection,hint,Busca la frase con orden lógico sujeto-verbo-objeto.
+3,1,L3-SS-2,sentence_selection,prompt,Escoge la frase que te suena natural.
+3,1,L3-SS-2,sentence_selection,hint,Piensa en cómo dirías la frase a un amigo.
+3,1,L3-SS-3,sentence_selection,prompt,¿Cuál frase cuenta una acción realista?
+3,1,L3-SS-3,sentence_selection,hint,Elige la frase con personajes que pueden realizar la acción.
+3,2,L3-AQ-1,audio_question,question,¿Qué animal cruza el puente?
+3,2,L3-AQ-1,audio_question,context,"En el bosque mágico, un animal cruza con cuidado el puente brillante."
+3,2,L3-AQ-1,audio_question,hint,Lee el contexto si no hay audio disponible.
+3,2,L3-AQ-2,audio_question,question,¿Qué busca el mono curioso?
+3,2,L3-AQ-2,audio_question,context,El mono curioso busca su mochila verde para la clase de magia.
+3,2,L3-AQ-2,audio_question,hint,"Si no escuchas audio, lee el texto 'context'."
+3,2,L3-AQ-3,audio_question,question,¿Qué hacen los amigos al final?
+3,2,L3-AQ-3,audio_question,context,"Después de la aventura, los amigos toman té de estrellas."
+3,2,L3-AQ-3,audio_question,hint,Busca pistas en la última parte del texto.
+3,3,L3-SO-1,SYLLABLE_ORDER,hint,Animal que salta.
+3,3,L3-SO-2,SYLLABLE_ORDER,hint,Brilla en la noche.
+4,1,L4-AW-1,audio_write,instruction,Escribe la palabra que escuchas o lees:
+4,1,L4-AW-1,audio_write,fallbackText,Escribe: luciérnaga
+4,1,L4-AW-1,audio_write,hint,Recuerda colocar la tilde correcta.
+4,1,L4-AW-2,audio_write,instruction,Escribe la frase completa.
+4,1,L4-AW-2,audio_write,fallbackText,Escribe: El dragón sopla nubes de algodón.
+4,1,L4-AW-2,audio_write,hint,Empieza con mayúscula y termina con punto.
+4,2,L4-TW-1,text_write,instruction,Escribe una frase que incluya la palabra 'magia'.
+4,2,L4-TW-1,text_write,hint,Asegúrate de usar la palabra mágica.
+4,2,L4-TW-2,text_write,instruction,Escribe el nombre de la figura o símbolo: 🔺
+4,2,L4-TW-2,text_write,hint,Piensa en la forma geométrica del símbolo.
+4,2,L4-TW-3,text_write,instruction,Ordena las letras y escribe la palabra: lvase
+4,2,L4-TW-3,text_write,hint,Piensa en un lugar lleno de árboles.
+4,2,L4-TW-4,text_write,instruction,Ordena las letras y escribe la palabra: oglob
+4,2,L4-TW-4,text_write,hint,Se infla para flotar en el aire.
+4,2,L4-TW-5,text_write,instruction,Completa la palabra: L_n_s (día de la semana)
+4,2,L4-TW-5,text_write,hint,Empieza la semana.
+4,3,L4-RA-1,READ_AND_ANSWER,text,El oso Simón vive en una cueva y come miel dulce.
+4,3,L4-RA-1,READ_AND_ANSWER,hint,Busca dónde vive.
+4,3,L4-RA-2,READ_AND_ANSWER,text,La vaca Lola camina al río para beber agua fresca.
+4,3,L4-RA-2,READ_AND_ANSWER,hint,¿Qué hace en el río?
+5,1,L5-TC-1,tense_classify,sentence,Ayer dibujé una estrella brillante.
+5,1,L5-TC-1,tense_classify,hint,Observa la palabra 'ayer'.
+5,1,L5-TC-2,tense_classify,sentence,Hoy comparto mi cuaderno mágico.
+5,1,L5-TC-2,tense_classify,hint,La acción ocurre en este momento.
+5,1,L5-TC-3,tense_classify,sentence,Mañana estudiaré los hechizos nuevos.
+5,1,L5-TC-3,tense_classify,hint,"Si dice 'mañana', piensa en el futuro."
+5,2,L5-SP-1,singular_plural,hint,Observa cómo cambian las terminaciones al plural.
+5,3,L5-AG-1,accent_game,hint,Recuerda: melodía lleva tilde en la sílaba fuerte.
+5,3,L5-AG-2,accent_game,hint,Imagina dónde suena más fuerte la palabra.
+5,4,L5-PG-1,punctuation_game,sentence,Que sorpresa verte aqui
+5,4,L5-PG-1,punctuation_game,hint,La frase expresa sorpresa.
+5,4,L5-PG-2,punctuation_game,sentence,Como te llamas
+5,4,L5-PG-2,punctuation_game,hint,"Es una pregunta, necesita signos interrogativos."
+5,4,L5-PG-3,punctuation_game,sentence,Gracias por ayudarme
+5,4,L5-PG-3,punctuation_game,hint,Una afirmación termina con punto.
+5,5,L5-FE-1,final_exam,question,"¿Qué tiempo verbal usa la frase: ""Mañana cantaré con el coro""?"
+5,5,L5-FE-1,final_exam,hint,Busca palabras que indiquen futuro.
+5,5,L5-FE-2,final_exam,question,"Elige el signo que completa la frase: ""¿Vienes a la clase de magia"""
+5,5,L5-FE-2,final_exam,hint,Coloca el signo inicial correcto para una pregunta.
+5,5,L5-FE-3,final_exam,question,¿Dónde colocarías la tilde en la palabra 'musica'?
+5,5,L5-FE-3,final_exam,hint,Piensa en cómo suena la sílaba fuerte.

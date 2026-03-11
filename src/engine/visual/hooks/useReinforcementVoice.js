@@ -1,24 +1,51 @@
-import { Howl } from 'howler'
-
-const VOICE_DEFS = [
-  ['/assets/voice/great_job.mp3', 0.9],
-  ['/assets/voice/well_done.mp3', 0.9],
-  ['/assets/voice/keep_trying.mp3', 0.9]
-]
-
-const voices = VOICE_DEFS.map(([src, volume]) => new Howl({ src: [src], volume }))
+import { getAudioSettings, playVoiceCue } from '../../audio/audioManager'
 
 export function useReinforcementVoice() {
-  function playPositive() {
-    const index = Math.floor(Math.random() * 2)
-    voices[index]?.play()
+  // Mantiene solo los refuerzos que encajan con el flujo de avance.
+  const POSITIVE_CUES = ['positive1', 'positive2', 'positive3']
+
+  function randomPositiveCue() {
+    const index = Math.floor(Math.random() * POSITIVE_CUES.length)
+    return POSITIVE_CUES[index]
+  }
+
+  function playPositive(options = {}) {
+    playVoiceCue(randomPositiveCue(), options)
+  }
+
+  function playPositiveAndWait({ timeoutMs = 2200, ...options } = {}) {
+    const audioSettings = getAudioSettings()
+    if (!audioSettings.voiceEnabled || (audioSettings.voiceVolume ?? 0) <= 0) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve) => {
+      let settled = false
+      const finish = () => {
+        if (settled) return
+        settled = true
+        resolve()
+      }
+
+      const timer = setTimeout(() => {
+        finish()
+      }, timeoutMs)
+
+      playVoiceCue(randomPositiveCue(), {
+        ...options,
+        onEnd: () => {
+          clearTimeout(timer)
+          finish()
+        }
+      })
+    })
   }
 
   function playEncouragement() {
-    voices[2]?.play()
+    playVoiceCue('retry')
   }
 
-  return { playPositive, playEncouragement }
+  return { playPositive, playPositiveAndWait, playEncouragement }
 }
 
 export default useReinforcementVoice
