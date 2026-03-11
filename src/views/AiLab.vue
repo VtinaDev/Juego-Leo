@@ -2,6 +2,40 @@
   <section class="ai-lab">
     <h1>AI Content Lab</h1>
 
+    <div class="config-grid">
+      <label>
+        <span>Age Range</span>
+        <select v-model="selectedAgeRange">
+          <option value="4-6">4-6</option>
+          <option value="6-8">6-8</option>
+          <option value="8-10">8-10</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Skill</span>
+        <select v-model="selectedSkillType">
+          <option value="decoding">decoding</option>
+          <option value="reading_comprehension">reading_comprehension</option>
+          <option value="inference">inference</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Difficulty</span>
+        <select v-model="selectedDifficulty">
+          <option value="easy">easy</option>
+          <option value="medium">medium</option>
+          <option value="hard">hard</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Exercise Count</span>
+        <input v-model.number="exerciseCount" type="number" min="1" max="20" />
+      </label>
+    </div>
+
     <label for="json-input" class="label">Exercise Batch JSON</label>
     <textarea
       id="json-input"
@@ -48,7 +82,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { AIReadingExercise } from '../lib/ai/schemas/exerciseSchema'
+import type {
+  AIReadingExercise,
+  AIReadingExerciseBatch,
+  AgeRange,
+  SkillType,
+  Difficulty
+} from '../lib/ai/schemas/exerciseSchema'
 import { validateGeneratedExercise } from '../lib/ai/utils/validateGeneratedExercise'
 import { downloadJson } from '../lib/ai/utils/downloadJson'
 import { MockLLMClient } from '../lib/ai/clients/MockLLMClient'
@@ -64,6 +104,10 @@ const parseError = ref('')
 const batchErrors = ref<string[]>([])
 const exerciseResults = ref<ExerciseValidationView[]>([])
 const parsedExercises = ref<AIReadingExercise[]>([])
+const selectedAgeRange = ref<AgeRange>('6-8')
+const selectedSkillType = ref<SkillType>('reading_comprehension')
+const selectedDifficulty = ref<Difficulty>('easy')
+const exerciseCount = ref(3)
 
 const allValid = computed(() => {
   return exerciseResults.value.length > 0 && exerciseResults.value.every((result) => result.valid)
@@ -139,7 +183,35 @@ async function handleGenerateMockBatch() {
   const response = await client.generateStructuredJson({
     user: 'Generate a sample batch of reading exercises for children.'
   })
-  rawJson.value = JSON.stringify(response.data, null, 2)
+
+  const sourceExercises = extractExercises(response.data)
+  const safeCount = Math.max(1, Math.min(20, Number(exerciseCount.value) || 1))
+  exerciseCount.value = safeCount
+
+  const remappedExercises: AIReadingExercise[] = Array.from({ length: safeCount }, (_, index) => {
+    const template = sourceExercises[index % sourceExercises.length] || {
+      id: `mock-ex-${index + 1}`,
+      ageRange: selectedAgeRange.value,
+      title: `Mock Exercise ${index + 1}`,
+      text: 'Texto de ejemplo.',
+      question: '¿Cuál es la respuesta correcta?',
+      options: ['Opción A', 'Opción B'],
+      correctAnswer: 'Opción A',
+      skillType: selectedSkillType.value,
+      difficulty: selectedDifficulty.value
+    }
+
+    return {
+      ...template,
+      id: `${template.id}-${index + 1}`,
+      ageRange: selectedAgeRange.value,
+      skillType: selectedSkillType.value,
+      difficulty: selectedDifficulty.value
+    }
+  })
+
+  const batch: AIReadingExerciseBatch = { exercises: remappedExercises }
+  rawJson.value = JSON.stringify(batch, null, 2)
 }
 </script>
 
@@ -148,6 +220,28 @@ async function handleGenerateMockBatch() {
   max-width: 900px;
   margin: 0 auto;
   padding: 1rem;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.config-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.config-grid select,
+.config-grid input {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
 }
 
 .label {
