@@ -15,18 +15,26 @@
       <label>
         <span>Skill</span>
         <select v-model="selectedSkillType">
-          <option value="decoding">decoding</option>
-          <option value="reading_comprehension">reading_comprehension</option>
-          <option value="inference">inference</option>
+          <option
+            v-for="skill in availableSkills"
+            :key="skill"
+            :value="skill"
+          >
+            {{ skill }}
+          </option>
         </select>
       </label>
 
       <label>
         <span>Difficulty</span>
         <select v-model="selectedDifficulty">
-          <option value="easy">easy</option>
-          <option value="medium">medium</option>
-          <option value="hard">hard</option>
+          <option
+            v-for="difficulty in availableDifficulties"
+            :key="difficulty"
+            :value="difficulty"
+          >
+            {{ difficulty }}
+          </option>
         </select>
       </label>
 
@@ -81,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type {
   AIReadingExercise,
   AIReadingExerciseBatch,
@@ -92,6 +100,7 @@ import type {
 import { validateGeneratedExercise } from '../lib/ai/utils/validateGeneratedExercise'
 import { downloadJson } from '../lib/ai/utils/downloadJson'
 import { MockLLMClient } from '../lib/ai/clients/MockLLMClient'
+import { AGE_PRESETS } from '../lib/ai/utils/agePresets'
 
 type ExerciseValidationView = {
   index: number
@@ -108,6 +117,9 @@ const selectedAgeRange = ref<AgeRange>('6-8')
 const selectedSkillType = ref<SkillType>('reading_comprehension')
 const selectedDifficulty = ref<Difficulty>('easy')
 const exerciseCount = ref(3)
+const selectedPreset = computed(() => AGE_PRESETS[selectedAgeRange.value])
+const availableSkills = computed(() => selectedPreset.value.allowedSkills)
+const availableDifficulties = computed(() => selectedPreset.value.allowedDifficulty)
 
 const allValid = computed(() => {
   return exerciseResults.value.length > 0 && exerciseResults.value.every((result) => result.valid)
@@ -120,6 +132,19 @@ const validationStatus = computed(() => {
   if (!exerciseResults.value.length) return 'Pending'
   return allValid.value ? 'Valid batch' : 'Batch has errors'
 })
+
+watch(
+  selectedAgeRange,
+  () => {
+    if (!availableSkills.value.includes(selectedSkillType.value)) {
+      selectedSkillType.value = availableSkills.value[0]
+    }
+    if (!availableDifficulties.value.includes(selectedDifficulty.value)) {
+      selectedDifficulty.value = availableDifficulties.value[0]
+    }
+  },
+  { immediate: true }
+)
 
 function resetValidationState() {
   parseError.value = ''
