@@ -7,6 +7,7 @@ import Game from '../views/Game.vue'
 import MapView from '../views/MapView.vue'
 import Profile from '../views/Profile.vue'
 import Subscribe from '../views/Subscribe.vue'
+import AiLab from '../views/AiLab.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,6 +19,7 @@ const router = createRouter({
     { path: '/mapview', name: 'MapView', component: MapView },
     { path: '/profile', name: 'Profile', component: Profile },
     { path: '/subscribe', name: 'Subscribe', component: Subscribe },
+    { path: '/ai-lab', name: 'AiLab', component: AiLab },
 
   ],
   scrollBehavior() {
