@@ -1,0 +1,79 @@
+{
+  "exercises": [
+    {
+      "id": "mock-ex-1-1",
+      "ageRange": "6-8",
+      "title": "El gato y la luna",
+      "text": "El gato mira la luna desde la ventana.",
+      "question": "¿Qué mira el gato?",
+      "options": [
+        "El sol",
+        "La luna",
+        "La mesa"
+      ],
+      "correctAnswer": "La luna",
+      "skillType": "reading_comprehension",
+      "difficulty": "easy"
+    },
+    {
+      "id": "mock-ex-2-2",
+      "ageRange": "6-8",
+      "title": "Camino al parque",
+      "text": "Ana lleva una pelota roja al parque para jugar con su hermano.",
+      "question": "¿Qué lleva Ana al parque?",
+      "options": [
+        "Una pelota roja",
+        "Un libro azul",
+        "Una mochila verde"
+      ],
+      "correctAnswer": "Una pelota roja",
+      "skillType": "reading_comprehension",
+      "difficulty": "easy"
+    },
+    {
+      "id": "mock-ex-3-3",
+      "ageRange": "6-8",
+      "title": "La linterna apagada",
+      "text": "Pedro no encontró pilas, por eso su linterna no encendió durante la excursión nocturna.",
+      "question": "¿Por qué no encendió la linterna?",
+      "options": [
+        "Porque estaba mojada",
+        "Porque no tenía pilas",
+        "Porque era de día"
+      ],
+      "correctAnswer": "Porque no tenía pilas",
+      "skillType": "reading_comprehension",
+      "difficulty": "easy"
+    },
+    {
+      "id": "mock-ex-1-4",
+      "ageRange": "6-8",
+      "title": "El gato y la luna",
+      "text": "El gato mira la luna desde la ventana.",
+      "question": "¿Qué mira el gato?",
+      "options": [
+        "El sol",
+        "La luna",
+        "La mesa"
+      ],
+      "correctAnswer": "La luna",
+      "skillType": "reading_comprehension",
+      "difficulty": "easy"
+    },
+    {
+      "id": "mock-ex-2-5",
+      "ageRange": "6-8",
+      "title": "Camino al parque",
+      "text": "Ana lleva una pelota roja al parque para jugar con su hermano.",
+      "question": "¿Qué lleva Ana al parque?",
+      "options": [
+        "Una pelota roja",
+        "Un libro azul",
+        "Una mochila verde"
+      ],
+      "correctAnswer": "Una pelota roja",
+      "skillType": "reading_comprehension",
+      "difficulty": "easy"
+    }
+  ]
+}
