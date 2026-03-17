@@ -30,10 +30,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { LOCAL_BATCH_REGISTRY } from '../lib/ai/utils/loadLocalExerciseBatch'
+import { ref, computed, onMounted } from 'vue'
+import { loadAllLocalExerciseBatches } from '../lib/ai/utils/loadLocalExerciseBatch'
 
-const batchEntries = computed(() => Object.entries(LOCAL_BATCH_REGISTRY))
+const loadedBatches = ref<Record<string, any>>({})
+
+onMounted(async () => {
+  loadedBatches.value = await loadAllLocalExerciseBatches()
+})
+
+const batchEntries = computed(() => Object.entries(loadedBatches.value))
 </script>
 
 <style scoped>
