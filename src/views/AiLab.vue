@@ -55,6 +55,7 @@
     <div class="actions">
       <button type="button" @click="handleGenerateMockBatch">Generate Mock Batch</button>
       <button type="button" @click="handleValidate">Validate</button>
+      <span class="filename-hint">Suggested file: {{ suggestedFilename }}</span>
       <button type="button" @click="handleDownload" :disabled="!canDownload">Download JSON</button>
     </div>
 
@@ -101,6 +102,7 @@ import { validateGeneratedExercise } from '../lib/ai/utils/validateGeneratedExer
 import { downloadJson } from '../lib/ai/utils/downloadJson'
 import { MockLLMClient } from '../lib/ai/clients/MockLLMClient'
 import { AGE_PRESETS } from '../lib/ai/utils/agePresets'
+import { buildBatchFilename } from '../lib/ai/utils/buildBatchFilename'
 
 type ExerciseValidationView = {
   index: number
@@ -126,6 +128,14 @@ const allValid = computed(() => {
 })
 
 const canDownload = computed(() => allValid.value && parsedExercises.value.length > 0)
+const suggestedFilename = computed(() =>
+  buildBatchFilename({
+    ageRange: selectedAgeRange.value,
+    skillType: selectedSkillType.value,
+    difficulty: selectedDifficulty.value,
+    sequenceNumber: 1
+  })
+)
 
 const validationStatus = computed(() => {
   if (parseError.value) return 'Invalid JSON'
@@ -199,7 +209,7 @@ function handleValidate() {
 
 function handleDownload() {
   if (!canDownload.value) return
-  downloadJson({ exercises: parsedExercises.value }, 'ai-generated-exercises.json')
+  downloadJson({ exercises: parsedExercises.value }, suggestedFilename.value)
 }
 
 async function handleGenerateMockBatch() {
@@ -288,8 +298,15 @@ async function handleGenerateMockBatch() {
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.75rem;
   margin-top: 1rem;
+}
+
+.filename-hint {
+  font-size: 0.9rem;
+  color: #334155;
 }
 
 button {
