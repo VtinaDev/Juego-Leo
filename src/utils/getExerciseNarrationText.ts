@@ -30,8 +30,15 @@ function truncate(text: string): string {
 export function getExerciseNarrationText(exercise: MaybeExercise): string | null {
   if (!exercise) return null
 
+  const typedExercise = exercise as Record<string, unknown>
+  const type = String(typedExercise.type || '').toUpperCase()
+  if (type === 'COMPLETE_WORD') {
+    const solution = cleanText(typedExercise.solution ?? typedExercise.correct ?? typedExercise.answer)
+    if (solution) return truncate(solution)
+  }
+
   for (const field of FIELDS_PRIORITY) {
-    const value = cleanText((exercise as Record<string, unknown>)[field])
+    const value = cleanText(typedExercise[field])
     if (value) {
       return truncate(value)
     }

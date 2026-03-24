@@ -1,6 +1,9 @@
 import fs from 'fs'
 import path from 'path'
+import dotenv from 'dotenv'
 import OpenAI from 'openai'
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env') })
 
 const MODEL = process.env.OPENAI_IMAGE_MODEL || 'gpt-image-1'
 const SIZE = process.env.OPENAI_IMAGE_SIZE || '1024x1024'
@@ -31,8 +34,7 @@ export async function createImage(prompt, filePath, { model = MODEL, size = SIZE
   const response = await client.images.generate({
     model,
     prompt,
-    size,
-    response_format: 'b64_json'
+    size
   })
 
   const imageBase64 = response?.data?.[0]?.b64_json

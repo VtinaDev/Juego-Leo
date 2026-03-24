@@ -106,7 +106,15 @@
             </div>
             <!-- ========= VISUAL COMÚN (todos los niveles) ========= -->
             <div
-              v-if="hasVisual && !hideLevelVisuals && !isLevelFour && current.type !== 'IMAGE_WORD_MATCH'"
+              v-if="
+                hasVisual &&
+                !hideLevelVisuals &&
+                !isLevelFour &&
+                current.type !== 'IMAGE_WORD_MATCH' &&
+                !(current.type === 'complete_sentence' && current.image) &&
+                !(current.type === 'multiple_choice' && (current.image || current.emoji)) &&
+                !(current.type === 'sentence_selection' && current.image)
+              "
               class="exercise-visual"
             >
               <img
@@ -130,56 +138,75 @@
 
             <!-- Pregunta sobre frase (L1) -->
             <section v-if="current.type === 'question_sentence'">
-              <SentenceAudioRow
-                :text="questionMaskedSentence"
-                :speak-text="current.sentence"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-4 leading-snug text-slate-700"
-                :align-center="true"
-                aria-label="Escuchar frase"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
-              <div class="options-row" :class="optionLayout(current.options)">
-                <button
-                  v-for="option in current.options"
-                  :key="option"
-                  class="btn-option"
-                  type="button"
-                  @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
-                >
-                  {{ option }}
-                </button>
-              </div>
+              <BaseExerciseLayout aria-label="Pregunta sobre frase">
+                <template #prompt>
+                  <ExercisePrompt
+                    :title="questionMaskedSentence || current.prompt || 'Elige la respuesta correcta'"
+                    instruction="Escucha la frase y selecciona una sola respuesta."
+                  />
+                  <div class="mt-2 flex justify-center">
+                    <AudioButton
+                      :exercise="current"
+                      :narration-text="current.sentence"
+                      :audio-src="current.audio"
+                      aria-label="Escuchar frase"
+                      @fallback-audio="(src) => playSimpleAudio(src)"
+                    />
+                  </div>
+                </template>
+
+                <ExerciseOptions
+                  :options="current.options || []"
+                  aria-label="Opciones de respuesta para la frase"
+                  @select="handleSimpleOption"
+                />
+
+                <ExerciseFeedback
+                  :status="currentStatus === 'ok' ? 'success' : currentStatus === 'fail' ? 'error' : 'idle'"
+                  success-text="¡Excelente!"
+                  error-text="Inténtalo de nuevo con calma."
+                />
+              </BaseExerciseLayout>
             </section>
 
             <!-- Completar frase (L1) -->
             <section v-else-if="current.type === 'complete_sentence'">
-              <SentenceAudioRow
-                :text="current.prompt"
-                :speak-text="fillBlank(current.prompt, current.correct || current.answer)"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-4 leading-snug"
-                :align-center="true"
-                aria-label="Escuchar frase"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
-              <div class="options-row" :class="optionLayout(current.options)">
-                <button
-                  v-for="option in current.options"
-                  :key="option"
-                  class="btn-option"
-                  type="button"
-                  @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
-                >
-                  {{ option }}
-                </button>
-              </div>
+              <BaseExerciseLayout aria-label="Ejercicio de completar frase">
+                <template #media v-if="current.image">
+                  <ExerciseImage
+                    :src="resolveAsset(current.image)"
+                    :alt="current.imageAlt || current.prompt || 'Ilustración del ejercicio'"
+                  />
+                </template>
+
+                <template #prompt>
+                  <ExercisePrompt
+                    :title="current.prompt || 'Completa la frase'"
+                    instruction="Elige una sola palabra para completar correctamente."
+                  />
+                  <div class="mt-2 flex justify-center">
+                    <AudioButton
+                      :exercise="current"
+                      :narration-text="fillBlank(current.prompt, current.correct || current.answer)"
+                      :audio-src="current.audio"
+                      aria-label="Escuchar frase"
+                      @fallback-audio="(src) => playSimpleAudio(src)"
+                    />
+                  </div>
+                </template>
+
+                <ExerciseOptions
+                  :options="current.options || []"
+                  aria-label="Opciones para completar la frase"
+                  @select="handleSimpleOption"
+                />
+
+                <ExerciseFeedback
+                  :status="currentStatus === 'ok' ? 'success' : currentStatus === 'fail' ? 'error' : 'idle'"
+                  success-text="¡Excelente!"
+                  error-text="Inténtalo de nuevo con calma."
+                />
+              </BaseExerciseLayout>
             </section>
 
             <!-- Ordenar frase (L1) -->
@@ -241,38 +268,45 @@
 
             <!-- Opción múltiple genérica (L2, L3, L5...) -->
             <section v-else-if="current.type === 'multiple_choice'">
-              <SentenceAudioRow
-                :text="current.question || current.prompt"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-3 leading-snug"
-                :align-center="true"
-                aria-label="Escuchar pregunta"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
-              <div v-if="current.image || current.emoji" class="choice-visual">
-                <img
-                  v-if="current.image"
-                  :src="resolveAsset(current.image)"
-                  :alt="current.imageAlt || current.question || 'Ilustración del ejercicio'"
-                  class="choice-visual-img"
-                  @error="$event.target.style.display = 'none'"
+              <BaseExerciseLayout aria-label="Ejercicio de opción múltiple">
+                <template #media v-if="current.image || current.emoji">
+                  <div class="choice-visual">
+                    <ExerciseImage
+                      v-if="current.image"
+                      :src="resolveAsset(current.image)"
+                      :alt="current.imageAlt || current.question || 'Ilustración del ejercicio'"
+                    />
+                    <div v-else class="choice-emoji" aria-hidden="true">{{ current.emoji }}</div>
+                  </div>
+                </template>
+
+                <template #prompt>
+                  <ExercisePrompt
+                    :title="current.question || current.prompt || 'Elige la opción correcta'"
+                    instruction="Selecciona una sola respuesta."
+                  />
+                  <div class="mt-2 flex justify-center">
+                    <AudioButton
+                      :exercise="current"
+                      :audio-src="current.audio"
+                      aria-label="Escuchar pregunta"
+                      @fallback-audio="(src) => playSimpleAudio(src)"
+                    />
+                  </div>
+                </template>
+
+                <ExerciseOptions
+                  :options="current.options || []"
+                  aria-label="Opciones de respuesta"
+                  @select="handleSimpleOption"
                 />
-                <div v-else class="choice-emoji" aria-hidden="true">{{ current.emoji }}</div>
-              </div>
-              <div class="options-row" :class="optionLayout(current.options)">
-                <button
-                  v-for="option in current.options"
-                  :key="option"
-                  class="btn-option"
-                  type="button"
-                  @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
-                >
-                  {{ option }}
-                </button>
-              </div>
+
+                <ExerciseFeedback
+                  :status="currentStatus === 'ok' ? 'success' : currentStatus === 'fail' ? 'error' : 'idle'"
+                  success-text="¡Excelente!"
+                  error-text="Inténtalo de nuevo con calma."
+                />
+              </BaseExerciseLayout>
             </section>
 
             <!-- Sinónimos (L2) -->
@@ -368,6 +402,7 @@
             <section v-else-if="current.type === 'COMPLETE_WORD'">
               <SentenceAudioRow
                 :text="current.prompt || 'Completa la palabra'"
+                :speak-text="completeWordSpokenText"
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-xl font-semibold mb-3 leading-snug text-center"
@@ -376,13 +411,30 @@
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
               <div class="text-center">
-                <input
-                  v-model="textAnswer"
-                  type="text"
-                  class="w-full border rounded-xl p-3 text-center text-xl"
-                  placeholder="Escribe aquí"
-                />
-                <button class="btn btn-primary mt-3" type="button" @click="handleTextSubmit">
+                <div class="complete-word-pattern" aria-label="Completa la palabra por casillas">
+                  <template v-for="(slot, idx) in completeWordSlots" :key="`cw-slot-${idx}`">
+                    <span v-if="slot.type === 'fixed'" class="cw-fixed">{{ slot.char }}</span>
+                    <input
+                      v-else
+                      :ref="(el) => setCompleteWordInputRef(el, slot.blankIndex)"
+                      v-model="completeWordInputs[slot.blankIndex]"
+                      type="text"
+                      inputmode="text"
+                      autocomplete="off"
+                      autocapitalize="none"
+                      spellcheck="false"
+                      maxlength="1"
+                      class="cw-input"
+                      aria-label="Letra faltante"
+                      @input="handleCompleteWordInput(slot.blankIndex, $event)"
+                      @keydown.backspace="handleCompleteWordBackspace(slot.blankIndex, $event)"
+                      @keydown.enter.prevent="handleTextSubmit"
+                    />
+                  </template>
+                </div>
+              </div>
+              <div class="flex justify-center mt-4">
+                <button class="btn btn-primary" type="button" @click="handleTextSubmit">
                   Confirmar
                 </button>
               </div>
@@ -417,7 +469,7 @@
               <p class="text-xl font-semibold mb-3 leading-snug text-center">
                 Ordena las sílabas
               </p>
-              <div class="options-row" :class="optionLayout(current.syllables)">
+              <div class="options-row syllable-order-source" :class="optionLayout(current.syllables)">
                 <button
                   v-for="syllable in current.syllables"
                   :key="`syllable-${syllable}`"
@@ -429,7 +481,9 @@
                 </button>
               </div>
               <div class="mt-3 text-center">
-                <p class="text-lg font-semibold tracking-wide">{{ syllableAttempt.join(' ') }}</p>
+                <p class="text-lg font-semibold tracking-wide syllable-order-target">
+                  {{ syllableAttempt.join(' ') }}
+                </p>
                 <button class="btn btn-primary mt-2" type="button" @click="submitSyllableOrder">
                   Confirmar
                 </button>
@@ -508,6 +562,9 @@
                 aria-label="Escuchar texto"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
+              <p v-if="current.question" class="read-answer-question">
+                {{ current.question }}
+              </p>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -527,28 +584,41 @@
 
             <!-- Seleccionar frase que tiene sentido -->
             <section v-else-if="current.type === 'sentence_selection'">
-              <SentenceAudioRow
-                :text="current.prompt || 'Elige la frase que tenga más sentido.'"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-4 leading-snug"
-                :align-center="true"
-                aria-label="Escuchar enunciado"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
-              <div class="options-row" :class="optionLayout(current.options)">
-                <button
-                  v-for="option in current.options"
-                  :key="option"
-                  class="btn-option"
-                  type="button"
-                  @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
-                >
-                  {{ option }}
-                </button>
-              </div>
+              <BaseExerciseLayout aria-label="Seleccionar frase con sentido">
+                <template #media v-if="current.image && !isLevelThreeStageOne">
+                  <ExerciseImage
+                    :src="resolveAsset(current.image)"
+                    :alt="current.imageAlt || current.prompt || 'Ilustración del ejercicio'"
+                  />
+                </template>
+
+                <template #prompt>
+                  <ExercisePrompt
+                    :title="current.prompt || 'Elige la frase que tenga más sentido.'"
+                    instruction="Elige la frase que tenga más sentido."
+                  />
+                  <div class="mt-2 flex justify-center">
+                    <AudioButton
+                      :exercise="current"
+                      :audio-src="current.audio"
+                      aria-label="Escuchar enunciado"
+                      @fallback-audio="(src) => playSimpleAudio(src)"
+                    />
+                  </div>
+                </template>
+
+                <ExerciseOptions
+                  :options="current.options || []"
+                  aria-label="Opciones de frase"
+                  @select="handleSimpleOption"
+                />
+
+                <ExerciseFeedback
+                  :status="currentStatus === 'ok' ? 'success' : currentStatus === 'fail' ? 'error' : 'idle'"
+                  success-text="¡Excelente!"
+                  error-text="Inténtalo de nuevo con calma."
+                />
+              </BaseExerciseLayout>
             </section>
 
             <!-- Pregunta con contexto / audio -->
@@ -599,13 +669,13 @@
                   @fallback-audio="(src) => playSimpleAudio(src)"
                 />
               </div>
-              <p v-if="current.fallbackText || current.instruction" class="audio-context">
+              <p v-if="(current.fallbackText || current.instruction) && !isLevelFourStageOne" class="audio-context">
                 {{ current.fallbackText || current.instruction }}
               </p>
               <textarea
                 v-model="textAnswer"
-                rows="3"
-                class="w-full border rounded-xl p-3 text-base"
+                rows="2"
+                class="w-full border rounded-xl p-2 text-xl font-bold"
                 placeholder="Escribe aquí..."
               />
               <div class="mt-3 flex justify-end">
@@ -619,6 +689,7 @@
             <section v-else-if="current.type === 'text_write'">
               <SentenceAudioRow
                 :text="current.instruction || 'Escribe una frase.'"
+                :speak-text="current.narrationText || ''"
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-xl font-semibold mb-3 leading-snug"
@@ -626,10 +697,37 @@
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
+              <div v-if="isLetterBuildExercise" class="letter-build">
+                <div class="options-row letter-build-tiles">
+                  <button
+                    v-for="tile in letterBuildTiles"
+                    :key="`letter-build-${tile.index}`"
+                    class="btn-option letter-build-btn"
+                    type="button"
+                    :disabled="tile.used"
+                    @click="handleLetterBuildSelect(tile)"
+                  >
+                    {{ tile.char }}
+                  </button>
+                </div>
+                <input
+                  v-model="textAnswer"
+                  type="text"
+                  readonly
+                  class="w-full border rounded-xl p-2 text-xl font-bold letter-build-input"
+                  :placeholder="current.placeholder || 'Forma la palabra aquí...'"
+                />
+                <div class="mt-2 flex justify-center">
+                  <button class="btn btn-secondary" type="button" @click="resetLetterBuild">
+                    Reiniciar letras
+                  </button>
+                </div>
+              </div>
               <textarea
+                v-else
                 v-model="textAnswer"
-                rows="3"
-                class="w-full border rounded-xl p-3 text-base"
+                rows="2"
+                class="w-full border rounded-xl p-2 text-xl font-bold"
                 :placeholder="current.placeholder || 'Escribe aquí tu frase mágica...'"
               />
               <p class="text-sm text-gray-600 mt-1">
@@ -646,8 +744,12 @@
 
             <!-- Clasificar tiempos verbales -->
             <section v-else-if="current.type === 'tense_classify'">
+              <p v-if="current.prompt" class="tense-guide">
+                {{ current.prompt }}
+              </p>
               <SentenceAudioRow
-                :text="current.sentence || current.prompt"
+                :text="current.sentence || ''"
+                :speak-text="current.prompt || ''"
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-2xl font-semibold mb-4 leading-snug"
@@ -819,6 +921,11 @@ import AudioButton from '../components/AudioButton.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
 import SyllableHighlighter from '../components/SyllableHighlighter.vue'
 import SentenceAudioRow from '../components/SentenceAudioRow.vue'
+import BaseExerciseLayout from '../components/exercises/BaseExerciseLayout.vue'
+import ExerciseImage from '../components/exercises/ExerciseImage.vue'
+import ExercisePrompt from '../components/exercises/ExercisePrompt.vue'
+import ExerciseOptions from '../components/exercises/ExerciseOptions.vue'
+import ExerciseFeedback from '../components/exercises/ExerciseFeedback.vue'
 
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
@@ -1309,6 +1416,53 @@ const stageLabel = computed(() => {
 const blankSymbol = '_____'
 const blankRegex = /_{3,}/g
 const textAnswer = ref('')
+const completeWordInputs = ref([])
+const completeWordInputRefs = ref([])
+const letterBuildUsedIndices = ref([])
+
+const isLetterBuildExercise = computed(() =>
+  current.value?.type === 'text_write' &&
+  Array.isArray(current.value?.letters) &&
+  current.value.letters.length > 0
+)
+
+const letterBuildTiles = computed(() => {
+  if (!isLetterBuildExercise.value) return []
+  const used = new Set(letterBuildUsedIndices.value)
+  return current.value.letters.map((letter, index) => ({
+    index,
+    char: String(letter ?? ''),
+    used: used.has(index)
+  }))
+})
+
+const completeWordPattern = computed(() => {
+  if (current.value?.type !== 'COMPLETE_WORD') return ''
+  const explicitPattern = String(current.value?.pattern || '').trim()
+  if (explicitPattern.includes('_')) return explicitPattern
+  const prompt = String(current.value?.prompt || '')
+  const match = prompt.match(/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ_]*_[A-Za-zÁÉÍÓÚÜÑáéíóúüñ_]*/u)
+  return match?.[0] || ''
+})
+
+const completeWordSlots = computed(() => {
+  const source = completeWordPattern.value
+  if (!source) return []
+  let blankIndex = 0
+  return source.split('').map((char) => {
+    if (char === '_') {
+      const slot = { type: 'blank', blankIndex }
+      blankIndex += 1
+      return slot
+    }
+    return { type: 'fixed', char }
+  })
+})
+
+const completeWordSpokenText = computed(() => {
+  if (current.value?.type !== 'COMPLETE_WORD') return ''
+  return String(current.value?.solution || current.value?.correct || current.value?.answer || current.value?.prompt || '')
+})
 
 const levelHeading = computed(() => {
   const context = stageContext.value
@@ -1325,15 +1479,88 @@ function fillBlank(text, replacement) {
   return text.replace(blankRegex, replacement)
 }
 
+function normalizeLetterInput(value = '') {
+  return String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Za-zÑñÜü]/g, '')
+    .slice(0, 1)
+    .toLowerCase()
+}
+
+function setCompleteWordInputRef(el, idx) {
+  if (!el || !Number.isInteger(idx) || idx < 0) return
+  completeWordInputRefs.value[idx] = el
+}
+
+function focusCompleteWordInput(idx) {
+  if (!Number.isInteger(idx) || idx < 0) return
+  completeWordInputRefs.value[idx]?.focus?.()
+}
+
+function handleCompleteWordInput(blankIndex, event) {
+  const target = event?.target
+  const value = normalizeLetterInput(target?.value)
+  completeWordInputs.value[blankIndex] = value
+  if (target && target.value !== value) target.value = value
+  if (value) focusCompleteWordInput(blankIndex + 1)
+}
+
+function handleCompleteWordBackspace(blankIndex, event) {
+  const currentValue = completeWordInputs.value[blankIndex] || ''
+  if (!currentValue) {
+    event.preventDefault()
+    focusCompleteWordInput(blankIndex - 1)
+  }
+}
+
+function resetCompleteWordInputs() {
+  const blankCount = completeWordSlots.value.filter((slot) => slot.type === 'blank').length
+  completeWordInputs.value = Array.from({ length: blankCount }, () => '')
+  completeWordInputRefs.value = []
+}
+
+function buildCompleteWordAnswer() {
+  const pattern = completeWordPattern.value
+  if (!pattern) return textAnswer.value || ''
+  let blankCursor = 0
+  return pattern
+    .split('')
+    .map((char) => {
+      if (char !== '_') return char
+      const value = completeWordInputs.value[blankCursor] || ''
+      blankCursor += 1
+      return value
+    })
+    .join('')
+}
+
+function handleLetterBuildSelect(tile) {
+  if (!tile || tile.used) return
+  letterBuildUsedIndices.value = [...letterBuildUsedIndices.value, tile.index]
+  textAnswer.value = `${textAnswer.value || ''}${tile.char || ''}`
+}
+
+function resetLetterBuild() {
+  letterBuildUsedIndices.value = []
+  textAnswer.value = ''
+}
+
 const showExerciseNarration = computed(() => {
   // Oculta el recuadro de audio en nivel 1 (La fuerza tranquila), en la etapa 1/4 (nivel 4) y 1/5 (nivel 5)
   if (level.value === 1) return false
+  if (level.value === 3 && [1, 2].includes(stage.value)) return false
   if (level.value === 2 && stage.value === 1) return false
   if (level.value === 2 && stage.value === 5) return false
+  if (level.value === 4 && [1, 2, 3].includes(stage.value)) return false
+  if (level.value === 5 && stage.value === 4) return false
+  if (level.value === 5 && stage.value === 5) return false
   if ((level.value === 4 || level.value === 5) && stage.value === 1) return false
   return true
 })
 
+const isLevelThreeStageOne = computed(() => level.value === 3 && stage.value === 1)
+const isLevelFourStageOne = computed(() => level.value === 4 && stage.value === 1)
 const hideLevelVisuals = computed(() => [2, 3, 4, 5].includes(level.value))
 const isLevelFour = computed(() => level.value === 4)
 const fallbackIcon = computed(() => stageContext.value?.levelMeta?.icon || '🪄')
@@ -1544,9 +1771,18 @@ function handleAccentClick(syllable) {
 
 function handleTextSubmit() {
   if (!current.value) return
-  const value = textAnswer.value || ''
+  const value = current.value.type === 'COMPLETE_WORD'
+    ? buildCompleteWordAnswer()
+    : (textAnswer.value || '')
   checkAnswer(value, { autoAdvance: true })
-  textAnswer.value = ''
+  if (isLetterBuildExercise.value) {
+    resetLetterBuild()
+  } else {
+    textAnswer.value = ''
+  }
+  if (current.value.type === 'COMPLETE_WORD') {
+    resetCompleteWordInputs()
+  }
 }
 
 function playSimpleAudio(src, onEnd) {
@@ -1884,6 +2120,8 @@ watch(
     clearAudioListeners()
     lastReadingProgress = 0
     activeSyllable.value = -1
+    resetCompleteWordInputs()
+    resetLetterBuild()
   }
 )
 
@@ -1901,7 +2139,12 @@ function handlePrev() {
 
 function handleRepeat() {
   repeat()
-  textAnswer.value = ''
+  if (isLetterBuildExercise.value) {
+    resetLetterBuild()
+  } else {
+    textAnswer.value = ''
+  }
+  resetCompleteWordInputs()
 }
 
 onBeforeUnmount(() => {
@@ -1983,27 +2226,33 @@ function shuffleArray(arr) {
   text-align: center;
   justify-content: center;
   align-items: center;
-  padding: 1rem 2rem;
-  min-height: 72px;
-  border-radius: 18px;
-  border: none;
-  background: #ffde7b;
+  padding: 0.85rem 1rem;
+  min-height: 64px;
+  border-radius: 14px;
+  border: 2px solid #cfd8e3;
+  background: #ffffff;
   font-weight: 700;
-  font-size: 1.3rem;
-  line-height: 1.05;
-  color: var(--color-text);
-  text-transform: uppercase;
-  transition: all 0.2s ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  font-size: clamp(1.05rem, 2.2vw, 1.18rem);
+  line-height: 1.35;
+  color: #0f172a;
+  text-transform: none;
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
 }
 .btn-option:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.75);
-  background: linear-gradient(135deg, #ffe388, #ffd14a);
-  color: #0f172a;
+  border-color: #0ea5e9;
+  background: #f7fcff;
+}
+.btn-option:focus-visible {
+  outline: 3px solid #0ea5e9;
+  outline-offset: 2px;
+}
+.btn-option:active {
+  transform: translateY(1px);
 }
 .btn-option.btn-active {
-  background: var(--color-green);
+  border-color: #0ea5e9;
+  background: #f7fcff;
 }
 .options-row {
   display: flex;
@@ -2011,6 +2260,52 @@ function shuffleArray(arr) {
   justify-content: center;
   gap: 0.75rem;
   width: 100%;
+}
+.letter-build {
+  width: 100%;
+}
+.letter-build-tiles {
+  margin-bottom: 0.7rem;
+}
+.letter-build-btn {
+  min-width: 86px;
+  max-width: 120px;
+  min-height: 54px;
+  font-size: 1.2rem;
+  text-transform: lowercase;
+}
+.letter-build-btn[disabled] {
+  opacity: 0.45;
+}
+.letter-build-input {
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+.syllable-order-source .btn-option {
+  min-width: 150px;
+  max-width: 220px;
+  min-height: 54px;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+}
+.syllable-order-target {
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+}
+.read-answer-question {
+  margin: 0.4rem 0 0.85rem;
+  text-align: center;
+  color: #0b6e4f;
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+.tense-guide {
+  margin: 0 0 0.65rem;
+  text-align: center;
+  color: #1e3a8a;
+  font-weight: 700;
+  font-size: 1.02rem;
 }
 .options-column {
   flex-direction: column;
@@ -2481,6 +2776,37 @@ function shuffleArray(arr) {
 }
 .smartick-card .options-row {
   margin-top: 0.5rem;
+}
+.complete-word-pattern {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0.4rem 0 0.2rem;
+}
+.cw-fixed {
+  min-width: 1.4rem;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: lowercase;
+}
+.cw-input {
+  width: 2.2rem;
+  height: 2.6rem;
+  border-radius: 0.75rem;
+  border: 2px solid #93c5fd;
+  background: #eff6ff;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-transform: lowercase;
+  color: #1e3a8a;
+  outline: none;
+}
+.cw-input:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
 }
 .exercise-narration {
   display: inline-flex;

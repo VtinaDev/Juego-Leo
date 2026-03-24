@@ -718,14 +718,16 @@
         {
           "id": "L2-CW-1",
           "type": "COMPLETE_WORD",
-          "prompt": "Completa la palabra: s_p_",
-          "solution": "sapo",
+          "prompt": "Completa la palabra:",
+          "pattern": "s_p_",
+          "solution": "sopa",
           "hint": "Salta y vive en el agua."
         },
         {
           "id": "L2-CW-2",
           "type": "COMPLETE_WORD",
-          "prompt": "Completa la palabra: l_n_",
+          "prompt": "Completa la palabra:",
+          "pattern": "l_n_",
           "solution": "luna",
           "hint": "Brilla de noche."
         }
@@ -906,10 +908,10 @@
           "type": "sentence_selection",
           "prompt": "Escoge la frase que te suena natural.",
           "options": [
-            "La lluvia canta suave",
-            "Canta suave la lluvia"
+            "llueve poco",
+            "poco llueve"
           ],
-          "correct": "La lluvia canta suave",
+          "correct": "llueve poco",
           "audio": "/audio/voice/exercise-listen.mp3",
           "image": "/images/L3/l3-ss-2.png",
           "hint": "Piensa en cómo dirías la frase a un amigo.",
@@ -985,43 +987,43 @@
         {
           "id": "L3-AQ-2",
           "type": "audio_question",
-          "question": "¿Qué busca el mono curioso?",
-          "context": "El mono curioso busca su mochila verde para la clase de magia.",
+          "question": "¿Qué come el mono?",
+          "context": "El mono come un plátano durante la aventura.",
           "options": [
-            "Su mochila verde",
-            "Su sombrero rojo"
+            "un plátano",
+            "un zapato"
           ],
-          "correct": "Su mochila verde",
+          "correct": "un plátano",
           "audio": null,
           "image": "/images/L3/l3-aq-2.png",
           "hint": "Si no escuchas audio, lee el texto 'context'.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
           "optionsLegacy": [
-            "Su mochila verde",
-            "Su sombrero rojo",
-            "Su pluma azul"
+            "un plátano",
+            "un zapato",
+            "una nube"
           ]
         },
         {
           "id": "L3-AQ-3",
           "type": "audio_question",
-          "question": "¿Qué hacen los amigos al final?",
-          "context": "Después de la aventura, los amigos toman té de estrellas.",
+          "question": "¿Qué hacen los amigos?",
+          "context": "Después de la aventura, los amigos se divierten.",
           "options": [
-            "Toman té de estrellas",
-            "Duermen bajo el árbol"
+            "Se enfadan",
+            "Se divierten"
           ],
-          "correct": "Toman té de estrellas",
+          "correct": "Se divierten",
           "audio": null,
           "image": "/images/L3/l3-aq-3.png",
           "hint": "Busca pistas en la última parte del texto.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
           "optionsLegacy": [
-            "Toman té de estrellas",
-            "Duermen bajo el árbol",
-            "Saltan sobre las nubes"
+            "Se enfadan",
+            "Se divierten",
+            "Se aburren"
           ]
         }
       ]
@@ -1061,7 +1063,8 @@
         {
           "id": "L4-AW-1",
           "type": "audio_write",
-          "instruction": "Escribe la palabra que escuchas o lees:",
+          "instruction": "",
+          "narrationText": "luciérnaga",
           "fallbackText": "Escribe: luciérnaga",
           "answer": "luciérnaga",
           "audio": null,
@@ -1073,9 +1076,9 @@
         {
           "id": "L4-AW-2",
           "type": "audio_write",
-          "instruction": "Escribe la frase completa.",
-          "fallbackText": "Escribe: El dragón sopla nubes de algodón.",
-          "answer": "El dragón sopla nubes de algodón.",
+          "instruction": "Escribe: El dragón lanza fuego",
+          "fallbackText": "Escribe: El dragón lanza fuego",
+          "answer": "El dragón lanza fuego",
           "audio": "/audio/voice/exercise-read.mp3",
           "image": "/images/L4/l4-aw-2.png",
           "hint": "Empieza con mayúscula y termina con punto.",
@@ -1087,6 +1090,7 @@
         {
           "id": "L4-RA-1",
           "type": "READ_AND_ANSWER",
+          "question": "¿Dónde vive el oso Simón?",
           "text": "El oso Simón vive en una cueva y come miel dulce.",
           "options": [
             "En una cueva",
@@ -1098,6 +1102,7 @@
         {
           "id": "L4-RA-2",
           "type": "READ_AND_ANSWER",
+          "question": "¿Para qué camina al río la vaca Lola?",
           "text": "La vaca Lola camina al río para beber agua fresca.",
           "options": [
             "Beber agua",
@@ -1124,8 +1129,8 @@
           "id": "L4-TW-2",
           "type": "text_write",
           "instruction": "Escribe el nombre de la figura o símbolo: 🔺",
-          "placeholder": "Ej: triángulo",
-          "answer": "triángulo",
+          "placeholder": "Ej: triángulo rojo",
+          "answer": "triángulo rojo",
           "audio": null,
           "image": "/images/L4/l4-tw-2.png",
           "hint": "Piensa en la forma geométrica del símbolo.",
@@ -1135,8 +1140,16 @@
         {
           "id": "L4-TW-3",
           "type": "text_write",
-          "instruction": "Ordena las letras y escribe la palabra: lvase",
-          "placeholder": "Ej: ?",
+          "instruction": "Ordena las letras y escribe la palabra",
+          "narrationText": "Selva.",
+          "letters": [
+            "l",
+            "v",
+            "a",
+            "s",
+            "e"
+          ],
+          "placeholder": "Ej: selva",
           "answer": "selva",
           "audio": null,
           "image": "/images/L4/l4-tw-3.png",
@@ -1146,10 +1159,10 @@
         },
         {
           "id": "L4-TW-4",
-          "type": "text_write",
-          "instruction": "Ordena las letras y escribe la palabra: oglob",
-          "placeholder": "Ej: ?",
-          "answer": "globo",
+          "type": "COMPLETE_WORD",
+          "prompt": "Completa la palabra:",
+          "pattern": "g_o_o",
+          "solution": "globo",
           "audio": null,
           "image": "/images/L4/l4-tw-4.png",
           "hint": "Se infla para flotar en el aire.",
@@ -1158,10 +1171,10 @@
         },
         {
           "id": "L4-TW-5",
-          "type": "text_write",
-          "instruction": "Completa la palabra: L_n_s (día de la semana)",
-          "placeholder": "Escribe la palabra completa",
-          "answer": "lunes",
+          "type": "COMPLETE_WORD",
+          "prompt": "Completa la palabra:",
+          "pattern": "l_n_s",
+          "solution": "lunes",
           "audio": null,
           "image": "/images/L4/l4-tw-5.png",
           "hint": "Empieza la semana.",
@@ -1215,6 +1228,7 @@
         {
           "id": "L5-TC-1",
           "type": "tense_classify",
+          "prompt": "Lee la frase y elige si ocurrió en el pasado o está pasando ahora.",
           "sentence": "Ayer dibujé una estrella brillante.",
           "options": [
             "Pasado",
@@ -1235,6 +1249,7 @@
         {
           "id": "L5-TC-2",
           "type": "tense_classify",
+          "prompt": "Lee la frase y elige si ocurre ahora o ya ocurrió antes.",
           "sentence": "Hoy comparto mi cuaderno mágico.",
           "options": [
             "Presente",
@@ -1255,6 +1270,7 @@
         {
           "id": "L5-TC-3",
           "type": "tense_classify",
+          "prompt": "Lee la frase y elige si pasará en el futuro o ya pasó.",
           "sentence": "Mañana estudiaré los hechizos nuevos.",
           "options": [
             "Futuro",
@@ -1348,7 +1364,7 @@
         {
           "id": "L5-PG-1",
           "type": "punctuation_game",
-          "sentence": "Que sorpresa verte aqui",
+          "sentence": "¡Que sorpresa verte aquí!",
           "options": [
             "¡",
             "¿"
@@ -1369,7 +1385,7 @@
         {
           "id": "L5-PG-2",
           "type": "punctuation_game",
-          "sentence": "Como te llamas",
+          "sentence": "¿Como te llamas?",
           "options": [
             "¿",
             "¡"

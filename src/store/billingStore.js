@@ -83,9 +83,8 @@ export const useBillingStore = defineStore('billing', {
 
     canAccessLevel(level) {
       this.enforceTrialValidity()
-      // Nivel 1 siempre accesible; el resto requiere suscripción activa.
-      if (level <= 1) return true
-      return this.hasActiveSubscription
+      // Modo inspección: permitir acceso a todos los niveles sin suscripción.
+      return Number(level) >= 1
     },
 
     toggleSubscription() {

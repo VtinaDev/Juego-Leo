@@ -100,21 +100,22 @@ onBeforeUnmount(() => {
   justify-content: center;
   width: 48px;
   height: 48px;
-  border-radius: 12px;
-  border: 2px solid rgba(14, 165, 233, 0.35);
-  background: linear-gradient(135deg, #e0f2fe, #c7d2fe);
-  box-shadow: 0 8px 18px rgba(14, 165, 233, 0.2);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   font-size: 1.2rem;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.15s ease;
 }
 .audio-button:hover {
   transform: translateY(-1px) scale(1.03);
-  box-shadow: 0 12px 22px rgba(14, 165, 233, 0.28);
-  background: linear-gradient(135deg, #bfdbfe, #c7d2fe);
 }
 .audio-button:active {
   transform: translateY(0);
-  box-shadow: 0 5px 12px rgba(15, 23, 42, 0.14);
+}
+.audio-button:focus-visible {
+  outline: none;
 }
 .audio-button__icon {
   width: 38px;

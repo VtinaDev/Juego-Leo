@@ -220,10 +220,8 @@ const enrichedHabitats = computed(() => {
     const meta = def?.meta ?? {}
     const theme = HABITATS[id] ?? {}
     const progress = game.getLevelProgress(id)
-    const previous = result[result.length - 1]
-    const previousComplete = id === 1 ? true : (previous?.progress?.percent ?? 0) === 1
     const unlockedByPlan = billing.canAccessLevel?.(id) ?? true
-    const unlocked = id === 1 || (previousComplete && unlockedByPlan)
+    const unlocked = unlockedByPlan
     const isComplete = progress.percent === 1
     const cta = isComplete ? 'Revivir aventura' : unlocked ? 'Continuar' : 'Bloqueado'
     const progressLabel = isComplete ? 'Completado' : progress.nextStage
