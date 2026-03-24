@@ -926,14 +926,74 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 768px) {
-  .map-canvas {
-    height: 100vh;
-  }
-  .map-node {
-    width: 120px;
+  .habitat-map {
+    min-height: 100dvh;
   }
   .map-header {
-    flex-direction: column;
+    position: relative;
+    inset: auto;
+    margin: 0.5rem 0.65rem 0.3rem;
+    gap: 0.5rem;
+  }
+  .map-canvas {
+    height: calc(100dvh - 140px);
+    min-height: 620px;
+    border-radius: 18px;
+  }
+  .map-node {
+    width: 88px;
+  }
+  .node-icon-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 18px;
+  }
+  .node-label {
+    display: none;
+  }
+  .stage-chips {
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .stage-chip {
+    min-width: 22px;
+    height: 22px;
+    border-radius: 8px;
+    font-size: 0.68rem;
+  }
+  .habitat-bg {
+    width: 28% !important;
+    height: 28% !important;
+    opacity: 0.84;
+  }
+  .map-header h1 {
+    font-size: clamp(1.55rem, 7.2vw, 2rem);
+  }
+  .sub {
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-canvas {
+    height: calc(100dvh - 150px);
+    min-height: 560px;
+  }
+  .map-node {
+    width: 78px;
+  }
+  .node-icon-wrap {
+    width: 72px;
+    height: 72px;
+  }
+  .stage-chip {
+    min-width: 20px;
+    height: 20px;
+    font-size: 0.64rem;
+  }
+  .habitat-bg {
+    width: 24% !important;
+    height: 24% !important;
   }
 }
 
