@@ -197,7 +197,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AudioToggles from './components/AudioToggles.vue'
-import { unlockAudio, playSfx, getAudioSettings } from './engine/audio/audioManager'
+import { unlockAudio, playSfx, getAudioSettings } from './engine/audio/audioManager.js'
 import { useAuthStore } from './store/authStore'
 
 const route = useRoute()
