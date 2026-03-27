@@ -912,7 +912,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useBillingStore } from '../store/billingStore'
 import { useGameStore } from '../store/gameStore'
@@ -974,86 +974,14 @@ let previousBodyOverscroll = ''
 const gameViewRef = ref(null)
 const exerciseCardRef = ref(null)
 const mobileViewport = ref(false)
-const exerciseScale = ref(1)
-const compactMode = ref('normal')
-let scaleRaf = null
-let resizeObserver = null
 
 function updateMobileViewportFlag() {
   if (typeof window === 'undefined') return
   mobileViewport.value = window.matchMedia('(max-width: 768px)').matches
 }
 
-function scheduleExerciseScaleUpdate() {
-  if (typeof window === 'undefined') return
-  if (scaleRaf) cancelAnimationFrame(scaleRaf)
-  scaleRaf = requestAnimationFrame(async () => {
-    scaleRaf = null
-    await nextTick()
-    updateExerciseScale()
-  })
-}
-
-function updateExerciseScale() {
-  if (!mobileViewport.value) {
-    exerciseScale.value = 1
-    compactMode.value = 'normal'
-    return
-  }
-  const root = gameViewRef.value
-  const card = exerciseCardRef.value
-  if (!root || !card) return
-
-  const naturalHeight = card.scrollHeight || 0
-  const rootRect = root.getBoundingClientRect()
-  const viewportHeight =
-    window.visualViewport?.height ||
-    window.innerHeight ||
-    document.documentElement.clientHeight ||
-    0
-  const availableHeight = Math.max(0, Math.min(root.clientHeight || 0, viewportHeight - Math.max(0, rootRect.top)))
-  if (!naturalHeight || !availableHeight) {
-    exerciseScale.value = 1
-    compactMode.value = 'normal'
-    return
-  }
-
-  const ratio = availableHeight / naturalHeight
-  const nextScale = ratio < 1 ? Math.max(0.42, Math.min(1, ratio)) : 1
-  const roundedScale = Math.round(nextScale * 100) / 100
-  if (Math.abs(roundedScale - exerciseScale.value) >= 0.01) {
-    exerciseScale.value = roundedScale
-  }
-
-  // Histéresis para evitar parpadeos por cambios de clase compacta.
-  const mode = compactMode.value
-  if (mode === 'normal' && roundedScale < 0.88) {
-    compactMode.value = 'compact'
-    scheduleExerciseScaleUpdate()
-  } else if (mode === 'compact' && roundedScale < 0.72) {
-    compactMode.value = 'ultra'
-    scheduleExerciseScaleUpdate()
-  } else if (mode === 'compact' && roundedScale > 0.93) {
-    compactMode.value = 'normal'
-    scheduleExerciseScaleUpdate()
-  } else if (mode === 'ultra' && roundedScale > 0.8) {
-    compactMode.value = 'compact'
-    scheduleExerciseScaleUpdate()
-  }
-}
-
-const exerciseScaleStyle = computed(() => {
-  if (!mobileViewport.value || exerciseScale.value >= 0.999) return null
-  return {
-    transform: `scale(${exerciseScale.value})`,
-    transformOrigin: 'top center'
-  }
-})
-
-const gameViewClasses = computed(() => ({
-  'compact-mobile': mobileViewport.value && (compactMode.value === 'compact' || compactMode.value === 'ultra'),
-  'ultra-compact-mobile': mobileViewport.value && compactMode.value === 'ultra'
-}))
+const exerciseScaleStyle = computed(() => null)
+const gameViewClasses = computed(() => ({}))
 
 function lockExerciseScrollOnMobile() {
   if (typeof window === 'undefined') return
@@ -1081,16 +1009,10 @@ onMounted(() => {
     prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     updateMobileViewportFlag()
     window.addEventListener('resize', updateMobileViewportFlag, { passive: true })
-    window.addEventListener('resize', scheduleExerciseScaleUpdate, { passive: true })
   }
   // Silencia la música global al entrar al modo ejercicios
   stopMusic(260)
   lockExerciseScrollOnMobile()
-  if (typeof ResizeObserver !== 'undefined') {
-    resizeObserver = new ResizeObserver(() => scheduleExerciseScaleUpdate())
-    if (gameViewRef.value) resizeObserver.observe(gameViewRef.value)
-  }
-  scheduleExerciseScaleUpdate()
 })
 
 // Permite leer /game/:level/:stage o /game/:levelId/:stageId
@@ -2285,17 +2207,8 @@ onBeforeUnmount(() => {
   clearSyllableTicker()
   clearAudioListeners()
   restoreExerciseScrollLock()
-  if (resizeObserver) {
-    resizeObserver.disconnect()
-    resizeObserver = null
-  }
   if (typeof window !== 'undefined') {
     window.removeEventListener('resize', updateMobileViewportFlag)
-    window.removeEventListener('resize', scheduleExerciseScaleUpdate)
-  }
-  if (scaleRaf) {
-    cancelAnimationFrame(scaleRaf)
-    scaleRaf = null
   }
 })
 
@@ -2303,14 +2216,6 @@ watch(
   () => currentImageSrc.value,
   () => {
     imageLoadFailed.value = false
-    scheduleExerciseScaleUpdate()
-  }
-)
-
-watch(
-  () => current.value?.id,
-  () => {
-    scheduleExerciseScaleUpdate()
   }
 )
 
