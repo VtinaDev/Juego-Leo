@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <!-- Header -->
-    <header class="header-transparent">
+    <header v-if="!isGameRoute" class="header-transparent">
       <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
         <RouterLink class="brand brand-logo-link" to="/">
           <img class="brand-logo" src="/logo/app-icon.PNG" alt="Juego & Leo" />
@@ -73,14 +73,14 @@
     <!-- Main router outlet -->
     <main
       class="flex-1 w-full"
-      :class="isMapViewRoute ? 'max-w-none mx-0 px-0 py-0' : 'max-w-6xl mx-auto px-4 py-6'"
+      :class="isFullBleedRoute ? 'max-w-none mx-0 px-0 py-0' : 'max-w-6xl mx-auto px-4 py-6'"
     >
       <!-- 👇 Asegúrate de que este router-view esté presente -->
       <RouterView />
     </main>
 
     <!-- Footer -->
-    <footer class="footer-wave mt-10">
+    <footer v-if="!isGameRoute" class="footer-wave mt-10">
       <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-gray-700 text-center space-y-2">
         <div class="flex justify-center gap-4 text-green-700">
           <RouterLink to="/subscribe" class="underline">Suscripción</RouterLink>
@@ -230,6 +230,9 @@ const levelNumber = computed(() => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1
 })
 const isMapViewRoute = computed(() => route.name === 'MapView')
+const isGameRoute = computed(() => route.name === 'game')
+const isCongratsRoute = computed(() => route.name === 'Congrats')
+const isFullBleedRoute = computed(() => isMapViewRoute.value || isGameRoute.value || isCongratsRoute.value)
 
 function handleBeforeInstall(event) {
   event.preventDefault()
