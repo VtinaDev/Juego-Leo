@@ -3083,7 +3083,8 @@ function shuffleArray(arr) {
     width: 100vw;
     max-width: 100vw;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     height: 100dvh;
     min-height: 100dvh;
     display: flex;
@@ -3097,7 +3098,7 @@ function shuffleArray(arr) {
     background: transparent;
     width: 100%;
     max-width: 100%;
-    height: 100%;
+    height: auto;
     min-height: 100%;
   }
   .smartick-card {
