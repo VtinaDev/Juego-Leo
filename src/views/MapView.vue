@@ -51,7 +51,6 @@
                 :aria-label="`Ir a nivel ${habitat.id}, etapa ${stage.num}`"
                 @click="handleMapTap($event)"
               >
-                <span class="chip-icon" aria-hidden="true">{{ stage.state === 'done' ? '✔' : '▶' }}</span>
                 <span class="chip-num">{{ stage.num }}</span>
               </RouterLink>
               <span
@@ -59,7 +58,6 @@
                 class="mobile-stage-chip mobile-stage-chip--locked"
                 aria-hidden="true"
               >
-                <span class="chip-icon" aria-hidden="true">🔒</span>
                 <span class="chip-num">{{ stage.num }}</span>
               </span>
             </template>
@@ -179,7 +177,6 @@
               :aria-label="`Ir a nivel ${habitat.id}, etapa ${stage.num}`"
               @click="handleMapTap($event)"
             >
-              <span aria-hidden="true">{{ stage.state === 'done' ? '✔' : '▶' }}</span>
               <span>{{ stage.num }}</span>
             </RouterLink>
             <span
@@ -187,7 +184,6 @@
               class="stage-chip stage-chip--locked"
               aria-hidden="true"
             >
-              <span aria-hidden="true">🔒</span>
               <span>{{ stage.num }}</span>
             </span>
           </template>
@@ -849,23 +845,20 @@ watch(
   border-color: #22c55e;
 }
 .mobile-stage-chip--next {
-  background: #fff8e7;
-  color: #78350f;
-  border-color: #f59e0b;
-  animation: mobileChipPulse 1.9s ease-in-out infinite;
-  box-shadow: 0 10px 20px rgba(245, 158, 11, 0.34);
+  background: #ffffff;
+  color: #1f2937;
+  border-color: rgba(15, 23, 42, 0.16);
+  animation: none;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
 }
 .mobile-stage-chip--locked {
-  background: #cbd5e1;
-  color: #475569;
-  border-color: rgba(71, 85, 105, 0.35);
-  box-shadow: none;
+  background: #ffffff;
+  color: #1f2937;
+  border-color: rgba(15, 23, 42, 0.16);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
 }
 .mobile-stage-chip:active {
   transform: scale(0.95);
-}
-.chip-icon {
-  font-size: 0.88rem;
 }
 .mobile-actions {
   margin-top: 0.2rem;
@@ -910,18 +903,6 @@ watch(
 .mobile-cta:active {
   transform: scale(0.97);
 }
-@keyframes mobileChipPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 rgba(245, 158, 11, 0.28);
-  }
-  50% {
-    transform: scale(1.06);
-    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
-  }
-}
-
 .map-canvas {
   position: relative;
   height: 70vh;
@@ -1162,15 +1143,15 @@ watch(
   color: #166534;
 }
 .stage-chip--next {
-  background: #fff8e7;
-  border-color: #f59e0b;
-  color: #78350f;
-  animation: mobileChipPulse 2.1s ease-in-out infinite;
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+  animation: none;
 }
 .stage-chip--locked {
-  background: #cbd5e1;
-  border-color: rgba(71, 85, 105, 0.35);
-  color: #334155;
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
 }
 .stage-chip:focus-visible {
   outline: 2px solid #22c55e;
