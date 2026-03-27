@@ -35,7 +35,6 @@
           <div class="mobile-character-wrap">
             <img v-if="habitat.character" :src="habitat.character" :alt="habitat.levelName" />
             <span v-else class="node-icon">{{ habitat.icon }}</span>
-            <span v-if="habitat.isComplete" class="mobile-character-badge" aria-hidden="true">✔</span>
           </div>
 
           <div class="mobile-stage-row" role="list" :aria-label="`Etapas de ${habitat.levelName}`">
@@ -64,29 +63,14 @@
           </div>
 
           <div class="mobile-actions">
-            <RouterLink
-              v-if="habitat.unlocked"
-              :to="`/game/${habitat.id}/${habitat.progress.nextStage}`"
-              class="mobile-cta mobile-cta--play tap-pop"
-              @click="handleMapTap($event)"
-            >
-              {{ habitat.isComplete ? 'Revivir aventura' : `Jugar etapa ${habitat.progress.nextStage}` }}
-            </RouterLink>
-            <RouterLink
-              v-else
-              to="/subscribe"
-              class="mobile-cta mobile-cta--locked tap-pop"
-              @click="handleMapTap($event)"
-            >
-              Desbloquear nivel
-            </RouterLink>
             <button
               v-if="nextHabitatId(habitat.id)"
               type="button"
-              class="mobile-next tap-pop"
+              class="mobile-next-icon tap-pop"
               @click="scrollToHabitat(nextHabitatId(habitat.id), 'smooth')"
+              aria-label="Siguiente hábitat"
             >
-              Siguiente zona
+              <img src="/icons/next.PNG" alt="" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -801,21 +785,6 @@ watch(
   animation: float 3.8s ease-in-out infinite;
   filter: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.35));
 }
-.mobile-character-badge {
-  position: absolute;
-  right: 10px;
-  bottom: 8px;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: #22c55e;
-  color: #ffffff;
-  border: 2px solid rgba(255, 255, 255, 0.84);
-  box-shadow: 0 8px 16px rgba(34, 197, 94, 0.42);
-  font-weight: 900;
-}
 .mobile-stage-row {
   display: flex;
   flex-wrap: wrap;
@@ -862,45 +831,27 @@ watch(
 }
 .mobile-actions {
   margin-top: 0.2rem;
-  display: grid;
-  gap: 0.55rem;
+  display: flex;
+  justify-content: center;
 }
-.mobile-cta {
-  min-height: 56px;
-  border-radius: 18px;
+.mobile-next-icon {
+  width: 84px;
+  height: 84px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1rem;
-  text-align: center;
-  font-size: 1.04rem;
-  font-weight: 800;
-  line-height: 1.25;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
 }
-.mobile-cta--play {
-  background: linear-gradient(180deg, #fde68a, #f59e0b);
-  color: #4a2904;
-  border: 1px solid rgba(245, 158, 11, 0.45);
-  box-shadow: 0 12px 22px rgba(245, 158, 11, 0.35);
+.mobile-next-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.28));
 }
-.mobile-cta--locked {
-  background: #f1f5f9;
-  color: #1e293b;
-  border: 1px solid rgba(100, 116, 139, 0.45);
-  box-shadow: 0 10px 18px rgba(100, 116, 139, 0.2);
-}
-.mobile-next {
-  min-height: 52px;
-  border-radius: 16px;
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  color: #0f172a;
-  font-size: 0.98rem;
-  font-weight: 800;
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.14);
-}
-.mobile-next:active,
-.mobile-cta:active {
+.mobile-next-icon:active {
   transform: scale(0.97);
 }
 .map-canvas {
