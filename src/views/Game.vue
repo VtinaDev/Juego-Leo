@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6">
+  <div class="game-view">
     <!-- Estado: cargando -->
     <div v-if="loading" class="text-center text-gray-500">
       Cargando etapa...
@@ -51,42 +51,44 @@
       >
         <template #default>
           <div class="smartick-shell">
-            <div class="smartick-topbar">
-              <div class="smartick-progress">
-                <div class="avatar-chip">
-                  <img :src="characterImage" alt="Avatar" />
-                </div>
-                <div class="score-track">
-                  <div class="score-stars">
-                    <span
-                      v-for="(filled, idx) in starTrack"
-                      :key="`star-${idx}`"
-                      :class="['star-dot', { 'star-dot--filled': filled }]"
-                    />
+            <div class="smartick-card exercise-body">
+            <div class="smartick-card-head">
+              <div class="smartick-topbar">
+                <div class="smartick-progress">
+                  <div class="avatar-chip">
+                    <img :src="characterImage" alt="Avatar" />
                   </div>
-                  <div class="score-points">{{ game.points || 0 }} pts</div>
+                  <div class="score-track">
+                    <div class="score-stars">
+                      <span
+                        v-for="(filled, idx) in starTrack"
+                        :key="`star-${idx}`"
+                        :class="['star-dot', { 'star-dot--filled': filled }]"
+                      />
+                    </div>
+                    <div class="score-points">{{ game.points || 0 }} pts</div>
+                  </div>
+                </div>
+                <div class="smartick-actions">
+                  <button class="icon-btn" type="button" @click="handlePrev" aria-label="Anterior">
+                    ←
+                  </button>
+                  <button class="icon-btn" type="button" @click="handleRepeat" aria-label="Repetir">
+                    ↺
+                  </button>
+                  <button class="icon-btn" type="button" @click="handleSkip" aria-label="Saltar">
+                    ▶
+                  </button>
                 </div>
               </div>
-              <div class="smartick-actions">
-                <button class="icon-btn" type="button" @click="handlePrev" aria-label="Anterior">
-                  ←
-                </button>
-                <button class="icon-btn" type="button" @click="handleRepeat" aria-label="Repetir">
-                  ↺
-                </button>
-                <button class="icon-btn" type="button" @click="handleSkip" aria-label="Saltar">
-                  ▶
-                </button>
+
+              <div class="smartick-stage">
+                <div class="stage-pill">
+                  <span>{{ stageLabel }}</span>
+                </div>
               </div>
             </div>
-
-            <div class="smartick-stage">
-              <div class="stage-pill">
-                <span>{{ stageLabel }}</span>
-              </div>
-            </div>
-
-            <div class="smartick-card space-y-4 exercise-body">
+            <div class="smartick-card-content space-y-4">
             <div class="exercise-narration" v-if="exerciseNarrationText && showExerciseNarration">
               <AudioButton
                 :exercise="current"
@@ -887,6 +889,7 @@
             <p v-if="currentStatus === 'skipped'" class="text-yellow-600 mt-4">
               Ejercicio saltado para revisión.
             </p>
+            </div>
             </div>
           </div>
         </template>
@@ -2219,6 +2222,9 @@ function shuffleArray(arr) {
 </script>
 
 <style scoped>
+.game-view {
+  padding: 1.5rem;
+}
 .btn-option {
   display: inline-flex;
   min-width: 240px;
@@ -2355,7 +2361,7 @@ function shuffleArray(arr) {
   padding: 0;
   background: transparent;
   box-shadow: none;
-  border-radius: 24px;
+  border-radius: 0;
   overflow: hidden;
 }
 .choice-visual-img {
@@ -2374,20 +2380,20 @@ function shuffleArray(arr) {
   width: 100%;
   max-width: 340px;
   margin: 0 auto 1rem;
-  border-radius: 24px;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
-  background: #f8fafc;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
   display: block;
   padding: 0;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: auto;
   overflow: hidden;
 }
 .exercise-visual img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   display: block;
-  border-radius: 24px;
+  border-radius: 0;
 }
 .visual-fallback {
   background: linear-gradient(135deg, rgba(147, 197, 253, 0.8), rgba(165, 180, 252, 0.95));
@@ -2765,11 +2771,57 @@ function shuffleArray(arr) {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 .smartick-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 1.25rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 12px 26px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+}
+.smartick-card-head {
+  margin-bottom: 0.9rem;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.smartick-card-content {
+  position: relative;
+}
+:deep(.exercise-layout) {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+:deep(.exercise-layout__media) {
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+:deep(.exercise-layout__prompt),
+:deep(.exercise-layout__content) {
+  width: 100%;
+}
+:deep(.exercise-image) {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  min-height: 0;
+}
+:deep(.exercise-image__img) {
+  padding: 0;
+  border-radius: 0;
+}
+:deep(.exercise-options) {
+  width: 100%;
+  margin: 0;
+}
+:deep(.exercise-options__button) {
+  box-shadow: none;
+  background: transparent;
 }
 .smartick-card .exercise-visual {
   max-width: 420px;
@@ -2827,8 +2879,35 @@ function shuffleArray(arr) {
   font-size: 0.95rem;
 }
 @media (max-width: 768px) {
+  .game-view {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
   .smartick-shell {
-    padding: 1rem;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    width: 100%;
+    max-width: 100%;
+  }
+  .smartick-card {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.95rem 0.85rem 1.1rem;
+  }
+  .smartick-card-head {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
   }
   .smartick-topbar {
     grid-template-columns: 1fr;

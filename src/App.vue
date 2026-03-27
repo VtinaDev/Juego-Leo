@@ -71,7 +71,10 @@
     </header>
 
     <!-- Main router outlet -->
-    <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-6">
+    <main
+      class="flex-1 w-full"
+      :class="isMapViewRoute ? 'max-w-none mx-0 px-0 py-0' : 'max-w-6xl mx-auto px-4 py-6'"
+    >
       <!-- 👇 Asegúrate de que este router-view esté presente -->
       <RouterView />
     </main>
@@ -226,6 +229,7 @@ const levelNumber = computed(() => {
   const parsed = Number(raw)
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 1
 })
+const isMapViewRoute = computed(() => route.name === 'MapView')
 
 function handleBeforeInstall(event) {
   event.preventDefault()

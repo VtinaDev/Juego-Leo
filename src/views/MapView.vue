@@ -7,7 +7,7 @@
           Explora cada territorio y sigue tu ruta del tesoro.
         </p>
       </div>
-      <div class="legend">
+      <div v-if="!isMobile" class="legend">
         <div class="legend-item">
           <span class="legend-dot legend-dot-active" />
           Etapa actual
@@ -19,7 +19,96 @@
       </div>
     </header>
 
-    <div class="map-canvas" :style="mapCanvasStyle">
+    <section
+      v-if="isMobile"
+      ref="mobileTrackRef"
+      class="mobile-map-track"
+      aria-label="Mapa deslizante de hábitats"
+    >
+      <article
+        v-for="habitat in enrichedHabitats"
+        :key="`mobile-${habitat.id}`"
+        :ref="(el) => setMobileSlideRef(el, habitat.id)"
+        class="mobile-habitat-slide"
+        :class="{
+          'mobile-habitat-slide--active': habitat.id === mobileFocusHabitatId,
+          'mobile-habitat-slide--locked': !habitat.unlocked
+        }"
+      >
+        <div class="mobile-habitat-bg" :style="{ backgroundImage: getHabitatBackground(habitat) }" />
+        <div class="cloud-layer mobile-cloud-layer" aria-hidden="true">
+          <div class="cloud cloud-a"></div>
+          <div class="cloud cloud-b"></div>
+          <div class="cloud cloud-c"></div>
+          <div class="cloud cloud-d"></div>
+          <div class="cloud cloud-e"></div>
+          <div class="cloud cloud-f"></div>
+          <div class="cloud cloud-g"></div>
+        </div>
+
+        <div class="mobile-habitat-content">
+          <p class="mobile-habitat-eyebrow">{{ habitat.themeTitle }}</p>
+          <h2 class="mobile-habitat-title">{{ habitat.levelName }}</h2>
+          <p class="mobile-habitat-description">{{ habitat.description }}</p>
+
+          <div class="mobile-character-wrap">
+            <img v-if="habitat.character" :src="habitat.character" :alt="habitat.levelName" />
+            <span v-else class="node-icon">{{ habitat.icon }}</span>
+          </div>
+
+          <div class="mobile-stage-row" role="list" :aria-label="`Etapas de ${habitat.levelName}`">
+            <template v-for="stage in stagesFor(habitat)" :key="`mobile-stage-${habitat.id}-${stage.num}`">
+              <RouterLink
+                v-if="habitat.unlocked"
+                :to="`/game/${habitat.id}/${stage.num}`"
+                class="mobile-stage-chip"
+                :class="{
+                  'mobile-stage-chip--done': stage.state === 'done',
+                  'mobile-stage-chip--next': stage.state === 'next'
+                }"
+                :aria-label="`Ir a nivel ${habitat.id}, etapa ${stage.num}`"
+              >
+                {{ stage.num }}
+              </RouterLink>
+              <span
+                v-else
+                class="mobile-stage-chip mobile-stage-chip--locked"
+                aria-hidden="true"
+              >
+                {{ stage.num }}
+              </span>
+            </template>
+          </div>
+
+          <div class="mobile-actions">
+            <RouterLink
+              v-if="habitat.unlocked"
+              :to="`/game/${habitat.id}/${habitat.progress.nextStage}`"
+              class="mobile-cta mobile-cta--play"
+            >
+              {{ habitat.isComplete ? 'Revivir aventura' : `Jugar etapa ${habitat.progress.nextStage}` }}
+            </RouterLink>
+            <RouterLink
+              v-else
+              to="/subscribe"
+              class="mobile-cta mobile-cta--locked"
+            >
+              Desbloquear nivel
+            </RouterLink>
+            <button
+              v-if="nextHabitatId(habitat.id)"
+              type="button"
+              class="mobile-next"
+              @click="scrollToHabitat(nextHabitatId(habitat.id))"
+            >
+              Siguiente zona
+            </button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div v-else class="map-canvas" :style="mapCanvasStyle">
 
       <!-- 🌤️ CAPA DE NUBES EN PARALLAX -->
       <div class="cloud-layer">
@@ -143,35 +232,31 @@ const HABITAT_IMAGES = {
 const HABITATS = {
   1: {
     title: 'El árbol',
-    description: 'Donde habita el Oso Perezoso.',
     background: HABITAT_IMAGES.arbol,
     coords: { x: 14, y: 78 },
     pathIndex: 0
   },
   2: {
     title: 'Valle Anaranjado',
-    description: 'La madriguera creativa del Zorro Astuto.',
     background: HABITAT_IMAGES.madriguera,
     coords: { x: 32, y: 50 },
     pathIndex: 1
   },
   3: {
     title: 'Isla de Lianas',
-    description: 'Árboles altos y tambores para el Mono Curioso.',
     background: HABITAT_IMAGES.isla,
     coords: { x: 52, y: 74 },
     pathIndex: 2
   },
   4: {
     title: 'Santuario azul',
-    description: 'Biblioteca acuática del Mono Avanzado.',
     background: HABITAT_IMAGES.santuario,
     coords: { x: 72, y: 46 },
     pathIndex: 3
   },
   5: {
     title: 'La Escuela',
-    description: 'La meta final del Elefante Sabiondo.',
+    description: 'La meta final.',
     background: HABITAT_IMAGES.escuela,
     coords: { x: 90, y: 60 },
     pathIndex: 4
@@ -202,8 +287,13 @@ const profile = useProfileStore()
 profile.loadProfile?.()
 const recentlyUnlocked = ref(null)
 const unlockStatus = ref(new Map())
+const isMobile = ref(false)
+const mobileTrackRef = ref(null)
+const mobileSlides = ref({})
+const previousMobileFocusId = ref(null)
 let unlockTimer = null
 const lastHoverSound = new Map()
+let mediaQueryList = null
 
 const levelIds = listLevels()
   .map(Number)
@@ -243,6 +333,16 @@ const enrichedHabitats = computed(() => {
     })
   })
   return result
+})
+
+const mobileFocusHabitatId = computed(() => {
+  const firstInProgress = enrichedHabitats.value.find((h) => h.unlocked && h.progress.percent < 1)
+  if (firstInProgress) return firstInProgress.id
+
+  const firstUnlocked = enrichedHabitats.value.find((h) => h.unlocked)
+  if (firstUnlocked) return firstUnlocked.id
+
+  return enrichedHabitats.value[0]?.id ?? null
 })
 
 function stagesFor(habitat) {
@@ -335,6 +435,27 @@ function nodeStyle(coords) {
   }
 }
 
+function setMobileSlideRef(el, habitatId) {
+  if (!habitatId) return
+  if (el) {
+    mobileSlides.value[habitatId] = el
+    return
+  }
+  delete mobileSlides.value[habitatId]
+}
+
+function nextHabitatId(currentId) {
+  const index = enrichedHabitats.value.findIndex((h) => h.id === currentId)
+  if (index < 0 || index + 1 >= enrichedHabitats.value.length) return null
+  return enrichedHabitats.value[index + 1].id
+}
+
+function scrollToHabitat(habitatId, behavior = 'smooth') {
+  const node = mobileSlides.value[habitatId]
+  if (!node) return
+  node.scrollIntoView({ inline: 'center', block: 'nearest', behavior })
+}
+
 function handleHabitatHover(id) {
   const soundKey = HABITAT_SFX[id]
   if (!soundKey) return
@@ -416,13 +537,38 @@ function formatDate(date) {
   return new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short' }).format(new Date(date))
 }
 
+function updateViewportMode() {
+  if (typeof window === 'undefined') return
+  isMobile.value = window.matchMedia('(max-width: 768px)').matches
+}
+
 onMounted(() => {
+  updateViewportMode()
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    mediaQueryList = window.matchMedia('(max-width: 768px)')
+    mediaQueryList.addEventListener?.('change', updateViewportMode)
+  }
+  window.addEventListener('resize', updateViewportMode, { passive: true })
   playMusic('nature', { loop: true })
 })
 
 onBeforeUnmount(() => {
+  mediaQueryList?.removeEventListener?.('change', updateViewportMode)
+  window.removeEventListener('resize', updateViewportMode)
   stopMusic(200)
 })
+
+watch(
+  () => [isMobile.value, mobileFocusHabitatId.value, enrichedHabitats.value.length],
+  ([mobile, focusId]) => {
+    if (!mobile || !focusId) return
+    const focusChanged = previousMobileFocusId.value !== focusId
+    previousMobileFocusId.value = focusId
+    const behavior = focusChanged ? 'smooth' : 'auto'
+    setTimeout(() => scrollToHabitat(focusId, behavior), 20)
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>
@@ -487,6 +633,198 @@ onBeforeUnmount(() => {
 .legend-dot-done {
   background: #34d399;
 }
+
+.mobile-map-track {
+  min-height: calc(100dvh - 92px);
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 88px;
+  background: linear-gradient(to bottom, #cfe9ff 0%, #b8f6c2 50%, #7edc8d 100%);
+  box-shadow: inset 0 0 40px rgba(34, 139, 34, 0.26);
+}
+.mobile-map-track::-webkit-scrollbar {
+  height: 0;
+}
+.mobile-habitat-slide {
+  position: relative;
+  min-width: 100vw;
+  width: 100vw;
+  min-height: calc(100dvh - 92px);
+  scroll-snap-align: center;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0.85rem;
+}
+.mobile-habitat-bg {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  width: 76%;
+  height: 76%;
+  transform: translate(-50%, -50%);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: saturate(1.05) drop-shadow(0 10px 22px rgba(15, 23, 42, 0.28));
+  opacity: 0.95;
+}
+.mobile-cloud-layer {
+  top: 22%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 125%;
+  height: 180px;
+  z-index: 0;
+  opacity: 0.78;
+}
+.mobile-habitat-content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 560px);
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  padding: 1rem 0.85rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.72rem;
+}
+.mobile-habitat-eyebrow {
+  margin: 0;
+  align-self: flex-start;
+  padding: 0.34rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 247, 205, 0.92);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #4c6a2f;
+}
+.mobile-habitat-title {
+  margin: 0;
+  font-size: clamp(1.45rem, 5vw, 1.9rem);
+  color: #ffffff;
+  text-shadow: 0 3px 10px rgba(15, 23, 42, 0.65);
+}
+.mobile-habitat-description {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 0.94rem;
+  text-shadow: 0 2px 8px rgba(15, 23, 42, 0.62);
+}
+.mobile-character-wrap {
+  align-self: center;
+  width: 245px;
+  height: 245px;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  display: grid;
+  place-items: center;
+  box-shadow: none;
+}
+.mobile-character-wrap img {
+  width: 132%;
+  height: 132%;
+  object-fit: contain;
+  animation: float 3.8s ease-in-out infinite;
+  filter: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.35));
+}
+.mobile-stage-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+}
+.mobile-stage-chip {
+  min-width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.96rem;
+  color: #1f2937;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.mobile-stage-chip--done {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #34d399;
+}
+.mobile-stage-chip--next {
+  background: #fef3c7;
+  color: #7c2d12;
+  border-color: #f59e0b;
+  animation: mobileChipPulse 2.6s ease-in-out infinite;
+}
+.mobile-stage-chip--locked {
+  background: #e2e8f0;
+  color: #64748b;
+}
+.mobile-stage-chip:active {
+  transform: scale(0.97);
+}
+.mobile-actions {
+  margin-top: 0.2rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.mobile-cta {
+  min-height: 50px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-size: 0.96rem;
+  font-weight: 800;
+}
+.mobile-cta--play {
+  background: linear-gradient(180deg, #fde68a, #f59e0b);
+  color: #4a2904;
+  border: 1px solid rgba(245, 158, 11, 0.42);
+}
+.mobile-cta--locked {
+  background: #e2e8f0;
+  color: #334155;
+  border: 1px solid rgba(100, 116, 139, 0.36);
+}
+.mobile-next {
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.85);
+  background: rgba(30, 41, 59, 0.22);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+@keyframes mobileChipPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(245, 158, 11, 0.28);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+  }
+}
+
 .map-canvas {
   position: relative;
   height: 70vh;
@@ -923,16 +1261,22 @@ onBeforeUnmount(() => {
   .map-node--pulse .node-base {
     animation: none;
   }
+  .mobile-stage-chip--next {
+    animation: none;
+  }
 }
 
 @media (max-width: 768px) {
   .habitat-map {
     min-height: 100dvh;
+    width: 100vw;
+    margin: 0;
   }
   .map-header {
     position: relative;
     inset: auto;
-    margin: 0.5rem 0.65rem 0.3rem;
+    margin: 0;
+    padding: 0.55rem 0.75rem 0.3rem;
     gap: 0.5rem;
   }
   .map-canvas {
