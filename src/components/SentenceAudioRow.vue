@@ -89,16 +89,19 @@ function preferExerciseAnswerIfSpelled(text: string, exercise: any) {
   align-items: flex-start;
   gap: 0.65rem;
   justify-content: flex-start;
+  font-family: var(--font-readable, 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif);
 }
 .sentence-audio-row.is-centered {
   justify-content: center;
 }
 .sentence-audio-text {
   margin: 0;
-  font-weight: 700;
-  font-size: 1.15rem;
-  line-height: 1.35;
+  font-weight: 750;
+  font-size: clamp(1.2rem, 4.9vw, 1.5rem);
+  line-height: 1.56;
   color: #0f172a;
+  text-wrap: balance;
+  max-width: 26ch;
 }
 .sentence-audio-btn {
   flex-shrink: 0;

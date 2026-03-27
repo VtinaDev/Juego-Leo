@@ -36,12 +36,13 @@ defineProps({
   width: min(100%, 880px);
   margin: 0 auto;
   padding: 1.15rem;
-  border-radius: 16px;
+  border-radius: 18px;
   border: 1px solid #d6e0ea;
   background: #ffffff;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
   display: grid;
-  gap: 1rem;
+  gap: 1.1rem;
+  font-family: var(--font-readable, 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif);
 }
 
 .exercise-layout__header,
@@ -67,7 +68,7 @@ defineProps({
 
 .exercise-layout__content {
   display: grid;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
 @media (max-width: 640px) {

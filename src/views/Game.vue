@@ -55,8 +55,9 @@
             <div class="smartick-card-head">
               <div class="smartick-topbar">
                 <div class="smartick-progress">
-                  <div class="avatar-chip">
+                  <div class="avatar-chip" :class="{ 'avatar-chip--celebrate': celebrateAvatar }">
                     <img :src="characterImage" alt="Avatar" />
+                    <span v-if="celebrateAvatar" class="avatar-reward" aria-hidden="true">⭐</span>
                   </div>
                   <div class="score-track">
                     <div class="score-stars">
@@ -947,7 +948,9 @@ const confettiPieces = Array.from({ length: 100 }, (_, i) => ({
   duration: 4 + Math.random() * 3
 }))
 const showConfetti = ref(false)
+const celebrateAvatar = ref(false)
 let confettiTimer = null
+let avatarCelebrateTimer = null
 const readingHighlight = ref(false)
 let readingTimer = null
 let syllableTimer = null
@@ -1324,13 +1327,19 @@ watch(
       unlockAudio()
       playSfx('correct')
       showConfetti.value = true
+      celebrateAvatar.value = true
       if (confettiTimer) clearTimeout(confettiTimer)
+      if (avatarCelebrateTimer) clearTimeout(avatarCelebrateTimer)
       confettiTimer = setTimeout(() => {
         showConfetti.value = false
       }, 4500)
+      avatarCelebrateTimer = setTimeout(() => {
+        celebrateAvatar.value = false
+      }, 950)
     } else if (status === 'fail') {
       unlockAudio()
       playSfx('wrong')
+      celebrateAvatar.value = false
     }
   }
 )
@@ -2153,6 +2162,7 @@ function handleRepeat() {
 onBeforeUnmount(() => {
   stopAllMedia()
   if (confettiTimer) clearTimeout(confettiTimer)
+  if (avatarCelebrateTimer) clearTimeout(avatarCelebrateTimer)
   if (readingTimer) clearTimeout(readingTimer)
   stopTts()
   clearSyllableTicker()
@@ -2224,6 +2234,7 @@ function shuffleArray(arr) {
 <style scoped>
 .game-view {
   padding: 1.5rem;
+  font-family: var(--font-readable, 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif);
 }
 .btn-option {
   display: inline-flex;
@@ -2232,29 +2243,31 @@ function shuffleArray(arr) {
   text-align: center;
   justify-content: center;
   align-items: center;
-  padding: 0.85rem 1rem;
-  min-height: 64px;
-  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  min-height: 60px;
+  border-radius: 16px;
   border: 2px solid #cfd8e3;
   background: #ffffff;
-  font-weight: 700;
-  font-size: clamp(1.05rem, 2.2vw, 1.18rem);
-  line-height: 1.35;
+  font-weight: 750;
+  font-size: clamp(1.12rem, 4.5vw, 1.3rem);
+  line-height: 1.5;
   color: #0f172a;
   text-transform: none;
-  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+  transform: scale(1);
 }
 .btn-option:hover {
   border-color: #0ea5e9;
   background: #f7fcff;
+  box-shadow: 0 8px 16px rgba(14, 165, 233, 0.16);
 }
 .btn-option:focus-visible {
   outline: 3px solid #0ea5e9;
   outline-offset: 2px;
 }
 .btn-option:active {
-  transform: translateY(1px);
+  transform: scale(0.95);
 }
 .btn-option.btn-active {
   border-color: #0ea5e9;
@@ -2304,7 +2317,11 @@ function shuffleArray(arr) {
   text-align: center;
   color: #0b6e4f;
   font-weight: 800;
-  font-size: 1.15rem;
+  font-size: clamp(1.2rem, 4.9vw, 1.45rem);
+  line-height: 1.55;
+  max-width: 24ch;
+  margin-inline: auto;
+  text-wrap: balance;
 }
 .tense-guide {
   margin: 0 0 0.65rem;
@@ -2571,6 +2588,11 @@ function shuffleArray(arr) {
   .reading-animated {
     animation: none;
   }
+  .avatar-chip--celebrate,
+  .avatar-reward {
+    animation: none;
+    transform: none;
+  }
 }
 @media (max-width: 768px) {
   .reading-row {
@@ -2703,11 +2725,32 @@ function shuffleArray(arr) {
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
   display: grid;
   place-items: center;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .avatar-chip img {
   width: 44px;
   height: 44px;
   object-fit: contain;
+}
+.avatar-chip--celebrate {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 16px 28px rgba(245, 158, 11, 0.36);
+}
+.avatar-reward {
+  position: absolute;
+  right: -8px;
+  top: -10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #f59e0b;
+  color: #fff;
+  font-size: 0.85rem;
+  box-shadow: 0 8px 16px rgba(245, 158, 11, 0.38);
+  animation: avatarRewardPop 0.65s ease;
 }
 .score-track {
   display: grid;
@@ -2755,6 +2798,9 @@ function shuffleArray(arr) {
 .icon-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 12px 22px rgba(15, 23, 42, 0.15);
+}
+.icon-btn:active {
+  transform: scale(0.95);
 }
 .smartick-stage {
   display: flex;
@@ -2878,6 +2924,20 @@ function shuffleArray(arr) {
   color: #0f172a;
   font-size: 0.95rem;
 }
+@keyframes avatarRewardPop {
+  0% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 @media (max-width: 768px) {
   .game-view {
     padding: 0;
@@ -2904,6 +2964,14 @@ function shuffleArray(arr) {
     width: 100%;
     max-width: 100%;
     padding: 0.95rem 0.85rem 1.1rem;
+  }
+  .btn-option {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 60px;
+    font-size: clamp(1.12rem, 5vw, 1.28rem);
+    line-height: 1.52;
   }
   .smartick-card-head {
     margin-bottom: 0.75rem;

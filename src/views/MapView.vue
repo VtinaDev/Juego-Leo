@@ -1,21 +1,10 @@
 <template>
   <section class="habitat-map">
     <header class="map-header">
-      <div>
-        <h1>Escuela mágica</h1>
-        <p class="sub">
-          Explora cada territorio y sigue tu ruta del tesoro.
-        </p>
-      </div>
-      <div v-if="!isMobile" class="legend">
-        <div class="legend-item">
-          <span class="legend-dot legend-dot-active" />
-          Etapa actual
-        </div>
-        <div class="legend-item">
-          <span class="legend-dot legend-dot-done" />
-          Hábitat completado
-        </div>
+      <div class="map-header-main">
+        <p class="map-eyebrow">Mapa de aventura</p>
+        <h1>{{ currentZone?.levelName || 'Escuela mágica' }}</h1>
+        <p class="sub">{{ currentZone?.themeTitle || 'Siguiente misión disponible' }}</p>
       </div>
     </header>
 
@@ -31,20 +20,12 @@
         :ref="(el) => setMobileSlideRef(el, habitat.id)"
         class="mobile-habitat-slide"
         :class="{
-          'mobile-habitat-slide--active': habitat.id === mobileFocusHabitatId,
+          'mobile-habitat-slide--active': habitat.id === mobileVisibleHabitatId,
+          'mobile-habitat-slide--next': habitat.id === mobileFocusHabitatId,
           'mobile-habitat-slide--locked': !habitat.unlocked
         }"
       >
         <div class="mobile-habitat-bg" :style="{ backgroundImage: getHabitatBackground(habitat) }" />
-        <div class="cloud-layer mobile-cloud-layer" aria-hidden="true">
-          <div class="cloud cloud-a"></div>
-          <div class="cloud cloud-b"></div>
-          <div class="cloud cloud-c"></div>
-          <div class="cloud cloud-d"></div>
-          <div class="cloud cloud-e"></div>
-          <div class="cloud cloud-f"></div>
-          <div class="cloud cloud-g"></div>
-        </div>
 
         <div class="mobile-habitat-content">
           <p class="mobile-habitat-eyebrow">{{ habitat.themeTitle }}</p>
@@ -54,28 +35,32 @@
           <div class="mobile-character-wrap">
             <img v-if="habitat.character" :src="habitat.character" :alt="habitat.levelName" />
             <span v-else class="node-icon">{{ habitat.icon }}</span>
+            <span v-if="habitat.isComplete" class="mobile-character-badge" aria-hidden="true">✔</span>
           </div>
 
           <div class="mobile-stage-row" role="list" :aria-label="`Etapas de ${habitat.levelName}`">
             <template v-for="stage in stagesFor(habitat)" :key="`mobile-stage-${habitat.id}-${stage.num}`">
               <RouterLink
-                v-if="habitat.unlocked"
+                v-if="habitat.unlocked && stage.state !== 'locked'"
                 :to="`/game/${habitat.id}/${stage.num}`"
-                class="mobile-stage-chip"
+                class="mobile-stage-chip tap-pop"
                 :class="{
                   'mobile-stage-chip--done': stage.state === 'done',
                   'mobile-stage-chip--next': stage.state === 'next'
                 }"
                 :aria-label="`Ir a nivel ${habitat.id}, etapa ${stage.num}`"
+                @click="handleMapTap($event)"
               >
-                {{ stage.num }}
+                <span class="chip-icon" aria-hidden="true">{{ stage.state === 'done' ? '✔' : '▶' }}</span>
+                <span class="chip-num">{{ stage.num }}</span>
               </RouterLink>
               <span
                 v-else
                 class="mobile-stage-chip mobile-stage-chip--locked"
                 aria-hidden="true"
               >
-                {{ stage.num }}
+                <span class="chip-icon" aria-hidden="true">🔒</span>
+                <span class="chip-num">{{ stage.num }}</span>
               </span>
             </template>
           </div>
@@ -84,22 +69,24 @@
             <RouterLink
               v-if="habitat.unlocked"
               :to="`/game/${habitat.id}/${habitat.progress.nextStage}`"
-              class="mobile-cta mobile-cta--play"
+              class="mobile-cta mobile-cta--play tap-pop"
+              @click="handleMapTap($event)"
             >
               {{ habitat.isComplete ? 'Revivir aventura' : `Jugar etapa ${habitat.progress.nextStage}` }}
             </RouterLink>
             <RouterLink
               v-else
               to="/subscribe"
-              class="mobile-cta mobile-cta--locked"
+              class="mobile-cta mobile-cta--locked tap-pop"
+              @click="handleMapTap($event)"
             >
               Desbloquear nivel
             </RouterLink>
             <button
               v-if="nextHabitatId(habitat.id)"
               type="button"
-              class="mobile-next"
-              @click="scrollToHabitat(nextHabitatId(habitat.id))"
+              class="mobile-next tap-pop"
+              @click="scrollToHabitat(nextHabitatId(habitat.id), 'smooth')"
             >
               Siguiente zona
             </button>
@@ -164,8 +151,9 @@
         <RouterLink
           v-if="habitat.unlocked"
           :to="`/game/${habitat.id}/${habitat.progress.nextStage}`"
-          class="node-icon-wrap"
+          class="node-icon-wrap tap-pop"
           :style="{ borderColor: habitat.color }"
+          @click="handleMapTap($event)"
         >
           <img v-if="habitat.character" :src="habitat.character" :alt="habitat.levelName" />
           <span v-else class="node-icon">{{ habitat.icon }}</span>
@@ -179,19 +167,30 @@
         <span class="node-base" :style="{ backgroundColor: habitat.color }" />
 
         <div v-if="habitat.unlocked" class="stage-chips">
-          <RouterLink
-            v-for="stage in stagesFor(habitat)"
-            :key="`stage-${habitat.id}-${stage.num}`"
-            :to="`/game/${habitat.id}/${stage.num}`"
-            class="stage-chip"
-            :class="{
-              'stage-chip--done': stage.state === 'done',
-              'stage-chip--next': stage.state === 'next'
-            }"
-            :aria-label="`Ir a nivel ${habitat.id}, etapa ${stage.num}`"
-          >
-            {{ stage.num }}
-          </RouterLink>
+          <template v-for="stage in stagesFor(habitat)" :key="`stage-${habitat.id}-${stage.num}`">
+            <RouterLink
+              v-if="stage.state !== 'locked'"
+              :to="`/game/${habitat.id}/${stage.num}`"
+              class="stage-chip tap-pop"
+              :class="{
+                'stage-chip--done': stage.state === 'done',
+                'stage-chip--next': stage.state === 'next'
+              }"
+              :aria-label="`Ir a nivel ${habitat.id}, etapa ${stage.num}`"
+              @click="handleMapTap($event)"
+            >
+              <span aria-hidden="true">{{ stage.state === 'done' ? '✔' : '▶' }}</span>
+              <span>{{ stage.num }}</span>
+            </RouterLink>
+            <span
+              v-else
+              class="stage-chip stage-chip--locked"
+              aria-hidden="true"
+            >
+              <span aria-hidden="true">🔒</span>
+              <span>{{ stage.num }}</span>
+            </span>
+          </template>
         </div>
       </div>
     </div>
@@ -291,9 +290,11 @@ const isMobile = ref(false)
 const mobileTrackRef = ref(null)
 const mobileSlides = ref({})
 const previousMobileFocusId = ref(null)
+const mobileVisibleHabitatId = ref(null)
 let unlockTimer = null
 const lastHoverSound = new Map()
 let mediaQueryList = null
+let mobileScrollRaf = null
 
 const levelIds = listLevels()
   .map(Number)
@@ -343,6 +344,15 @@ const mobileFocusHabitatId = computed(() => {
   if (firstUnlocked) return firstUnlocked.id
 
   return enrichedHabitats.value[0]?.id ?? null
+})
+
+const currentZone = computed(() => {
+  const visibleId = mobileVisibleHabitatId.value
+  if (visibleId) {
+    const byVisible = enrichedHabitats.value.find((habitat) => habitat.id === visibleId)
+    if (byVisible) return byVisible
+  }
+  return enrichedHabitats.value.find((habitat) => habitat.id === mobileFocusHabitatId.value) || enrichedHabitats.value[0] || null
 })
 
 function stagesFor(habitat) {
@@ -456,6 +466,44 @@ function scrollToHabitat(habitatId, behavior = 'smooth') {
   node.scrollIntoView({ inline: 'center', block: 'nearest', behavior })
 }
 
+function handleMapTap(event) {
+  if (event?.currentTarget?.classList) {
+    event.currentTarget.classList.remove('is-tapped')
+    requestAnimationFrame(() => {
+      event.currentTarget.classList.add('is-tapped')
+      setTimeout(() => event.currentTarget?.classList?.remove('is-tapped'), 170)
+    })
+  }
+}
+
+function resolveSlideFocusFromScroll() {
+  const track = mobileTrackRef.value
+  if (!track) return
+  const centerX = track.scrollLeft + track.clientWidth / 2
+  let nearestId = null
+  let nearestDistance = Number.POSITIVE_INFINITY
+  Object.entries(mobileSlides.value).forEach(([id, node]) => {
+    if (!node) return
+    const nodeCenter = node.offsetLeft + node.offsetWidth / 2
+    const distance = Math.abs(centerX - nodeCenter)
+    if (distance < nearestDistance) {
+      nearestDistance = distance
+      nearestId = Number(id)
+    }
+  })
+  if (nearestId) {
+    mobileVisibleHabitatId.value = nearestId
+  }
+}
+
+function onMobileTrackScroll() {
+  if (mobileScrollRaf) return
+  mobileScrollRaf = requestAnimationFrame(() => {
+    mobileScrollRaf = null
+    resolveSlideFocusFromScroll()
+  })
+}
+
 function handleHabitatHover(id) {
   const soundKey = HABITAT_SFX[id]
   if (!soundKey) return
@@ -553,6 +601,9 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  if (mobileScrollRaf) cancelAnimationFrame(mobileScrollRaf)
+  mobileScrollRaf = null
+  mobileTrackRef.value?.removeEventListener?.('scroll', onMobileTrackScroll)
   mediaQueryList?.removeEventListener?.('change', updateViewportMode)
   window.removeEventListener('resize', updateViewportMode)
   stopMusic(200)
@@ -565,7 +616,24 @@ watch(
     const focusChanged = previousMobileFocusId.value !== focusId
     previousMobileFocusId.value = focusId
     const behavior = focusChanged ? 'smooth' : 'auto'
-    setTimeout(() => scrollToHabitat(focusId, behavior), 20)
+    if (!mobileVisibleHabitatId.value) {
+      mobileVisibleHabitatId.value = focusId
+    }
+    setTimeout(() => {
+      scrollToHabitat(focusId, behavior)
+      resolveSlideFocusFromScroll()
+    }, 20)
+  },
+  { immediate: true }
+)
+
+watch(
+  () => mobileTrackRef.value,
+  (track, previous) => {
+    previous?.removeEventListener?.('scroll', onMobileTrackScroll)
+    if (!track) return
+    track.addEventListener('scroll', onMobileTrackScroll, { passive: true })
+    setTimeout(resolveSlideFocusFromScroll, 40)
   },
   { immediate: true }
 )
@@ -577,23 +645,36 @@ watch(
 .habitat-map {
   padding: 0;
   color: #0f172a;
-  font-family: 'Baloo 2', 'Comic Sans MS', 'Segoe UI', sans-serif;
+  font-family: var(--font-readable, 'Lexend', 'Baloo 2', 'Segoe UI', sans-serif);
   position: relative;
   min-height: 100vh;
 }
 .map-header {
   position: absolute;
-  inset: 1rem 1rem auto 1rem;
+  inset: 0.75rem 0.75rem auto 0.75rem;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.75rem;
   padding: 0;
   border-radius: 0;
   background: transparent;
+  border: none;
+  box-shadow: none;
   backdrop-filter: none;
   z-index: 4;
-  color: #1f4d2d;
+  color: #0f172a;
+}
+.map-header-main {
+  display: grid;
+  gap: 0.08rem;
+}
+.map-eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #334155;
+  font-weight: 700;
 }
 .eyebrow {
   text-transform: uppercase;
@@ -602,36 +683,16 @@ watch(
   color: #94a3b8;
 }
 .map-header h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.05rem, 3.2vw, 1.55rem);
   margin: 0;
-  color: #1f4d2d;
+  color: #0f172a;
+  line-height: 1.2;
 }
 .sub {
+  margin: 0;
   max-width: 540px;
-  color: #2f5f3a;
-}
-.legend {
-  display: none;
-}
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.9rem;
-  color: #475569;
-}
-.legend-dot {
-  width: 0.9rem;
-  height: 0.9rem;
-  border-radius: 50%;
-  display: inline-block;
-  background: #cbd5f5;
-}
-.legend-dot-active {
-  background: #facc15;
-}
-.legend-dot-done {
-  background: #34d399;
+  color: #334155;
+  font-size: 0.92rem;
 }
 
 .mobile-map-track {
@@ -643,9 +704,9 @@ watch(
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  padding-top: 88px;
-  background: linear-gradient(to bottom, #cfe9ff 0%, #b8f6c2 50%, #7edc8d 100%);
-  box-shadow: inset 0 0 40px rgba(34, 139, 34, 0.26);
+  padding-top: 74px;
+  background: linear-gradient(to bottom, #cde4ff 0%, #cdeed8 54%, #9eddb4 100%);
+  box-shadow: inset 0 0 26px rgba(15, 23, 42, 0.14);
 }
 .mobile-map-track::-webkit-scrollbar {
   height: 0;
@@ -659,29 +720,32 @@ watch(
   display: flex;
   align-items: stretch;
   justify-content: center;
-  padding: 0.85rem;
+  padding: 0.8rem 0.9rem;
+  transition: transform 0.36s ease, opacity 0.36s ease, filter 0.36s ease;
+  opacity: 0.84;
+  transform: scale(0.975);
+  filter: saturate(0.9);
+}
+.mobile-habitat-slide--active {
+  opacity: 1;
+  transform: scale(1);
+  filter: saturate(1);
+}
+.mobile-habitat-slide--next .mobile-character-wrap {
+  animation: nextLevelPulse 2.2s ease-in-out infinite;
 }
 .mobile-habitat-bg {
   position: absolute;
   left: 50%;
-  top: 56%;
-  width: 76%;
-  height: 76%;
+  top: 57%;
+  width: 80%;
+  height: 80%;
   transform: translate(-50%, -50%);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  filter: saturate(1.05) drop-shadow(0 10px 22px rgba(15, 23, 42, 0.28));
-  opacity: 0.95;
-}
-.mobile-cloud-layer {
-  top: 22%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 125%;
-  height: 180px;
-  z-index: 0;
-  opacity: 0.78;
+  filter: saturate(0.95) drop-shadow(0 10px 20px rgba(15, 23, 42, 0.28));
+  opacity: 0.88;
 }
 .mobile-habitat-content {
   position: relative;
@@ -692,126 +756,160 @@ watch(
   background: transparent;
   backdrop-filter: none;
   box-shadow: none;
-  padding: 1rem 0.85rem 1.1rem;
+  padding: 0.9rem 0.85rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.72rem;
+  gap: 0.62rem;
 }
 .mobile-habitat-eyebrow {
   margin: 0;
   align-self: flex-start;
-  padding: 0.34rem 0.65rem;
+  padding: 0.32rem 0.62rem;
   border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(255, 247, 205, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 247, 205, 0.95);
   font-size: 0.76rem;
   font-weight: 800;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: #4c6a2f;
+  letter-spacing: 0.02em;
+  color: #3f4f1b;
 }
 .mobile-habitat-title {
   margin: 0;
-  font-size: clamp(1.45rem, 5vw, 1.9rem);
+  font-size: clamp(1.5rem, 5.6vw, 2rem);
   color: #ffffff;
-  text-shadow: 0 3px 10px rgba(15, 23, 42, 0.65);
+  text-shadow: 0 2px 8px rgba(15, 23, 42, 0.75);
+  line-height: 1.2;
 }
 .mobile-habitat-description {
   margin: 0;
   color: #f8fafc;
-  font-size: 0.94rem;
-  text-shadow: 0 2px 8px rgba(15, 23, 42, 0.62);
+  font-size: 0.98rem;
+  line-height: 1.45;
+  text-shadow: 0 1px 6px rgba(15, 23, 42, 0.72);
 }
 .mobile-character-wrap {
+  position: relative;
   align-self: center;
-  width: 245px;
-  height: 245px;
-  border-radius: 0;
+  width: 236px;
+  height: 236px;
+  border-radius: 18px;
   background: transparent;
   border: none;
   display: grid;
   place-items: center;
-  box-shadow: none;
+  box-shadow: 0 16px 24px rgba(15, 23, 42, 0.22);
 }
 .mobile-character-wrap img {
-  width: 132%;
-  height: 132%;
+  width: 126%;
+  height: 126%;
   object-fit: contain;
   animation: float 3.8s ease-in-out infinite;
   filter: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.35));
+}
+.mobile-character-badge {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #22c55e;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.84);
+  box-shadow: 0 8px 16px rgba(34, 197, 94, 0.42);
+  font-weight: 900;
 }
 .mobile-stage-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.55rem;
+  gap: 0.5rem;
 }
 .mobile-stage-chip {
-  min-width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  min-width: 56px;
+  min-height: 54px;
+  border-radius: 16px;
+  padding: 0.2rem 0.45rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.3rem;
   font-weight: 800;
   font-size: 0.96rem;
   color: #1f2937;
-  background: #f8fafc;
-  border: 1px solid rgba(15, 23, 42, 0.1);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 .mobile-stage-chip--done {
   background: #dcfce7;
-  color: #166534;
-  border-color: #34d399;
+  color: #14532d;
+  border-color: #22c55e;
 }
 .mobile-stage-chip--next {
-  background: #fef3c7;
-  color: #7c2d12;
+  background: #fff8e7;
+  color: #78350f;
   border-color: #f59e0b;
-  animation: mobileChipPulse 2.6s ease-in-out infinite;
+  animation: mobileChipPulse 1.9s ease-in-out infinite;
+  box-shadow: 0 10px 20px rgba(245, 158, 11, 0.34);
 }
 .mobile-stage-chip--locked {
-  background: #e2e8f0;
-  color: #64748b;
+  background: #cbd5e1;
+  color: #475569;
+  border-color: rgba(71, 85, 105, 0.35);
+  box-shadow: none;
 }
 .mobile-stage-chip:active {
-  transform: scale(0.97);
+  transform: scale(0.95);
+}
+.chip-icon {
+  font-size: 0.88rem;
 }
 .mobile-actions {
   margin-top: 0.2rem;
   display: grid;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 .mobile-cta {
-  min-height: 50px;
-  border-radius: 16px;
+  min-height: 56px;
+  border-radius: 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1rem;
   text-align: center;
-  font-size: 0.96rem;
+  font-size: 1.04rem;
   font-weight: 800;
+  line-height: 1.25;
 }
 .mobile-cta--play {
   background: linear-gradient(180deg, #fde68a, #f59e0b);
   color: #4a2904;
-  border: 1px solid rgba(245, 158, 11, 0.42);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  box-shadow: 0 12px 22px rgba(245, 158, 11, 0.35);
 }
 .mobile-cta--locked {
-  background: #e2e8f0;
-  color: #334155;
-  border: 1px solid rgba(100, 116, 139, 0.36);
+  background: #f1f5f9;
+  color: #1e293b;
+  border: 1px solid rgba(100, 116, 139, 0.45);
+  box-shadow: 0 10px 18px rgba(100, 116, 139, 0.2);
 }
 .mobile-next {
-  min-height: 48px;
-  border-radius: 14px;
-  border: 1px dashed rgba(255, 255, 255, 0.85);
-  background: rgba(30, 41, 59, 0.22);
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 700;
+  min-height: 52px;
+  border-radius: 16px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.98rem;
+  font-weight: 800;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.14);
+}
+.mobile-next:active,
+.mobile-cta:active {
+  transform: scale(0.97);
 }
 @keyframes mobileChipPulse {
   0%,
@@ -820,7 +918,7 @@ watch(
     box-shadow: 0 0 0 rgba(245, 158, 11, 0.28);
   }
   50% {
-    transform: scale(1.04);
+    transform: scale(1.06);
     box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
   }
 }
@@ -1040,11 +1138,13 @@ watch(
   justify-content: center;
 }
 .stage-chip {
-  min-width: 28px;
-  height: 26px;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 0.32rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.22rem;
   border-radius: 10px;
   background: #f3f4f6;
   color: #0f172a;
@@ -1063,9 +1163,15 @@ watch(
   color: #166534;
 }
 .stage-chip--next {
-  background: #eef2ff;
-  border-color: #6366f1;
-  color: #312e81;
+  background: #fff8e7;
+  border-color: #f59e0b;
+  color: #78350f;
+  animation: mobileChipPulse 2.1s ease-in-out infinite;
+}
+.stage-chip--locked {
+  background: #cbd5e1;
+  border-color: rgba(71, 85, 105, 0.35);
+  color: #334155;
 }
 .stage-chip:focus-visible {
   outline: 2px solid #22c55e;
@@ -1148,7 +1254,8 @@ watch(
   box-shadow: none;
 }
 .map-node.active .node-icon-wrap {
-  animation: glow 2.5s ease-in-out infinite;
+  animation: glow 1.9s ease-in-out infinite;
+  transform: scale(1.09);
 }
 .map-node.active .node-icon-wrap::before {
   opacity: 1;
@@ -1213,6 +1320,36 @@ watch(
   }
 }
 
+.tap-pop {
+  transform: scale(1);
+}
+.tap-pop.is-tapped {
+  animation: tapPop 0.18s ease;
+}
+@keyframes tapPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes nextLevelPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 16px 24px rgba(15, 23, 42, 0.22);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 22px 30px rgba(245, 158, 11, 0.3);
+  }
+}
+
 .log-panel {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -1264,6 +1401,14 @@ watch(
   .mobile-stage-chip--next {
     animation: none;
   }
+  .mobile-habitat-slide,
+  .mobile-habitat-slide--next .mobile-character-wrap,
+  .tap-pop.is-tapped,
+  .stage-chip--next {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1275,9 +1420,9 @@ watch(
   .map-header {
     position: relative;
     inset: auto;
-    margin: 0;
-    padding: 0.55rem 0.75rem 0.3rem;
-    gap: 0.5rem;
+    margin: 0.35rem 0.55rem 0;
+    padding: 0.5rem 0.62rem;
+    gap: 0.44rem;
   }
   .map-canvas {
     height: calc(100dvh - 140px);
@@ -1311,10 +1456,10 @@ watch(
     opacity: 0.84;
   }
   .map-header h1 {
-    font-size: clamp(1.55rem, 7.2vw, 2rem);
+    font-size: clamp(1.2rem, 6.4vw, 1.6rem);
   }
   .sub {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
   }
 }
 
