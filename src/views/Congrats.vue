@@ -42,22 +42,24 @@
 
           <div class="actions">
             <button
-              class="btn btn-ghost icon-only"
+              class="btn btn-ghost action-btn"
               type="button"
               @click="repeatStage"
               aria-label="Volver"
               :style="{ borderColor: levelColor }"
             >
               <img src="/icons/back.PNG" alt="Volver" class="icon-img" />
+              <span class="action-label">Repetir etapa</span>
             </button>
             <button
-              class="btn btn-primary icon-only"
+              class="btn btn-primary action-btn"
               type="button"
               @click="goToNextStage"
               :aria-label="primaryLabel"
               :style="{ borderColor: levelColor }"
             >
               <img src="/icons/next.PNG" alt="Siguiente" class="icon-img" />
+              <span class="action-label">{{ hasNextStage ? 'Siguiente etapa' : 'Ir al mapa' }}</span>
             </button>
           </div>
 
@@ -311,37 +313,31 @@ h1 {
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.75rem;
   margin: 1.8rem 0 0.4rem;
 }
-.actions .btn {
+.actions .action-btn {
+  flex: 1 1 0;
   min-width: 0;
-  min-height: 0;
-  padding: 0.8rem 1.6rem;
-  font-size: 1rem;
-}
-.actions .btn-ghost {
-  padding: 0.8rem 1.4rem;
-}
-.actions .icon-only {
-  min-width: 58px;
-  min-height: 58px;
-  padding: 0;
-  border-radius: 14px;
-  background: transparent;
-  box-shadow: none;
-  border: 1px solid transparent;
-}
-.actions .icon-only:hover {
-  background: transparent;
-  box-shadow: none;
-  transform: none;
+  min-height: 64px;
+  padding: 0.65rem 0.75rem;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-transform: none;
 }
 .actions .icon-img {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
+}
+.action-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .hint {
@@ -443,18 +439,94 @@ h1 {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .congrats-shell {
+    padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem max(0.95rem, env(safe-area-inset-bottom));
+    align-items: end;
+  }
+
   .congrats-card {
-    padding: 2rem 1.5rem;
+    width: 100%;
+    max-width: none;
+    border-radius: 18px;
+    padding: 1rem 0.9rem;
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(8px);
+  }
+
+  .congrats-body {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+
+  .congrats-info {
+    text-align: center;
+    flex-basis: auto;
+  }
+
+  .lead {
+    justify-content: center;
+    text-align: center;
+    font-size: clamp(1.25rem, 6vw, 1.5rem);
+    margin-bottom: 0.95rem;
+  }
+
+  .celebration-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .pill {
+    width: 100%;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .stars {
+    justify-content: center;
+    margin: 1rem 0 0.35rem;
+  }
+
+  .star-img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .stars-label {
+    margin-left: 0.45rem;
+    font-size: 0.92rem;
+  }
+
+  .congrats-avatar {
+    width: 108px;
+    height: 108px;
+    margin: 0.2rem auto 0;
   }
 
   .actions {
-    flex-direction: column;
+    margin-top: 1.05rem;
+    gap: 0.6rem;
   }
 
-  .btn {
-    width: 100%;
-    text-align: center;
+  .actions .action-btn {
+    min-height: 58px;
+    padding: 0.55rem 0.6rem;
+    gap: 0.35rem;
+  }
+
+  .actions .icon-img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .action-label {
+    font-size: 0.86rem;
+  }
+
+  .hint {
+    font-size: 0.88rem;
   }
 }
 </style>
