@@ -1,5 +1,5 @@
 <template>
-  <div class="game-view">
+  <div ref="gameViewRef" class="game-view">
     <!-- Estado: cargando -->
     <div v-if="loading" class="text-center text-gray-500">
       Cargando etapa...
@@ -51,7 +51,11 @@
       >
         <template #default>
           <div class="smartick-shell">
-            <div class="smartick-card exercise-body">
+            <div
+              ref="exerciseCardRef"
+              class="smartick-card exercise-body"
+              :style="exerciseScaleStyle"
+            >
             <div class="smartick-card-head">
               <div class="smartick-topbar">
                 <div class="smartick-progress">
@@ -967,11 +971,58 @@ let lastOptionPreviewAt = 0
 let previousBodyOverflow = ''
 let previousHtmlOverflow = ''
 let previousBodyOverscroll = ''
+const gameViewRef = ref(null)
+const exerciseCardRef = ref(null)
+const mobileViewport = ref(false)
+const exerciseScale = ref(1)
+let scaleRaf = null
+let resizeObserver = null
+
+function updateMobileViewportFlag() {
+  if (typeof window === 'undefined') return
+  mobileViewport.value = window.matchMedia('(max-width: 768px)').matches
+}
+
+function scheduleExerciseScaleUpdate() {
+  if (typeof window === 'undefined') return
+  if (scaleRaf) cancelAnimationFrame(scaleRaf)
+  scaleRaf = requestAnimationFrame(() => {
+    scaleRaf = null
+    updateExerciseScale()
+  })
+}
+
+function updateExerciseScale() {
+  if (!mobileViewport.value) {
+    exerciseScale.value = 1
+    return
+  }
+  const root = gameViewRef.value
+  const card = exerciseCardRef.value
+  if (!root || !card) return
+
+  const naturalHeight = card.scrollHeight || 0
+  const availableHeight = root.clientHeight || 0
+  if (!naturalHeight || !availableHeight) {
+    exerciseScale.value = 1
+    return
+  }
+
+  const ratio = availableHeight / naturalHeight
+  exerciseScale.value = ratio < 1 ? Math.max(0.72, ratio) : 1
+}
+
+const exerciseScaleStyle = computed(() => {
+  if (!mobileViewport.value || exerciseScale.value >= 0.999) return null
+  return {
+    transform: `scale(${exerciseScale.value})`,
+    transformOrigin: 'top center'
+  }
+})
 
 function lockExerciseScrollOnMobile() {
   if (typeof window === 'undefined') return
-  const isMobileViewport = window.matchMedia('(max-width: 768px)').matches
-  if (!isMobileViewport) return
+  if (!mobileViewport.value) return
   previousBodyOverflow = document.body.style.overflow || ''
   previousHtmlOverflow = document.documentElement.style.overflow || ''
   previousBodyOverscroll = document.body.style.overscrollBehavior || ''
@@ -993,10 +1044,19 @@ game.load?.()
 onMounted(() => {
   if (typeof window !== 'undefined') {
     prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    updateMobileViewportFlag()
+    window.addEventListener('resize', updateMobileViewportFlag, { passive: true })
+    window.addEventListener('resize', scheduleExerciseScaleUpdate, { passive: true })
   }
   // Silencia la música global al entrar al modo ejercicios
   stopMusic(260)
   lockExerciseScrollOnMobile()
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(() => scheduleExerciseScaleUpdate())
+    if (gameViewRef.value) resizeObserver.observe(gameViewRef.value)
+    if (exerciseCardRef.value) resizeObserver.observe(exerciseCardRef.value)
+  }
+  scheduleExerciseScaleUpdate()
 })
 
 // Permite leer /game/:level/:stage o /game/:levelId/:stageId
@@ -2191,12 +2251,32 @@ onBeforeUnmount(() => {
   clearSyllableTicker()
   clearAudioListeners()
   restoreExerciseScrollLock()
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', updateMobileViewportFlag)
+    window.removeEventListener('resize', scheduleExerciseScaleUpdate)
+  }
+  if (scaleRaf) {
+    cancelAnimationFrame(scaleRaf)
+    scaleRaf = null
+  }
 })
 
 watch(
   () => currentImageSrc.value,
   () => {
     imageLoadFailed.value = false
+    scheduleExerciseScaleUpdate()
+  }
+)
+
+watch(
+  () => current.value?.id,
+  () => {
+    scheduleExerciseScaleUpdate()
   }
 )
 
