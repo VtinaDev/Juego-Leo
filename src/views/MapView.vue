@@ -732,7 +732,7 @@ watch(
   filter: saturate(1);
 }
 .mobile-habitat-slide--next .mobile-character-wrap {
-  animation: nextLevelPulse 2.2s ease-in-out infinite;
+  animation: none;
 }
 .mobile-habitat-bg {
   position: absolute;
@@ -782,22 +782,21 @@ watch(
 }
 .mobile-habitat-description {
   margin: 0;
-  color: #f8fafc;
+  color: rgb(20, 90, 20);
   font-size: 0.98rem;
   line-height: 1.45;
-  text-shadow: 0 1px 6px rgba(15, 23, 42, 0.72);
 }
 .mobile-character-wrap {
   position: relative;
   align-self: center;
   width: 236px;
   height: 236px;
-  border-radius: 18px;
+  border-radius: 0;
   background: transparent;
   border: none;
   display: grid;
   place-items: center;
-  box-shadow: 0 16px 24px rgba(15, 23, 42, 0.22);
+  box-shadow: none;
 }
 .mobile-character-wrap img {
   width: 126%;
@@ -1195,15 +1194,7 @@ watch(
   z-index: 2;
 }
 .node-icon-wrap::before {
-  content: '';
-  position: absolute;
-  inset: -10px;
-  border-radius: 28px;
-  background: radial-gradient(circle, rgba(250, 204, 21, 0.35), rgba(250, 204, 21, 0));
-  opacity: 0;
-  filter: blur(6px);
-  transition: opacity 0.3s ease;
-  z-index: 0;
+  content: none;
 }
 .node-icon-wrap:hover {
   transform: translateY(-6px);
@@ -1254,14 +1245,14 @@ watch(
   box-shadow: none;
 }
 .map-node.active .node-icon-wrap {
-  animation: glow 1.9s ease-in-out infinite;
-  transform: scale(1.09);
+  animation: none;
+  transform: none;
 }
 .map-node.active .node-icon-wrap::before {
-  opacity: 1;
+  opacity: 0;
 }
 .map-node.active .node-icon-wrap img {
-  filter: drop-shadow(0 12px 26px rgba(250, 204, 21, 0.55));
+  filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.25));
 }
 .map-node--pulse .node-icon-wrap {
   animation: unlockGlow 1.4s ease;
@@ -1272,15 +1263,6 @@ watch(
 }
 .map-node.locked {
   opacity: 0.6;
-}
-@keyframes glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(250, 204, 21, 0.6);
-  }
 }
 @keyframes unlockGlow {
   0% {
@@ -1335,18 +1317,6 @@ watch(
   }
   100% {
     transform: scale(1);
-  }
-}
-
-@keyframes nextLevelPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: 0 16px 24px rgba(15, 23, 42, 0.22);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 22px 30px rgba(245, 158, 11, 0.3);
   }
 }
 
