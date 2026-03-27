@@ -776,8 +776,8 @@ watch(
 .mobile-habitat-title {
   margin: 0;
   font-size: clamp(1.5rem, 5.6vw, 2rem);
-  color: #ffffff;
-  text-shadow: 0 2px 8px rgba(15, 23, 42, 0.75);
+  color: #14532d;
+  text-shadow: none;
   line-height: 1.2;
 }
 .mobile-habitat-description {
