@@ -23,9 +23,26 @@
       </span>
     </div>
 
-    <div class="mt-4 flex gap-3">
-      <button class="btn" type="button" @click="reset">Reiniciar</button>
-      <button v-if="!hideSubmit" class="btn btn-primary" type="button" @click="check">Continuar</button>
+    <div class="mt-4 flex gap-3 justify-center">
+      <button
+        class="dd-icon-btn dd-icon-btn--reset"
+        type="button"
+        @click="reset"
+        aria-label="Reiniciar"
+        title="Reiniciar"
+      >
+        <img src="/icons/next.PNG" alt="" aria-hidden="true" />
+      </button>
+      <button
+        v-if="!hideSubmit"
+        class="dd-icon-btn"
+        type="button"
+        @click="check"
+        aria-label="Continuar"
+        title="Continuar"
+      >
+        <img src="/icons/next.PNG" alt="" aria-hidden="true" />
+      </button>
     </div>
   </div>
 </template>
@@ -73,3 +90,31 @@ watch(
   }
 )
 </script>
+
+<style scoped>
+.dd-icon-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.15);
+}
+
+.dd-icon-btn img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.dd-icon-btn--reset img {
+  transform: rotate(180deg);
+}
+
+.dd-icon-btn:active {
+  transform: scale(0.95);
+}
+</style>
