@@ -912,7 +912,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { ref, computed, onBeforeUnmount, onMounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useBillingStore } from '../store/billingStore'
 import { useGameStore } from '../store/gameStore'
@@ -986,8 +986,9 @@ function updateMobileViewportFlag() {
 function scheduleExerciseScaleUpdate() {
   if (typeof window === 'undefined') return
   if (scaleRaf) cancelAnimationFrame(scaleRaf)
-  scaleRaf = requestAnimationFrame(() => {
+  scaleRaf = requestAnimationFrame(async () => {
     scaleRaf = null
+    await nextTick()
     updateExerciseScale()
   })
 }
@@ -1009,7 +1010,7 @@ function updateExerciseScale() {
   }
 
   const ratio = availableHeight / naturalHeight
-  exerciseScale.value = ratio < 1 ? Math.max(0.72, ratio) : 1
+  exerciseScale.value = ratio < 1 ? Math.max(0.5, ratio) : 1
 }
 
 const exerciseScaleStyle = computed(() => {
@@ -3075,8 +3076,9 @@ function shuffleArray(arr) {
     width: 100%;
     max-width: 100%;
     padding: 0.95rem 0.85rem 1.1rem;
-    height: 100%;
-    overflow: hidden;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
   }
   .btn-option {
     width: 100%;
@@ -3091,7 +3093,7 @@ function shuffleArray(arr) {
     padding-bottom: 0.5rem;
   }
   .smartick-card-content {
-    overflow: hidden;
+    overflow: visible;
   }
   .smartick-topbar {
     grid-template-columns: 1fr;
