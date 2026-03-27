@@ -975,6 +975,7 @@ const gameViewRef = ref(null)
 const exerciseCardRef = ref(null)
 const mobileViewport = ref(false)
 const exerciseScale = ref(1)
+const compactMode = ref('normal')
 let scaleRaf = null
 let resizeObserver = null
 
@@ -996,6 +997,7 @@ function scheduleExerciseScaleUpdate() {
 function updateExerciseScale() {
   if (!mobileViewport.value) {
     exerciseScale.value = 1
+    compactMode.value = 'normal'
     return
   }
   const root = gameViewRef.value
@@ -1012,11 +1014,32 @@ function updateExerciseScale() {
   const availableHeight = Math.max(0, Math.min(root.clientHeight || 0, viewportHeight - Math.max(0, rootRect.top)))
   if (!naturalHeight || !availableHeight) {
     exerciseScale.value = 1
+    compactMode.value = 'normal'
     return
   }
 
   const ratio = availableHeight / naturalHeight
-  exerciseScale.value = ratio < 1 ? Math.max(0.4, ratio) : 1
+  const nextScale = ratio < 1 ? Math.max(0.42, Math.min(1, ratio)) : 1
+  const roundedScale = Math.round(nextScale * 100) / 100
+  if (Math.abs(roundedScale - exerciseScale.value) >= 0.01) {
+    exerciseScale.value = roundedScale
+  }
+
+  // Histéresis para evitar parpadeos por cambios de clase compacta.
+  const mode = compactMode.value
+  if (mode === 'normal' && roundedScale < 0.88) {
+    compactMode.value = 'compact'
+    scheduleExerciseScaleUpdate()
+  } else if (mode === 'compact' && roundedScale < 0.72) {
+    compactMode.value = 'ultra'
+    scheduleExerciseScaleUpdate()
+  } else if (mode === 'compact' && roundedScale > 0.93) {
+    compactMode.value = 'normal'
+    scheduleExerciseScaleUpdate()
+  } else if (mode === 'ultra' && roundedScale > 0.8) {
+    compactMode.value = 'compact'
+    scheduleExerciseScaleUpdate()
+  }
 }
 
 const exerciseScaleStyle = computed(() => {
@@ -1028,8 +1051,8 @@ const exerciseScaleStyle = computed(() => {
 })
 
 const gameViewClasses = computed(() => ({
-  'compact-mobile': mobileViewport.value && exerciseScale.value < 0.9,
-  'ultra-compact-mobile': mobileViewport.value && exerciseScale.value < 0.75
+  'compact-mobile': mobileViewport.value && (compactMode.value === 'compact' || compactMode.value === 'ultra'),
+  'ultra-compact-mobile': mobileViewport.value && compactMode.value === 'ultra'
 }))
 
 function lockExerciseScrollOnMobile() {
@@ -1066,7 +1089,6 @@ onMounted(() => {
   if (typeof ResizeObserver !== 'undefined') {
     resizeObserver = new ResizeObserver(() => scheduleExerciseScaleUpdate())
     if (gameViewRef.value) resizeObserver.observe(gameViewRef.value)
-    if (exerciseCardRef.value) resizeObserver.observe(exerciseCardRef.value)
   }
   scheduleExerciseScaleUpdate()
 })
