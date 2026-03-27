@@ -964,6 +964,28 @@ const TTS_CHEERFUL_PITCH = 1.3
 const { speak, stop: stopTts, isSpeaking } = useTTS()
 const prefersReducedMotion = ref(false)
 let lastOptionPreviewAt = 0
+let previousBodyOverflow = ''
+let previousHtmlOverflow = ''
+let previousBodyOverscroll = ''
+
+function lockExerciseScrollOnMobile() {
+  if (typeof window === 'undefined') return
+  const isMobileViewport = window.matchMedia('(max-width: 768px)').matches
+  if (!isMobileViewport) return
+  previousBodyOverflow = document.body.style.overflow || ''
+  previousHtmlOverflow = document.documentElement.style.overflow || ''
+  previousBodyOverscroll = document.body.style.overscrollBehavior || ''
+  document.body.style.overflow = 'hidden'
+  document.documentElement.style.overflow = 'hidden'
+  document.body.style.overscrollBehavior = 'none'
+}
+
+function restoreExerciseScrollLock() {
+  if (typeof window === 'undefined') return
+  document.body.style.overflow = previousBodyOverflow
+  document.documentElement.style.overflow = previousHtmlOverflow
+  document.body.style.overscrollBehavior = previousBodyOverscroll
+}
 
 billing.load?.()
 game.load?.()
@@ -974,6 +996,7 @@ onMounted(() => {
   }
   // Silencia la música global al entrar al modo ejercicios
   stopMusic(260)
+  lockExerciseScrollOnMobile()
 })
 
 // Permite leer /game/:level/:stage o /game/:levelId/:stageId
@@ -2167,6 +2190,7 @@ onBeforeUnmount(() => {
   stopTts()
   clearSyllableTicker()
   clearAudioListeners()
+  restoreExerciseScrollLock()
 })
 
 watch(
@@ -2945,6 +2969,11 @@ function shuffleArray(arr) {
     width: 100vw;
     max-width: 100vw;
     overflow-x: hidden;
+    overflow-y: hidden;
+    height: 100dvh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
   }
   .smartick-shell {
     padding: 0;
@@ -2954,6 +2983,8 @@ function shuffleArray(arr) {
     background: transparent;
     width: 100%;
     max-width: 100%;
+    height: 100%;
+    min-height: 100%;
   }
   .smartick-card {
     border-radius: 0;
@@ -2964,6 +2995,8 @@ function shuffleArray(arr) {
     width: 100%;
     max-width: 100%;
     padding: 0.95rem 0.85rem 1.1rem;
+    height: 100%;
+    overflow: hidden;
   }
   .btn-option {
     width: 100%;
@@ -2976,6 +3009,9 @@ function shuffleArray(arr) {
   .smartick-card-head {
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
+  }
+  .smartick-card-content {
+    overflow: hidden;
   }
   .smartick-topbar {
     grid-template-columns: 1fr;
