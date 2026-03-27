@@ -1,5 +1,5 @@
 <template>
-  <div ref="gameViewRef" class="game-view">
+  <div ref="gameViewRef" class="game-view" :class="gameViewClasses">
     <!-- Estado: cargando -->
     <div v-if="loading" class="text-center text-gray-500">
       Cargando etapa...
@@ -1003,14 +1003,20 @@ function updateExerciseScale() {
   if (!root || !card) return
 
   const naturalHeight = card.scrollHeight || 0
-  const availableHeight = root.clientHeight || 0
+  const rootRect = root.getBoundingClientRect()
+  const viewportHeight =
+    window.visualViewport?.height ||
+    window.innerHeight ||
+    document.documentElement.clientHeight ||
+    0
+  const availableHeight = Math.max(0, Math.min(root.clientHeight || 0, viewportHeight - Math.max(0, rootRect.top)))
   if (!naturalHeight || !availableHeight) {
     exerciseScale.value = 1
     return
   }
 
   const ratio = availableHeight / naturalHeight
-  exerciseScale.value = ratio < 1 ? Math.max(0.5, ratio) : 1
+  exerciseScale.value = ratio < 1 ? Math.max(0.4, ratio) : 1
 }
 
 const exerciseScaleStyle = computed(() => {
@@ -1020,6 +1026,11 @@ const exerciseScaleStyle = computed(() => {
     transformOrigin: 'top center'
   }
 })
+
+const gameViewClasses = computed(() => ({
+  'compact-mobile': mobileViewport.value && exerciseScale.value < 0.9,
+  'ultra-compact-mobile': mobileViewport.value && exerciseScale.value < 0.75
+}))
 
 function lockExerciseScrollOnMobile() {
   if (typeof window === 'undefined') return
@@ -3094,6 +3105,62 @@ function shuffleArray(arr) {
   }
   .smartick-card-content {
     overflow: visible;
+  }
+  .game-view.compact-mobile .smartick-card {
+    padding: 0.7rem 0.58rem 0.78rem;
+  }
+  .game-view.compact-mobile .smartick-card-head {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+  }
+  .game-view.compact-mobile .avatar-chip {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  .game-view.compact-mobile .avatar-chip img {
+    width: 36px;
+    height: 36px;
+  }
+  .game-view.compact-mobile .icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+  .game-view.compact-mobile .stage-pill {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.82rem;
+  }
+  .game-view.compact-mobile .exercise-visual {
+    max-width: 280px;
+    margin-bottom: 0.45rem;
+  }
+  .game-view.compact-mobile .btn-option {
+    min-height: 52px;
+    font-size: clamp(1rem, 4.5vw, 1.15rem);
+    line-height: 1.42;
+    padding: 0.64rem 0.7rem;
+  }
+  .game-view.ultra-compact-mobile .smartick-card {
+    padding: 0.5rem 0.45rem 0.55rem;
+  }
+  .game-view.ultra-compact-mobile .smartick-card-head {
+    margin-bottom: 0.35rem;
+    padding-bottom: 0.18rem;
+  }
+  .game-view.ultra-compact-mobile .stage-pill {
+    font-size: 0.76rem;
+    padding: 0.24rem 0.52rem;
+  }
+  .game-view.ultra-compact-mobile .btn-option {
+    min-height: 46px;
+    font-size: clamp(0.92rem, 4.2vw, 1.02rem);
+    line-height: 1.33;
+    padding: 0.5rem 0.56rem;
+    border-radius: 12px;
+  }
+  .game-view.ultra-compact-mobile .exercise-visual {
+    max-width: 240px;
   }
   .smartick-topbar {
     grid-template-columns: 1fr;
