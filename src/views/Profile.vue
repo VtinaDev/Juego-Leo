@@ -19,6 +19,9 @@
         <span v-if="authStatus" class="text-emerald-700 font-semibold">{{ authStatus }}</span>
         <span v-else-if="authError" class="text-red-600 font-semibold">{{ authError }}</span>
       </div>
+      <p v-if="loginRequiredNotice" class="text-red-600 font-semibold">
+        {{ loginRequiredNotice }}
+      </p>
       <p class="text-sm text-slate-600">
         Inicia sesión para guardar el perfil y generar informes de la evolución de aprendizaje.
       </p>
@@ -50,16 +53,23 @@
         <p class="text-slate-700 mb-2">
           <strong>Progreso general:</strong> {{ summary.stars }} estrellas · {{ summary.points }} puntos
         </p>
+        <p class="text-slate-700 mb-2">
+          <strong>Estado actual:</strong> {{ progressState.label }}
+        </p>
+        <p class="text-slate-700 mb-2">
+          <strong>Avance total:</strong> {{ progressState.completedStages }}/{{ progressState.totalStages }}
+          etapas ({{ progressState.percent }}%)
+        </p>
         <p class="text-slate-700 mb-3"><strong>Observación:</strong> {{ summary.observation }}</p>
         <div>
           <p class="font-semibold text-slate-800 mb-1">Niveles recientes</p>
           <ul class="report-levels">
-            <li v-for="item in summary.levels" :key="item.levelId">
+            <li v-for="item in recentLevels" :key="item.levelId">
               <span class="level-name">{{ item.levelName }}</span>
               <span class="level-progress">Etapa {{ item.progress.completedStages }}/{{ item.progress.totalStages }}</span>
               <span v-if="item.progress.lastStage" class="level-date">Última sesión: {{ formatDate(item.progress.lastStage.completedAt) }}</span>
             </li>
-            <li v-if="!summary.levels.length" class="text-slate-500">Aún no hay sesiones registradas.</li>
+            <li v-if="!recentLevels.length" class="text-slate-500">Aún no hay sesiones registradas.</li>
           </ul>
         </div>
       </div>
@@ -135,10 +145,13 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
 import { useProfileStore } from '../store/profileStore'
 import { useAuthStore } from '../store/authStore'
 
+const route = useRoute()
+const router = useRouter()
 const game = useGameStore()
 game.load()
 
@@ -162,15 +175,52 @@ const authForm = reactive({
 })
 const reportMessage = ref('')
 const reportShown = ref(false)
+const loginRequiredNotice = computed(() =>
+  route.query.loginRequired === '1' && !auth.isAuthenticated
+    ? 'Debes iniciar sesión primero para jugar.'
+    : ''
+)
+
+const recentLevels = computed(() => {
+  return [...(timeline.value || [])]
+    .sort((a, b) => {
+      const aTime = new Date(a?.progress?.lastStage?.completedAt ?? 0).getTime()
+      const bTime = new Date(b?.progress?.lastStage?.completedAt ?? 0).getTime()
+      return bTime - aTime
+    })
+    .filter((item) => item?.progress?.completedStages > 0 || item?.progress?.lastStage)
+    .slice(0, 3)
+})
+
+const progressState = computed(() => {
+  const levels = timeline.value || []
+  const totalStages = levels.reduce((sum, item) => sum + Number(item?.progress?.totalStages || 0), 0)
+  const completedStages = levels.reduce((sum, item) => sum + Number(item?.progress?.completedStages || 0), 0)
+  const current = currentLevel.value || levels[levels.length - 1]
+  const percent = totalStages > 0 ? Math.round((completedStages / totalStages) * 100) : 0
+
+  let label = 'Sin iniciar'
+  if (totalStages > 0 && completedStages >= totalStages) {
+    label = 'Juego completado'
+  } else if (completedStages > 0) {
+    label = `En progreso: ${current?.levelName || 'Nivel'} · etapa ${current?.progress?.nextStage || 1} de ${current?.progress?.totalStages || 1}`
+  }
+
+  return {
+    label,
+    completedStages,
+    totalStages,
+    percent
+  }
+})
+
 const summary = computed(() => {
-  const levels = timeline.value.slice(0, 3) || []
-  const observation = buildObservation(levels)
+  const observation = buildObservation(recentLevels.value)
   return {
     childName: child.name || profile.childName || '',
     birthdate: child.birthdate || profile.childBirthdate || '',
     stars: game.stars ?? 0,
     points: game.points ?? 0,
-    levels,
     observation
   }
 })
@@ -250,7 +300,14 @@ onMounted(() => {
   if (!child.name) child.name = profile.childName || game.child?.name || ''
   if (!child.birthdate) child.birthdate = profile.childBirthdate || game.child?.birthdate || ''
   if (!authForm.email) authForm.email = auth.userEmail || ''
+  if (loginRequiredNotice.value) authError.value = loginRequiredNotice.value
 })
+
+function redirectToPendingPlay() {
+  const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : ''
+  if (!redirect) return
+  router.push(redirect)
+}
 
 function save() {
   errorMessage.value = ''
@@ -282,6 +339,7 @@ function handleRegister() {
   if (ok) {
     authStatus.value = `Cuenta creada: ${auth.userEmail}`
     authForm.password = ''
+    redirectToPendingPlay()
   } else authError.value = auth.error
 }
 
@@ -292,6 +350,7 @@ function handleLogin() {
   if (ok) {
     authStatus.value = `Sesión iniciada: ${auth.userEmail}`
     authForm.password = ''
+    redirectToPendingPlay()
   } else authError.value = auth.error
 }
 
@@ -319,6 +378,7 @@ function handleReport() {
       birthdate: child.birthdate || profile.childBirthdate
     },
     progress: timeline.value,
+    currentState: progressState.value,
     learningInsights: learningInsights.value,
     stars: game.stars,
     points: game.points,

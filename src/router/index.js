@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../store/authStore'
 
 import Home from '../views/Home.vue'
 import AboutGame from '../views/AboutGame.vue'
@@ -16,8 +17,8 @@ const router = createRouter({
     { path: '/', name: 'Home', component: Home },
     { path: '/aboutgame', name: 'AboutGame', component: AboutGame },
     { path: '/congrats', name: 'Congrats', component: Congrats },
-    { path: '/game/:levelId/:stageId',name: 'game',component: Game },
-    { path: '/mapview', name: 'MapView', component: MapView },
+    { path: '/game/:levelId/:stageId',name: 'game',component: Game, meta: { requiresAuth: true } },
+    { path: '/mapview', name: 'MapView', component: MapView, meta: { requiresAuth: true } },
     { path: '/profile', name: 'Profile', component: Profile },
     { path: '/subscribe', name: 'Subscribe', component: Subscribe },
     { path: '/ai-lab', name: 'AiLab', component: AiLab },
@@ -27,6 +28,23 @@ const router = createRouter({
   scrollBehavior() {
     return { top: 0 }
   },
+})
+
+router.beforeEach((to) => {
+  if (!to.meta?.requiresAuth) return true
+
+  const auth = useAuthStore()
+  auth.load()
+
+  if (auth.isAuthenticated) return true
+
+  return {
+    name: 'Profile',
+    query: {
+      loginRequired: '1',
+      redirect: to.fullPath
+    }
+  }
 })
 
 export default router

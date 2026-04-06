@@ -23,7 +23,7 @@ defineProps({
 .exercise-prompt {
   width: min(100%, 680px);
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
   display: grid;
   gap: 0.72rem;
   font-family: var(--font-readable, 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif);
@@ -45,22 +45,20 @@ defineProps({
   font-weight: 800;
   color: #0f172a;
   letter-spacing: 0.01em;
-  max-width: 22ch;
-  margin-inline: auto;
-  text-wrap: balance;
+  max-width: 100%;
+  text-wrap: pretty;
 }
 
 .exercise-prompt__instruction {
   margin: 0;
-  display: inline-flex;
+  display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.38rem;
   font-size: clamp(1.02rem, 3.8vw, 1.2rem);
   line-height: 1.58;
   color: #1e293b;
-  max-width: 26ch;
-  margin-inline: auto;
+  max-width: 100%;
 }
 
 .exercise-prompt__cue {

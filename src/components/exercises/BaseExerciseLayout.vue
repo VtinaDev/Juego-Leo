@@ -63,7 +63,7 @@ defineProps({
 
 .exercise-layout__prompt {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .exercise-layout__content {

@@ -75,14 +75,14 @@
                   </div>
                 </div>
                 <div class="smartick-actions">
+                  <RouterLink class="map-only-link" to="/mapview" aria-label="Volver al mapa">
+                    <img src="/icons/mapa.PNG" alt="Mapa" class="map-only-icon" />
+                  </RouterLink>
                   <button class="icon-btn" type="button" @click="handlePrev" aria-label="Anterior">
-                    ←
-                  </button>
-                  <button class="icon-btn" type="button" @click="handleRepeat" aria-label="Repetir">
-                    ↺
+                    <img src="/icons/back.PNG" alt="" aria-hidden="true" class="action-icon-img" />
                   </button>
                   <button class="icon-btn" type="button" @click="handleSkip" aria-label="Saltar">
-                    ▶
+                    <img src="/icons/next.PNG" alt="" aria-hidden="true" class="action-icon-img" />
                   </button>
                 </div>
               </div>
@@ -318,7 +318,7 @@
 
             <!-- Sinónimos (L2) -->
             <section v-else-if="current.type === 'pair_synonyms'">
-              <p class="text-base text-center text-gray-600 mb-2">Elige la palabra y luego su sinónimo.</p>
+              <p class="text-base text-left text-gray-600 mb-2">Elige la palabra y luego su sinónimo.</p>
               <div class="pair-board">
                 <div class="pair-column">
                   <button
@@ -349,7 +349,7 @@
 
             <!-- Antónimos (L2) -->
             <section v-else-if="current.type === 'pair_antonyms'">
-              <p class="text-base text-center text-gray-600 mb-2">Elige la palabra y luego su opuesto.</p>
+              <p class="text-base text-left text-gray-600 mb-2">Elige la palabra y luego su opuesto.</p>
               <div class="pair-board">
                 <div class="pair-column">
                   <button
@@ -381,7 +381,7 @@
             <!-- ========== NUEVOS TIPOS ========== -->
 
             <section v-else-if="current.type === 'UNSCRAMBLE_WORD'">
-              <p class="text-xl font-semibold mb-3 leading-snug text-center">
+              <p class="text-xl font-semibold mb-3 leading-snug text-left">
                 Ordena las letras para formar la palabra
               </p>
               <div class="options-row" :class="optionLayout(current.letters)">
@@ -412,8 +412,7 @@
                 :speak-text="completeWordSpokenText"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-xl font-semibold mb-3 leading-snug text-center"
-                :align-center="true"
+                text-class="text-xl font-semibold mb-3 leading-snug text-left"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -452,8 +451,7 @@
                 :text="current.prompt || current.question"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-3 leading-snug text-center"
-                :align-center="true"
+                text-class="text-2xl font-semibold mb-3 leading-snug text-left"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -473,7 +471,7 @@
             </section>
 
             <section v-else-if="current.type === 'SYLLABLE_ORDER'">
-              <p class="text-xl font-semibold mb-3 leading-snug text-center">
+              <p class="text-xl font-semibold mb-3 leading-snug text-left">
                 Ordena las sílabas
               </p>
               <div class="options-row syllable-order-source" :class="optionLayout(current.syllables)">
@@ -501,7 +499,7 @@
             </section>
 
             <section v-else-if="current.type === 'PUZZLE_ORDER'">
-              <p class="text-xl font-semibold mb-3 leading-snug text-center">
+              <p class="text-xl font-semibold mb-3 leading-snug text-left">
                 {{ current.prompt || 'Ordena las piezas del rompecabezas' }}
               </p>
               <div class="options-row" :class="optionLayout(current.segments)">
@@ -539,8 +537,7 @@
                 :text="current.prompt || 'Elige la palabra correcta'"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-xl font-semibold mb-3 leading-snug text-center"
-                :align-center="true"
+                text-class="text-xl font-semibold mb-3 leading-snug text-left"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -565,7 +562,6 @@
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-lg font-semibold mb-3 leading-snug text-left reading-paragraph"
-                :align-center="true"
                 aria-label="Escuchar texto"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -635,7 +631,6 @@
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-2xl font-semibold mb-3 leading-snug text-slate-700"
-                :align-center="true"
                 aria-label="Escuchar pregunta"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -700,7 +695,6 @@
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-xl font-semibold mb-3 leading-snug"
-                :align-center="true"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -760,7 +754,6 @@
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-2xl font-semibold mb-4 leading-snug"
-                :align-center="true"
                 aria-label="Escuchar frase"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -781,7 +774,7 @@
 
             <!-- Singular / plural -->
             <section v-else-if="current.type === 'singular_plural'">
-              <p class="text-base text-center text-gray-600 mb-2">Elige el singular y luego su plural.</p>
+              <p class="text-base text-left text-gray-600 mb-2">Elige el singular y luego su plural.</p>
               <div class="pair-board">
                 <div class="pair-column">
                   <button
@@ -837,7 +830,6 @@
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-2xl font-semibold mb-4 leading-snug"
-                :align-center="true"
                 aria-label="Escuchar frase"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -866,7 +858,6 @@
                 :exercise="current"
                 :audio-src="current.audio"
                 text-class="text-2xl font-semibold mb-4 leading-snug"
-                :align-center="true"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -2357,18 +2348,17 @@ function shuffleArray(arr) {
 }
 .read-answer-question {
   margin: 0.4rem 0 0.85rem;
-  text-align: center;
+  text-align: left;
   color: #0b6e4f;
   font-weight: 800;
   font-size: clamp(1.2rem, 4.9vw, 1.45rem);
   line-height: 1.55;
-  max-width: 24ch;
-  margin-inline: auto;
-  text-wrap: balance;
+  max-width: 100%;
+  text-wrap: pretty;
 }
 .tense-guide {
   margin: 0 0 0.65rem;
-  text-align: center;
+  text-align: left;
   color: #1e3a8a;
   font-weight: 700;
   font-size: 1.02rem;
@@ -2827,6 +2817,23 @@ function shuffleArray(arr) {
   gap: 0.5rem;
   justify-self: end;
 }
+.map-only-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  line-height: 0;
+}
+.map-only-icon {
+  width: 40px;
+  height: 40px;
+  display: block;
+  object-fit: contain;
+}
 .icon-btn {
   width: 40px;
   height: 40px;
@@ -2844,6 +2851,13 @@ function shuffleArray(arr) {
 }
 .icon-btn:active {
   transform: scale(0.95);
+}
+.action-icon-img {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
+  margin: 0 auto;
 }
 .smartick-stage {
   display: flex;
