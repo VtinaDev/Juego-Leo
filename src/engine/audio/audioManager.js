@@ -19,7 +19,7 @@ let cachedVoiceName = null
 const SAFE_SFX_GAIN = 0.75
 const SFX_THROTTLE_MS = 140
 let activeVoiceAudio = null
-let queuedVoiceCue = null
+const ALLOW_DEV_TTS_FALLBACK = import.meta.env.DEV && import.meta.env.VITE_ENABLE_TTS_FALLBACK !== 'false'
 
 // Legacy-style manager used by useAudio.js
 export class AudioManager {
@@ -326,22 +326,13 @@ function stopActiveVoiceAudio() {
   activeVoiceAudio = null
 }
 
-function isVoiceBusy() {
-  const htmlAudioBusy =
-    !!activeVoiceAudio &&
-    !activeVoiceAudio.paused &&
-    !activeVoiceAudio.ended
-
-  if (htmlAudioBusy) return true
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return false
-  return window.speechSynthesis.speaking || window.speechSynthesis.pending
-}
-
-function maybePlayQueuedVoiceCue() {
-  if (!queuedVoiceCue || isVoiceBusy()) return
-  const next = queuedVoiceCue
-  queuedVoiceCue = null
-  playVoiceCue(next.key, { ...next.options, queueIfBusy: false })
+function normalizeVoiceSrc(value = '') {
+  const raw = String(value || '').trim()
+  if (!raw) return ''
+  if (/^(https?:|data:)/i.test(raw)) return raw
+  if (raw.startsWith('/')) return raw
+  // Admite rutas relativas de assets de audio.
+  return `/${raw.replace(/^\/+/, '')}`
 }
 
 export function playVoice(textOrSrc = '', options = {}) {
@@ -357,29 +348,39 @@ export function playVoice(textOrSrc = '', options = {}) {
     }
   }
 
-  const isUrl = typeof textOrSrc === 'string' && /^https?:\/\//i.test(textOrSrc)
-  const isAsset = typeof textOrSrc === 'string' && textOrSrc.startsWith('/')
+  const normalizedSrc = normalizeVoiceSrc(textOrSrc)
+  const isAudioSrc =
+    typeof normalizedSrc === 'string' &&
+    (/^(https?:|data:)/i.test(normalizedSrc) ||
+      normalizedSrc.startsWith('/')) &&
+    /\.(mp3|wav|ogg|m4a|aac|webm)(\?.*)?$/i.test(normalizedSrc)
 
-  if (isUrl || isAsset) {
-    const audio = new Audio(textOrSrc)
+  if (isAudioSrc) {
+    const audio = new Audio(normalizedSrc)
+    audio.preload = 'auto'
+    if (Number.isFinite(options.playbackRate) && options.playbackRate > 0) {
+      audio.playbackRate = options.playbackRate
+    }
     audio.volume = settings.voiceVolume
     activeVoiceAudio = audio
     audio.onended = () => {
       if (activeVoiceAudio === audio) activeVoiceAudio = null
       options.onEnd?.()
-      maybePlayQueuedVoiceCue()
     }
     audio.onerror = () => {
       if (activeVoiceAudio === audio) activeVoiceAudio = null
       options.onEnd?.()
-      maybePlayQueuedVoiceCue()
     }
     audio.play().catch(() => {
       if (activeVoiceAudio === audio) activeVoiceAudio = null
       options.onEnd?.()
-      maybePlayQueuedVoiceCue()
     })
     return audio
+  }
+
+  if (!ALLOW_DEV_TTS_FALLBACK) {
+    options.onEnd?.()
+    return
   }
 
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
@@ -401,11 +402,9 @@ export function playVoice(textOrSrc = '', options = {}) {
 
   utterance.onend = () => {
     options.onEnd?.()
-    maybePlayQueuedVoiceCue()
   }
   utterance.onerror = () => {
     options.onEnd?.()
-    maybePlayQueuedVoiceCue()
   }
 
   if (interrupt) synth.cancel()
@@ -438,32 +437,25 @@ export function playVoiceCue(key, options = {}) {
   const normalized = String(key || '').trim().toLowerCase()
   if (!normalized) return
 
-  const queueIfBusy = options.queueIfBusy !== false
-  if (queueIfBusy && isVoiceBusy()) {
-    queuedVoiceCue = { key: normalized, options }
-    return
-  }
-
   const primarySrc = resolveVoiceCueSrc(normalized)
   if (primarySrc) {
-    playVoice(primarySrc, { ...options, interrupt: false })
+    playVoice(primarySrc, { ...options, interrupt: true })
     return
   }
 
   const fallbackKey = VOICE_CUE_FALLBACKS[normalized]
   const fallbackSrc = fallbackKey ? resolveVoiceCueSrc(fallbackKey) : null
   if (fallbackSrc) {
-    playVoice(fallbackSrc, { ...options, interrupt: false })
+    playVoice(fallbackSrc, { ...options, interrupt: true })
     return
   }
 
   if (options.textFallback) {
-    playVoice(options.textFallback, options)
+    playVoice(options.textFallback, { ...options, interrupt: true })
   }
 }
 
 export function stopVoice() {
-  queuedVoiceCue = null
   stopActiveVoiceAudio()
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
   window.speechSynthesis.cancel()

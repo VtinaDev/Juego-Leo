@@ -45,8 +45,7 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { playSfx } from '../utils/sfx'
-import { playMusic, stopMusic, unlockAudio, playVoice } from '../engine/audio/audioManager'
-import { VOICE_PRESET } from '../engine/audio/voiceProfile'
+import { playMusic, stopMusic, unlockAudio, playVoiceCue } from '../engine/audio/audioManager'
 import { useAudioSettings } from '../composables/useAudioSettings'
 import habitatBg from '../assets/habitat/Fondo.PNG'
 import MethodologySection from '../components/home/MethodologySection.vue'
@@ -66,8 +65,6 @@ const confettiPieces = Array.from({ length: 14 }, (_, idx) => ({
 }))
 
 const { musicEnabled, voiceEnabled } = useAudioSettings()
-const homeNarration =
-  'Aprende a leer jugando. Hola, ¿listo para la aventura? Vamos al mapa. Empieza por el Nivel uno gratis y desbloquea el resto con la suscripción.'
 const introTrack = 'intro'
 
 onMounted(() => {
@@ -130,7 +127,7 @@ function handleHomeNarration() {
   unlockAudio()
   playSfx('click')
   if (voiceEnabled.value) {
-    playVoice(homeNarration, { rate: VOICE_PRESET.rate, pitch: VOICE_PRESET.pitch, lang: VOICE_PRESET.lang })
+    playVoiceCue('home-welcome')
   }
 }
 

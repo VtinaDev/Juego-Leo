@@ -12,10 +12,6 @@ const SOUND_DEFS = {
   celebration: {
     src: ['/audio/sfx/confetti.wav'],
     volume: 0.7
-  },
-  gentleVoice: {
-    src: ['/audio/voice/exercise-try-again.mp3'],
-    volume: 0.6
   }
 }
 

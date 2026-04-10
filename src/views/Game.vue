@@ -242,18 +242,7 @@
                   :jump-mode="false"
                 />
                 <div class="reading-audio-inline inside-box">
-                  <AudioPlayer
-                    v-if="current.audio"
-                    :src="readingAudioSrc"
-                    :rate="READING_AUDIO_PACE"
-                    aria-label="Escuchar frase"
-                    @play="handleReadingPlay"
-                    @pause="handleReadingPause"
-                    @ended="handleReadingEnded"
-                    @progress="handleReadingProgress"
-                  />
                   <button
-                    v-else
                     class="btn btn-ghost reading-cta icon-only"
                     type="button"
                     aria-label="Escuchar frase"
@@ -908,16 +897,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { useBillingStore } from '../store/billingStore'
 import { useGameStore } from '../store/gameStore'
 import { useExerciseEngine } from '../engine/logic/ExerciseEngine'
-import { useTTS, isTTSSupported } from '../composables/useTTS'
 import exerciseWordTimings from '../engine/logic/audio/exerciseWordTimings.json'
 import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
-import { getAudioSettings, playSfx, playVoice, playVoiceCue, unlockAudio, stopMusic } from '../engine/audio/audioManager'
+import { getAudioSettings, playSfx, playVoice, playVoiceCue, stopVoice, unlockAudio, stopMusic } from '../engine/audio/audioManager'
 import { VOICE_PRESET } from '../engine/audio/voiceProfile'
 
 import ExerciseShell from '../components/ExerciseShell.vue'
 import DragDropBoard from '../components/DragDropBoard.vue'
 import AudioButton from '../components/AudioButton.vue'
-import AudioPlayer from '../components/AudioPlayer.vue'
 import SyllableHighlighter from '../components/SyllableHighlighter.vue'
 import SentenceAudioRow from '../components/SentenceAudioRow.vue'
 import BaseExerciseLayout from '../components/exercises/BaseExerciseLayout.vue'
@@ -954,9 +941,7 @@ let activeAudioEl = null
 let audioTimeUpdateHandler = null
 let lastReadingProgress = 0
 const READING_AUDIO_PACE = 0.76
-const TTS_SLOW_RATE = 0.82
-const TTS_CHEERFUL_PITCH = 1.3
-const { speak, stop: stopTts, isSpeaking } = useTTS()
+const ALLOW_DEV_TTS_FALLBACK = import.meta.env.DEV && import.meta.env.VITE_ENABLE_TTS_FALLBACK !== 'false'
 const prefersReducedMotion = ref(false)
 let lastOptionPreviewAt = 0
 let previousBodyOverflow = ''
@@ -1374,16 +1359,84 @@ watch(
   }
 )
 
-function cueForExerciseType(type) {
-  const map = {
-    audio_question: 'listen',
-    audio_choice: 'listen',
-    audio_sentence: 'listen',
-    audio_question_answer: 'listen',
-    read_with_audio: 'read',
-    audio_write: 'read'
+const EXERCISE_VOICE_CUE_BY_TYPE = {
+  IMAGE_WORD_MATCH: 'select-image-word',
+  CHOOSE_CORRECT_WORD: 'choose-correct-word'
+}
+
+const EXERCISE_VOICE_CUE_BY_ID = {
+  'L1-OS-1': 'start-with-article',
+  'L1-OS-2': 'put-el-first',
+  'L1-OS-3': 'subject-first-then-action',
+  'L1-OS-4': 'natural-subject-verb-order',
+  'L1-CS-1': 'l1-cs-1',
+  'L1-CS-2': 'l1-cs-2',
+  'L1-CS-3': 'l1-cs-3',
+  'L1-CS-4': 'l1-cs-4',
+  'L1-CS-5': 'l1-cs-5',
+  'L1-CS-6': 'l1-cs-6',
+  'L1-CS-7': 'l1-cs-7',
+  'L1-CS-8': 'l1-cs-8',
+  'L1-QS-1': 'l1-fs-1',
+  'L1-QS-2': 'l1-fs-2',
+  'L1-QS-3': 'l1-fs-3',
+  'L1-QS-4': 'l1-fs-4',
+  'L2-MC-1': 'l1-voc-1',
+  'L2-MC-3': 'l1-voc-2',
+  'L2-MC-4': 'l1-voc-3',
+  'L2-MC-5': 'l1-voc-4',
+  'L2-MC-6': 'l1-voc-5',
+  'L2-MC-7': 'l1-voc-6',
+  'L2-PA-1': 'l1-assoc-1',
+  'L2-PA-2': 'l1-assoc-2',
+  'L2-PS-1': 'l1-assoc-3',
+  'L2-PS-2': 'l1-assoc-4',
+  'L2-PS-3': 'l1-assoc-5'
+}
+
+const EXERCISE_VOICE_CUE_BY_QUESTION = {
+  'encierra el nombre correcto del dibujo sol': 'l1-voc-1',
+  'encierra el nombre correcto del dibujo sopa': 'l1-voc-2',
+  'encierra el nombre correcto del dibujo mesa': 'l1-voc-3',
+  'encierra el nombre correcto del dibujo oso': 'l1-voc-4',
+  'encierra el nombre correcto del dibujo pato': 'l1-voc-5',
+  'encierra el nombre correcto del dibujo luna': 'l1-voc-6'
+}
+
+const EXERCISE_VOICE_CUE_BY_TEXT = {
+  'une palabras que significan lo contrario': 'l1-assoc-1',
+  'recuerda el opuesto crea equilibrio magico': 'l1-assoc-2',
+  'busca parejas que compartan significado': 'l1-assoc-3',
+  'observa como cada palabra describe lo mismo': 'l1-assoc-4',
+  'une el numero con su nombre escrito': 'l1-assoc-5'
+}
+
+function normalizeExerciseText(text) {
+  return String(text || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function cueForExercise(exercise) {
+  if (!exercise) return null
+  const exerciseId = String(exercise.id || '').trim().toUpperCase()
+  if (exerciseId && EXERCISE_VOICE_CUE_BY_ID[exerciseId]) {
+    return EXERCISE_VOICE_CUE_BY_ID[exerciseId]
   }
-  return map[type] || 'choose'
+  const questionKey = normalizeExerciseText(exercise.question || exercise.prompt)
+  if (questionKey && EXERCISE_VOICE_CUE_BY_QUESTION[questionKey]) {
+    return EXERCISE_VOICE_CUE_BY_QUESTION[questionKey]
+  }
+  const textKey = normalizeExerciseText(exercise.hint || exercise.instruction || exercise.question || exercise.prompt)
+  if (textKey && EXERCISE_VOICE_CUE_BY_TEXT[textKey]) {
+    return EXERCISE_VOICE_CUE_BY_TEXT[textKey]
+  }
+  const type = String(exercise.type || '').trim()
+  return EXERCISE_VOICE_CUE_BY_TYPE[type] || null
 }
 
 const isFuerzaTranquilaStage4of6 = computed(() => isFuerzaTranquilaStage4of6Now())
@@ -1393,19 +1446,12 @@ const isStage1of4 = computed(() => {
   return stageNumber === 1 && totalStages === 4
 })
 
-function shouldPlayListenCueAtStageStart() {
-  return isFuerzaTranquilaStage4of6.value
-}
-
 watch(
   () => stage.value,
   () => {
     unlockAudio()
     playSfx('click')
     playVoiceCue('start')
-    if (shouldPlayListenCueAtStageStart()) {
-      playVoiceCue('listen')
-    }
   }
 )
 
@@ -1416,8 +1462,8 @@ watch(
     if (!id) return
     const audioSettings = getAudioSettings()
     if (!audioSettings.voiceEnabled) return
-    const cue = cueForExerciseType(current.value?.type)
-    if (cue === 'listen') return
+    const cue = cueForExercise(current.value)
+    if (!cue) return
     unlockAudio()
     playVoiceCue(cue)
   },
@@ -1723,6 +1769,7 @@ function handleOptionPreview(option) {
   lastOptionPreviewAt = now
   const audioSettings = getAudioSettings()
   if (!audioSettings.voiceEnabled) return
+  if (!ALLOW_DEV_TTS_FALLBACK) return
   const text = resolveOptionText(option)
   if (!text) return
   unlockAudio()
@@ -1839,21 +1886,15 @@ function playSimpleAudio(src, onEnd) {
   }
   unlockAudio()
   stopAllMedia()
-  if (activeAudioEl) {
-    activeAudioEl.pause()
-    activeAudioEl.currentTime = 0
-  }
-  const audio = new Audio(src)
-  audio.playbackRate = READING_AUDIO_PACE
-  activeAudioEl = audio
-  audio.addEventListener('ended', () => {
-    activeAudioEl = null
-    onEnd?.()
+  const audio = playVoice(src, {
+    interrupt: true,
+    playbackRate: READING_AUDIO_PACE,
+    onEnd: () => {
+      activeAudioEl = null
+      onEnd?.()
+    }
   })
-  audio.play().catch(() => {
-    activeAudioEl = null
-    onEnd?.()
-  })
+  activeAudioEl = audio || null
   return audio
 }
 
@@ -1908,7 +1949,7 @@ function startReadingPulse(autoStopMs) {
 }
 
 function stopReadingPulse() {
-  stopTts()
+  stopVoice()
   if (activeAudioEl) {
     clearAudioListeners()
     activeAudioEl.pause()
@@ -1929,83 +1970,30 @@ function resetReadingHighlight() {
   }
 }
 
-function handleTtsBoundary(event) {
-  if (!event || typeof event.charIndex !== 'number') return
-  const segments = syllableSegments.value
-  if (!segments || !segments.length) return
-  const idx = segments.findIndex(
-    (segment) => !segment.isGap && event.charIndex >= segment.start && event.charIndex < segment.end
-  )
-  if (idx >= 0) {
-    activeSyllable.value = idx
-    return
-  }
-  advanceSyllable()
-}
-
 async function handleReadingIconClick() {
   unlockAudio()
   playSfx('click')
   const audioSettings = getAudioSettings()
   if (!audioSettings.voiceEnabled) return
 
-  if (isSpeaking.value) {
-    stopReadingPulse()
-    return
-  }
-
-  const text = readingText.value
-  const canUseTts = text && isTTSSupported()
-
-  if (canUseTts) {
-    const estimate = Math.round(getEstimatedReadingDurationMs() * 1.15)
-    const rate = TTS_SLOW_RATE
-    const pitch = VOICE_PRESET.pitch
-    const effectiveEstimate = getEffectiveDurationMs(estimate, rate || 1)
-    const useFixedFaroSchedule = isFaroReadingExercise.value
-    // En TTS, el fin real lo marca onend; evitamos cortar antes por estimación.
-    startReadingPulse()
-    clearSyllableTicker()
-    let gotBoundary = false
-    let ttsFallbackTimer = null
-
-    if (useFixedFaroSchedule) {
-      // Margen extra para que el salto no se "caiga" antes de terminar la locución.
-      startFaroSyllableSchedule(Math.round(effectiveEstimate * 1.22))
-      gotBoundary = true
-    } else {
-      ttsFallbackTimer = window.setTimeout(() => {
-        if (!gotBoundary) {
-          startSyllableTickerForDuration(effectiveEstimate)
-        }
-      }, 450)
-    }
-
-    await speak(text, {
-      lang: VOICE_PRESET.lang,
-      rate,
-      pitch,
-      volume: audioSettings.voiceVolume,
-      onBoundary: (event) => {
-        if (useFixedFaroSchedule) return
-        gotBoundary = true
-        if (ttsFallbackTimer) {
-          clearTimeout(ttsFallbackTimer)
-          ttsFallbackTimer = null
-        }
-        handleTtsBoundary(event)
-      }
-    })
-    if (ttsFallbackTimer) {
-      clearTimeout(ttsFallbackTimer)
-      ttsFallbackTimer = null
-    }
-    stopReadingPulse()
-    return
-  }
-
   if (current.value?.audio) {
     handleAudioClick(current.value.audio)
+    return
+  }
+
+  // Solo para desarrollo: fallback temporal cuando falta audio manual.
+  if (ALLOW_DEV_TTS_FALLBACK && readingText.value) {
+    const estimate = Math.round(getEstimatedReadingDurationMs() * 1.15)
+    const effectiveEstimate = getEffectiveDurationMs(estimate, VOICE_PRESET.rate || 1)
+    startReadingPulse(effectiveEstimate)
+    startSyllableTickerForDuration(effectiveEstimate)
+    playVoice(readingText.value, {
+      lang: VOICE_PRESET.lang,
+      rate: VOICE_PRESET.rate,
+      pitch: VOICE_PRESET.pitch,
+      volume: audioSettings.voiceVolume,
+      onEnd: () => stopReadingPulse()
+    })
   }
 }
 
@@ -2053,14 +2041,6 @@ function clearAudioListeners() {
     activeAudioEl.removeEventListener('timeupdate', audioTimeUpdateHandler)
     audioTimeUpdateHandler = null
   }
-}
-
-function advanceSyllable() {
-  const segments = spokenSegments.value
-  if (!segments.length) return
-  const currentIdx = segments.findIndex((seg) => seg.idx === activeSyllable.value)
-  const next = segments[Math.min(currentIdx + 1, segments.length - 1)]
-  activeSyllable.value = next.idx
 }
 
 function startSyllableTickerForDuration(durationMs) {
@@ -2158,7 +2138,7 @@ watch(
   () => {
     // Limpieza fuerte al cambiar ejercicio para evitar timers/audio residuales fuera de fase.
     resetReadingHighlight()
-    stopTts()
+    stopVoice()
     clearAudioListeners()
     lastReadingProgress = 0
     activeSyllable.value = -1
@@ -2194,7 +2174,7 @@ onBeforeUnmount(() => {
   if (confettiTimer) clearTimeout(confettiTimer)
   if (avatarCelebrateTimer) clearTimeout(avatarCelebrateTimer)
   if (readingTimer) clearTimeout(readingTimer)
-  stopTts()
+  stopVoice()
   clearSyllableTicker()
   clearAudioListeners()
   restoreExerciseScrollLock()

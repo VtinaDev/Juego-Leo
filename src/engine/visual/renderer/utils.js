@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import { playVoice, stopVoice } from '../../audio/audioManager'
 
 export function prepareStage(app) {
   if (!app?.stage) return
@@ -106,8 +107,8 @@ export function createAudioControl({
       if (typeof onPlayAudio === 'function') {
         onPlayAudio(audio)
       } else {
-        const element = new Audio(audio)
-        element.play().catch(() => null)
+        stopVoice()
+        playVoice(audio, { interrupt: true })
       }
       container.alpha = 0.72
       setTimeout(() => {

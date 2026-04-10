@@ -10,6 +10,7 @@ import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue'
 import { renderExercise } from '@/engine/visual/renderer'
 import { useExerciseEngine } from '@/engine/logic/ExerciseEngine'
 import { useIllustration } from '@/engine/visual/hooks/useIllustration'
+import { playVoice, stopVoice } from '@/engine/audio/audioManager'
 import Perezoso from '@/assets/characters/Perezoso.png'
 import Zorro from '@/assets/characters/Zorro.png'
 import Mono from '@/assets/characters/Mono.png'
@@ -86,6 +87,18 @@ function renderWithHandlers(exercise) {
 }
 
 function selectHandlers(exercise) {
+  const playManagedAudio = (src, onEnd) => {
+    if (!src) {
+      onEnd?.()
+      return
+    }
+    stopVoice()
+    playVoice(src, {
+      interrupt: true,
+      onEnd
+    })
+  }
+
   if (isEngineMode.value && engine.value) {
     const activeEngine = engine.value
     return {
@@ -93,9 +106,7 @@ function selectHandlers(exercise) {
       onSubmit: (value, meta = {}) => activeEngine.checkAnswer(value, meta),
       onPlayAudio: (src, onEnd) => {
         if (src) {
-          const audio = new Audio(src)
-          audio.addEventListener('ended', () => onEnd?.())
-          audio.play().catch(() => onEnd?.())
+          playManagedAudio(src, onEnd)
           return
         }
         activeEngine.playCurrentAudio?.({ onEnd })
@@ -112,10 +123,7 @@ function selectHandlers(exercise) {
         props.handlers.onPlayAudio(src, onEnd)
         return
       }
-      if (!src) return
-      const audio = new Audio(src)
-      audio.addEventListener('ended', () => onEnd?.())
-      audio.play().catch(() => null)
+      playManagedAudio(src, onEnd)
     }
   }
 }

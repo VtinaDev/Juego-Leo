@@ -18,9 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, getCurrentInstance, onBeforeUnmount } from 'vue'
-import { useTTS, isTTSSupported } from '../composables/useTTS'
-import { getAudioSettings, playSfx, playVoice, unlockAudio } from '../engine/audio/audioManager'
+import { computed, getCurrentInstance, onBeforeUnmount, ref } from 'vue'
+import { getAudioSettings, playSfx, playVoice, stopVoice, unlockAudio } from '../engine/audio/audioManager'
 import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
 
 const props = defineProps<{
@@ -39,7 +38,7 @@ const emit = defineEmits<{
   (e: 'tts-boundary', event: SpeechSynthesisEvent): void
 }>()
 
-const { speak, stop, isSpeaking } = useTTS()
+const isSpeaking = ref(false)
 const instance = getCurrentInstance()
 
 const resolvedText = computed(() => {
@@ -54,42 +53,68 @@ async function handleClick() {
   if (!audioSettings.voiceEnabled) return
 
   if (isSpeaking.value) {
-    stop()
+    stopVoice()
+    isSpeaking.value = false
     emit('tts-end')
     return
   }
 
-  const text = resolvedText.value
-  const hasTTSSupport = isTTSSupported()
-
-  if (text && hasTTSSupport) {
+  const normalizedAudioSrc = normalizeAudioSrc(props.audioSrc || '')
+  if (normalizedAudioSrc) {
+    isSpeaking.value = true
     emit('tts-start')
-    await speak(text, {
-      lang: props.lang,
-      rate: props.rate,
-      pitch: props.pitch,
-      volume: audioSettings.voiceVolume,
-      onBoundary: (event) => emit('tts-boundary', event)
-    })
-    emit('tts-end')
-    return
-  }
-
-  if (props.audioSrc) {
-    emit('fallback-audio', props.audioSrc)
+    emit('fallback-audio', normalizedAudioSrc)
     const hasListener =
       !!instance?.vnode?.props &&
       ('onFallback-audio' in (instance.vnode.props as Record<string, unknown>) ||
         'onFallbackAudio' in (instance.vnode.props as Record<string, unknown>))
 
     if (!hasListener) {
-      playVoice(props.audioSrc)
+      playVoice(normalizedAudioSrc, {
+        onEnd: () => {
+          isSpeaking.value = false
+          emit('tts-end')
+        }
+      })
+      return
     }
+    // Si el padre maneja la reproducción, desactiva el estado visual local.
+    setTimeout(() => {
+      isSpeaking.value = false
+      emit('tts-end')
+    }, 120)
+    return
+  }
+
+  const text = resolvedText.value
+  if (text) {
+    // En producción playVoice(text) queda deshabilitado por AudioManager.
+    isSpeaking.value = true
+    emit('tts-start')
+    playVoice(text, {
+      lang: props.lang,
+      rate: props.rate,
+      pitch: props.pitch,
+      onEnd: () => {
+        isSpeaking.value = false
+        emit('tts-end')
+      }
+    })
+    return
   }
 }
 
+function normalizeAudioSrc(value: string): string {
+  const src = String(value || '').trim()
+  if (!src) return ''
+  if (/^(https?:|data:)/i.test(src)) return src
+  if (src.startsWith('/')) return src
+  return `/${src.replace(/^\/+/, '')}`
+}
+
 onBeforeUnmount(() => {
-  stop()
+  stopVoice()
+  isSpeaking.value = false
 })
 </script>
 

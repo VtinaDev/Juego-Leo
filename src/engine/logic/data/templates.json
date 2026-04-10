@@ -52,7 +52,7 @@
             "En el lago brillante"
           ],
           "correct": "En el árbol.",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-fs-1.mp3",
           "image": "/images/L1/buho.PNG",
           "hint": "Lee la frase completa y busca el lugar mencionado.",
           "onCorrect": "celebrate",
@@ -71,7 +71,8 @@
           "image": "/images/L1/luciernaga.PNG",
           "hint": "Piensa en lo que hace una luciérnaga.",
           "onCorrect": "celebrate",
-          "onError": "gentleRetry"
+          "onError": "gentleRetry",
+          "audio": "/audio/voice/exercises/l1-fs-2.mp3"
         },
         {
           "id": "L1-QS-3",
@@ -86,7 +87,8 @@
           "image": "/images/L1/florazul.PNG",
           "hint": "Observa el objeto final de la frase.",
           "onCorrect": "celebrate",
-          "onError": "gentleRetry"
+          "onError": "gentleRetry",
+          "audio": "/audio/voice/exercises/l1-fs-3.mp3"
         },
         {
           "id": "L1-QS-4",
@@ -101,7 +103,8 @@
           "image": "/images/L1/nino.PNG",
           "hint": "Lee el sujeto del verbo 'abraza'.",
           "onCorrect": "celebrate",
-          "onError": "gentleRetry"
+          "onError": "gentleRetry",
+          "audio": "/audio/voice/exercises/l1-fs-4.mp3"
         }
       ],
       "IMAGE_WORD_MATCH": [
@@ -117,7 +120,8 @@
           ],
           "correct": "estrella",
           "emoji": "✨",
-          "hint": "Piensa en lo que brilla en el cielo."
+          "hint": "Piensa en lo que brilla en el cielo.",
+          "audio": "/audio/voice/exercises/select-image-word.mp3"
         },
         {
           "id": "L1-IWM-2",
@@ -131,7 +135,8 @@
           ],
           "correct": "campana",
           "emoji": "🔔",
-          "hint": "Suena para avisar."
+          "hint": "Suena para avisar.",
+          "audio": "/audio/voice/exercises/select-image-word.mp3"
         }
       ],
       "CHOOSE_CORRECT_WORD": [
@@ -146,7 +151,8 @@
             "cuello"
           ],
           "correct": "cuento",
-          "hint": "Historias para dormir."
+          "hint": "Historias para dormir.",
+          "audio": "/audio/voice/exercises/choose-correct-word.mp3"
         },
         {
           "id": "L1-CCW-2",
@@ -159,7 +165,8 @@
             "foca"
           ],
           "correct": "faro",
-          "hint": "Guía a los barcos de noche."
+          "hint": "Guía a los barcos de noche.",
+          "audio": "/audio/voice/exercises/choose-correct-word.mp3"
         }
       ],
       "complete_sentence": [
@@ -172,7 +179,7 @@
             "baila"
           ],
           "correct": "abre",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-cs-1.mp3",
           "image": "/images/L1/hada.PNG",
           "hint": "Piensa en lo que se hace con una puerta.",
           "onCorrect": "celebrate",
@@ -187,7 +194,7 @@
             "cocina"
           ],
           "correct": "deja",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-cs-2.mp3",
           "image": "/images/L1/nube.PNG",
           "hint": "Las nubes dejan algo que cae del cielo.",
           "onCorrect": "celebrate",
@@ -202,7 +209,7 @@
             "pinta"
           ],
           "correct": "camina",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-cs-3.mp3",
           "image": "/images/L1/oso.PNG",
           "hint": "Recuerda que es un oso tranquilo.",
           "onCorrect": "celebrate",
@@ -217,7 +224,7 @@
             "canta"
           ],
           "correct": "flota",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-cs-4.mp3",
           "image": "/images/L1/hoja.PNG",
           "hint": "¿Qué hace una hoja en el aire?",
           "onCorrect": "celebrate",
@@ -232,7 +239,7 @@
             "corre"
           ],
           "correct": "susurra",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-cs-5.mp3",
           "image": "/images/L1/rio.PNG",
           "hint": "Piensa en un sonido tranquilo de agua.",
           "onCorrect": "celebrate",
@@ -247,7 +254,7 @@
             "bebe"
           ],
           "correct": "ilumina",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-cs-6.mp3",
           "image": "/images/L1/luna.PNG",
           "hint": "Busca la acción que da luz.",
           "onCorrect": "celebrate",
@@ -262,7 +269,7 @@
             "baila"
           ],
           "correct": "visita",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-cs-7.mp3",
           "image": "/images/L1/colibri.PNG",
           "hint": "¿Qué hace un colibrí con las flores?",
           "onCorrect": "celebrate",
@@ -277,7 +284,7 @@
             "rompe"
           ],
           "correct": "anuncia",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-cs-8.mp3",
           "image": "/images/L1/campana.PNG",
           "hint": "Recuerda qué hace la campana en la escuela.",
           "onCorrect": "celebrate",
@@ -298,7 +305,7 @@
             "estrella",
             "brilla"
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/start-with-article.mp3",
           "image": "/images/L1/estrella.PNG",
           "hint": "Comienza con el artículo.",
           "onCorrect": "celebrate",
@@ -319,7 +326,7 @@
             "termina",
             "feliz"
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/put-el-first.mp3",
           "image": "/images/L1/cuento.PNG",
           "hint": "Coloca 'El' al inicio.",
           "onCorrect": "celebrate",
@@ -342,7 +349,7 @@
             "el",
             "cofre"
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/subject-first-then-action.mp3",
           "image": "/images/L1/cofre.PNG",
           "hint": "Sujeto primero, luego acción.",
           "onCorrect": "celebrate",
@@ -363,7 +370,7 @@
             "sopla",
             "suave"
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/natural-subject-verb-order.mp3",
           "image": "/images/L1/viento.PNG",
           "hint": "Respeta el orden natural de sujeto y verbo.",
           "onCorrect": "celebrate",
@@ -377,7 +384,7 @@
           "text": "El faro guía a los barcos perdidos.",
           "instruction": "Lee la frase con ritmo tranquilo. Si quieres, escucha el audio.",
           "correct": "done",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-rwa-1.mp3",
           "image": "/images/L1/faro.PNG",
           "hint": "Respira y lee despacio cada palabra.",
           "onCorrect": "celebrate",
@@ -389,7 +396,7 @@
           "text": "La campana anuncia el recreo.",
           "instruction": "Lee en voz alta. Pulsa escuchar si prefieres.",
           "correct": "done",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-rwa-2.mp3",
           "image": "/images/L1/campana.PNG",
           "hint": "Observa las sílabas: cam-pa-na.",
           "onCorrect": "celebrate",
@@ -401,7 +408,7 @@
           "text": "Las hojas viajan con el viento.",
           "instruction": "Imagina el movimiento mientras lees.",
           "correct": "done",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-rwa-3.mp3",
           "image": "/images/L1/hoja.PNG",
           "hint": "Marca con el dedo cada palabra.",
           "onCorrect": "celebrate",
@@ -413,7 +420,7 @@
           "text": "El río canta para el bosque.",
           "instruction": "Lee tú mismo y disfruta del ritmo.",
           "correct": "done",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-rwa-4.mp3",
           "image": "/images/L1/rio.PNG",
           "hint": "Pronuncia lentamente las sílabas.",
           "onCorrect": "celebrate",
@@ -541,7 +548,7 @@
             "sul"
           ],
           "correct": "sol",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-voc-1.mp3",
           "image": "/images/L2/sol.PNG",
           "imageAlt": "Sol",
           "emoji": "",
@@ -577,7 +584,7 @@
             "sipa"
           ],
           "correct": "sopa",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-voc-2.mp3",
           "image": "/images/L2/sopa.PNG",
           "imageAlt": "Sopa",
           "emoji": "",
@@ -595,7 +602,7 @@
             "masa"
           ],
           "correct": "mesa",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-voc-3.mp3",
           "image": "/images/L2/mesa.PNG",
           "imageAlt": "Mesa",
           "emoji": "",
@@ -613,7 +620,7 @@
             "oso"
           ],
           "correct": "oso",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-voc-4.mp3",
           "image": "/images/L2/oso.PNG",
           "imageAlt": "Oso",
           "emoji": "",
@@ -631,7 +638,7 @@
             "gato"
           ],
           "correct": "pato",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-voc-5.mp3",
           "image": "/images/L2/pato.png",
           "imageAlt": "Pato",
           "emoji": "🦆",
@@ -649,7 +656,7 @@
             "puma"
           ],
           "correct": "luna",
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-voc-6.mp3",
           "image": "/images/L2/luna.png",
           "imageAlt": "Luna",
           "emoji": "🌙",
@@ -750,7 +757,7 @@
               "match": "veloz ⚡️"
             }
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-assoc-3.mp3",
           "image": "/images/L2/l2-ps-1.png",
           "hint": "Busca parejas que compartan significado.",
           "onCorrect": "celebrate",
@@ -773,7 +780,7 @@
               "match": "robusto 🛡️"
             }
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-assoc-4.mp3",
           "image": "/images/L2/l2-ps-2.png",
           "hint": "Observa cómo cada palabra describe lo mismo.",
           "onCorrect": "celebrate",
@@ -800,7 +807,7 @@
               "match": "cuatro"
             }
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-assoc-5.mp3",
           "image": "/images/L2/default.png",
           "hint": "Une el número con su nombre escrito.",
           "onCorrect": "celebrate",
@@ -825,7 +832,7 @@
               "match": "débil 🪶"
             }
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-assoc-1.mp3",
           "image": "/images/L2/l2-pa-1.png",
           "hint": "Une palabras que significan lo contrario.",
           "onCorrect": "celebrate",
@@ -848,7 +855,7 @@
               "match": "lento 🐢"
             }
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/l1-assoc-2.mp3",
           "image": "/images/L2/l2-pa-2.png",
           "hint": "Recuerda: el opuesto crea equilibrio mágico.",
           "onCorrect": "celebrate",
@@ -912,7 +919,7 @@
             "poco llueve"
           ],
           "correct": "llueve poco",
-          "audio": "/audio/voice/exercise-listen.mp3",
+          "audio": null,
           "image": "/images/L3/l3-ss-2.png",
           "hint": "Piensa en cómo dirías la frase a un amigo.",
           "onCorrect": "celebrate",
@@ -1079,7 +1086,7 @@
           "instruction": "Escribe: El dragón lanza fuego",
           "fallbackText": "Escribe: El dragón lanza fuego",
           "answer": "El dragón lanza fuego",
-          "audio": "/audio/voice/exercise-read.mp3",
+          "audio": null,
           "image": "/images/L4/l4-aw-2.png",
           "hint": "Empieza con mayúscula y termina con punto.",
           "onCorrect": "celebrate",
