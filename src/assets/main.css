@@ -15,7 +15,7 @@
   --color-cream: #f8f7e8;
   --color-rose: #ffc8d0;
   --color-orange: #f4b26a;
-  --color-sky: #cce9ff;
+  --color-sky: #ace8fb;
   --color-button-text: #0f172a;
   --font-readable: 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
 
@@ -31,7 +31,9 @@ html,
 body,
 #app {
   height: 100%;
-  background: #ffffff;
+  width: 100%;
+  margin: 0;
+  background: var(--color-sky);
   color: var(--color-text);
   font-family: 'Baloo 2', 'Nunito Sans', 'Poppins', system-ui, -apple-system, sans-serif;
 }

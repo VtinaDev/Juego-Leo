@@ -78,6 +78,7 @@
     </section>
 
     <div v-else class="map-canvas" :style="mapCanvasStyle">
+      <div class="map-meadow" aria-hidden="true"></div>
 
       <!-- 🌤️ CAPA DE NUBES EN PARALLAX -->
       <div class="cloud-layer">
@@ -95,11 +96,19 @@
         <polyline
           :points="pathPoints"
           fill="none"
-          stroke="#d9b48c"
-          stroke-width="5"
+          stroke="#b58f63"
+          stroke-width="8"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-dasharray="2 1.4"
+          opacity="0.35"
+        />
+        <polyline
+          :points="pathPoints"
+          fill="none"
+          stroke="#efe0a7"
+          stroke-width="6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
         />
       </svg>
 
@@ -111,6 +120,31 @@
         :style="habitatStyle(habitat)"
         aria-hidden="true"
       />
+
+      <div
+        v-for="stageNode in mapStagePoints"
+        :key="`stage-path-${stageNode.habitatId}-${stageNode.stageNum}`"
+        class="map-stage-node"
+        :class="{
+          'map-stage-node--done': stageNode.state === 'done',
+          'map-stage-node--next': stageNode.state === 'next',
+          'map-stage-node--locked': stageNode.state === 'locked'
+        }"
+        :style="stageNodeStyle(stageNode.coords)"
+      >
+        <RouterLink
+          v-if="stageNode.state !== 'locked' && stageNode.habitatUnlocked"
+          :to="`/game/${stageNode.habitatId}/${stageNode.stageNum}`"
+          class="map-stage-link tap-pop"
+          :aria-label="`Ir a nivel ${stageNode.habitatId}, etapa ${stageNode.stageNum}`"
+          @click="handleMapTap($event)"
+        >
+          <span>{{ stageNode.stageNum }}</span>
+        </RouterLink>
+        <span v-else class="map-stage-link map-stage-link--locked" aria-hidden="true">
+          <span>{{ stageNode.stageNum }}</span>
+        </span>
+      </div>
 
       <!-- NODOS -->
       <div
@@ -144,33 +178,6 @@
         <div v-else class="node-icon-wrap locked" :style="{ borderColor: habitat.color }">
           <img v-if="habitat.character" :src="habitat.character" :alt="habitat.levelName" />
           <span v-else class="node-icon">{{ habitat.icon }}</span>
-        </div>
-
-        <span class="node-base" :style="{ backgroundColor: habitat.color }" />
-
-        <div v-if="habitat.unlocked" class="stage-chips">
-          <template v-for="stage in stagesFor(habitat)" :key="`stage-${habitat.id}-${stage.num}`">
-            <RouterLink
-              v-if="stage.state !== 'locked'"
-              :to="`/game/${habitat.id}/${stage.num}`"
-              class="stage-chip tap-pop"
-              :class="{
-                'stage-chip--done': stage.state === 'done',
-                'stage-chip--next': stage.state === 'next'
-              }"
-              :aria-label="`Ir a nivel ${habitat.id}, etapa ${stage.num}`"
-              @click="handleMapTap($event)"
-            >
-              <span>{{ stage.num }}</span>
-            </RouterLink>
-            <span
-              v-else
-              class="stage-chip stage-chip--locked"
-              aria-hidden="true"
-            >
-              <span>{{ stage.num }}</span>
-            </span>
-          </template>
         </div>
       </div>
     </div>
@@ -212,32 +219,32 @@ const HABITATS = {
   1: {
     title: 'El árbol',
     background: HABITAT_IMAGES.arbol,
-    coords: { x: 14, y: 78 },
+    coords: { x: 20, y: 90 },
     pathIndex: 0
   },
   2: {
     title: 'Valle Anaranjado',
     background: HABITAT_IMAGES.madriguera,
-    coords: { x: 32, y: 50 },
+    coords: { x: 78, y: 72 },
     pathIndex: 1
   },
   3: {
     title: 'Isla de Lianas',
     background: HABITAT_IMAGES.isla,
-    coords: { x: 52, y: 74 },
+    coords: { x: 24, y: 54 },
     pathIndex: 2
   },
   4: {
     title: 'Santuario azul',
     background: HABITAT_IMAGES.santuario,
-    coords: { x: 72, y: 46 },
+    coords: { x: 76, y: 36 },
     pathIndex: 3
   },
   5: {
     title: 'La Escuela',
     description: 'La meta final.',
     background: HABITAT_IMAGES.escuela,
-    coords: { x: 90, y: 60 },
+    coords: { x: 28, y: 18 },
     pathIndex: 4
   }
 }
@@ -370,11 +377,73 @@ watch(
   { deep: true, immediate: true }
 )
 
+const mapProgressPoints = computed(() => {
+  const points = []
+  enrichedHabitats.value.forEach((habitat, index) => {
+    const nextHabitat = enrichedHabitats.value[index + 1]
+    const stageList = stagesFor(habitat)
+    if (nextHabitat) {
+      points.push({
+        type: 'habitat',
+        habitatId: habitat.id,
+        coords: habitat.coords
+      })
+      const dx = nextHabitat.coords.x - habitat.coords.x
+      const dy = nextHabitat.coords.y - habitat.coords.y
+      const segmentLength = Math.hypot(dx, dy) || 1
+      const normalX = -dy / segmentLength
+      const normalY = dx / segmentLength
+      stageList.forEach((stage, stageIndex) => {
+        const t = (stageIndex + 1) / (stageList.length + 1)
+        const wobble = (stageIndex % 2 === 0 ? 1 : -1) * 2.6
+        points.push({
+          type: 'stage',
+          habitatId: habitat.id,
+          habitatUnlocked: habitat.unlocked,
+          stageNum: stage.num,
+          state: stage.state,
+          coords: {
+            x: habitat.coords.x + dx * t + normalX * wobble,
+            y: habitat.coords.y + dy * t + normalY * wobble
+          }
+        })
+      })
+    } else {
+      const previousPoint = points[points.length - 1]?.coords ?? habitat.coords
+      const dx = habitat.coords.x - previousPoint.x
+      const dy = habitat.coords.y - previousPoint.y
+      const segmentLength = Math.hypot(dx, dy) || 1
+      const normalX = -dy / segmentLength
+      const normalY = dx / segmentLength
+      stageList.forEach((stage, stageIndex) => {
+        const t = (stageIndex + 1) / (stageList.length + 1)
+        const wobble = (stageIndex % 2 === 0 ? 1 : -1) * 2.4
+        points.push({
+          type: 'stage',
+          habitatId: habitat.id,
+          habitatUnlocked: habitat.unlocked,
+          stageNum: stage.num,
+          state: stage.state,
+          coords: {
+            x: previousPoint.x + dx * t + normalX * wobble,
+            y: previousPoint.y + dy * t + normalY * wobble
+          }
+        })
+      })
+      points.push({
+        type: 'habitat',
+        habitatId: habitat.id,
+        coords: habitat.coords
+      })
+    }
+  })
+  return points
+})
+
+const mapStagePoints = computed(() => mapProgressPoints.value.filter((point) => point.type === 'stage'))
+
 const pathPoints = computed(() => {
-  const pts = enrichedHabitats.value
-    .map((h) => `${h.coords.x},${h.coords.y}`)
-    .join(' ')
-  return pts
+  return mapProgressPoints.value.map((point) => `${point.coords.x},${point.coords.y}`).join(' ')
 })
 
 const childName = computed(() => profile.childName || game.child?.name || '')
@@ -402,9 +471,9 @@ const activityLog = computed(() => {
 })
 
 const mapCanvasStyle = computed(() => ({
-  background: 'linear-gradient(to bottom, #cfe9ff 0%, #b8f6c2 50%, #7edc8d 100%)',
-  boxShadow: 'inset 0 0 40px rgba(34, 139, 34, 0.26)',
-  backgroundColor: '#cfe9ff'
+  background: 'linear-gradient(180deg, var(--color-sky) 0%, var(--color-sky) 48%, #a3df77 49%, #9bd76d 100%)',
+  boxShadow: 'none',
+  backgroundColor: 'var(--color-sky)'
 }))
 
 function triggerUnlockFx(id) {
@@ -419,6 +488,13 @@ function triggerUnlockFx(id) {
 }
 
 function nodeStyle(coords) {
+  return {
+    left: `${coords.x}%`,
+    top: `${coords.y}%`
+  }
+}
+
+function stageNodeStyle(coords) {
   return {
     left: `${coords.x}%`,
     top: `${coords.y}%`
@@ -495,7 +571,7 @@ function handleHabitatHover(id) {
 }
 
 function habitatStyle(habitat) {
-  const size = 36
+  const size = 20
   const background = getHabitatBackground(habitat)
   if (!background) {
     return { display: 'none' }
@@ -506,7 +582,7 @@ function habitatStyle(habitat) {
     width: `${size}%`,
     height: `${size}%`,
     backgroundImage: background,
-    filter: 'drop-shadow(0 12px 24px rgba(15,23,42,0.25))',
+    filter: 'none',
     opacity: 0.9
   }
 }
@@ -566,8 +642,7 @@ function formatDate(date) {
 }
 
 function updateViewportMode() {
-  if (typeof window === 'undefined') return
-  isMobile.value = window.matchMedia('(max-width: 768px)').matches
+  isMobile.value = false
 }
 
 onMounted(() => {
@@ -685,8 +760,8 @@ watch(
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   padding-top: 74px;
-  background: linear-gradient(to bottom, #cde4ff 0%, #cdeed8 54%, #9eddb4 100%);
-  box-shadow: inset 0 0 26px rgba(15, 23, 42, 0.14);
+  background: linear-gradient(180deg, #ace8fb 0%, #bdefff 36%, #b8e37f 37%, #97ce5b 100%);
+  box-shadow: none;
 }
 .mobile-map-track::-webkit-scrollbar {
   height: 0;
@@ -724,7 +799,7 @@ watch(
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  filter: saturate(0.95) drop-shadow(0 10px 20px rgba(15, 23, 42, 0.28));
+  filter: saturate(0.95);
   opacity: 0.88;
 }
 .mobile-habitat-content {
@@ -789,7 +864,8 @@ watch(
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  margin-top: 0.3rem;
 }
 .mobile-stage-chip {
   min-width: 56px;
@@ -805,7 +881,7 @@ watch(
   color: #1f2937;
   background: #ffffff;
   border: 1px solid rgba(15, 23, 42, 0.16);
-  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+  box-shadow: none;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 .mobile-stage-chip--done {
@@ -818,13 +894,13 @@ watch(
   color: #1f2937;
   border-color: rgba(15, 23, 42, 0.16);
   animation: none;
-  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.16);
+  box-shadow: none;
 }
 .mobile-stage-chip--locked {
   background: #ffffff;
   color: #1f2937;
   border-color: rgba(15, 23, 42, 0.16);
-  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+  box-shadow: none;
 }
 .mobile-stage-chip:active {
   transform: scale(0.95);
@@ -849,16 +925,27 @@ watch(
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 10px 22px rgba(15, 23, 42, 0.28));
+  filter: none;
 }
 .mobile-next-icon:active {
   transform: scale(0.97);
 }
 .map-canvas {
   position: relative;
-  height: 70vh;
-  border-radius: 24px;
+  width: 100%;
+  height: calc(100dvh - 72px);
+  min-height: 860px;
+  max-height: none;
+  margin: 0;
+  border-radius: 0;
   overflow: hidden;
+}
+.map-meadow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(180deg, #ace8fb 0%, #bdefff 35%, #b8e37f 36%, #97ce5b 100%);
 }
 .map-path {
   position: absolute;
@@ -866,6 +953,8 @@ watch(
   width: 100%;
   height: 100%;
   pointer-events: none;
+  filter: none;
+  z-index: 1;
 }
 .cloud-layer {
   position: absolute;
@@ -1043,13 +1132,13 @@ watch(
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.92;
+  z-index: 2;
+  opacity: 0.78;
   border-radius: 28px;
   pointer-events: none;
-  transition: filter 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 .habitat-bg:hover {
-  filter: drop-shadow(0 16px 28px rgba(15, 23, 42, 0.3));
   opacity: 1;
   transform: translate(-50%, -50%) scale(1.02);
 }
@@ -1058,53 +1147,43 @@ watch(
   transform: translate(-50%, -50%);
   text-align: center;
   width: 132px;
-  z-index: 2;
+  z-index: 3;
   pointer-events: auto;
 }
-.stage-chips {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
+.map-stage-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
-.stage-chip {
-  min-width: 34px;
-  height: 30px;
-  padding: 0 0.32rem;
+.map-stage-link {
+  width: 38px;
+  height: 38px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.22rem;
-  border-radius: 10px;
-  background: #f3f4f6;
-  color: #0f172a;
-  font-weight: 700;
-  font-size: 0.78rem;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #68bbff 0%, #2f86df 100%);
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 800;
+  border: 2px solid #ffffff;
+  text-decoration: none;
+  line-height: 1;
 }
-.stage-chip:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
+.map-stage-node--done .map-stage-link {
+  background: linear-gradient(180deg, #79cbff 0%, #3f9bed 100%);
+  border-color: #ffe57a;
 }
-.stage-chip--done {
-  background: #dcfce7;
-  border-color: #22c55e;
-  color: #166534;
+.map-stage-node--next .map-stage-link {
+  border-color: #ffe57a;
 }
-.stage-chip--next {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.08);
-  color: #0f172a;
-  animation: none;
+.map-stage-link--locked,
+.map-stage-node--locked .map-stage-link {
+  background: linear-gradient(180deg, #b8c1cb 0%, #8f9aa6 100%);
+  border-color: #d6dde5;
+  color: #f8fafc;
 }
-.stage-chip--locked {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.08);
-  color: #0f172a;
-}
-.stage-chip:focus-visible {
+.map-stage-link:focus-visible {
   outline: 2px solid #22c55e;
   outline-offset: 2px;
 }
@@ -1114,9 +1193,9 @@ watch(
   transform: translate(-50%, -140%);
 }
 .node-icon-wrap {
-  width: 118px;
-  height: 118px;
-  border-radius: 24px;
+  width: 108px;
+  height: 108px;
+  border-radius: 999px;
   background: transparent;
   display: grid;
   place-items: center;
@@ -1140,11 +1219,11 @@ watch(
   animation: float 4s ease-in-out infinite;
 }
 .node-icon-wrap img {
-  width: 88%;
-  height: 88%;
+  width: 82%;
+  height: 82%;
   object-fit: contain;
   animation: float 4s ease-in-out infinite;
-  filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.25));
+  filter: none;
   position: relative;
   z-index: 1;
 }
@@ -1153,11 +1232,11 @@ watch(
   left: 50%;
   top: 0;
   transform: translate(-50%, -110%);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.9);
   color: #0f172a;
   padding: 0.6rem 0.9rem;
   border-radius: 14px;
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  box-shadow: none;
   opacity: 0;
   transition: opacity 0.2s ease, transform 0.2s ease;
   width: max-content;
@@ -1184,17 +1263,15 @@ watch(
   opacity: 0;
 }
 .map-node.active .node-icon-wrap img {
-  filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.25));
+  filter: none;
 }
 .map-node--pulse .node-icon-wrap {
   animation: unlockGlow 1.4s ease;
   box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.35);
 }
-.map-node--pulse .node-base {
-  animation: unlockBase 1.4s ease;
-}
 .map-node.locked {
   opacity: 0.6;
+  filter: grayscale(0.2);
 }
 @keyframes unlockGlow {
   0% {
@@ -1208,20 +1285,6 @@ watch(
   100% {
     box-shadow: 0 0 0 0 rgba(250, 204, 21, 0);
     transform: translateY(0) scale(1);
-  }
-}
-@keyframes unlockBase {
-  0% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 rgba(250, 204, 21, 0.25));
-  }
-  50% {
-    transform: scale(1.08);
-    filter: drop-shadow(0 12px 24px rgba(250, 204, 21, 0.45));
-  }
-  100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 rgba(250, 204, 21, 0));
   }
 }
 @keyframes float {
@@ -1296,8 +1359,7 @@ watch(
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .map-node--pulse .node-icon-wrap,
-  .map-node--pulse .node-base {
+  .map-node--pulse .node-icon-wrap {
     animation: none;
   }
   .mobile-stage-chip--next {
@@ -1305,8 +1367,7 @@ watch(
   }
   .mobile-habitat-slide,
   .mobile-habitat-slide--next .mobile-character-wrap,
-  .tap-pop.is-tapped,
-  .stage-chip--next {
+  .tap-pop.is-tapped {
     animation: none;
     transition: none;
     transform: none;
@@ -1327,9 +1388,11 @@ watch(
     gap: 0.44rem;
   }
   .map-canvas {
-    height: calc(100dvh - 140px);
-    min-height: 620px;
-    border-radius: 18px;
+    height: calc(100dvh - 110px);
+    min-height: 780px;
+    max-height: none;
+    width: 100%;
+    border-radius: 0;
   }
   .map-node {
     width: 88px;
@@ -1342,15 +1405,10 @@ watch(
   .node-label {
     display: none;
   }
-  .stage-chips {
-    gap: 4px;
-    margin-top: 6px;
-  }
-  .stage-chip {
-    min-width: 22px;
-    height: 22px;
-    border-radius: 8px;
-    font-size: 0.68rem;
+  .map-stage-link {
+    width: 34px;
+    height: 34px;
+    font-size: 0.82rem;
   }
   .habitat-bg {
     width: 28% !important;
@@ -1367,8 +1425,8 @@ watch(
 
 @media (max-width: 480px) {
   .map-canvas {
-    height: calc(100dvh - 150px);
-    min-height: 560px;
+    height: calc(100dvh - 120px);
+    min-height: 700px;
   }
   .map-node {
     width: 78px;
@@ -1377,10 +1435,10 @@ watch(
     width: 72px;
     height: 72px;
   }
-  .stage-chip {
-    min-width: 20px;
-    height: 20px;
-    font-size: 0.64rem;
+  .map-stage-link {
+    width: 30px;
+    height: 30px;
+    font-size: 0.76rem;
   }
   .habitat-bg {
     width: 24% !important;

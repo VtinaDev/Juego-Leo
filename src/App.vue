@@ -232,7 +232,10 @@ const levelNumber = computed(() => {
 const isMapViewRoute = computed(() => route.name === 'MapView')
 const isGameRoute = computed(() => route.name === 'game')
 const isCongratsRoute = computed(() => route.name === 'Congrats')
-const isFullBleedRoute = computed(() => isMapViewRoute.value || isGameRoute.value || isCongratsRoute.value)
+const isHomeRoute = computed(() => route.name === 'Home')
+const isFullBleedRoute = computed(
+  () => isHomeRoute.value || isMapViewRoute.value || isGameRoute.value || isCongratsRoute.value
+)
 
 function handleBeforeInstall(event) {
   event.preventDefault()
