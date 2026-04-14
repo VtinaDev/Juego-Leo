@@ -12,6 +12,8 @@
       @pointerup="pressedOptionKey = null"
       @pointercancel="pressedOptionKey = null"
       @mouseleave="pressedOptionKey = null"
+      @mouseenter="$emit('preview', option)"
+      @focus="$emit('preview', option)"
       @click="$emit('select', option)"
     >
       {{ optionLabel(option) }}
@@ -27,7 +29,7 @@ const props = defineProps({
   ariaLabel: { type: String, default: 'Exercise options' }
 })
 
-defineEmits(['select'])
+defineEmits(['select', 'preview'])
 const pressedOptionKey = ref(null)
 
 function optionLabel(option) {

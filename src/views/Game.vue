@@ -94,7 +94,7 @@
               </div>
             </div>
             <div class="smartick-card-content space-y-4">
-            <div class="exercise-narration" v-if="exerciseNarrationText && showExerciseNarration">
+            <div class="exercise-narration" v-if="exerciseNarrationText && showExerciseNarration && !hasInlineAudioSupport">
               <AudioButton
                 :exercise="current"
                 :narration-text="exerciseNarrationText"
@@ -103,6 +103,16 @@
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
               <span class="narration-label">Escuchar enunciado</span>
+            </div>
+            <div class="exercise-narration" v-else-if="current?.audio && !hasInlineAudioSupport">
+              <AudioButton
+                :exercise="current"
+                :narration-text="exerciseNarrationText"
+                :audio-src="current?.audio || null"
+                aria-label="Reproducir audio del ejercicio"
+                @fallback-audio="(src) => playSimpleAudio(src)"
+              />
+              <span class="narration-label">Reproducir audio</span>
             </div>
             <div v-if="currentStatus === 'ok'" class="status-banner success-banner">
               <img src="/icons/celebration.png" alt="Celebración" class="status-icon" />
@@ -165,6 +175,7 @@
                 <ExerciseOptions
                   :options="current.options || []"
                   aria-label="Opciones de respuesta para la frase"
+                  @preview="handleOptionPreview"
                   @select="handleSimpleOption"
                 />
 
@@ -205,6 +216,7 @@
                 <ExerciseOptions
                   :options="current.options || []"
                   aria-label="Opciones para completar la frase"
+                  @preview="handleOptionPreview"
                   @select="handleSimpleOption"
                 />
 
@@ -294,6 +306,7 @@
                 <ExerciseOptions
                   :options="current.options || []"
                   aria-label="Opciones de respuesta"
+                  @preview="handleOptionPreview"
                   @select="handleSimpleOption"
                 />
 
@@ -470,6 +483,8 @@
                   class="btn-option"
                   type="button"
                   @click="handleSyllableSelect(syllable)"
+                  @mouseenter="handleOptionPreview(syllable)"
+                  @focus="handleOptionPreview(syllable)"
                 >
                   {{ syllable }}
                 </button>
@@ -602,6 +617,7 @@
                 <ExerciseOptions
                   :options="current.options || []"
                   aria-label="Opciones de frase"
+                  @preview="handleOptionPreview"
                   @select="handleSimpleOption"
                 />
 
@@ -1382,34 +1398,108 @@ const EXERCISE_VOICE_CUE_BY_ID = {
   'L1-QS-3': 'l1-fs-3',
   'L1-QS-4': 'l1-fs-4',
   'L2-MC-1': 'l1-voc-1',
-  'L2-MC-3': 'l1-voc-2',
-  'L2-MC-4': 'l1-voc-3',
-  'L2-MC-5': 'l1-voc-4',
-  'L2-MC-6': 'l1-voc-5',
-  'L2-MC-7': 'l1-voc-6',
-  'L2-PA-1': 'l1-assoc-1',
-  'L2-PA-2': 'l1-assoc-2',
-  'L2-PS-1': 'l1-assoc-3',
-  'L2-PS-2': 'l1-assoc-4',
-  'L2-PS-3': 'l1-assoc-5'
+  'L2-MC-2': 'l1-voc-2',
+  'L2-MC-3': 'l1-voc-3',
+  'L2-MC-4': 'l1-voc-4',
+  'L2-MC-5': 'l1-voc-5',
+  'L2-MC-6': 'l1-voc-6',
+  'L2-MC-7': 'l1-voc-7',
+  'L2-PA-1': 'l2-pa-1',
+  'L2-PA-2': 'l2-pa-2',
+  'L2-PS-1': 'l2-ps-1',
+  'L2-PS-2': 'l2-ps-2',
+  'L2-PS-3': 'l2-ps-3',
+  'L3-AQ-1': 'l3-aq-1',
+  'L3-AQ-2': 'l3-aq-2',
+  'L3-AQ-3': 'l3-aq-3',
+  'L3-SO-1': 'prompt-ordena-las-palabras',
+  'L3-SO-2': 'prompt-ordena-las-palabras',
+  'L3-SS-1': 'l3-ss-1-prompt',
+  'L3-SS-2': 'l3-ss-2-prompt',
+  'L3-SS-3': 'l3-ss-3-prompt',
+  'L4-AW-1': 'l1-write-1',
+  'L4-AW-2': 'l4-aw-2-instruction',
+  'L4-RA-1': 'l4-ra-1-question',
+  'L4-RA-2': 'l4-ra-2-question',
+  'L4-TW-1': 'l1-write-2',
+  'L4-TW-2': 'l1-write-3',
+  'L4-TW-3': 'l1-write-4',
+  'L4-TW-4': 'l1-write-5',
+  'L4-TW-5': 'l1-write-5',
+  'L5-TC-1': 'l5-tc-1-sentence',
+  'L5-TC-2': 'l5-tc-2-sentence',
+  'L5-TC-3': 'l5-tc-3-sentence',
+  'L5-AG-1': 'l1-grammar-1',
+  'L5-AG-2': 'l1-grammar-2',
+  'L5-PG-1': 'l5-pg-1-sentence',
+  'L5-PG-2': 'l5-pg-2-sentence',
+  'L5-PG-3': 'l5-pg-3-sentence',
+  'L5-FE-1': 'l1-grammar-3',
+  'L5-FE-2': 'l1-grammar-4',
+  'L5-FE-3': 'l1-grammar-5'
 }
 
 const EXERCISE_VOICE_CUE_BY_QUESTION = {
   'encierra el nombre correcto del dibujo sol': 'l1-voc-1',
-  'encierra el nombre correcto del dibujo sopa': 'l1-voc-2',
-  'encierra el nombre correcto del dibujo mesa': 'l1-voc-3',
-  'encierra el nombre correcto del dibujo oso': 'l1-voc-4',
-  'encierra el nombre correcto del dibujo pato': 'l1-voc-5',
-  'encierra el nombre correcto del dibujo luna': 'l1-voc-6'
+  'encierra el nombre correcto del dibujo sapo': 'l1-voc-2',
+  'encierra el nombre correcto del dibujo sopa': 'l1-voc-3',
+  'encierra el nombre correcto del dibujo mesa': 'l1-voc-4',
+  'encierra el nombre correcto del dibujo oso': 'l1-voc-5',
+  'encierra el nombre correcto del dibujo pato': 'l1-voc-6',
+  'encierra el nombre correcto del dibujo luna': 'l1-voc-7'
 }
 
 const EXERCISE_VOICE_CUE_BY_TEXT = {
-  'une palabras que significan lo contrario': 'l1-assoc-1',
-  'recuerda el opuesto crea equilibrio magico': 'l1-assoc-2',
-  'busca parejas que compartan significado': 'l1-assoc-3',
-  'observa como cada palabra describe lo mismo': 'l1-assoc-4',
-  'une el numero con su nombre escrito': 'l1-assoc-5'
+  'une palabras que significan lo contrario': 'l2-pa-1',
+  'recuerda el opuesto crea equilibrio magico': 'l2-pa-2',
+  'busca parejas que compartan significado': 'l2-ps-1',
+  'observa como cada palabra describe lo mismo': 'l2-ps-2',
+  'une el numero con su nombre escrito': 'l2-ps-3'
 }
+
+const OPTION_VOICE_CUE_BY_TEXT = {
+  'un conejo': 'opt-un-conejo',
+  'un zapato': 'opt-un-zapato',
+  'un platano': 'opt-un-platano',
+  'se enfadan': 'opt-se-enfadan',
+  'se divierten': 'opt-se-divierten',
+  'el mono lee un mapa': 'l3-ss-1-opt-1',
+  'el mapa lee un mono': 'l3-ss-1-opt-2',
+  'llueve poco': 'l3-ss-2-opt-1',
+  'poco llueve': 'l3-ss-2-opt-2',
+  'el libro abre la ventana': 'l3-ss-3-opt-1',
+  'la nina abre la ventana': 'l3-ss-3-opt-2',
+  'en una cueva': 'l4-ra-1-opt-1',
+  'en un arbol': 'l4-ra-1-opt-2',
+  'beber agua': 'l4-ra-2-opt-1',
+  'dormir en la casa': 'l4-ra-2-opt-2',
+  sa: 'syll-sa',
+  po: 'syll-po',
+  lu: 'syll-lu',
+  na: 'syll-na',
+  me: 'syll-me',
+  lo: 'syll-lo',
+  di: 'syll-di',
+  a: 'syll-a',
+  fan: 'syll-fan',
+  ta: 'syll-ta',
+  si: 'syll-si',
+  pregunta: 'categoria-pregunta',
+  afirmacion: 'categoria-afirmacion',
+  pasado: 'tense-pasado',
+  presente: 'tense-presente',
+  futuro: 'tense-futuro'
+}
+
+const OPTION_VOICE_CUE_BY_EXACT_TEXT = {
+  '¡': 'signo-exclamacion',
+  '¿': 'signo-interrogacion',
+  '.': 'signo-punto-final',
+  música: 'musica-opcion-correcta',
+  'musíca': 'musica-opcion-error-1',
+  'mùsica': 'musica-opcion-error-2'
+}
+const ASSOCIATION_TYPES = new Set(['pair_synonyms', 'pair_antonyms'])
 
 function normalizeExerciseText(text) {
   return String(text || '')
@@ -1439,6 +1529,16 @@ function cueForExercise(exercise) {
   return EXERCISE_VOICE_CUE_BY_TYPE[type] || null
 }
 
+function cueForOption(option) {
+  const exactKey = String(resolveOptionText(option) || '').trim().toLowerCase()
+  if (exactKey && OPTION_VOICE_CUE_BY_EXACT_TEXT[exactKey]) {
+    return OPTION_VOICE_CUE_BY_EXACT_TEXT[exactKey]
+  }
+  const textKey = normalizeExerciseText(resolveOptionText(option))
+  if (!textKey) return null
+  return OPTION_VOICE_CUE_BY_TEXT[textKey] || null
+}
+
 const isFuerzaTranquilaStage4of6 = computed(() => isFuerzaTranquilaStage4of6Now())
 const isStage1of4 = computed(() => {
   const stageNumber = Number(stage.value ?? 0)
@@ -1458,14 +1558,23 @@ watch(
 watch(
   () => current.value?.id,
   () => {
-    const id = current.value?.id
+    const exercise = current.value
+    const id = exercise?.id
     if (!id) return
     const audioSettings = getAudioSettings()
     if (!audioSettings.voiceEnabled) return
-    const cue = cueForExercise(current.value)
-    if (!cue) return
     unlockAudio()
-    playVoiceCue(cue)
+    const cue = cueForExercise(exercise)
+    if (cue) {
+      playVoiceCue(cue)
+      return
+    }
+    // Safety fallback for association exercises: if cue mapping fails, use their manual MP3 directly.
+    const type = String(exercise?.type || '').trim().toLowerCase()
+    if (ASSOCIATION_TYPES.has(type) && exercise?.audio) {
+      playVoice(exercise.audio, { interrupt: true })
+      return
+    }
   },
   { immediate: true }
 )
@@ -1647,6 +1756,28 @@ const showExerciseNarration = computed(() => {
   return true
 })
 
+const INLINE_AUDIO_TYPES = new Set([
+  'question_sentence',
+  'complete_sentence',
+  'multiple_choice',
+  'sentence_selection',
+  'complete_word',
+  'choose_correct_word',
+  'image_word_match',
+  'read_and_answer',
+  'audio_question',
+  'audio_write',
+  'text_write',
+  'tense_classify',
+  'punctuation_game',
+  'final_exam'
+])
+
+const hasInlineAudioSupport = computed(() => {
+  const type = String(current.value?.type || '').trim().toLowerCase()
+  return INLINE_AUDIO_TYPES.has(type)
+})
+
 const isLevelThreeStageOne = computed(() => level.value === 3 && stage.value === 1)
 const isLevelFourStageOne = computed(() => level.value === 4 && stage.value === 1)
 const hideLevelVisuals = computed(() => [2, 3, 4, 5].includes(level.value))
@@ -1769,6 +1900,12 @@ function handleOptionPreview(option) {
   lastOptionPreviewAt = now
   const audioSettings = getAudioSettings()
   if (!audioSettings.voiceEnabled) return
+  const optionCue = cueForOption(option)
+  if (optionCue) {
+    unlockAudio()
+    playVoiceCue(optionCue, { interrupt: true })
+    return
+  }
   if (!ALLOW_DEV_TTS_FALLBACK) return
   const text = resolveOptionText(option)
   if (!text) return

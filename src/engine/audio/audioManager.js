@@ -19,6 +19,8 @@ let cachedVoiceName = null
 const SAFE_SFX_GAIN = 0.75
 const SFX_THROTTLE_MS = 140
 let activeVoiceAudio = null
+let pendingMusicStart = null
+let musicUnlockListenersAttached = false
 const ALLOW_DEV_TTS_FALLBACK = import.meta.env.DEV && import.meta.env.VITE_ENABLE_TTS_FALLBACK !== 'false'
 
 // Legacy-style manager used by useAudio.js
@@ -262,6 +264,7 @@ export function playMusic(keyOrSrc = 'intro', { loop = true, fadeMs = 280 } = {}
   const targetVolume = settings.musicVolume
   audio.volume = fadeMs > 0 ? 0 : targetVolume
   audio.play().then(() => {
+    clearPendingMusicStart()
     if (fadeMs > 0) {
       const steps = 10
       const stepTime = Math.max(12, Math.round(fadeMs / steps))
@@ -272,7 +275,10 @@ export function playMusic(keyOrSrc = 'intro', { loop = true, fadeMs = 280 } = {}
         if (current >= steps) clearInterval(interval)
       }, stepTime)
     }
-  }).catch(() => null)
+  }).catch(() => {
+    // Algunos navegadores bloquean autoplay: reintenta tras la próxima interacción del usuario.
+    schedulePendingMusicStart({ keyOrSrc, loop, fadeMs })
+  })
   musicAudio = audio
   musicSourceKey = keyOrSrc
 }
@@ -299,6 +305,32 @@ export function stopMusic(fadeMs = 180) {
       musicAudio = null
     }
   }, stepTime)
+}
+
+function clearPendingMusicStart() {
+  pendingMusicStart = null
+  if (!musicUnlockListenersAttached || typeof window === 'undefined') return
+  window.removeEventListener('pointerdown', retryPendingMusicStart)
+  window.removeEventListener('keydown', retryPendingMusicStart)
+  musicUnlockListenersAttached = false
+}
+
+function schedulePendingMusicStart(payload) {
+  pendingMusicStart = payload
+  if (musicUnlockListenersAttached || typeof window === 'undefined') return
+  musicUnlockListenersAttached = true
+  window.addEventListener('pointerdown', retryPendingMusicStart, { passive: true })
+  window.addEventListener('keydown', retryPendingMusicStart)
+}
+
+function retryPendingMusicStart() {
+  if (!pendingMusicStart) {
+    clearPendingMusicStart()
+    return
+  }
+  const request = { ...pendingMusicStart }
+  clearPendingMusicStart()
+  playMusic(request.keyOrSrc, { loop: request.loop, fadeMs: request.fadeMs })
 }
 
 function pickVoice(voices = [], lang = 'es-ES') {
