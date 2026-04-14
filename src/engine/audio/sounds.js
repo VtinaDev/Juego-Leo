@@ -117,7 +117,7 @@ export const VOICE_SOURCES = {
   // Shared manual option cues (L3/L5 and reused labels).
   'opt-un-conejo': '/audio/voice/exercises/opt-un-conejo.mp3',
   'opt-un-zapato': '/audio/voice/exercises/opt-un-zapato.mp3',
-  'opt-un-platano': '/audio/voice/exercises/opt-un-plátano.mp3',
+  'opt-un-platano': '/audio/voice/exercises/opt-un-platano.mp3',
   'opt-se-enfadan': '/audio/voice/exercises/opt-se-enfadan.mp3',
   'opt-se-divierten': '/audio/voice/exercises/opt-se-divierten.mp3',
   'prompt-ordena-las-palabras': '/audio/voice/exercises/prompt-ordena-las-palabras.mp3',
@@ -136,7 +136,7 @@ export const VOICE_SOURCES = {
   'signo-interrogacion': '/audio/voice/exercises/signo-interrogacion.mp3',
   'signo-punto-final': '/audio/voice/exercises/signo-punto-final.mp3',
   'categoria-pregunta': '/audio/voice/exercises/categoria-pregunta.mp3',
-  'categoria-afirmacion': '/audio/voice/exercises/categoria-afirmación.mp3',
+  'categoria-afirmacion': '/audio/voice/exercises/categoria-afirmacion.mp3',
   'musica-opcion-correcta': '/audio/voice/exercises/musica-opcion-correcta.mp3',
   'musica-opcion-error-1': '/audio/voice/exercises/musica-opcion-error-1.mp3',
   'musica-opcion-error-2': '/audio/voice/exercises/musica-opcion-error-2.mp3',
