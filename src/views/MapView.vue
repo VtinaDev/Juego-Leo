@@ -933,8 +933,8 @@ watch(
 .map-canvas {
   position: relative;
   width: 100%;
-  height: calc(100dvh - 72px);
-  min-height: 860px;
+  height: calc(100dvh - 100px);
+  min-height: 620px;
   max-height: none;
   margin: 0;
   border-radius: 0;
@@ -1377,7 +1377,7 @@ watch(
 @media (max-width: 768px) {
   .habitat-map {
     min-height: 100dvh;
-    width: 100vw;
+    width: 100%;
     margin: 0;
   }
   .map-header {
@@ -1388,8 +1388,8 @@ watch(
     gap: 0.44rem;
   }
   .map-canvas {
-    height: calc(100dvh - 110px);
-    min-height: 780px;
+    height: calc(100dvh - 120px);
+    min-height: 560px;
     max-height: none;
     width: 100%;
     border-radius: 0;
@@ -1425,8 +1425,8 @@ watch(
 
 @media (max-width: 480px) {
   .map-canvas {
-    height: calc(100dvh - 120px);
-    min-height: 700px;
+    height: calc(100dvh - 126px);
+    min-height: 520px;
   }
   .map-node {
     width: 78px;

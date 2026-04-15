@@ -626,4 +626,19 @@ function setTip(key, value) {
   }
 }
 
+@media (max-width: 768px) {
+  .header-transparent nav {
+    padding: 0.5rem 0.65rem;
+    gap: 0.5rem;
+  }
+  .tooltip {
+    display: none;
+  }
+  .settings-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 1.25rem;
+  }
+}
+
 </style>

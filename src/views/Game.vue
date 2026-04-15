@@ -2398,20 +2398,20 @@ function shuffleArray(arr) {
   min-height: 60px;
   border-radius: 16px;
   border: 2px solid #cfd8e3;
-  background: #ffffff;
+  background: transparent;
   font-weight: 750;
   font-size: clamp(1.12rem, 4.5vw, 1.3rem);
   line-height: 1.5;
   color: #0f172a;
   text-transform: none;
   transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+  box-shadow: none;
   transform: scale(1);
 }
 .btn-option:hover {
   border-color: #0ea5e9;
-  background: #f7fcff;
-  box-shadow: 0 8px 16px rgba(14, 165, 233, 0.16);
+  background: rgba(247, 252, 255, 0.35);
+  box-shadow: none;
 }
 .btn-option:focus-visible {
   outline: 3px solid #0ea5e9;

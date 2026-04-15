@@ -35,7 +35,7 @@
 <style scoped>
 .benefits {
   padding: 2.5rem 1rem 3rem;
-  background: #ffffff;
+  background: var(--color-sky);
 }
 
 .benefits-inner {
@@ -46,11 +46,11 @@
 }
 
 .benefits-card-banner {
-  background: linear-gradient(135deg, #d9f3e6, #cdeff2);
-  border-radius: 20px;
-  padding: clamp(1.2rem, 3vw, 1.8rem);
+  background: transparent;
+  border-radius: 0;
+  padding: 0 clamp(0.2rem, 2vw, 0.6rem);
   text-align: center;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  box-shadow: none;
 }
 
 .benefits-card-banner h2 {
@@ -62,7 +62,7 @@
 
 .banner-sub {
   margin: 0.35rem auto 0;
-  color: #334155;
+  color: #1f3b17;
   font-size: 1rem;
   line-height: 1.5;
   max-width: 720px;
@@ -75,11 +75,12 @@
 }
 
 .benefit-card {
-  background: #f9fbf7;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: 16px;
   padding: 1.1rem 1rem;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+  box-shadow: none;
+  backdrop-filter: blur(1px);
   display: grid;
   gap: 0.4rem;
   text-align: left;

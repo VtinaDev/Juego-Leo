@@ -87,11 +87,12 @@ const items = [
 }
 
 .methodology-card {
-  background: #f8f7e8;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: 18px;
   padding: 1.1rem 1rem;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  box-shadow: none;
+  backdrop-filter: blur(1px);
   text-align: left;
   display: flex;
   flex-direction: column;

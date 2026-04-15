@@ -33,6 +33,7 @@ body,
   height: 100%;
   width: 100%;
   margin: 0;
+  overflow-x: hidden;
   background: var(--color-sky);
   color: var(--color-text);
   font-family: 'Baloo 2', 'Nunito Sans', 'Poppins', system-ui, -apple-system, sans-serif;
@@ -181,10 +182,57 @@ a {
 }
 
 .footer-wave {
-  background: #ffffff;
+  background: #9bd76d;
   color: #0f172a;
   padding: 1.25rem 0 1.5rem;
 }
 
 .wave-section {
+}
+
+@media (max-width: 768px) {
+  .btn {
+    min-width: 148px;
+    min-height: 50px;
+    padding: 0.72rem 1rem;
+    font-size: 0.95rem;
+    border-radius: 14px;
+  }
+  .btn-icon {
+    min-width: 44px;
+    padding: 0.35rem;
+    border-radius: 10px;
+  }
+  .btn-icon img {
+    width: 36px;
+    height: 36px;
+  }
+  .brand-logo {
+    height: 72px;
+  }
+  .header-transparent .btn,
+  .header-transparent .btn-icon {
+    padding: 0.25rem 0.35rem;
+    border-radius: 10px;
+  }
+  .nav-icons-wrapper {
+    gap: 0.15rem;
+    padding: 0.1rem 0.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    min-width: 126px;
+    min-height: 46px;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.86rem;
+  }
+  .btn-icon img {
+    width: 32px;
+    height: 32px;
+  }
+  .brand-logo {
+    height: 62px;
+  }
 }

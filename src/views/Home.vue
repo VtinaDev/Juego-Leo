@@ -167,7 +167,7 @@ onBeforeUnmount(() => {
   overflow: hidden;
   border-radius: 0;
   min-height: min(86vh, 760px);
-  background: linear-gradient(180deg, var(--color-sky) 0%, var(--color-sky) 48%, #a3df77 49%, #9bd76d 100%);
+  background: linear-gradient(180deg, var(--color-sky) 0%, var(--color-sky) 58%, #9bd76d 58%, #9bd76d 100%);
   box-shadow: none;
 }
 .hero-art::before {
@@ -343,6 +343,7 @@ onBeforeUnmount(() => {
 }
 .hero-btn {
   width: 100%;
+  min-width: 0;
   justify-content: center;
   font-weight: 800;
   font-size: 1.02rem;
@@ -354,7 +355,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 8px 16px rgba(15, 23, 42, 0.16);
 }
 .hero-btn--soft {
-  background: linear-gradient(180deg, #ffe789 0%, #f4c946 100%);
+  background: linear-gradient(180deg, #ffde5c 0%, #f4c946 100%);
   color: #ffffff !important;
 }
 .hero-btn--accent {

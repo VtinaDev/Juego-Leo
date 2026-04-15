@@ -95,7 +95,7 @@
 .about-wrapper {
   padding: 0 0 3rem;
   color: #0f172a;
-  background: #ffffff;
+  background: transparent;
 }
 
 .about-inner {
@@ -240,11 +240,12 @@
 }
 
 .about-card {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px dashed rgba(255, 255, 255, 0.72);
+  border-radius: 16px;
   padding: 1.2rem 1.1rem;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  box-shadow: none;
+  backdrop-filter: blur(1px);
   display: grid;
   gap: 0.4rem;
   height: 100%;
@@ -254,14 +255,14 @@
   margin: 0;
   font-size: 1.1rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #27556f;
 }
 
 .about-card p,
 .about-card ul,
 .about-card ol {
   margin: 0;
-  color: #475569;
+  color: #355f78;
   line-height: 1.55;
   font-size: 1rem;
   padding-left: 1.1rem;
