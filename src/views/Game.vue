@@ -2440,10 +2440,10 @@ function shuffleArray(arr) {
 
 .game-view.option-status-fail .btn-option,
 .game-view.option-status-fail :deep(.exercise-options__button) {
-  border-color: #e28a2c;
-  background: linear-gradient(180deg, #fff4e6 0%, #ffd19a 100%);
-  color: #7c2d12;
-  box-shadow: 0 10px 20px rgba(249, 115, 22, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: #ea7a14;
+  background: linear-gradient(180deg, #ffb347 0%, #ff7a00 100%);
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(234, 122, 20, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .options-row {
   display: flex;
