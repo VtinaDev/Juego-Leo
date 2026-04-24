@@ -650,7 +650,11 @@ function formatDate(date) {
 }
 
 function updateViewportMode() {
-  isMobile.value = false
+  if (typeof window === 'undefined' || !window.matchMedia) {
+    isMobile.value = false
+    return
+  }
+  isMobile.value = window.matchMedia('(max-width: 768px)').matches
 }
 
 onMounted(() => {
@@ -965,7 +969,7 @@ watch(
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background-image: url('/images/map_background.png'), url('/images/map-background.png');
+  background-image: url('/images/map-background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1253,6 +1257,11 @@ watch(
     max-height: none;
     width: 100%;
     border-radius: 0;
+  }
+  .map-meadow {
+    background-size: contain;
+    background-position: center top;
+    background-color: #ace8fb;
   }
   .map-node {
     width: 88px;

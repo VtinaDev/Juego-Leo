@@ -808,7 +808,7 @@
             }
           ],
           "audio": "/audio/voice/exercises/l1-assoc-5.mp3",
-          "image": "/images/L2/default.png",
+          "image": "/images/L2/sol.PNG",
           "hint": "Une el número con su nombre escrito.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry"

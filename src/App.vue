@@ -3,7 +3,7 @@
     <!-- Header -->
     <header
       v-if="!isGameRoute"
-      :class="['header-transparent', { 'header-overlay': isHomeRoute || isMapViewRoute }]"
+      :class="['header-transparent', { 'header-overlay': isHomeRoute || isMapViewRoute || isCongratsRoute }]"
     >
       <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
         <RouterLink class="brand brand-logo-link" to="/">

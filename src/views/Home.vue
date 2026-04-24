@@ -378,6 +378,18 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 768px) {
+  .hero-stage,
+  .hero-art,
+  .hero-grid {
+    min-height: 100dvh;
+  }
+
+  .hero-art {
+    background-size: contain;
+    background-position: center top;
+    background-color: #d6ebff;
+  }
+
   .hero-grid {
     padding:
       5.8rem

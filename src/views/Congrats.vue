@@ -152,9 +152,9 @@ const characterImage = computed(() => {
   const map = {
     1: Perezoso,
     2: Zorro,
-    3: Mono,
+    3: Oso,
     4: Mono,
-    5: ElefanteGraduado
+    5: Elefante_graduado
   }
   return map[levelNumber.value] || Perezoso
 })
@@ -191,12 +191,12 @@ function goToLevels() {
 
 <style scoped>
 .congrats-shell {
+  width: 100%;
   min-height: 100vh;
   display: grid;
   place-items: center;
   padding: 2.5rem 1.25rem;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.5)),
-    url('@/views/fondo-congrats.PNG');
+  background-image: url('@/views/fondo-congrats.PNG');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

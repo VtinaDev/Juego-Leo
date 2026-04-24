@@ -1346,9 +1346,9 @@ const spokenSyllableTimeline = computed(() => {
 const levelCharacters = {
   1: Perezoso,
   2: Zorro,
-  3: Mono,
+  3: Oso,
   4: Mono,
-  5: ElefanteGraduado
+  5: Elefante_graduado
 }
 
 watch(
