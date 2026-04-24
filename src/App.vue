@@ -42,7 +42,7 @@
           </button>
           <div class="tooltip-wrapper">
             <RouterLink
-              class="btn btn-icon"
+              class="btn btn-icon header-action-btn map-btn"
               to="/mapview"
               aria-label="Mapa"
               @mouseenter="setTip('map', true)"
@@ -50,13 +50,13 @@
               @focus="setTip('map', true)"
               @blur="setTip('map', false)"
             >
-              <img src="/icons/mapa.PNG" alt="Mapa" />
+              <img class="header-action-img" src="/icons/mapa.PNG" alt="Mapa" />
             </RouterLink>
             <span v-if="tooltips.map" class="tooltip tooltip--below" role="status">Mapa</span>
           </div>
           <div class="tooltip-wrapper">
             <button
-              class="btn btn-icon"
+              class="btn btn-icon header-action-btn profile-btn"
               type="button"
               aria-label="Perfil"
               @click="openAuthModal"
@@ -65,7 +65,7 @@
               @focus="setTip('profile', true)"
               @blur="setTip('profile', false)"
             >
-              <img src="/icons/perfil.PNG" alt="Perfil" />
+              <img class="header-action-img" src="/icons/perfil.PNG" alt="Perfil" />
             </button>
             <span v-if="tooltips.profile" class="tooltip tooltip--below" role="status">Perfil</span>
           </div>
@@ -640,9 +640,9 @@ function setTip(key, value) {
     flex-wrap: nowrap;
   }
   .brand-logo {
-    height: 48px;
+    height: 56px;
     width: auto;
-    max-width: 24vw;
+    max-width: 30vw;
   }
   .brand-logo-link {
     padding: 0;
@@ -658,21 +658,36 @@ function setTip(key, value) {
     flex-wrap: nowrap;
   }
   .header-transparent .btn-icon {
-    min-width: 40px;
-    min-height: 40px;
-    padding: 0.2rem 0.25rem;
+    min-width: 46px;
+    min-height: 46px;
+    padding: 0.22rem 0.28rem;
   }
   .header-transparent .btn-icon img {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
+  }
+  .header-action-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.72) !important;
+    border: 1px solid rgba(15, 23, 42, 0.18) !important;
+    border-radius: 12px !important;
+  }
+  .header-action-img {
+    filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.28));
+  }
+  .profile-btn {
+    position: relative;
+    z-index: 2;
   }
   .tooltip {
     display: none;
   }
   .settings-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 1.1rem;
+    width: 46px;
+    height: 46px;
+    font-size: 1.2rem;
   }
 }
 
