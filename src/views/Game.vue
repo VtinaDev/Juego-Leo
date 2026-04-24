@@ -3182,9 +3182,9 @@ function shuffleArray(arr) {
     height: 36px;
   }
   .game-view.compact-mobile .icon-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
   }
   .game-view.compact-mobile .stage-pill {
     padding: 0.3rem 0.65rem;
@@ -3221,12 +3221,55 @@ function shuffleArray(arr) {
   .game-view.ultra-compact-mobile .exercise-visual {
     max-width: 240px;
   }
+  .game-view.compact-mobile .map-only-icon {
+    width: 46px;
+    height: 46px;
+  }
+  .game-view.compact-mobile .action-icon-img {
+    width: 28px;
+    height: 28px;
+  }
+  .game-view.ultra-compact-mobile .icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+  .game-view.ultra-compact-mobile .map-only-icon {
+    width: 42px;
+    height: 42px;
+  }
+  .game-view.ultra-compact-mobile .action-icon-img {
+    width: 24px;
+    height: 24px;
+  }
   .smartick-topbar {
     grid-template-columns: 1fr;
     justify-items: center;
   }
   .smartick-actions {
     justify-self: center;
+    gap: 0.7rem;
+  }
+  .map-only-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .icon-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+  }
+  .action-icon-img {
+    width: 30px;
+    height: 30px;
+  }
+  .audio-icon-static {
+    width: 58px;
+    height: 58px;
+  }
+  .exercise-narration .audio-button {
+    width: 56px;
+    height: 56px;
   }
 }
 </style>

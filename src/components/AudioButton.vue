@@ -149,4 +149,14 @@ onBeforeUnmount(() => {
   object-fit: contain;
   pointer-events: none;
 }
+@media (max-width: 768px) {
+  .audio-button {
+    width: 56px;
+    height: 56px;
+  }
+  .audio-button__icon {
+    width: 46px;
+    height: 46px;
+  }
+}
 </style>
