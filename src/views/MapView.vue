@@ -39,18 +39,6 @@
               <p class="progress-label">{{ progressSummary(habitat) }}</p>
             </div>
           </div>
-
-          <div class="mobile-actions">
-            <button
-              v-if="nextHabitatId(habitat.id)"
-              type="button"
-              class="mobile-next-icon tap-pop"
-              @click="scrollToHabitat(nextHabitatId(habitat.id), 'smooth')"
-              aria-label="Siguiente hábitat"
-            >
-              <img src="/icons/next.PNG" alt="" aria-hidden="true" />
-            </button>
-          </div>
         </div>
       </article>
     </section>
@@ -177,6 +165,7 @@ let unlockTimer = null
 const lastHoverSound = new Map()
 let mediaQueryList = null
 let mobileScrollRaf = null
+let mobileAutoLoopTimer = null
 
 const levelIds = listLevels()
   .map(Number)
@@ -317,16 +306,36 @@ function setMobileSlideRef(el, habitatId) {
   delete mobileSlides.value[habitatId]
 }
 
-function nextHabitatId(currentId) {
-  const index = enrichedHabitats.value.findIndex((h) => h.id === currentId)
-  if (index < 0 || index + 1 >= enrichedHabitats.value.length) return null
-  return enrichedHabitats.value[index + 1].id
-}
-
 function scrollToHabitat(habitatId, behavior = 'smooth') {
   const node = mobileSlides.value[habitatId]
   if (!node) return
   node.scrollIntoView({ inline: 'center', block: 'nearest', behavior })
+}
+
+function getNextLoopHabitatId(currentId) {
+  const ids = enrichedHabitats.value.map((h) => h.id)
+  if (!ids.length) return null
+  const currentIndex = ids.indexOf(currentId)
+  if (currentIndex < 0) return ids[0]
+  return ids[(currentIndex + 1) % ids.length]
+}
+
+function advanceMobileCarousel() {
+  const currentId = mobileVisibleHabitatId.value || mobileFocusHabitatId.value || enrichedHabitats.value[0]?.id
+  const nextId = getNextLoopHabitatId(currentId)
+  if (!nextId) return
+  scrollToHabitat(nextId, 'smooth')
+}
+
+function startMobileAutoLoop() {
+  if (mobileAutoLoopTimer) {
+    clearInterval(mobileAutoLoopTimer)
+    mobileAutoLoopTimer = null
+  }
+  if (!isMobile.value || enrichedHabitats.value.length < 2) return
+  mobileAutoLoopTimer = setInterval(() => {
+    advanceMobileCarousel()
+  }, 3200)
 }
 
 function handleMapTap(event) {
@@ -421,6 +430,10 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  if (mobileAutoLoopTimer) {
+    clearInterval(mobileAutoLoopTimer)
+    mobileAutoLoopTimer = null
+  }
   if (mobileScrollRaf) cancelAnimationFrame(mobileScrollRaf)
   mobileScrollRaf = null
   mobileTrackRef.value?.removeEventListener?.('scroll', onMobileTrackScroll)
@@ -454,6 +467,14 @@ watch(
     if (!track) return
     track.addEventListener('scroll', onMobileTrackScroll, { passive: true })
     setTimeout(resolveSlideFocusFromScroll, 40)
+  },
+  { immediate: true }
+)
+
+watch(
+  () => [isMobile.value, enrichedHabitats.value.length],
+  () => {
+    startMobileAutoLoop()
   },
   { immediate: true }
 )
@@ -699,31 +720,6 @@ watch(
   font-weight: 700;
   color: #1f2937;
   text-align: center;
-}
-.mobile-actions {
-  margin-top: 0.2rem;
-  display: flex;
-  justify-content: center;
-}
-.mobile-next-icon {
-  width: 84px;
-  height: 84px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  box-shadow: none;
-  padding: 0;
-}
-.mobile-next-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: none;
-}
-.mobile-next-icon:active {
-  transform: scale(0.97);
 }
 .map-canvas {
   position: relative;
