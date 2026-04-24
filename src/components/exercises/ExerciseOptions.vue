@@ -64,22 +64,22 @@ function optionKey(option) {
   min-height: 60px;
   padding: 0.95rem 1rem;
   border-radius: 16px;
-  border: 2px solid #cfd8e3;
-  background: transparent;
-  color: #0f172a;
+  border: 2px solid rgba(219, 143, 75, 0.55);
+  background: linear-gradient(145deg, #ffe29a 0%, #ffc982 55%, #f0b572 100%);
+  color: #5a2d0b;
   font-size: clamp(1.12rem, 4.4vw, 1.3rem);
   line-height: 1.5;
   font-weight: 750;
   text-align: center;
-  box-shadow: none;
+  box-shadow: 0 10px 18px rgba(240, 177, 114, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
   transform: scale(1);
 }
 
 .exercise-options__button:hover {
-  border-color: #0ea5e9;
-  background: rgba(247, 252, 255, 0.35);
-  box-shadow: none;
+  border-color: #d58443;
+  background: linear-gradient(145deg, #ffe8ad 0%, #ffd292 55%, #f5be7e 100%);
+  box-shadow: 0 12px 24px rgba(240, 177, 114, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .exercise-options__button:focus-visible {

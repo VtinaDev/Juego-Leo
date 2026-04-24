@@ -2397,21 +2397,21 @@ function shuffleArray(arr) {
   padding: 0.9rem 1rem;
   min-height: 60px;
   border-radius: 16px;
-  border: 2px solid #cfd8e3;
-  background: transparent;
+  border: 2px solid rgba(219, 143, 75, 0.55);
+  background: linear-gradient(145deg, #ffe29a 0%, #ffc982 55%, #f0b572 100%);
   font-weight: 750;
   font-size: clamp(1.12rem, 4.5vw, 1.3rem);
   line-height: 1.5;
-  color: #0f172a;
+  color: #5a2d0b;
   text-transform: none;
   transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: none;
+  box-shadow: 0 10px 18px rgba(240, 177, 114, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transform: scale(1);
 }
 .btn-option:hover {
-  border-color: #0ea5e9;
-  background: rgba(247, 252, 255, 0.35);
-  box-shadow: none;
+  border-color: #d58443;
+  background: linear-gradient(145deg, #ffe8ad 0%, #ffd292 55%, #f5be7e 100%);
+  box-shadow: 0 12px 24px rgba(240, 177, 114, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 .btn-option:focus-visible {
   outline: 3px solid #0ea5e9;
@@ -2421,8 +2421,8 @@ function shuffleArray(arr) {
   transform: scale(0.95);
 }
 .btn-option.btn-active {
-  border-color: #0ea5e9;
-  background: #f7fcff;
+  border-color: #c36f31;
+  background: linear-gradient(145deg, #ffd887 0%, #f7be72 55%, #e8a85f 100%);
 }
 .options-row {
   display: flex;
@@ -2955,16 +2955,16 @@ function shuffleArray(arr) {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
-  background: #fff;
-  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.1);
+  border: 1px solid rgba(219, 143, 75, 0.55);
+  background: linear-gradient(145deg, #ffe29a 0%, #ffc982 55%, #f0b572 100%);
+  box-shadow: 0 10px 18px rgba(240, 177, 114, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   font-weight: 700;
-  color: #0f172a;
+  color: #5a2d0b;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .icon-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 12px 22px rgba(240, 177, 114, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 .icon-btn:active {
   transform: scale(0.95);

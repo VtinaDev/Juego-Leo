@@ -703,10 +703,7 @@ function setTip(key, value) {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
+    border-radius: 12px !important;
   }
   .header-action-img {
     filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.35));

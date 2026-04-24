@@ -126,15 +126,16 @@ onBeforeUnmount(() => {
   width: 48px;
   height: 48px;
   padding: 0;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  border: 1px solid rgba(219, 143, 75, 0.55);
+  border-radius: 999px;
+  background: linear-gradient(145deg, #ffe29a 0%, #ffc982 55%, #f0b572 100%);
+  box-shadow: 0 8px 16px rgba(240, 177, 114, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.65);
   font-size: 1.2rem;
   transition: transform 0.15s ease;
 }
 .audio-button:hover {
   transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(240, 177, 114, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 .audio-button:active {
   transform: translateY(0);
