@@ -4,7 +4,7 @@
       <div class="map-header-main">
         <p class="map-eyebrow">Mapa de aventura</p>
         <h1>{{ currentZone?.levelName || 'Escuela mágica' }}</h1>
-        <p class="sub">{{ currentZone?.themeTitle || 'Siguiente misión disponible' }}</p>
+        <p class="map-sub-desktop">{{ currentZone?.themeTitle || 'Siguiente misión disponible' }}</p>
       </div>
     </header>
 
@@ -728,11 +728,11 @@ watch(
 
 .map-header {
   position: absolute;
-  inset: clamp(5.6rem, 9vw, 7rem) 0.75rem auto 0.75rem;
+  inset: auto clamp(0.9rem, 2.2vw, 1.6rem) clamp(4.2rem, 8.5vw, 5.6rem) auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.75rem;
   padding: 0;
   border-radius: 0;
@@ -745,7 +745,15 @@ watch(
 }
 .map-header-main {
   display: grid;
-  gap: 0.08rem;
+  gap: 0.12rem;
+  justify-items: start;
+  text-align: left;
+  padding: 0.68rem 0.85rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(248, 251, 255, 0.72);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(3px);
 }
 .map-eyebrow {
   margin: 0;
@@ -770,6 +778,14 @@ watch(
   max-width: 540px;
   color: #334155;
   font-size: 0.92rem;
+}
+.map-sub-desktop {
+  margin: 0;
+  max-width: min(48ch, 100%);
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  text-align: left;
 }
 
 .mobile-map-track {
@@ -1280,6 +1296,7 @@ watch(
   .sub {
     font-size: 0.88rem;
   }
+  .map-sub-desktop { display: none; }
 }
 
 @media (max-width: 480px) {
