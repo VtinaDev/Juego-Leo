@@ -1,6 +1,6 @@
 <template>
   <section class="habitat-map">
-    <header class="map-header">
+    <header v-if="!isMobile" class="map-header">
       <div class="map-header-main">
         <p class="map-eyebrow">Mapa de aventura</p>
         <h1>{{ currentZone?.levelName || 'Escuela mágica' }}</h1>
