@@ -637,6 +637,9 @@ function setTip(key, value) {
     padding: 0.5rem 0.65rem;
     gap: 0.5rem;
   }
+  .install-btn {
+    display: none !important;
+  }
   .tooltip {
     display: none;
   }
