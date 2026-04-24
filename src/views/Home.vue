@@ -294,6 +294,8 @@ onBeforeUnmount(() => {
 }
 
 .hero-btn {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   min-width: 0;
   justify-content: center;
@@ -304,16 +306,37 @@ onBeforeUnmount(() => {
   border-radius: 12px;
   border: none;
   box-shadow: 0 8px 16px rgba(15, 23, 42, 0.16);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.hero-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0));
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .hero-btn--soft {
-  background: linear-gradient(180deg, #ffde5c 0%, #f4c946 100%);
+  background: linear-gradient(155deg, #ffe36f 0%, #ffc755 52%, #f39b3f 100%);
   color: #ffffff !important;
 }
 
 .hero-btn--accent {
-  background: linear-gradient(180deg, #67b2ff 0%, #2f80ff 100%);
+  background: linear-gradient(155deg, #7ec7ff 0%, #4ca2ff 52%, #2f80ff 100%);
   color: #ffffff !important;
+}
+
+.hero-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.24);
+  filter: brightness(1.04);
+}
+
+.hero-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.2);
 }
 
 .home-confetti {
