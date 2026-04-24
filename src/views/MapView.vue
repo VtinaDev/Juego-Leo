@@ -25,8 +25,6 @@
           'mobile-habitat-slide--locked': !habitat.unlocked
         }"
       >
-        <div class="mobile-habitat-bg" :style="{ backgroundImage: getHabitatBackground(habitat) }" />
-
         <div class="mobile-habitat-content">
           <p class="mobile-habitat-eyebrow">{{ habitat.themeTitle }}</p>
           <h2 class="mobile-habitat-title">{{ habitat.levelName }}</h2>
@@ -816,19 +814,6 @@ watch(
 }
 .mobile-habitat-slide--next .mobile-character-wrap {
   animation: none;
-}
-.mobile-habitat-bg {
-  position: absolute;
-  left: 50%;
-  top: 57%;
-  width: 80%;
-  height: 80%;
-  transform: translate(-50%, -50%);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  filter: saturate(0.95);
-  opacity: 0.88;
 }
 .mobile-habitat-content {
   position: relative;

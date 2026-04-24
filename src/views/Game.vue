@@ -74,6 +74,11 @@
                     <div class="score-points">{{ game.points || 0 }} pts</div>
                   </div>
                 </div>
+                <div class="smartick-stage">
+                  <div class="stage-pill">
+                    <span>{{ stageLabel }}</span>
+                  </div>
+                </div>
                 <div class="smartick-actions">
                   <RouterLink class="map-only-link" to="/mapview" aria-label="Volver al mapa">
                     <img src="/icons/mapa.PNG" alt="Mapa" class="map-only-icon" />
@@ -87,11 +92,6 @@
                 </div>
               </div>
 
-              <div class="smartick-stage">
-                <div class="stage-pill">
-                  <span>{{ stageLabel }}</span>
-                </div>
-              </div>
             </div>
             <div class="smartick-card-content space-y-4">
             <div class="exercise-narration" v-if="exerciseNarrationText && showExerciseNarration && !hasInlineAudioSupport">
@@ -127,6 +127,7 @@
                 hasVisual &&
                 !hideLevelVisuals &&
                 !isLevelFour &&
+                !(mobileViewport && isHabitatVisualMobile) &&
                 current.type !== 'IMAGE_WORD_MATCH' &&
                 !(current.type === 'complete_sentence' && current.image) &&
                 !(current.type === 'multiple_choice' && (current.image || current.emoji)) &&
@@ -157,23 +158,30 @@
             <section v-if="current.type === 'question_sentence'">
               <BaseExerciseLayout aria-label="Pregunta sobre frase">
                 <template #prompt>
-                  <ExercisePrompt
-                    :title="questionMaskedSentence || current.prompt || 'Elige la respuesta correcta'"
-                    instruction="Escucha la frase y selecciona una sola respuesta."
-                  />
-                  <div class="mt-2 flex justify-center">
-                    <AudioButton
+                  <div class="audio-prompt-stack">
+                    <SentenceAudioRow
+                      :text="current.sentence || ''"
+                      :speak-text="current.sentence || ''"
                       :exercise="current"
-                      :narration-text="current.sentence"
                       :audio-src="current.audio"
+                      text-class="text-3xl font-semibold leading-snug text-slate-700"
                       aria-label="Escuchar frase"
                       @fallback-audio="(src) => playSimpleAudio(src)"
                     />
+                    <p
+                      v-if="shouldShowEnunciado(questionMaskedSentence || current.prompt || 'Elige la respuesta correcta', current.sentence || '')"
+                      class="audio-prompt-enunciado"
+                    >
+                      {{ questionMaskedSentence || current.prompt || 'Elige la respuesta correcta' }}
+                    </p>
+                    <p class="audio-prompt-instruction">Escucha la frase y selecciona una sola respuesta.</p>
                   </div>
                 </template>
 
                 <ExerciseOptions
                   :options="current.options || []"
+                  :status="currentStatus"
+                  :correct-answers="currentCorrectAnswers"
                   aria-label="Opciones de respuesta para la frase"
                   @preview="handleOptionPreview"
                   @select="handleSimpleOption"
@@ -198,23 +206,30 @@
                 </template>
 
                 <template #prompt>
-                  <ExercisePrompt
-                    :title="current.prompt || 'Completa la frase'"
-                    instruction="Elige una sola palabra para completar correctamente."
-                  />
-                  <div class="mt-2 flex justify-center">
-                    <AudioButton
+                  <div class="audio-prompt-stack">
+                    <SentenceAudioRow
+                      :text="fillBlank(current.prompt, current.correct || current.answer)"
+                      :speak-text="fillBlank(current.prompt, current.correct || current.answer)"
                       :exercise="current"
-                      :narration-text="fillBlank(current.prompt, current.correct || current.answer)"
                       :audio-src="current.audio"
+                      text-class="text-3xl font-semibold leading-snug text-slate-700"
                       aria-label="Escuchar frase"
                       @fallback-audio="(src) => playSimpleAudio(src)"
                     />
+                    <p
+                      v-if="shouldShowEnunciado(current.prompt || 'Completa la frase', fillBlank(current.prompt, current.correct || current.answer))"
+                      class="audio-prompt-enunciado"
+                    >
+                      {{ current.prompt || 'Completa la frase' }}
+                    </p>
+                    <p class="audio-prompt-instruction">Elige una sola palabra para completar correctamente.</p>
                   </div>
                 </template>
 
                 <ExerciseOptions
                   :options="current.options || []"
+                  :status="currentStatus"
+                  :correct-answers="currentCorrectAnswers"
                   aria-label="Opciones para completar la frase"
                   @preview="handleOptionPreview"
                   @select="handleSimpleOption"
@@ -289,22 +304,23 @@
                 </template>
 
                 <template #prompt>
-                  <ExercisePrompt
-                    :title="current.question || current.prompt || 'Elige la opción correcta'"
-                    instruction="Selecciona una sola respuesta."
-                  />
-                  <div class="mt-2 flex justify-center">
-                    <AudioButton
+                  <div class="audio-prompt-stack">
+                    <SentenceAudioRow
+                      :text="current.question || current.prompt || 'Elige la opción correcta'"
                       :exercise="current"
                       :audio-src="current.audio"
+                      text-class="text-3xl font-semibold leading-snug text-slate-700"
                       aria-label="Escuchar pregunta"
                       @fallback-audio="(src) => playSimpleAudio(src)"
                     />
+                    <p class="audio-prompt-instruction">Selecciona una sola respuesta.</p>
                   </div>
                 </template>
 
                 <ExerciseOptions
                   :options="current.options || []"
+                  :status="currentStatus"
+                  :correct-answers="currentCorrectAnswers"
                   aria-label="Opciones de respuesta"
                   @preview="handleOptionPreview"
                   @select="handleSimpleOption"
@@ -414,7 +430,7 @@
                 :speak-text="completeWordSpokenText"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-xl font-semibold mb-3 leading-snug text-left"
+                text-class="text-2xl font-semibold mb-3 leading-snug text-left"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -453,7 +469,7 @@
                 :text="current.prompt || current.question"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-3 leading-snug text-left"
+                text-class="text-3xl font-semibold mb-3 leading-snug text-left"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -541,7 +557,7 @@
                 :text="current.prompt || 'Elige la palabra correcta'"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-xl font-semibold mb-3 leading-snug text-left"
+                text-class="text-2xl font-semibold mb-3 leading-snug text-left"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -565,7 +581,7 @@
                 :text="current.text || current.context || current.reading"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-lg font-semibold mb-3 leading-snug text-left reading-paragraph"
+                text-class="text-xl font-semibold mb-3 leading-snug text-left reading-paragraph"
                 aria-label="Escuchar texto"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -600,22 +616,23 @@
                 </template>
 
                 <template #prompt>
-                  <ExercisePrompt
-                    :title="current.prompt || 'Elige la frase que tenga más sentido.'"
-                    instruction="Elige la frase que tenga más sentido."
-                  />
-                  <div class="mt-2 flex justify-center">
-                    <AudioButton
+                  <div class="audio-prompt-stack">
+                    <SentenceAudioRow
+                      :text="current.prompt || 'Elige la frase que tenga más sentido.'"
                       :exercise="current"
                       :audio-src="current.audio"
+                      text-class="text-3xl font-semibold leading-snug text-slate-700"
                       aria-label="Escuchar enunciado"
                       @fallback-audio="(src) => playSimpleAudio(src)"
                     />
+                    <p class="audio-prompt-instruction">Elige la frase que tenga más sentido.</p>
                   </div>
                 </template>
 
                 <ExerciseOptions
                   :options="current.options || []"
+                  :status="currentStatus"
+                  :correct-answers="currentCorrectAnswers"
                   aria-label="Opciones de frase"
                   @preview="handleOptionPreview"
                   @select="handleSimpleOption"
@@ -635,7 +652,7 @@
                 :text="current.question"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-3 leading-snug text-slate-700"
+                text-class="text-3xl font-semibold mb-3 leading-snug text-slate-700"
                 aria-label="Escuchar pregunta"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -699,7 +716,7 @@
                 :speak-text="current.narrationText || ''"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-xl font-semibold mb-3 leading-snug"
+                text-class="text-2xl font-semibold mb-3 leading-snug"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -758,7 +775,7 @@
                 :speak-text="current.prompt || ''"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-4 leading-snug"
+                text-class="text-3xl font-semibold mb-4 leading-snug"
                 aria-label="Escuchar frase"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -834,7 +851,7 @@
                 :text="current.sentence"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-4 leading-snug"
+                text-class="text-3xl font-semibold mb-4 leading-snug"
                 aria-label="Escuchar frase"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -862,7 +879,7 @@
                 :text="current.question || current.prompt"
                 :exercise="current"
                 :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-4 leading-snug"
+                text-class="text-3xl font-semibold mb-4 leading-snug"
                 aria-label="Escuchar enunciado"
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
@@ -925,7 +942,6 @@ import SyllableHighlighter from '../components/SyllableHighlighter.vue'
 import SentenceAudioRow from '../components/SentenceAudioRow.vue'
 import BaseExerciseLayout from '../components/exercises/BaseExerciseLayout.vue'
 import ExerciseImage from '../components/exercises/ExerciseImage.vue'
-import ExercisePrompt from '../components/exercises/ExercisePrompt.vue'
 import ExerciseOptions from '../components/exercises/ExerciseOptions.vue'
 import ExerciseFeedback from '../components/exercises/ExerciseFeedback.vue'
 
@@ -1094,6 +1110,13 @@ watch(
 )
 const leftOptions = computed(() => leftOptionsShuffled.value)
 const rightOptions = computed(() => rightOptionsShuffled.value)
+const currentCorrectAnswers = computed(() => {
+  const exercise = current.value
+  if (!exercise) return []
+  const raw = exercise.correct ?? exercise.answer ?? exercise.expectedAnswer ?? exercise.solution
+  const values = Array.isArray(raw) ? raw : [raw]
+  return values.map((entry) => resolveOptionText(entry)).filter(Boolean)
+})
 function optionLayout(list) {
   const count = Array.isArray(list) ? list.length : 0
   return count > 2 ? 'options-column' : ''
@@ -1789,6 +1812,10 @@ const isLevelFour = computed(() => level.value === 4)
 const fallbackIcon = computed(() => stageContext.value?.levelMeta?.icon || '🪄')
 const fallbackLabel = computed(() => stageContext.value?.levelMeta?.animal || 'Animal sabio')
 const currentImageSrc = computed(() => resolveAsset(current.value?.image))
+const isHabitatVisualMobile = computed(() => {
+  const src = String(currentImageSrc.value || '').toLowerCase()
+  return src.includes('/habitats/')
+})
 const fallbackCharacterImage = computed(() => levelCharacters[level.value] || Perezoso)
 const hasVisual = computed(() => Boolean(currentImageSrc.value || fallbackCharacterImage.value))
 const imageLoadFailed = ref(false)
@@ -1894,8 +1921,23 @@ function resolveOptionText(option) {
     option.sentence ||
     option.prompt ||
     option.title ||
+    option.value ||
     ''
   )
+}
+
+function normalizePromptText(value) {
+  return String(value ?? '')
+    .replace(/_+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+}
+
+function shouldShowEnunciado(enunciado, frase) {
+  const enunciadoNorm = normalizePromptText(enunciado)
+  const fraseNorm = normalizePromptText(frase)
+  return !!enunciadoNorm && enunciadoNorm !== fraseNorm
 }
 
 function handleOptionPreview(option) {
@@ -2390,21 +2432,23 @@ function shuffleArray(arr) {
 .game-view {
   padding: 1.5rem;
   font-family: var(--font-readable, 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif);
+  --exercise-image-radius: 22px;
 }
 .btn-option {
   display: inline-flex;
-  min-width: 240px;
-  max-width: 360px;
+  width: min(100%, 760px);
+  min-width: 0;
+  max-width: 760px;
   text-align: center;
   justify-content: center;
   align-items: center;
-  padding: 0.9rem 1rem;
-  min-height: 60px;
+  padding: 1.02rem 1.15rem;
+  min-height: 68px;
   border-radius: 16px;
   border: 2px solid #b7cee6;
   background: linear-gradient(180deg, #f7fbff 0%, #e8f3ff 100%);
   font-weight: 750;
-  font-size: clamp(1.12rem, 4.5vw, 1.3rem);
+  font-size: clamp(1.24rem, 4.9vw, 1.46rem);
   line-height: 1.5;
   color: #0f172a;
   text-transform: none;
@@ -2430,16 +2474,14 @@ function shuffleArray(arr) {
   box-shadow: 0 10px 20px rgba(56, 189, 248, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.game-view.option-status-ok .btn-option,
-.game-view.option-status-ok :deep(.exercise-options__button) {
-  border-color: #2ca45d;
-  background: linear-gradient(180deg, #e9fce9 0%, #b8f3c6 100%);
-  color: #14532d;
-  box-shadow: 0 10px 20px rgba(34, 197, 94, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+.game-view.option-status-ok .btn-option.btn-active {
+  border-color: #b8d956;
+  background: linear-gradient(135deg, #c5ef5f 0%, #d8f86d 45%, #ffe27a 100%);
+  color: #0f172a;
+  box-shadow: 0 10px 20px rgba(197, 239, 95, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.game-view.option-status-fail .btn-option,
-.game-view.option-status-fail :deep(.exercise-options__button) {
+.game-view.option-status-fail .btn-option.btn-active {
   border-color: #ea7a14;
   background: linear-gradient(180deg, #ffb347 0%, #ff7a00 100%);
   color: #ffffff;
@@ -2475,9 +2517,9 @@ function shuffleArray(arr) {
 .syllable-order-source .btn-option {
   min-width: 150px;
   max-width: 220px;
-  min-height: 54px;
-  padding: 0.65rem 1rem;
-  font-size: 1rem;
+  min-height: 60px;
+  padding: 0.8rem 1rem;
+  font-size: 1.12rem;
 }
 .syllable-order-target {
   font-size: 2rem;
@@ -2545,7 +2587,7 @@ function shuffleArray(arr) {
   place-items: center;
   margin: 0 auto 1rem;
   width: auto;
-  max-width: 340px;
+  max-width: 280px;
   padding: 0;
   background: transparent;
   box-shadow: none;
@@ -2554,11 +2596,11 @@ function shuffleArray(arr) {
 }
 .choice-visual-img {
   width: 100%;
-  max-height: 280px;
+  max-height: 220px;
   object-fit: contain;
   background: transparent;
   box-shadow: none;
-  border-radius: 24px;
+  border-radius: var(--exercise-image-radius);
 }
 .choice-emoji {
   font-size: 3rem;
@@ -2566,9 +2608,9 @@ function shuffleArray(arr) {
 }
 .exercise-visual {
   width: 100%;
-  max-width: 340px;
+  max-width: 280px;
   margin: 0 auto 1rem;
-  border-radius: 0;
+  border-radius: var(--exercise-image-radius);
   box-shadow: none;
   background: transparent;
   display: block;
@@ -2581,7 +2623,7 @@ function shuffleArray(arr) {
   height: auto;
   object-fit: contain;
   display: block;
-  border-radius: 0;
+  border-radius: var(--exercise-image-radius);
 }
 .visual-fallback {
   background: linear-gradient(135deg, rgba(147, 197, 253, 0.8), rgba(165, 180, 252, 0.95));
@@ -2877,8 +2919,10 @@ function shuffleArray(arr) {
   border: 1px solid rgba(148, 163, 184, 0.15);
 }
 .smartick-topbar {
+  width: min(100%, 760px);
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   align-items: center;
   gap: 0.75rem;
 }
@@ -2886,7 +2930,7 @@ function shuffleArray(arr) {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  justify-self: center;
+  justify-self: start;
 }
 .avatar-chip {
   width: 52px;
@@ -2954,6 +2998,7 @@ function shuffleArray(arr) {
   display: inline-flex;
   gap: 0.5rem;
   justify-self: end;
+  align-items: center;
 }
 .map-only-link {
   display: inline-flex;
@@ -3000,7 +3045,8 @@ function shuffleArray(arr) {
 .smartick-stage {
   display: flex;
   justify-content: center;
-  margin: 0.75rem 0 0.5rem;
+  margin: 0;
+  justify-self: center;
 }
 .stage-pill {
   padding: 0.4rem 0.85rem;
@@ -3048,25 +3094,37 @@ function shuffleArray(arr) {
 }
 :deep(.exercise-image) {
   border: none;
-  border-radius: 0;
+  border-radius: var(--exercise-image-radius);
   background: transparent;
   min-height: 0;
 }
 :deep(.exercise-image__img) {
   padding: 0;
-  border-radius: 0;
+  border-radius: var(--exercise-image-radius);
 }
 :deep(.exercise-options) {
-  width: 100%;
-  margin: 0;
+  width: min(100%, 760px);
+  margin: 0 auto;
 }
 :deep(.exercise-options__button) {
   border-color: #b7cee6;
   background: linear-gradient(180deg, #f7fbff 0%, #e8f3ff 100%);
   box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
+:deep(.exercise-options__button.exercise-options__button--correct) {
+  border-color: #b8d956;
+  background: linear-gradient(135deg, #c5ef5f 0%, #d8f86d 45%, #ffe27a 100%);
+  color: #0f172a;
+  box-shadow: 0 10px 20px rgba(197, 239, 95, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+:deep(.exercise-options__button.exercise-options__button--incorrect) {
+  border-color: #ea7a14;
+  background: linear-gradient(180deg, #ffb347 0%, #ff7a00 100%);
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(234, 122, 20, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
 .smartick-card .exercise-visual {
-  max-width: 420px;
+  max-width: 320px;
 }
 .smartick-card .options-row {
   margin-top: 0.5rem;
@@ -3119,6 +3177,25 @@ function shuffleArray(arr) {
   font-weight: 700;
   color: #0f172a;
   font-size: 0.95rem;
+}
+.audio-prompt-instruction {
+  margin: 0.45rem 0 0;
+  font-size: clamp(1.02rem, 3.8vw, 1.2rem);
+  line-height: 1.58;
+  color: #1e293b;
+}
+.audio-prompt-stack {
+  width: min(100%, 760px);
+  display: grid;
+  gap: 0.15rem;
+  margin: 0 auto;
+}
+.audio-prompt-enunciado {
+  margin: 0.45rem 0 0;
+  font-size: clamp(1.14rem, 4.2vw, 1.34rem);
+  line-height: 1.52;
+  font-weight: 760;
+  color: #0f172a;
 }
 @keyframes avatarRewardPop {
   0% {
@@ -3176,8 +3253,8 @@ function shuffleArray(arr) {
     width: 100%;
     max-width: none;
     min-width: 0;
-    min-height: 60px;
-    font-size: clamp(1.12rem, 5vw, 1.28rem);
+    min-height: 66px;
+    font-size: clamp(1.2rem, 5.2vw, 1.38rem);
     line-height: 1.52;
   }
   .smartick-card-head {
@@ -3217,10 +3294,10 @@ function shuffleArray(arr) {
     margin-bottom: 0.45rem;
   }
   .game-view.compact-mobile .btn-option {
-    min-height: 52px;
-    font-size: clamp(1rem, 4.5vw, 1.15rem);
+    min-height: 58px;
+    font-size: clamp(1.1rem, 4.8vw, 1.26rem);
     line-height: 1.42;
-    padding: 0.64rem 0.7rem;
+    padding: 0.74rem 0.78rem;
   }
   .game-view.ultra-compact-mobile .smartick-card {
     padding: 0.5rem 0.45rem 0.55rem;
@@ -3234,10 +3311,10 @@ function shuffleArray(arr) {
     padding: 0.24rem 0.52rem;
   }
   .game-view.ultra-compact-mobile .btn-option {
-    min-height: 46px;
-    font-size: clamp(0.92rem, 4.2vw, 1.02rem);
+    min-height: 52px;
+    font-size: clamp(1rem, 4.5vw, 1.12rem);
     line-height: 1.33;
-    padding: 0.5rem 0.56rem;
+    padding: 0.6rem 0.62rem;
     border-radius: 12px;
   }
   .game-view.ultra-compact-mobile .exercise-visual {

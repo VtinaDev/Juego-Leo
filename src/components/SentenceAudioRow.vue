@@ -89,7 +89,15 @@ function preferExerciseAnswerIfSpelled(text: string, exercise: any) {
   align-items: flex-start;
   gap: 0.65rem;
   justify-content: flex-start;
+  width: min(100%, 760px);
+  margin: 0 auto;
   font-family: var(--font-readable, 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif);
+  padding: 0.72rem 0.85rem;
+  border-radius: 16px;
+  border: 3px solid rgba(14, 165, 233, 0.72);
+  background: rgba(248, 251, 255, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 10px 20px rgba(14, 165, 233, 0.16);
+  backdrop-filter: blur(2px);
 }
 .sentence-audio-row.is-centered {
   justify-content: center;
