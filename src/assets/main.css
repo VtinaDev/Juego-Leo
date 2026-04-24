@@ -17,10 +17,6 @@
   --color-orange: #f4b26a;
   --color-sky: #ace8fb;
   --color-button-text: #0f172a;
-  --btn-grad-primary: linear-gradient(145deg, #7fd98f 0%, #4fbf6f 55%, #3ea45d 100%);
-  --btn-grad-secondary: linear-gradient(145deg, #ffd977 0%, #f7b85f 55%, #ea9850 100%);
-  --btn-grad-ghost: linear-gradient(145deg, #d6ecff 0%, #b8dcff 55%, #9ecaf4 100%);
-  --btn-grad-icon: linear-gradient(145deg, #ffd98b 0%, #ffc16f 55%, #f0a15a 100%);
   --font-readable: 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
 
   --pad-sm: 0.75rem;
@@ -66,7 +62,7 @@ a {
   font-size: 1.15rem;
   color: var(--color-cream) !important;
   text-transform: uppercase;
-  background: var(--btn-grad-primary);
+  background: linear-gradient(145deg, var(--color-green), #7fc86c);
   border: none;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.55);
@@ -82,25 +78,25 @@ a {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 .btn-primary {
-  background: var(--btn-grad-primary);
+  background: linear-gradient(145deg, var(--color-green), #7fc86c);
   border: none;
   color: var(--color-cream) !important;
 }
 .btn-secondary {
-  background: var(--btn-grad-secondary);
+  background: linear-gradient(145deg, var(--color-yellow-warm), #f3c85d);
   border: none;
   color: var(--color-cream) !important;
 }
 .btn-ghost {
-  background: var(--btn-grad-ghost);
+  background: linear-gradient(145deg, #ffffff, #f8f7e8);
   border: none;
-  color: #083b66 !important;
+  color: var(--color-text) !important;
 }
 .btn-home-primary {
-  background: var(--btn-grad-primary);
+  background: linear-gradient(145deg, var(--color-green), #7fc86c);
 }
 .btn-sound {
-  background: var(--btn-grad-secondary);
+  background: linear-gradient(145deg, var(--color-green-light), #b9e7b3);
   border: 1px solid rgba(15, 23, 42, 0.06);
   color: var(--color-button-text) !important;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
@@ -122,10 +118,9 @@ a {
   justify-content: center;
   min-width: 72px;
   border-radius: 14px;
-  background: var(--btn-grad-icon);
+  background: linear-gradient(145deg, var(--color-green-light), #b9e7b3);
   border: none;
-  color: #fff6eb !important;
-  box-shadow: 0 8px 18px rgba(240, 161, 90, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  color: var(--color-button-text) !important;
 }
 .btn-icon img {
   width: 64px;

@@ -96,12 +96,12 @@ watch(
   width: 56px;
   height: 56px;
   border-radius: 999px;
-  border: 1px solid rgba(219, 143, 75, 0.55);
-  background: linear-gradient(145deg, #ffe29a 0%, #ffc982 55%, #f0b572 100%);
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  background: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 16px rgba(240, 177, 114, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.15);
 }
 
 .dd-icon-btn img {
