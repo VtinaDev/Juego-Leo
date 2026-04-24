@@ -433,7 +433,11 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 2;
   padding: clamp(1.4rem, 3vw, 2.2rem) clamp(0.9rem, 3vw, 2.2rem) clamp(1.2rem, 2.8vw, 2rem);
-  background: linear-gradient(180deg, #f2f8ff 0%, #e8f3ff 100%);
+  background-image: url('/images/map-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #e8f3ff;
   border-top: 1px solid rgba(148, 163, 184, 0.22);
   border-bottom: 1px solid rgba(148, 163, 184, 0.22);
   overflow: hidden;
@@ -593,6 +597,8 @@ onBeforeUnmount(() => {
 
   .home-map-preview {
     padding-inline: 0.65rem;
+    background-image: url('/images/map-background-mobile.png');
+    background-position: center top;
   }
 
   .home-map-slider__track {
