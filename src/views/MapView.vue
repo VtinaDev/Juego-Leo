@@ -31,15 +31,13 @@
             <span v-else class="node-icon">{{ habitat.icon }}</span>
           </div>
 
-          <p class="mobile-habitat-eyebrow">{{ habitat.themeTitle }}</p>
-          <h2 class="mobile-habitat-title">{{ habitat.levelName }}</h2>
-          <p class="mobile-habitat-description">{{ habitat.description }}</p>
-
-          <div class="mobile-progress-wrap" :aria-label="`Progreso de ${habitat.levelName}`">
-            <div class="progress-track">
-              <div class="progress-fill" :style="{ width: `${progressPercent(habitat)}%` }"></div>
+          <div class="mobile-progress-card">
+            <div class="mobile-progress-wrap" :aria-label="`Progreso de ${habitat.levelName}`">
+              <div class="progress-track">
+                <div class="progress-fill" :style="{ width: `${progressPercent(habitat)}%` }"></div>
+              </div>
+              <p class="progress-label">{{ progressSummary(habitat) }}</p>
             </div>
-            <p class="progress-label">{{ progressSummary(habitat) }}</p>
           </div>
 
           <div class="mobile-actions">
@@ -600,7 +598,18 @@ watch(
   padding: 0.9rem 0.85rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.62rem;
+  gap: 0.72rem;
+}
+.mobile-progress-card {
+  margin-top: 0.2rem;
+  align-self: center;
+  width: min(100%, 250px);
+  padding: 0.55rem 0.75rem 0.62rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(248, 251, 255, 0.45);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
 }
 .mobile-habitat-eyebrow {
   margin: 0;
