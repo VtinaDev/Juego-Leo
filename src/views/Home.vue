@@ -385,7 +385,8 @@ onBeforeUnmount(() => {
   }
 
   .hero-art {
-    background-size: contain;
+    background-image: url('/home-background-mobile.png');
+    background-size: cover;
     background-position: center top;
     background-color: #d6ebff;
   }
