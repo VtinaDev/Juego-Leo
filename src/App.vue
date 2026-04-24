@@ -645,7 +645,9 @@ function setTip(key, value) {
     max-width: 24vw;
   }
   .brand-logo-link {
-    padding: 0.1rem 0.2rem;
+    padding: 0;
+    background: transparent;
+    backdrop-filter: none;
   }
   .install-btn {
     display: none !important;
@@ -656,21 +658,21 @@ function setTip(key, value) {
     flex-wrap: nowrap;
   }
   .header-transparent .btn-icon {
-    min-width: 36px;
-    min-height: 36px;
-    padding: 0.15rem 0.2rem;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0.2rem 0.25rem;
   }
   .header-transparent .btn-icon img {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
   .tooltip {
     display: none;
   }
   .settings-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 1rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
   }
 }
 

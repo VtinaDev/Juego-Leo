@@ -216,10 +216,10 @@ a {
     max-width: 38vw;
   }
   .brand-logo-link {
-    padding: 0.2rem 0.35rem;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.62);
-    backdrop-filter: blur(4px);
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
   }
   .header-transparent .btn,
   .header-transparent .btn-icon {
