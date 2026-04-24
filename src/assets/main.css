@@ -180,11 +180,17 @@ a {
   text-shadow: none;
   padding: 0.5rem 0.75rem;
   border-radius: 12px;
+  transition: none !important;
 }
 .header-transparent .btn:hover,
 .header-transparent .btn-icon:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.03);
+  transform: none !important;
+  filter: none !important;
+}
+.header-transparent .btn:active,
+.header-transparent .btn-icon:active {
+  transform: none !important;
+  filter: none !important;
 }
 
 .footer-wave {

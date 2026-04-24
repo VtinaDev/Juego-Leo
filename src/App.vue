@@ -600,24 +600,6 @@ function setTip(key, value) {
   line-height: 1;
 }
 
-.brand-logo-link,
-.brand-logo,
-.header-transparent .btn-icon,
-.settings-btn {
-  transition: transform 0.16s ease, filter 0.16s ease, box-shadow 0.16s ease;
-}
-
-.brand-logo-link:hover,
-.header-transparent .btn-icon:hover {
-  transform: translateY(-1px) scale(1.05);
-  filter: brightness(1.04);
-}
-
-.brand-logo-link:active,
-.header-transparent .btn-icon:active {
-  transform: scale(0.94);
-}
-
 .tooltip-wrapper {
   position: relative;
   display: inline-flex;
