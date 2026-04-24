@@ -51,36 +51,27 @@
                 ¡Juega!
               </RouterLink>
             </div>
+
           </div>
         </div>
-      </div>
-    </section>
 
-    <section class="home-map-preview" aria-label="Vista previa del mapa">
-      <div class="home-map-preview__header">
-        <p class="home-map-preview__eyebrow">Mapa de aventura</p>
-        <h2 class="home-map-preview__title">Recorre los hábitats con Leo</h2>
-      </div>
-
-      <div class="home-map-slider" role="presentation" aria-hidden="true">
-        <div class="home-map-slider__track">
-          <article
-            v-for="(item, index) in mapPreviewLoop"
-            :key="`map-preview-${item.id}-${index}`"
-            class="home-map-card"
-            :style="{ '--map-card-color': item.color }"
-          >
-            <div class="home-map-card__character">
-              <img :src="item.image" :alt="item.name" loading="lazy" />
+        <section class="home-map-preview home-map-preview--cover" aria-label="Personajes del mapa">
+          <div class="home-map-slider" role="presentation" aria-hidden="true">
+            <div class="home-map-slider__track">
+              <article
+                v-for="(item, index) in mapPreviewLoop"
+                :key="`map-preview-${item.id}-${index}`"
+                class="home-map-card"
+                :style="{ '--map-card-color': item.color }"
+              >
+                <div class="home-map-card__character">
+                  <img :src="item.image" :alt="item.name" loading="lazy" />
+                </div>
+              </article>
             </div>
-            <p class="home-map-card__name">{{ item.name }}</p>
-          </article>
-        </div>
+          </div>
+        </section>
       </div>
-
-      <RouterLink to="/mapview" class="home-map-preview__cta">
-        Ir al mapa
-      </RouterLink>
     </section>
 
     <section class="home-learn-sections">
@@ -223,7 +214,7 @@ onBeforeUnmount(() => {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
-  background-image: url('/background_home.png');
+  background-image: url('/backgroun_home.png');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -431,37 +422,17 @@ onBeforeUnmount(() => {
 
 .home-map-preview {
   position: relative;
-  z-index: 2;
-  padding: clamp(1.4rem, 3vw, 2.2rem) clamp(0.9rem, 3vw, 2.2rem) clamp(1.2rem, 2.8vw, 2rem);
-  background-image: url('/images/map-background.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: #e8f3ff;
-  border-top: 1px solid rgba(148, 163, 184, 0.22);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+  padding: clamp(0.3rem, 1.2vw, 0.6rem) 0.25rem clamp(0.4rem, 1.6vw, 0.8rem);
+  background: transparent;
+  border: none;
+  border-radius: 0;
   overflow: hidden;
 }
 
-.home-map-preview__header {
-  text-align: center;
-  margin-bottom: 0.9rem;
-}
-
-.home-map-preview__eyebrow {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #42637a;
-}
-
-.home-map-preview__title {
-  margin: 0.45rem 0 0;
-  color: #173b61;
-  font-size: clamp(1.05rem, 2.4vw, 1.55rem);
-  font-weight: 800;
+.home-map-preview--cover {
+  z-index: 2;
+  width: min(calc(100% - 2rem), 980px);
+  margin: 0 auto 1.1rem;
 }
 
 .home-map-slider {
@@ -472,57 +443,28 @@ onBeforeUnmount(() => {
 .home-map-slider__track {
   display: flex;
   width: max-content;
-  gap: 0.8rem;
+  gap: 1.05rem;
   animation: mapSliderLoop 24s linear infinite;
 }
 
 .home-map-card {
-  width: clamp(122px, 16vw, 166px);
-  border-radius: 16px;
-  padding: 0.65rem 0.65rem 0.78rem;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid color-mix(in srgb, var(--map-card-color) 50%, #ffffff 50%);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+  width: clamp(154px, 20vw, 230px);
+  padding: 0.1rem 0.1rem;
   text-align: center;
 }
 
 .home-map-card__character {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--map-card-color) 15%, #ffffff 85%);
   display: grid;
   place-items: center;
 }
 
 .home-map-card__character img {
-  width: 86%;
-  height: 86%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-}
-
-.home-map-card__name {
-  margin: 0.55rem 0 0;
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: #1e3a5f;
-  line-height: 1.2;
-}
-
-.home-map-preview__cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 1rem auto 0;
-  min-width: 170px;
-  padding: 0.66rem 0.95rem;
-  border-radius: 999px;
-  border: none;
-  text-decoration: none;
-  color: #fff;
-  font-weight: 800;
-  background: linear-gradient(145deg, #49a9ff 0%, #2f80ff 100%);
-  box-shadow: 0 10px 20px rgba(47, 128, 255, 0.35);
+  filter: drop-shadow(0 12px 18px rgba(15, 23, 42, 0.24));
 }
 
 @keyframes mapSliderLoop {
@@ -553,7 +495,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-art {
-    background-image: url('/bacground_home_mobile.png');
+    background-image: url('/backgroun_home.png');
     background-size: cover;
     background-position: center top;
     background-color: #d6ebff;
@@ -596,19 +538,17 @@ onBeforeUnmount(() => {
   }
 
   .home-map-preview {
-    padding-inline: 0.65rem;
-    background-image: url('/images/map-background-mobile.png');
-    background-position: center top;
+    padding-inline: 0;
   }
 
   .home-map-slider__track {
-    gap: 0.62rem;
+    gap: 0.75rem;
     animation-duration: 20s;
   }
 
   .home-map-card {
-    width: 126px;
-    padding: 0.6rem 0.55rem 0.72rem;
+    width: 166px;
+    padding: 0.24rem 0.12rem 0.45rem;
   }
 }
 
