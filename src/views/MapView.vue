@@ -26,14 +26,14 @@
         }"
       >
         <div class="mobile-habitat-content">
-          <p class="mobile-habitat-eyebrow">{{ habitat.themeTitle }}</p>
-          <h2 class="mobile-habitat-title">{{ habitat.levelName }}</h2>
-          <p class="mobile-habitat-description">{{ habitat.description }}</p>
-
           <div class="mobile-character-wrap">
             <img v-if="habitat.character" :src="habitat.character" :alt="habitat.levelName" />
             <span v-else class="node-icon">{{ habitat.icon }}</span>
           </div>
+
+          <p class="mobile-habitat-eyebrow">{{ habitat.themeTitle }}</p>
+          <h2 class="mobile-habitat-title">{{ habitat.levelName }}</h2>
+          <p class="mobile-habitat-description">{{ habitat.description }}</p>
 
           <div class="mobile-stage-row" role="list" :aria-label="`Etapas de ${habitat.levelName}`">
             <template v-for="stage in stagesFor(habitat)" :key="`mobile-stage-${habitat.id}-${stage.num}`">
