@@ -87,8 +87,8 @@ const items = [
 }
 
 .methodology-card {
-  background: rgba(255, 255, 255, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.62);
+  background: rgba(241, 245, 249, 0.86);
+  border: 1px solid rgba(148, 163, 184, 0.45);
   border-radius: 18px;
   padding: 1.1rem 1rem;
   box-shadow: none;

@@ -35,7 +35,7 @@
 <style scoped>
 .benefits {
   padding: 2.5rem 1rem 3rem;
-  background: var(--color-sky);
+  background: #ffffff;
 }
 
 .benefits-inner {
@@ -75,8 +75,8 @@
 }
 
 .benefit-card {
-  background: rgba(255, 255, 255, 0.38);
-  border: 1px solid rgba(255, 255, 255, 0.62);
+  background: rgba(241, 245, 249, 0.86);
+  border: 1px solid rgba(148, 163, 184, 0.45);
   border-radius: 16px;
   padding: 1.1rem 1rem;
   box-shadow: none;

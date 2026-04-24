@@ -1,7 +1,10 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <!-- Header -->
-    <header v-if="!isGameRoute" class="header-transparent">
+    <header
+      v-if="!isGameRoute"
+      :class="['header-transparent', { 'header-overlay': isHomeRoute || isMapViewRoute }]"
+    >
       <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
         <RouterLink class="brand brand-logo-link" to="/">
           <img class="brand-logo" src="/logo/app-icon.PNG" alt="Juego & Leo" />
@@ -627,6 +630,9 @@ function setTip(key, value) {
 }
 
 @media (max-width: 768px) {
+  .header-overlay nav {
+    padding-top: max(0.35rem, env(safe-area-inset-top));
+  }
   .header-transparent nav {
     padding: 0.5rem 0.65rem;
     gap: 0.5rem;
@@ -639,6 +645,15 @@ function setTip(key, value) {
     height: 42px;
     font-size: 1.25rem;
   }
+}
+
+.header-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: transparent;
 }
 
 </style>

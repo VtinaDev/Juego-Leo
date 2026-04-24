@@ -82,9 +82,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
+import Oso from '../assets/characters/Oso.png'
 import Mono from '../assets/characters/Mono.png'
-import Elefante from '../assets/characters/Elefante.png'
-import ElefanteGraduado from '../assets/characters/Elefante-graduado.png'
+import Elefante_graduado from '../assets/characters/Elefante_graduado.png'
 
 const route = useRoute()
 const router = useRouter()

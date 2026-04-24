@@ -34,7 +34,7 @@ body,
   width: 100%;
   margin: 0;
   overflow-x: hidden;
-  background: var(--color-sky);
+  background: #ffffff;
   color: var(--color-text);
   font-family: 'Baloo 2', 'Nunito Sans', 'Poppins', system-ui, -apple-system, sans-serif;
 }
@@ -182,7 +182,7 @@ a {
 }
 
 .footer-wave {
-  background: #9bd76d;
+  background: linear-gradient(135deg, #c5ef5f 0%, #d8f86d 45%, #ffe27a 100%);
   color: #0f172a;
   padding: 1.25rem 0 1.5rem;
 }

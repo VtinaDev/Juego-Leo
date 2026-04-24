@@ -80,17 +80,6 @@
     <div v-else class="map-canvas" :style="mapCanvasStyle">
       <div class="map-meadow" aria-hidden="true"></div>
 
-      <!-- 🌤️ CAPA DE NUBES EN PARALLAX -->
-      <div class="cloud-layer">
-        <div class="cloud cloud-a"></div>
-        <div class="cloud cloud-b"></div>
-        <div class="cloud cloud-c"></div>
-        <div class="cloud cloud-d"></div>
-        <div class="cloud cloud-e"></div>
-        <div class="cloud cloud-f"></div>
-        <div class="cloud cloud-g"></div>
-      </div>
-
       <!-- PATH DEL MAPA -->
       <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         <polyline
@@ -196,9 +185,9 @@ import { playSfx } from '../utils/sfx'
 import { playMusic, stopMusic } from '../engine/audio/audioManager'
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
+import Oso from '../assets/characters/Oso.png'
 import Mono from '../assets/characters/Mono.png'
-import Elefante from '../assets/characters/Elefante.png'
-import ElefanteGraduado from '../assets/characters/Elefante-graduado.png'
+import Elefante_graduado from '../assets/characters/Elefante_graduado.png'
 import HabitatArbol from '../assets/habitat/arbol.PNG'
 import HabitatMadriguera from '../assets/habitat/madriguera.PNG'
 import HabitatIsla from '../assets/habitat/isla_lianas.PNG'
@@ -219,49 +208,57 @@ const HABITATS = {
   1: {
     title: 'El árbol',
     background: HABITAT_IMAGES.arbol,
-    coords: { x: 20, y: 90 },
+    coords: { x: 28, y: 40 },
     pathIndex: 0
   },
   2: {
     title: 'Valle Anaranjado',
     background: HABITAT_IMAGES.madriguera,
-    coords: { x: 78, y: 72 },
+    coords: { x: 53, y: 43 },
     pathIndex: 1
   },
   3: {
     title: 'Isla de Lianas',
     background: HABITAT_IMAGES.isla,
-    coords: { x: 24, y: 54 },
+    coords: { x: 66, y: 58 },
     pathIndex: 2
   },
   4: {
     title: 'Santuario azul',
     background: HABITAT_IMAGES.santuario,
-    coords: { x: 76, y: 36 },
+    coords: { x: 61, y: 84 },
     pathIndex: 3
   },
   5: {
     title: 'La Escuela',
     description: 'La meta final.',
     background: HABITAT_IMAGES.escuela,
-    coords: { x: 28, y: 18 },
+    coords: { x: 28, y: 86 },
     pathIndex: 4
   }
+}
+
+const SEGMENT_CURVATURE = {
+  1: -10,
+  2: 9,
+  3: -8,
+  4: -10,
+  5: -3
 }
 
 const LEVEL_CHARACTERS = {
   1: Perezoso,
   2: Zorro,
-  3: Mono,
-  4: Elefante,
-  5: ElefanteGraduado
+  3: Oso,
+  4: Mono,
+  5: Elefante_graduado,
 }
 
 const HABITAT_SFX = {
   1: 'sloth',
   2: 'fox',
-  3: 'monkey',
-  4: 'elephant',
+  3: 'bear',
+  4: 'monkey',
   5: 'elephant'
 }
 
@@ -393,9 +390,10 @@ const mapProgressPoints = computed(() => {
       const segmentLength = Math.hypot(dx, dy) || 1
       const normalX = -dy / segmentLength
       const normalY = dx / segmentLength
+      const curveAmount = SEGMENT_CURVATURE[habitat.id] ?? 0
       stageList.forEach((stage, stageIndex) => {
         const t = (stageIndex + 1) / (stageList.length + 1)
-        const wobble = (stageIndex % 2 === 0 ? 1 : -1) * 2.6
+        const wobble = Math.sin(Math.PI * t) * curveAmount
         points.push({
           type: 'stage',
           habitatId: habitat.id,
@@ -415,9 +413,10 @@ const mapProgressPoints = computed(() => {
       const segmentLength = Math.hypot(dx, dy) || 1
       const normalX = -dy / segmentLength
       const normalY = dx / segmentLength
+      const curveAmount = SEGMENT_CURVATURE[habitat.id] ?? 0
       stageList.forEach((stage, stageIndex) => {
         const t = (stageIndex + 1) / (stageList.length + 1)
-        const wobble = (stageIndex % 2 === 0 ? 1 : -1) * 2.4
+        const wobble = Math.sin(Math.PI * t) * curveAmount
         points.push({
           type: 'stage',
           habitatId: habitat.id,
@@ -571,7 +570,14 @@ function handleHabitatHover(id) {
 }
 
 function habitatStyle(habitat) {
-  const size = 20
+  const layoutByHabitat = {
+    1: { width: 18, height: 18, offsetY: 74 },
+    2: { width: 18, height: 18, offsetY: 74 },
+    3: { width: 17, height: 17, offsetY: 74 },
+    4: { width: 18, height: 18, offsetY: 74 },
+    5: { width: 20, height: 20, offsetY: 76 }
+  }
+  const layout = layoutByHabitat[habitat.id] || { width: 18, height: 18, offsetY: 74 }
   const background = getHabitatBackground(habitat)
   if (!background) {
     return { display: 'none' }
@@ -579,8 +585,10 @@ function habitatStyle(habitat) {
   return {
     left: `${habitat.coords.x}%`,
     top: `${habitat.coords.y}%`,
-    width: `${size}%`,
-    height: `${size}%`,
+    width: `${layout.width}%`,
+    height: `${layout.height}%`,
+    '--habitat-transform': `translate(-50%, -${layout.offsetY}%)`,
+    transform: 'var(--habitat-transform)',
     backgroundImage: background,
     filter: 'none',
     opacity: 0.9
@@ -704,9 +712,21 @@ watch(
   position: relative;
   min-height: 100vh;
 }
+
+.map {
+  background-image: url('/images/map-background.png');
+}
+
+.map-view {
+  background-image: url('/images/map-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .map-header {
   position: absolute;
-  inset: 0.75rem 0.75rem auto 0.75rem;
+  inset: clamp(5.6rem, 9vw, 7rem) 0.75rem auto 0.75rem;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -759,7 +779,7 @@ watch(
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  padding-top: 74px;
+  padding-top: 110px;
   background: linear-gradient(180deg, #ace8fb 0%, #bdefff 36%, #b8e37f 37%, #97ce5b 100%);
   box-shadow: none;
 }
@@ -933,8 +953,8 @@ watch(
 .map-canvas {
   position: relative;
   width: 100%;
-  height: calc(100dvh - 100px);
-  min-height: 620px;
+  height: 100dvh;
+  min-height: 760px;
   max-height: none;
   margin: 0;
   border-radius: 0;
@@ -945,7 +965,10 @@ watch(
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background: linear-gradient(180deg, #ace8fb 0%, #bdefff 35%, #b8e37f 36%, #97ce5b 100%);
+  background-image: url('/images/map_background.png'), url('/images/map-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .map-path {
   position: absolute;
@@ -956,169 +979,6 @@ watch(
   filter: none;
   z-index: 1;
 }
-.cloud-layer {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 120px;
-  pointer-events: none;
-  overflow: hidden;
-}
-/* 🌤️ NUBES EN PARALLAX */
-.cloud-layer {
-  position: absolute;
-  top: 38%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 130%;
-  height: 220px;
-  pointer-events: none;
-  z-index: 0;
-  overflow: visible;
-}
-
-.cloud {
-  position: absolute;
-  top: -30px;
-  width: 200px;
-  height: 70px;
-  background: radial-gradient(circle at 40% 50%, rgba(255,255,255,0.95), rgba(255,255,255,0.7) 60%, rgba(255,255,255,0.05));
-  border-radius: 60px;
-  filter: blur(0.8px);
-  opacity: 0.9;
-}
-
-/* FORMAS DE ALGODÓN SUAVE */
-.cloud::before,
-.cloud::after {
-  content: "";
-  position: absolute;
-  background: inherit;
-  border-radius: 50%;
-}
-
-.cloud::before {
-  width: 130px;
-  height: 60px;
-  top: -22px;
-  left: 20px;
-}
-
-.cloud::after {
-  width: 100px;
-  height: 50px;
-  top: 5px;
-  left: 90px;
-}
-
-/* Velocidades diferentes para efecto parallax */
-.cloud-a {
-  left: 3%;
-  top: 0;
-  width: 180px;
-  height: 64px;
-  border-radius: 68px;
-  animation: drift-a 16s linear infinite alternate;
-}
-
-.cloud-b {
-  top: 52px;
-  width: 240px;
-  height: 86px;
-  border-radius: 88px;
-  left: 68%;
-  animation: drift-b 24s linear infinite alternate-reverse;
-}
-
-.cloud-c {
-  top: 138px;
-  width: 160px;
-  height: 58px;
-  border-radius: 60px;
-  left: 14%;
-  animation: drift-c 20s linear infinite alternate;
-}
-
-.cloud-d {
-  top: 90px;
-  width: 220px;
-  height: 78px;
-  border-radius: 90px;
-  left: 82%;
-  animation: drift-d 26s linear infinite alternate-reverse;
-}
-
-.cloud-e {
-  top: -10px;
-  width: 190px;
-  height: 58px;
-  border-radius: 70px;
-  left: 40%;
-  animation: drift-e 30s linear infinite alternate-reverse;
-}
-
-.cloud-f {
-  top: -120px;
-  left: 25%;
-  width: 110px;
-  height: 48px;
-  border-radius: 58px;
-  opacity: 0.65;
-  animation: drift-f 22s linear infinite alternate;
-}
-
-.cloud-g {
-  top: -140px;
-  left: 72%;
-  width: 100px;
-  height: 46px;
-  border-radius: 50px;
-  opacity: 0.55;
-  animation: drift-g 24s linear infinite alternate-reverse;
-}
-
-/* ANIMACIONES */
-@keyframes drift-a {
-  0% { transform: translate3d(-30%, -4px, 0); }
-  50% { transform: translate3d(0, 4px, 0); }
-  100% { transform: translate3d(28%, -4px, 0); }
-}
-
-@keyframes drift-b {
-  0% { transform: translate3d(-18%, 3px, 0); }
-  50% { transform: translate3d(0, -6px, 0); }
-  100% { transform: translate3d(22%, 3px, 0); }
-}
-
-@keyframes drift-c {
-  0% { transform: translate3d(-24%, -3px, 0); }
-  50% { transform: translate3d(0, 4px, 0); }
-  100% { transform: translate3d(24%, -3px, 0); }
-}
-
-@keyframes drift-d {
-  0% { transform: translate3d(-20%, 3px, 0); }
-  50% { transform: translate3d(0, -3px, 0); }
-  100% { transform: translate3d(20%, 3px, 0); }
-}
-
-@keyframes drift-e {
-  0% { transform: translate3d(-22%, 2px, 0); }
-  50% { transform: translate3d(0, -5px, 0); }
-  100% { transform: translate3d(22%, 2px, 0); }
-}
-
-@keyframes drift-f {
-  0% { transform: translate3d(-18%, -2px, 0); }
-  50% { transform: translate3d(0, 3px, 0); }
-  100% { transform: translate3d(18%, -2px, 0); }
-}
-
-@keyframes drift-g {
-  0% { transform: translate3d(-16%, 1px, 0); }
-  50% { transform: translate3d(0, -3px, 0); }
-  100% { transform: translate3d(16%, 1px, 0); }
-}
-
 .map-bg-layer {
   position: absolute;
   inset: 0;
@@ -1128,7 +988,7 @@ watch(
 }
 .habitat-bg {
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: var(--habitat-transform, translate(-50%, -50%));
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -1140,7 +1000,7 @@ watch(
 }
 .habitat-bg:hover {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1.02);
+  transform: var(--habitat-transform) scale(1.02);
 }
 .map-node {
   position: absolute;
@@ -1388,8 +1248,8 @@ watch(
     gap: 0.44rem;
   }
   .map-canvas {
-    height: calc(100dvh - 120px);
-    min-height: 560px;
+    height: 100dvh;
+    min-height: 640px;
     max-height: none;
     width: 100%;
     border-radius: 0;
@@ -1425,8 +1285,8 @@ watch(
 
 @media (max-width: 480px) {
   .map-canvas {
-    height: calc(100dvh - 126px);
-    min-height: 520px;
+    height: 100dvh;
+    min-height: 600px;
   }
   .map-node {
     width: 78px;
