@@ -600,6 +600,24 @@ function setTip(key, value) {
   line-height: 1;
 }
 
+.brand-logo-link,
+.brand-logo,
+.header-transparent .btn-icon,
+.settings-btn {
+  transition: transform 0.16s ease, filter 0.16s ease, box-shadow 0.16s ease;
+}
+
+.brand-logo-link:hover,
+.header-transparent .btn-icon:hover {
+  transform: translateY(-1px) scale(1.05);
+  filter: brightness(1.04);
+}
+
+.brand-logo-link:active,
+.header-transparent .btn-icon:active {
+  transform: scale(0.94);
+}
+
 .tooltip-wrapper {
   position: relative;
   display: inline-flex;
@@ -634,18 +652,22 @@ function setTip(key, value) {
     padding-top: max(0.35rem, env(safe-area-inset-top));
   }
   .header-transparent nav {
-    padding: 0.4rem 0.45rem;
-    gap: 0.25rem;
-    justify-content: space-between;
-    flex-wrap: nowrap;
+    padding: 0.3rem 0.5rem;
+    gap: 0.35rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
   }
   .brand-logo {
-    height: 56px;
+    height: 96px;
     width: auto;
-    max-width: 30vw;
+    max-width: min(52vw, 220px);
   }
   .brand-logo-link {
-    padding: 0;
+    padding: 0.1rem 0.15rem;
     background: transparent;
     backdrop-filter: none;
   }
@@ -653,29 +675,32 @@ function setTip(key, value) {
     display: none !important;
   }
   .nav-icons-wrapper {
-    gap: 0.05rem;
-    padding: 0.05rem 0.1rem;
+    margin-left: 0 !important;
+    gap: 0.35rem;
+    padding: 0.05rem 0.15rem;
     flex-wrap: nowrap;
+    justify-content: center;
   }
   .header-transparent .btn-icon {
-    min-width: 46px;
-    min-height: 46px;
-    padding: 0.22rem 0.28rem;
+    min-width: 68px;
+    min-height: 68px;
+    padding: 0.28rem 0.32rem;
   }
   .header-transparent .btn-icon img {
-    width: 38px;
-    height: 38px;
+    width: 56px;
+    height: 56px;
   }
   .header-action-btn {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.72) !important;
-    border: 1px solid rgba(15, 23, 42, 0.18) !important;
-    border-radius: 12px !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
   .header-action-img {
-    filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.28));
+    filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.35));
   }
   .profile-btn {
     position: relative;
@@ -685,9 +710,9 @@ function setTip(key, value) {
     display: none;
   }
   .settings-btn {
-    width: 46px;
-    height: 46px;
-    font-size: 1.2rem;
+    width: 68px;
+    height: 68px;
+    font-size: 1.9rem;
   }
 }
 
