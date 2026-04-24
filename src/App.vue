@@ -648,47 +648,56 @@ function setTip(key, value) {
 }
 
 @media (max-width: 768px) {
+  :root {
+    --mobile-logo-slot: clamp(112px, 31vw, 172px);
+    --mobile-icons-gap: clamp(0.16rem, 1vw, 0.35rem);
+    --mobile-icon-size: clamp(48px, calc((100vw - var(--mobile-logo-slot) - 1.9rem) / 3), 86px);
+  }
   .header-overlay nav {
     padding-top: max(0.35rem, env(safe-area-inset-top));
   }
   .header-transparent nav {
-    padding: 0.3rem 0.5rem;
-    gap: 0.35rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-items: center;
+    padding: 0.3rem 0.45rem;
+    gap: 0.2rem;
+    display: flex;
+    flex-wrap: nowrap;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: space-between;
   }
   .brand-logo {
-    height: 96px;
-    width: auto;
-    max-width: min(52vw, 220px);
+    height: auto;
+    width: var(--mobile-logo-slot);
+    min-width: 112px;
+    max-width: 172px;
   }
   .brand-logo-link {
-    padding: 0.1rem 0.15rem;
+    margin-right: 0.1rem;
+    padding: 0;
     background: transparent;
     backdrop-filter: none;
+    flex: 0 0 auto;
   }
   .install-btn {
     display: none !important;
   }
   .nav-icons-wrapper {
-    margin-left: 0 !important;
-    gap: 0.35rem;
-    padding: 0.05rem 0.15rem;
+    margin-left: auto !important;
+    gap: var(--mobile-icons-gap);
+    padding: 0;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: flex-end;
+    flex: 0 1 auto;
   }
   .header-transparent .btn-icon {
-    min-width: 68px;
-    min-height: 68px;
-    padding: 0.28rem 0.32rem;
+    min-width: var(--mobile-icon-size);
+    min-height: var(--mobile-icon-size);
+    width: var(--mobile-icon-size);
+    height: var(--mobile-icon-size);
+    padding: 0.12rem;
   }
   .header-transparent .btn-icon img {
-    width: 56px;
-    height: 56px;
+    width: calc(var(--mobile-icon-size) - 12px);
+    height: calc(var(--mobile-icon-size) - 12px);
   }
   .header-action-btn {
     display: inline-flex !important;
@@ -710,9 +719,9 @@ function setTip(key, value) {
     display: none;
   }
   .settings-btn {
-    width: 68px;
-    height: 68px;
-    font-size: 1.9rem;
+    width: var(--mobile-icon-size);
+    height: var(--mobile-icon-size);
+    font-size: clamp(1.4rem, 4.8vw, 2.2rem);
   }
 }
 
