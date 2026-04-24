@@ -685,7 +685,9 @@ function setTip(key, value) {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    border-radius: 12px !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
   .header-action-img {
     filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.35));

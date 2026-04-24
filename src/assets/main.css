@@ -179,18 +179,20 @@ a {
   border: none;
   text-shadow: none;
   padding: 0.5rem 0.75rem;
-  border-radius: 12px;
-  transition: none !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: transform 0.16s ease, filter 0.16s ease !important;
 }
 .header-transparent .btn:hover,
 .header-transparent .btn-icon:hover {
-  transform: none !important;
-  filter: none !important;
+  transform: translateY(-1px) scale(1.05) !important;
+  filter: brightness(1.05) !important;
 }
 .header-transparent .btn:active,
 .header-transparent .btn-icon:active {
-  transform: none !important;
-  filter: none !important;
+  transform: scale(0.94) !important;
+  filter: brightness(1.02) !important;
 }
 
 .footer-wave {
