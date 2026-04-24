@@ -158,10 +158,14 @@ a {
 .brand-logo-link {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
 }
 .brand-logo {
   height: 110px;
   width: auto;
+  max-width: 42vw;
   display: block;
 }
 
@@ -208,7 +212,14 @@ a {
     height: 36px;
   }
   .brand-logo {
-    height: 72px;
+    height: 64px;
+    max-width: 38vw;
+  }
+  .brand-logo-link {
+    padding: 0.2rem 0.35rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(4px);
   }
   .header-transparent .btn,
   .header-transparent .btn-icon {
@@ -233,6 +244,7 @@ a {
     height: 32px;
   }
   .brand-logo {
-    height: 62px;
+    height: 56px;
+    max-width: 34vw;
   }
 }
