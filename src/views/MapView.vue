@@ -555,7 +555,7 @@ watch(
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   padding-top: 110px;
-  background-image: url('/images/map-background-mobile.png');
+  background-image: url('../assets/habitat/Fondo.PNG');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -949,7 +949,7 @@ watch(
     border-radius: 0;
   }
   .map-meadow {
-    background-image: url('/images/map-background-mobile.png');
+    background-image: url('../assets/habitat/Fondo.PNG');
     background-size: cover;
     background-position: center top;
     background-color: #ace8fb;
