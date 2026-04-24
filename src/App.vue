@@ -634,19 +634,43 @@ function setTip(key, value) {
     padding-top: max(0.35rem, env(safe-area-inset-top));
   }
   .header-transparent nav {
-    padding: 0.5rem 0.65rem;
-    gap: 0.5rem;
+    padding: 0.4rem 0.45rem;
+    gap: 0.25rem;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+  .brand-logo {
+    height: 48px;
+    width: auto;
+    max-width: 24vw;
+  }
+  .brand-logo-link {
+    padding: 0.1rem 0.2rem;
   }
   .install-btn {
     display: none !important;
+  }
+  .nav-icons-wrapper {
+    gap: 0.05rem;
+    padding: 0.05rem 0.1rem;
+    flex-wrap: nowrap;
+  }
+  .header-transparent .btn-icon {
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0.15rem 0.2rem;
+  }
+  .header-transparent .btn-icon img {
+    width: 28px;
+    height: 28px;
   }
   .tooltip {
     display: none;
   }
   .settings-btn {
-    width: 42px;
-    height: 42px;
-    font-size: 1.25rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
   }
 }
 
