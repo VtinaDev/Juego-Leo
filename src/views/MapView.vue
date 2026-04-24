@@ -784,7 +784,11 @@ watch(
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   padding-top: 110px;
-  background: linear-gradient(180deg, #ace8fb 0%, #bdefff 36%, #b8e37f 37%, #97ce5b 100%);
+  background-image: url('/images/map-background-mobile.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-color: #ace8fb;
   box-shadow: none;
 }
 .mobile-map-track::-webkit-scrollbar {
@@ -1259,7 +1263,8 @@ watch(
     border-radius: 0;
   }
   .map-meadow {
-    background-size: contain;
+    background-image: url('/images/map-background-mobile.png');
+    background-size: cover;
     background-position: center top;
     background-color: #ace8fb;
   }
