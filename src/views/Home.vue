@@ -56,6 +56,33 @@
       </div>
     </section>
 
+    <section class="home-map-preview" aria-label="Vista previa del mapa">
+      <div class="home-map-preview__header">
+        <p class="home-map-preview__eyebrow">Mapa de aventura</p>
+        <h2 class="home-map-preview__title">Recorre los hábitats con Leo</h2>
+      </div>
+
+      <div class="home-map-slider" role="presentation" aria-hidden="true">
+        <div class="home-map-slider__track">
+          <article
+            v-for="(item, index) in mapPreviewLoop"
+            :key="`map-preview-${item.id}-${index}`"
+            class="home-map-card"
+            :style="{ '--map-card-color': item.color }"
+          >
+            <div class="home-map-card__character">
+              <img :src="item.image" :alt="item.name" loading="lazy" />
+            </div>
+            <p class="home-map-card__name">{{ item.name }}</p>
+          </article>
+        </div>
+      </div>
+
+      <RouterLink to="/mapview" class="home-map-preview__cta">
+        Ir al mapa
+      </RouterLink>
+    </section>
+
     <section class="home-learn-sections">
       <BenefitsBlock />
       <MethodologySection />
@@ -64,12 +91,17 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { playSfx } from '../utils/sfx'
 import { playMusic, unlockAudio, playVoiceCue } from '../engine/audio/audioManager'
 import { useAudioSettings } from '../composables/useAudioSettings'
 import MethodologySection from '../components/home/MethodologySection.vue'
 import BenefitsBlock from '../components/home/BenefitsBlock.vue'
+import Perezoso from '../assets/characters/Perezoso.png'
+import Zorro from '../assets/characters/Zorro.png'
+import Oso from '../assets/characters/Oso.png'
+import Mono from '../assets/characters/Mono.png'
+import Elefante_graduado from '../assets/characters/Elefante_graduado.png'
 
 const showConfetti = ref(false)
 const pulseCta = ref(false)
@@ -87,6 +119,14 @@ const confettiPieces = Array.from({ length: 14 }, (_, idx) => ({
 
 const { musicEnabled, voiceEnabled } = useAudioSettings()
 const introTrack = 'intro'
+const mapPreviewItems = [
+  { id: 1, name: 'El Árbol', image: Perezoso, color: '#34d399' },
+  { id: 2, name: 'Valle Anaranjado', image: Zorro, color: '#fb923c' },
+  { id: 3, name: 'Isla de Lianas', image: Oso, color: '#38bdf8' },
+  { id: 4, name: 'Santuario Azul', image: Mono, color: '#60a5fa' },
+  { id: 5, name: 'La Escuela', image: Elefante_graduado, color: '#facc15' }
+]
+const mapPreviewLoop = computed(() => [...mapPreviewItems, ...mapPreviewItems])
 
 onMounted(() => {
   if (typeof window === 'undefined') return
@@ -389,6 +429,107 @@ onBeforeUnmount(() => {
   padding-top: 0;
 }
 
+.home-map-preview {
+  position: relative;
+  z-index: 2;
+  padding: clamp(1.4rem, 3vw, 2.2rem) clamp(0.9rem, 3vw, 2.2rem) clamp(1.2rem, 2.8vw, 2rem);
+  background: linear-gradient(180deg, #f2f8ff 0%, #e8f3ff 100%);
+  border-top: 1px solid rgba(148, 163, 184, 0.22);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+  overflow: hidden;
+}
+
+.home-map-preview__header {
+  text-align: center;
+  margin-bottom: 0.9rem;
+}
+
+.home-map-preview__eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #42637a;
+}
+
+.home-map-preview__title {
+  margin: 0.45rem 0 0;
+  color: #173b61;
+  font-size: clamp(1.05rem, 2.4vw, 1.55rem);
+  font-weight: 800;
+}
+
+.home-map-slider {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.home-map-slider__track {
+  display: flex;
+  width: max-content;
+  gap: 0.8rem;
+  animation: mapSliderLoop 24s linear infinite;
+}
+
+.home-map-card {
+  width: clamp(122px, 16vw, 166px);
+  border-radius: 16px;
+  padding: 0.65rem 0.65rem 0.78rem;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid color-mix(in srgb, var(--map-card-color) 50%, #ffffff 50%);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+  text-align: center;
+}
+
+.home-map-card__character {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--map-card-color) 15%, #ffffff 85%);
+  display: grid;
+  place-items: center;
+}
+
+.home-map-card__character img {
+  width: 86%;
+  height: 86%;
+  object-fit: contain;
+}
+
+.home-map-card__name {
+  margin: 0.55rem 0 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  line-height: 1.2;
+}
+
+.home-map-preview__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem auto 0;
+  min-width: 170px;
+  padding: 0.66rem 0.95rem;
+  border-radius: 999px;
+  border: none;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 800;
+  background: linear-gradient(145deg, #49a9ff 0%, #2f80ff 100%);
+  box-shadow: 0 10px 20px rgba(47, 128, 255, 0.35);
+}
+
+@keyframes mapSliderLoop {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - 0.4rem));
+  }
+}
+
 .home-learn-sections :deep(.methodology-section) {
   margin-top: 0;
 }
@@ -448,6 +589,20 @@ onBeforeUnmount(() => {
 
   .home-learn-sections {
     padding-top: 0;
+  }
+
+  .home-map-preview {
+    padding-inline: 0.65rem;
+  }
+
+  .home-map-slider__track {
+    gap: 0.62rem;
+    animation-duration: 20s;
+  }
+
+  .home-map-card {
+    width: 126px;
+    padding: 0.6rem 0.55rem 0.72rem;
   }
 }
 
