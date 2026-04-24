@@ -973,7 +973,6 @@ function updateMobileViewportFlag() {
 }
 
 const exerciseScaleStyle = computed(() => null)
-const gameViewClasses = computed(() => ({}))
 
 function lockExerciseScrollOnMobile() {
   if (typeof window === 'undefined') return
@@ -1046,6 +1045,11 @@ const {
   repeat,
   stopAllMedia
 } = engine
+
+const gameViewClasses = computed(() => ({
+  'option-status-ok': currentStatus.value === 'ok',
+  'option-status-fail': currentStatus.value === 'fail'
+}))
 
 const selectedLeft = ref('')
 const currentPairs = ref([])
@@ -2397,21 +2401,21 @@ function shuffleArray(arr) {
   padding: 0.9rem 1rem;
   min-height: 60px;
   border-radius: 16px;
-  border: 2px solid #cfd8e3;
-  background: transparent;
+  border: 2px solid #b7cee6;
+  background: linear-gradient(180deg, #f7fbff 0%, #e8f3ff 100%);
   font-weight: 750;
   font-size: clamp(1.12rem, 4.5vw, 1.3rem);
   line-height: 1.5;
   color: #0f172a;
   text-transform: none;
-  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: none;
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.75);
   transform: scale(1);
 }
 .btn-option:hover {
   border-color: #0ea5e9;
-  background: rgba(247, 252, 255, 0.35);
-  box-shadow: none;
+  background: linear-gradient(180deg, #ffffff 0%, #d9ecff 100%);
+  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 .btn-option:focus-visible {
   outline: 3px solid #0ea5e9;
@@ -2421,8 +2425,25 @@ function shuffleArray(arr) {
   transform: scale(0.95);
 }
 .btn-option.btn-active {
-  border-color: #0ea5e9;
-  background: #f7fcff;
+  border-color: #38bdf8;
+  background: linear-gradient(180deg, #f2f9ff 0%, #cbe6ff 100%);
+  box-shadow: 0 10px 20px rgba(56, 189, 248, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.game-view.option-status-ok .btn-option,
+.game-view.option-status-ok :deep(.exercise-options__button) {
+  border-color: #2ca45d;
+  background: linear-gradient(180deg, #e9fce9 0%, #b8f3c6 100%);
+  color: #14532d;
+  box-shadow: 0 10px 20px rgba(34, 197, 94, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.game-view.option-status-fail .btn-option,
+.game-view.option-status-fail :deep(.exercise-options__button) {
+  border-color: #e28a2c;
+  background: linear-gradient(180deg, #fff4e6 0%, #ffd19a 100%);
+  color: #7c2d12;
+  box-shadow: 0 10px 20px rgba(249, 115, 22, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 .options-row {
   display: flex;
@@ -3040,8 +3061,9 @@ function shuffleArray(arr) {
   margin: 0;
 }
 :deep(.exercise-options__button) {
-  box-shadow: none;
-  background: transparent;
+  border-color: #b7cee6;
+  background: linear-gradient(180deg, #f7fbff 0%, #e8f3ff 100%);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 .smartick-card .exercise-visual {
   max-width: 420px;
