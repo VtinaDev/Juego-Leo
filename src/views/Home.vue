@@ -53,24 +53,12 @@
             </div>
 
           </div>
-        </div>
-
-        <section class="home-map-preview home-map-preview--cover" aria-label="Personajes del mapa">
-          <div class="home-map-slider" role="presentation" aria-hidden="true">
-            <div class="home-map-slider__track">
-              <article
-                v-for="(item, index) in mapPreviewLoop"
-                :key="`map-preview-${item.id}-${index}`"
-                class="home-map-card"
-                :style="{ '--map-card-color': item.color }"
-              >
-                <div class="home-map-card__character">
-                  <img :src="item.image" :alt="item.name" loading="lazy" />
-                </div>
-              </article>
-            </div>
+          <div class="hero-character-stage" role="presentation" aria-hidden="true">
+            <figure :key="activeCharacter.id" class="hero-character-bubble">
+              <img :src="activeCharacter.image" alt="" loading="lazy" />
+            </figure>
           </div>
-        </section>
+        </div>
       </div>
     </section>
 
@@ -98,6 +86,7 @@ const showConfetti = ref(false)
 const pulseCta = ref(false)
 const prefersReducedMotion = ref(false)
 const confettiCanSound = ref(false)
+const activeCharacterIndex = ref(0)
 
 const confettiPieces = Array.from({ length: 14 }, (_, idx) => ({
   id: idx,
@@ -117,7 +106,8 @@ const mapPreviewItems = [
   { id: 4, name: 'Santuario Azul', image: Mono, color: '#60a5fa' },
   { id: 5, name: 'La Escuela', image: Elefante_graduado, color: '#facc15' }
 ]
-const mapPreviewLoop = computed(() => [...mapPreviewItems, ...mapPreviewItems])
+const activeCharacter = computed(() => mapPreviewItems[activeCharacterIndex.value] || mapPreviewItems[0])
+let characterCycleTimer = null
 
 onMounted(() => {
   if (typeof window === 'undefined') return
@@ -130,6 +120,10 @@ onMounted(() => {
       showConfetti.value = false
     }, 2200)
   }
+
+  characterCycleTimer = window.setInterval(() => {
+    activeCharacterIndex.value = (activeCharacterIndex.value + 1) % mapPreviewItems.length
+  }, 2200)
 })
 
 watch(
@@ -192,6 +186,10 @@ function handleHomeNarration() {
 }
 
 onBeforeUnmount(() => {
+  if (characterCycleTimer) {
+    clearInterval(characterCycleTimer)
+    characterCycleTimer = null
+  }
   // Dejamos que la música continúe al navegar a otras vistas
 })
 </script>
@@ -225,7 +223,10 @@ onBeforeUnmount(() => {
   z-index: 2;
   min-height: 100vh;
   display: grid;
+  grid-template-columns: minmax(0, 520px) minmax(180px, 330px);
+  justify-content: center;
   align-items: center;
+  gap: clamp(0.8rem, 2.2vw, 1.6rem);
   padding:
     clamp(5.5rem, 10vw, 7.5rem)
     clamp(1rem, 4vw, 3rem)
@@ -240,6 +241,29 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(148, 163, 184, 0.45);
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16);
+}
+
+.hero-character-stage {
+  width: min(100%, 320px);
+  justify-self: start;
+  display: grid;
+  place-items: center;
+}
+
+.hero-character-bubble {
+  margin: 0;
+  width: clamp(180px, 25vw, 300px);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  animation: heroCharacterPop 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hero-character-bubble img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 24px rgba(15, 23, 42, 0.26));
 }
 
 .hero-eyebrow {
@@ -420,99 +444,18 @@ onBeforeUnmount(() => {
   padding-top: 0;
 }
 
-.home-map-preview {
-  position: absolute;
-  top: 52%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: clamp(0.25rem, 1vw, 0.5rem) 0;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.home-map-preview--cover {
-  z-index: 1;
-  width: min(calc(100% - 2rem), 980px);
-  margin: 0;
-}
-
-.home-map-slider {
-  overflow: hidden;
-  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
-}
-
-.home-map-slider__track {
-  display: flex;
-  width: max-content;
-  align-items: center;
-  gap: 1.35rem;
-  animation: mapSliderLoop 20s linear infinite;
-}
-
-.home-map-card {
-  width: clamp(210px, 24vw, 330px);
-  padding: 0.1rem 0.1rem;
-  text-align: center;
-  animation: mapCharacterDrift 3.4s ease-in-out infinite;
-}
-
-.home-map-card:nth-child(2n) {
-  animation-delay: -1.1s;
-}
-
-.home-map-card:nth-child(3n) {
-  animation-delay: -2.1s;
-}
-
-.home-map-card__character {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-}
-
-.home-map-card__character img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform-origin: center bottom;
-  filter: drop-shadow(0 12px 18px rgba(15, 23, 42, 0.24));
-  animation: mapCharacterWiggle 1.8s ease-in-out infinite;
-}
-
-@keyframes mapSliderLoop {
+@keyframes heroCharacterPop {
   0% {
-    transform: translateX(0);
+    transform: translateY(10px) scale(0.7);
+    opacity: 0;
+  }
+  70% {
+    transform: translateY(0) scale(1.15);
+    opacity: 1;
   }
   100% {
-    transform: translateX(calc(-50% - 0.4rem));
-  }
-}
-
-@keyframes mapCharacterDrift {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes mapCharacterWiggle {
-  0% {
-    transform: rotate(-2deg) scale(1);
-  }
-  50% {
-    transform: rotate(2deg) scale(1.03);
-  }
-  100% {
-    transform: rotate(-2deg) scale(1);
+    transform: translateY(0) scale(1);
+    opacity: 1;
   }
 }
 
@@ -523,9 +466,7 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .confetti-dot,
   .btn-cta-pulse,
-  .home-map-slider__track,
-  .home-map-card,
-  .home-map-card__character img {
+  .hero-character-bubble {
     animation: none;
   }
 }
@@ -545,10 +486,12 @@ onBeforeUnmount(() => {
   }
 
   .hero-grid {
+    grid-template-columns: 1fr;
     padding:
       5.8rem
       1rem
       2rem;
+    gap: 0.35rem;
   }
 
   .hero-content {
@@ -580,21 +523,14 @@ onBeforeUnmount(() => {
     padding-top: 0;
   }
 
-  .home-map-preview {
-    top: 82%;
-    z-index: 20;
-    width: min(calc(100% - 1rem), 640px);
-    padding-inline: 0;
+  .hero-character-stage {
+    width: min(100%, 220px);
+    justify-self: center;
+    margin-top: -0.35rem;
   }
 
-  .home-map-slider__track {
-    gap: 0.5rem;
-    animation-duration: 15s;
-  }
-
-  .home-map-card {
-    width: clamp(126px, 28vw, 168px);
-    padding: 0.2rem 0.1rem 0.2rem;
+  .hero-character-bubble {
+    width: clamp(140px, 42vw, 205px);
   }
 }
 
