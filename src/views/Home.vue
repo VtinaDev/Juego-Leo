@@ -252,11 +252,11 @@ onBeforeUnmount(() => {
 
 .hero-character-bubble {
   margin: 0;
-  width: clamp(180px, 25vw, 300px);
+  width: clamp(220px, 29vw, 360px);
   aspect-ratio: 1 / 1;
   display: grid;
   place-items: center;
-  animation: heroCharacterPop 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: heroCharacterPop 0.95s cubic-bezier(0.16, 0.84, 0.28, 1);
 }
 
 .hero-character-bubble img {
@@ -446,11 +446,11 @@ onBeforeUnmount(() => {
 
 @keyframes heroCharacterPop {
   0% {
-    transform: translateY(10px) scale(0.7);
+    transform: translateY(16px) scale(0.52);
     opacity: 0;
   }
   70% {
-    transform: translateY(0) scale(1.15);
+    transform: translateY(0) scale(1.32);
     opacity: 1;
   }
   100% {
@@ -530,7 +530,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-character-bubble {
-    width: clamp(140px, 42vw, 205px);
+    width: clamp(176px, 52vw, 270px);
   }
 }
 
