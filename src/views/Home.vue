@@ -581,8 +581,8 @@ onBeforeUnmount(() => {
   }
 
   .home-map-preview {
-    top: 76%;
-    z-index: 1;
+    top: 74%;
+    z-index: 11;
     width: min(calc(100% - 1rem), 640px);
     padding-inline: 0;
   }
