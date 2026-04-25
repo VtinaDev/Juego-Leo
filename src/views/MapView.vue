@@ -26,7 +26,16 @@
         }"
       >
         <div class="mobile-habitat-content">
-          <div class="mobile-character-wrap">
+          <RouterLink
+            v-if="habitat.unlocked"
+            :to="`/game/${habitat.id}/${habitat.progress.nextStage}`"
+            class="mobile-character-wrap mobile-character-wrap--link tap-pop"
+            @click="handleMapTap($event)"
+          >
+            <img v-if="habitat.character" :src="habitat.character" :alt="habitat.levelName" />
+            <span v-else class="node-icon">{{ habitat.icon }}</span>
+          </RouterLink>
+          <div v-else class="mobile-character-wrap mobile-character-wrap--locked">
             <img v-if="habitat.character" :src="habitat.character" :alt="habitat.levelName" />
             <span v-else class="node-icon">{{ habitat.icon }}</span>
           </div>
@@ -38,6 +47,18 @@
               </div>
               <p class="progress-label">{{ progressSummary(habitat) }}</p>
             </div>
+            <p class="mobile-stage-description">{{ habitat.stageDescription }}</p>
+            <RouterLink
+              v-if="habitat.unlocked"
+              :to="`/game/${habitat.id}/${habitat.progress.nextStage}`"
+              class="mobile-stage-cta tap-pop"
+              @click="handleMapTap($event)"
+            >
+              {{ mobileCtaLabel(habitat) }}
+            </RouterLink>
+            <button v-else type="button" class="mobile-stage-cta mobile-stage-cta--locked" disabled>
+              Bloqueado
+            </button>
           </div>
         </div>
       </article>
@@ -175,6 +196,28 @@ const levelIds = listLevels()
     listLevels().length === 0 ? [1, 2, 3, 4, 5] : []
   )
 
+function humanizeSubtypeKey(subtypeKey) {
+  if (!subtypeKey) return 'Continúa la aventura'
+  return String(subtypeKey)
+    .replace(/_/g, ' ')
+    .toLowerCase()
+    .replace(/^\w/, (char) => char.toUpperCase())
+}
+
+function resolveStageSummary(levelDef, progress) {
+  const order = Array.isArray(levelDef?.order) && levelDef.order.length
+    ? levelDef.order
+    : Object.keys(levelDef?.subtypes || {})
+  if (!order.length) {
+    return { stageNumber: 1, title: 'Comienza la aventura' }
+  }
+  const rawStage = Number(progress?.nextStage) || 1
+  const stageNumber = Math.min(Math.max(rawStage, 1), order.length)
+  const subtypeKey = order[stageNumber - 1]
+  const stageTitle = levelDef?.stageMeta?.[subtypeKey]?.title?.trim() || humanizeSubtypeKey(subtypeKey)
+  return { stageNumber, title: stageTitle }
+}
+
 const enrichedHabitats = computed(() => {
   const result = []
   levelIds.forEach((id, index) => {
@@ -187,6 +230,7 @@ const enrichedHabitats = computed(() => {
     const isComplete = progress.percent === 1
     const cta = isComplete ? 'Revivir aventura' : unlocked ? 'Continuar' : 'Bloqueado'
     const progressLabel = isComplete ? 'Completado' : progress.nextStage
+    const stageSummary = resolveStageSummary(def, progress)
     result.push({
       id,
       icon: meta.icon ?? '🪄',
@@ -200,7 +244,8 @@ const enrichedHabitats = computed(() => {
       progressLabel,
       unlocked,
       isComplete,
-      cta
+      cta,
+      stageDescription: `Etapa ${stageSummary.stageNumber}: ${stageSummary.title}`
     })
   })
   return result
@@ -404,6 +449,12 @@ function progressSummary(habitat) {
   const done = Number(habitat?.progress?.completedStages) || 0
   const total = Number(habitat?.progress?.totalStages) || 0
   return `${done}/${total} etapas`
+}
+
+function mobileCtaLabel(habitat) {
+  if (!habitat?.unlocked) return 'Bloqueado'
+  const stageNumber = Number(habitat?.progress?.nextStage) || 1
+  return `Ir a etapa ${stageNumber}`
 }
 
 function formatDate(date) {
@@ -669,6 +720,14 @@ watch(
   place-items: center;
   box-shadow: none;
 }
+.mobile-character-wrap--link {
+  text-decoration: none;
+  cursor: pointer;
+}
+.mobile-character-wrap--locked {
+  opacity: 0.72;
+  filter: grayscale(0.12);
+}
 .mobile-character-wrap img {
   width: 126%;
   height: 126%;
@@ -720,6 +779,46 @@ watch(
   font-weight: 700;
   color: #1f2937;
   text-align: center;
+}
+.mobile-stage-description {
+  margin: 0.38rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  font-weight: 700;
+  color: #334155;
+  text-align: center;
+}
+.mobile-stage-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+  width: 100%;
+  min-height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(59, 130, 246, 0.36);
+  background: linear-gradient(160deg, #60a5fa 0%, #2563eb 100%);
+  color: #fff;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: 0 8px 14px rgba(37, 99, 235, 0.3);
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+.mobile-stage-cta:active {
+  transform: scale(0.98);
+}
+.mobile-stage-cta:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 10px 18px rgba(37, 99, 235, 0.35);
+}
+.mobile-stage-cta--locked {
+  border-color: rgba(100, 116, 139, 0.24);
+  background: linear-gradient(160deg, #cbd5e1 0%, #94a3b8 100%);
+  box-shadow: none;
+  color: #1f2937;
+  cursor: not-allowed;
 }
 .map-canvas {
   position: relative;

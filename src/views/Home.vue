@@ -421,36 +421,50 @@ onBeforeUnmount(() => {
 }
 
 .home-map-preview {
-  position: relative;
-  padding: clamp(0.3rem, 1.2vw, 0.6rem) 0.25rem clamp(0.4rem, 1.6vw, 0.8rem);
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: clamp(0.25rem, 1vw, 0.5rem) 0;
   background: transparent;
   border: none;
   border-radius: 0;
-  overflow: hidden;
+  overflow: visible;
+  pointer-events: none;
 }
 
 .home-map-preview--cover {
-  z-index: 2;
+  z-index: 1;
   width: min(calc(100% - 2rem), 980px);
-  margin: 0 auto 1.1rem;
+  margin: 0;
 }
 
 .home-map-slider {
   overflow: hidden;
-  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
 }
 
 .home-map-slider__track {
   display: flex;
   width: max-content;
-  gap: 1.05rem;
-  animation: mapSliderLoop 24s linear infinite;
+  align-items: center;
+  gap: 1.35rem;
+  animation: mapSliderLoop 20s linear infinite;
 }
 
 .home-map-card {
-  width: clamp(154px, 20vw, 230px);
+  width: clamp(210px, 24vw, 330px);
   padding: 0.1rem 0.1rem;
   text-align: center;
+  animation: mapCharacterDrift 3.4s ease-in-out infinite;
+}
+
+.home-map-card:nth-child(2n) {
+  animation-delay: -1.1s;
+}
+
+.home-map-card:nth-child(3n) {
+  animation-delay: -2.1s;
 }
 
 .home-map-card__character {
@@ -464,7 +478,9 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transform-origin: center bottom;
   filter: drop-shadow(0 12px 18px rgba(15, 23, 42, 0.24));
+  animation: mapCharacterWiggle 1.8s ease-in-out infinite;
 }
 
 @keyframes mapSliderLoop {
@@ -476,13 +492,40 @@ onBeforeUnmount(() => {
   }
 }
 
+@keyframes mapCharacterDrift {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes mapCharacterWiggle {
+  0% {
+    transform: rotate(-2deg) scale(1);
+  }
+  50% {
+    transform: rotate(2deg) scale(1.03);
+  }
+  100% {
+    transform: rotate(-2deg) scale(1);
+  }
+}
+
 .home-learn-sections :deep(.methodology-section) {
   margin-top: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .confetti-dot,
-  .btn-cta-pulse {
+  .btn-cta-pulse,
+  .home-map-slider__track,
+  .home-map-card,
+  .home-map-card__character img {
     animation: none;
   }
 }
@@ -538,17 +581,19 @@ onBeforeUnmount(() => {
   }
 
   .home-map-preview {
+    top: 58%;
+    width: min(calc(100% - 1rem), 640px);
     padding-inline: 0;
   }
 
   .home-map-slider__track {
-    gap: 0.75rem;
-    animation-duration: 20s;
+    gap: 0.5rem;
+    animation-duration: 15s;
   }
 
   .home-map-card {
-    width: 166px;
-    padding: 0.24rem 0.12rem 0.45rem;
+    width: clamp(170px, 37vw, 235px);
+    padding: 0.2rem 0.1rem 0.2rem;
   }
 }
 
