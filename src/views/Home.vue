@@ -581,8 +581,8 @@ onBeforeUnmount(() => {
   }
 
   .home-map-preview {
-    top: 74%;
-    z-index: 11;
+    top: 82%;
+    z-index: 20;
     width: min(calc(100% - 1rem), 640px);
     padding-inline: 0;
   }
@@ -593,7 +593,7 @@ onBeforeUnmount(() => {
   }
 
   .home-map-card {
-    width: clamp(140px, 31vw, 190px);
+    width: clamp(126px, 28vw, 168px);
     padding: 0.2rem 0.1rem 0.2rem;
   }
 }
