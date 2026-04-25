@@ -197,20 +197,20 @@ onBeforeUnmount(() => {
 <style scoped>
 .home {
   position: relative;
-  min-height: 100vh;
+  min-height: 108vh;
   overflow-x: hidden;
 }
 
 .hero-stage {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: 108vh;
   margin: 0;
 }
 
 .hero-art {
   position: relative;
-  min-height: 100vh;
+  min-height: 108vh;
   overflow: hidden;
   background-image: url('/backgroun_home.png');
   background-size: cover;
@@ -221,16 +221,16 @@ onBeforeUnmount(() => {
 .hero-grid {
   position: relative;
   z-index: 2;
-  min-height: 100vh;
+  min-height: 108vh;
   display: grid;
   grid-template-columns: minmax(0, 520px) minmax(180px, 330px);
   justify-content: center;
   align-items: center;
   gap: clamp(0.8rem, 2.2vw, 1.6rem);
   padding:
-    clamp(5.5rem, 10vw, 7.5rem)
+    clamp(7rem, 12vw, 9rem)
     clamp(1rem, 4vw, 3rem)
-    clamp(2rem, 4vw, 3rem);
+    clamp(3rem, 5vw, 4rem);
 }
 
 .hero-content {
@@ -475,7 +475,7 @@ onBeforeUnmount(() => {
   .hero-stage,
   .hero-art,
   .hero-grid {
-    min-height: 100dvh;
+    min-height: 112dvh;
   }
 
   .hero-art {
@@ -488,9 +488,9 @@ onBeforeUnmount(() => {
   .hero-grid {
     grid-template-columns: 1fr;
     padding:
-      5.8rem
+      7.2rem
       1rem
-      2rem;
+      3.2rem;
     gap: 0.35rem;
   }
 
