@@ -16,10 +16,6 @@
         @enter="handleEnter"
       />
     </div>
-
-    <button v-if="levels.length > 1" class="map-view__swipe-cta" type="button" @click="scrollToNextLevel">
-      Deslizar niveles ↔
-    </button>
   </section>
 </template>
 
@@ -163,23 +159,6 @@ function updateCardScaleByCenter() {
   })
 }
 
-function getCenteredCardIndex(cards, railCenter) {
-  let bestIndex = 0
-  let bestDistance = Number.POSITIVE_INFINITY
-
-  cards.forEach((card, index) => {
-    const rect = card.getBoundingClientRect()
-    const center = rect.left + rect.width / 2
-    const distance = Math.abs(center - railCenter)
-    if (distance < bestDistance) {
-      bestDistance = distance
-      bestIndex = index
-    }
-  })
-
-  return bestIndex
-}
-
 function queueScaleUpdate() {
   if (rafId) return
   rafId = window.requestAnimationFrame(() => {
@@ -200,25 +179,6 @@ function onMotionChange(event) {
 function handleEnter(level) {
   if (!level || level.locked) return
   router.push(level.route).catch(() => {})
-}
-
-function scrollToNextLevel() {
-  const rail = railRef.value
-  if (!rail) return
-  const cards = cardRefs.value.filter(Boolean)
-  if (cards.length < 2) return
-
-  const railRect = rail.getBoundingClientRect()
-  const railCenter = railRect.left + railRect.width / 2
-  const currentIndex = getCenteredCardIndex(cards, railCenter)
-  const nextIndex = (currentIndex + 1) % cards.length
-  const behavior = prefersReducedMotion.value ? 'auto' : 'smooth'
-
-  cards[nextIndex].scrollIntoView({
-    behavior,
-    inline: 'center',
-    block: 'nearest'
-  })
 }
 
 watch(
@@ -305,15 +265,24 @@ onBeforeUnmount(() => {
   padding: 0.6rem clamp(0.8rem, 4vw, 1.1rem) 1rem;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  scrollbar-color: rgba(37, 99, 235, 0.7) rgba(148, 163, 184, 0.22);
+  scrollbar-width: auto;
 }
 
 .map-view__rail::-webkit-scrollbar {
-  height: 8px;
+  height: 14px;
+}
+
+.map-view__rail::-webkit-scrollbar-track {
+  background: rgba(148, 163, 184, 0.22);
+  border-radius: 999px;
 }
 
 .map-view__rail::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.35);
+  background: rgba(37, 99, 235, 0.78);
+  border: 3px solid rgba(148, 163, 184, 0.15);
   border-radius: 999px;
+  background-clip: padding-box;
 }
 
 .map-view__card {
@@ -332,31 +301,6 @@ onBeforeUnmount(() => {
   transition: none;
 }
 
-.map-view__swipe-cta {
-  display: flex;
-  width: fit-content;
-  margin: 0.25rem auto 0;
-  border: none;
-  border-radius: 999px;
-  min-height: 44px;
-  padding: 0.7rem 1.15rem;
-  font-weight: 900;
-  font-size: 0.9rem;
-  letter-spacing: 0.01em;
-  color: #0b3c67;
-  background: linear-gradient(180deg, #fde68a 0%, #facc15 55%, #eab308 100%);
-  box-shadow: 0 10px 16px rgba(217, 119, 6, 0.28);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-}
-
-.map-view__swipe-cta:hover,
-.map-view__swipe-cta:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 22px rgba(217, 119, 6, 0.34);
-  filter: brightness(1.02);
-}
-
 @media (min-width: 980px) {
   .map-view__rail {
     width: min(1200px, 100%);
@@ -372,10 +316,6 @@ onBeforeUnmount(() => {
     flex: initial;
     max-width: none;
     transform: none;
-  }
-
-  .map-view__swipe-cta {
-    display: none;
   }
 }
 
