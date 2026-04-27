@@ -30,10 +30,9 @@ defineEmits(['enter'])
 
 <style scoped>
 .habitat-card {
-  width: clamp(220px, 72vw, 280px);
+  width: var(--habitat-card-width, clamp(220px, 72vw, 280px));
   border-radius: 24px;
   background: linear-gradient(180deg, #ffffff 0%, #f2f8ff 100%);
-  border: 2px solid rgba(34, 197, 94, 0.48);
   box-shadow: none;
   padding: 0.72rem;
   display: grid;

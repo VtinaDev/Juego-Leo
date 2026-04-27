@@ -6,20 +6,25 @@
       <p>Explora cada hábitat, consigue estrellas y desbloquea nuevos retos.</p>
     </header>
 
-    <div class="map-view__rail" :class="{ 'map-view__rail--reduced': prefersReducedMotion }">
+    <div ref="railRef" class="map-view__rail" :class="{ 'map-view__rail--reduced': prefersReducedMotion }">
       <HabitatCard
-        v-for="level in levels"
+        v-for="(level, index) in levels"
         :key="level.id"
+        :ref="(el) => setCardRef(el, index)"
         :level="level"
         class="map-view__card"
         @enter="handleEnter"
       />
     </div>
+
+    <button v-if="levels.length > 1" class="map-view__swipe-cta" type="button" @click="scrollToNextLevel">
+      Deslizar niveles ↔
+    </button>
   </section>
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import HabitatCard from '../components/map/HabitatCard.vue'
 import { useGameStore } from '../store/gameStore'
@@ -32,7 +37,10 @@ const billing = useBillingStore()
 game.load?.()
 billing.load?.()
 const prefersReducedMotion = ref(false)
+const railRef = ref(null)
+const cardRefs = ref([])
 let motionQueryList = null
+let rafId = 0
 
 const levelBlueprint = [
   {
@@ -107,8 +115,86 @@ const levels = computed(() => {
   })
 })
 
+function setCardRef(el, index) {
+  if (!el) {
+    cardRefs.value[index] = null
+    return
+  }
+  cardRefs.value[index] = el
+}
+
+function resetCardScale() {
+  cardRefs.value.forEach((card) => {
+    if (!card) return
+    card.style.setProperty('--card-scale', '1')
+    card.style.setProperty('--card-lift', '0px')
+  })
+}
+
+function updateCardScaleByCenter() {
+  const rail = railRef.value
+  if (!rail || prefersReducedMotion.value) {
+    resetCardScale()
+    return
+  }
+
+  const hasHorizontalCarousel = rail.scrollWidth > rail.clientWidth + 4
+  if (!hasHorizontalCarousel) {
+    resetCardScale()
+    return
+  }
+
+  const railRect = rail.getBoundingClientRect()
+  const railCenter = railRect.left + railRect.width / 2
+  const maxDistance = Math.max(railRect.width / 2, 1)
+
+  cardRefs.value.forEach((card) => {
+    if (!card) return
+    const cardRect = card.getBoundingClientRect()
+    const cardCenter = cardRect.left + cardRect.width / 2
+    const normalizedDistance = Math.min(Math.abs(cardCenter - railCenter) / maxDistance, 1)
+    const proximity = 1 - normalizedDistance
+
+    const scale = 0.98 + proximity * 0.16
+    const lift = -proximity * 10
+
+    card.style.setProperty('--card-scale', scale.toFixed(3))
+    card.style.setProperty('--card-lift', `${lift.toFixed(1)}px`)
+  })
+}
+
+function getCenteredCardIndex(cards, railCenter) {
+  let bestIndex = 0
+  let bestDistance = Number.POSITIVE_INFINITY
+
+  cards.forEach((card, index) => {
+    const rect = card.getBoundingClientRect()
+    const center = rect.left + rect.width / 2
+    const distance = Math.abs(center - railCenter)
+    if (distance < bestDistance) {
+      bestDistance = distance
+      bestIndex = index
+    }
+  })
+
+  return bestIndex
+}
+
+function queueScaleUpdate() {
+  if (rafId) return
+  rafId = window.requestAnimationFrame(() => {
+    rafId = 0
+    updateCardScaleByCenter()
+  })
+}
+
 function onMotionChange(event) {
   prefersReducedMotion.value = Boolean(event.matches)
+  if (prefersReducedMotion.value) {
+    resetCardScale()
+    return
+  }
+  queueScaleUpdate()
 }
 
 function handleEnter(level) {
@@ -116,15 +202,56 @@ function handleEnter(level) {
   router.push(level.route).catch(() => {})
 }
 
+function scrollToNextLevel() {
+  const rail = railRef.value
+  if (!rail) return
+  const cards = cardRefs.value.filter(Boolean)
+  if (cards.length < 2) return
+
+  const railRect = rail.getBoundingClientRect()
+  const railCenter = railRect.left + railRect.width / 2
+  const currentIndex = getCenteredCardIndex(cards, railCenter)
+  const nextIndex = (currentIndex + 1) % cards.length
+  const behavior = prefersReducedMotion.value ? 'auto' : 'smooth'
+
+  cards[nextIndex].scrollIntoView({
+    behavior,
+    inline: 'center',
+    block: 'nearest'
+  })
+}
+
+watch(
+  () => levels.value.length,
+  () => {
+    nextTick(() => {
+      queueScaleUpdate()
+    })
+  }
+)
+
 onMounted(() => {
   if (typeof window === 'undefined' || !window.matchMedia) return
+
   motionQueryList = window.matchMedia('(prefers-reduced-motion: reduce)')
   prefersReducedMotion.value = motionQueryList.matches
   motionQueryList.addEventListener?.('change', onMotionChange)
+
+  railRef.value?.addEventListener('scroll', queueScaleUpdate, { passive: true })
+  window.addEventListener('resize', queueScaleUpdate, { passive: true })
+
+  nextTick(() => {
+    queueScaleUpdate()
+  })
 })
 
 onBeforeUnmount(() => {
   motionQueryList?.removeEventListener?.('change', onMotionChange)
+  railRef.value?.removeEventListener('scroll', queueScaleUpdate)
+  window.removeEventListener('resize', queueScaleUpdate)
+  if (rafId) {
+    window.cancelAnimationFrame(rafId)
+  }
 })
 </script>
 
@@ -133,9 +260,10 @@ onBeforeUnmount(() => {
   min-height: 100dvh;
   padding: clamp(5.6rem, 9vw, 7rem) clamp(0.9rem, 3vw, 2rem) clamp(1.6rem, 4vw, 2.5rem);
   background:
-    radial-gradient(circle at 8% 10%, rgba(250, 204, 21, 0.2) 0, transparent 42%),
-    radial-gradient(circle at 92% 8%, rgba(147, 250, 96, 0.2) 0, transparent 45%),
-    linear-gradient(180deg, #f0ffdf 0%, #f7fcff 50%, #ffffff 100%);
+    radial-gradient(circle at 10% 12%, rgba(250, 204, 21, 0.36) 0%, rgba(250, 204, 21, 0) 44%),
+    radial-gradient(circle at 88% 10%, rgba(132, 204, 22, 0.34) 0%, rgba(132, 204, 22, 0) 46%),
+    radial-gradient(circle at 50% 78%, rgba(132, 204, 22, 0.2) 0%, rgba(132, 204, 22, 0) 52%),
+    linear-gradient(180deg, #ecfccb 0%, #fef9c3 38%, #f0fdf4 72%, #ffffff 100%);
 }
 
 .map-view__header {
@@ -169,12 +297,12 @@ onBeforeUnmount(() => {
 }
 
 .map-view__rail {
-  width: min(1200px, 100%);
-  margin: 0 auto;
+  width: 100vw;
+  margin: 0 calc(50% - 50vw);
   display: flex;
-  gap: clamp(0.7rem, 2.8vw, 1.2rem);
+  gap: clamp(0.7rem, 3.2vw, 1.2rem);
   overflow-x: auto;
-  padding: 0.6rem 0.2rem 1rem;
+  padding: 0.6rem clamp(0.8rem, 4vw, 1.1rem) 1rem;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
 }
@@ -189,15 +317,65 @@ onBeforeUnmount(() => {
 }
 
 .map-view__card {
+  --habitat-card-width: calc(100vw - clamp(1.6rem, 8vw, 2.6rem));
+  flex: 0 0 var(--habitat-card-width);
+  max-width: var(--habitat-card-width);
   scroll-snap-align: center;
+  transform: translateY(var(--card-lift, 0px)) scale(var(--card-scale, 1));
+  transform-origin: center center;
+  transition: transform 0.2s ease;
+  will-change: transform;
+}
+
+.map-view__rail--reduced .map-view__card {
+  transform: none !important;
+  transition: none;
+}
+
+.map-view__swipe-cta {
+  display: flex;
+  width: fit-content;
+  margin: 0.25rem auto 0;
+  border: none;
+  border-radius: 999px;
+  min-height: 44px;
+  padding: 0.7rem 1.15rem;
+  font-weight: 900;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  color: #0b3c67;
+  background: linear-gradient(180deg, #fde68a 0%, #facc15 55%, #eab308 100%);
+  box-shadow: 0 10px 16px rgba(217, 119, 6, 0.28);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.map-view__swipe-cta:hover,
+.map-view__swipe-cta:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 22px rgba(217, 119, 6, 0.34);
+  filter: brightness(1.02);
 }
 
 @media (min-width: 980px) {
   .map-view__rail {
+    width: min(1200px, 100%);
+    margin: 0 auto;
     overflow: visible;
     display: grid;
     grid-template-columns: repeat(3, minmax(280px, 1fr));
     align-items: stretch;
+  }
+
+  .map-view__card {
+    --habitat-card-width: auto;
+    flex: initial;
+    max-width: none;
+    transform: none;
+  }
+
+  .map-view__swipe-cta {
+    display: none;
   }
 }
 

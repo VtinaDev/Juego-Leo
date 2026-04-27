@@ -191,12 +191,19 @@ a {
 }
 
 .footer-wave {
-  background-image: url('/backgroun_home.png');
-  background-size: cover;
-  background-position: center bottom;
-  background-repeat: no-repeat;
-  color: #0f172a;
-  padding: 1.25rem 0 1.5rem;
+  background: linear-gradient(180deg, #fde68a 0%, #facc15 55%, #eab308 100%);
+  color: #4c2f0d;
+  padding: 1.3rem 0 1.5rem;
+}
+
+.footer-wave a {
+  color: #613e13;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+}
+
+.footer-wave a:hover {
+  color: #4c2f0d;
 }
 
 .wave-section {
