@@ -53,14 +53,11 @@
             </div>
 
           </div>
-          <div class="hero-character-stage" role="presentation" aria-hidden="true">
-            <figure :key="activeCharacter.id" class="hero-character-bubble">
-              <img :src="activeCharacter.image" alt="" loading="lazy" />
-            </figure>
-          </div>
         </div>
       </div>
     </section>
+
+    <HabitatShowcase />
 
     <section class="home-learn-sections">
       <BenefitsBlock />
@@ -70,23 +67,18 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { playSfx } from '../utils/sfx'
 import { playMusic, unlockAudio, playVoiceCue } from '../engine/audio/audioManager'
 import { useAudioSettings } from '../composables/useAudioSettings'
 import MethodologySection from '../components/home/MethodologySection.vue'
 import BenefitsBlock from '../components/home/BenefitsBlock.vue'
-import Perezoso from '../assets/characters/Perezoso.png'
-import Zorro from '../assets/characters/Zorro.png'
-import Oso from '../assets/characters/Oso.png'
-import Mono from '../assets/characters/Mono.png'
-import Elefante_graduado from '../assets/characters/Elefante_graduado.png'
+import HabitatShowcase from '../components/home/HabitatShowcase.vue'
 
 const showConfetti = ref(false)
 const pulseCta = ref(false)
 const prefersReducedMotion = ref(false)
 const confettiCanSound = ref(false)
-const activeCharacterIndex = ref(0)
 
 const confettiPieces = Array.from({ length: 14 }, (_, idx) => ({
   id: idx,
@@ -99,15 +91,6 @@ const confettiPieces = Array.from({ length: 14 }, (_, idx) => ({
 
 const { musicEnabled, voiceEnabled } = useAudioSettings()
 const introTrack = 'intro'
-const mapPreviewItems = [
-  { id: 1, name: 'El Árbol', image: Perezoso, color: '#34d399' },
-  { id: 2, name: 'Valle Anaranjado', image: Zorro, color: '#fb923c' },
-  { id: 3, name: 'Isla de Lianas', image: Oso, color: '#38bdf8' },
-  { id: 4, name: 'Santuario Azul', image: Mono, color: '#60a5fa' },
-  { id: 5, name: 'La Escuela', image: Elefante_graduado, color: '#facc15' }
-]
-const activeCharacter = computed(() => mapPreviewItems[activeCharacterIndex.value] || mapPreviewItems[0])
-let characterCycleTimer = null
 
 onMounted(() => {
   if (typeof window === 'undefined') return
@@ -121,9 +104,6 @@ onMounted(() => {
     }, 2200)
   }
 
-  characterCycleTimer = window.setInterval(() => {
-    activeCharacterIndex.value = (activeCharacterIndex.value + 1) % mapPreviewItems.length
-  }, 2200)
 })
 
 watch(
@@ -186,10 +166,6 @@ function handleHomeNarration() {
 }
 
 onBeforeUnmount(() => {
-  if (characterCycleTimer) {
-    clearInterval(characterCycleTimer)
-    characterCycleTimer = null
-  }
   // Dejamos que la música continúe al navegar a otras vistas
 })
 </script>
@@ -223,10 +199,10 @@ onBeforeUnmount(() => {
   z-index: 2;
   min-height: 108vh;
   display: grid;
-  grid-template-columns: minmax(0, 520px) minmax(180px, 330px);
+  grid-template-columns: minmax(0, 520px);
   justify-content: center;
   align-items: center;
-  gap: clamp(0.8rem, 2.2vw, 1.6rem);
+  gap: 0;
   padding:
     clamp(7rem, 12vw, 9rem)
     clamp(1rem, 4vw, 3rem)
@@ -241,29 +217,6 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(148, 163, 184, 0.45);
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16);
-}
-
-.hero-character-stage {
-  width: min(100%, 320px);
-  justify-self: start;
-  display: grid;
-  place-items: center;
-}
-
-.hero-character-bubble {
-  margin: 0;
-  width: clamp(220px, 29vw, 360px);
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-  animation: heroCharacterPop 0.95s cubic-bezier(0.16, 0.84, 0.28, 1);
-}
-
-.hero-character-bubble img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 14px 24px rgba(15, 23, 42, 0.26));
 }
 
 .hero-eyebrow {
@@ -444,29 +397,13 @@ onBeforeUnmount(() => {
   padding-top: 0;
 }
 
-@keyframes heroCharacterPop {
-  0% {
-    transform: translateY(16px) scale(0.52);
-    opacity: 0;
-  }
-  70% {
-    transform: translateY(0) scale(1.32);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
-
 .home-learn-sections :deep(.methodology-section) {
   margin-top: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .confetti-dot,
-  .btn-cta-pulse,
-  .hero-character-bubble {
+  .btn-cta-pulse {
     animation: none;
   }
 }
@@ -521,16 +458,6 @@ onBeforeUnmount(() => {
 
   .home-learn-sections {
     padding-top: 0;
-  }
-
-  .hero-character-stage {
-    width: min(100%, 220px);
-    justify-self: center;
-    margin-top: -0.35rem;
-  }
-
-  .hero-character-bubble {
-    width: clamp(176px, 52vw, 270px);
   }
 }
 

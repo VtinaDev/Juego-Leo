@@ -94,26 +94,6 @@
 
             </div>
             <div class="smartick-card-content space-y-4">
-            <div class="exercise-narration" v-if="exerciseNarrationText && showExerciseNarration && !hasInlineAudioSupport">
-              <AudioButton
-                :exercise="current"
-                :narration-text="exerciseNarrationText"
-                :audio-src="current?.audio || null"
-                aria-label="Escuchar enunciado"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
-              <span class="narration-label">Escuchar enunciado</span>
-            </div>
-            <div class="exercise-narration" v-else-if="current?.audio && !hasInlineAudioSupport">
-              <AudioButton
-                :exercise="current"
-                :narration-text="exerciseNarrationText"
-                :audio-src="current?.audio || null"
-                aria-label="Reproducir audio del ejercicio"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
-              <span class="narration-label">Reproducir audio</span>
-            </div>
             <div v-if="currentStatus === 'ok'" class="status-banner success-banner">
               <img src="/icons/celebration.png" alt="Celebración" class="status-icon" />
               <span>¡Excelente!</span>
@@ -208,6 +188,7 @@
                 <template #prompt>
                   <div class="audio-prompt-stack">
                     <SentenceAudioRow
+                      v-if="!isFuerzaTranquilaStage2of6"
                       :text="fillBlank(current.prompt, current.correct || current.answer)"
                       :speak-text="fillBlank(current.prompt, current.correct || current.answer)"
                       :exercise="current"
@@ -217,11 +198,26 @@
                       @fallback-audio="(src) => playSimpleAudio(src)"
                     />
                     <p
-                      v-if="shouldShowEnunciado(current.prompt || 'Completa la frase', fillBlank(current.prompt, current.correct || current.answer))"
+                      v-if="!isFuerzaTranquilaStage2of6 && shouldShowEnunciado(current.prompt || 'Completa la frase', fillBlank(current.prompt, current.correct || current.answer))"
                       class="audio-prompt-enunciado"
                     >
                       {{ current.prompt || 'Completa la frase' }}
                     </p>
+                    <div v-if="isFuerzaTranquilaStage2of6" class="reading-box complete-prompt-box">
+                      <p class="complete-prompt-box__text">
+                        {{ current.prompt || 'Completa la frase' }}
+                      </p>
+                      <div class="reading-audio-inline inside-box">
+                        <button
+                          class="btn btn-ghost reading-cta icon-only"
+                          type="button"
+                          aria-label="Escuchar frase"
+                          @click="handleCompleteSentenceIconClick"
+                        >
+                          <img src="/icons/audio.PNG" alt="" class="audio-icon-static" />
+                        </button>
+                      </div>
+                    </div>
                     <p class="audio-prompt-instruction">Elige una sola palabra para completar correctamente.</p>
                   </div>
                 </template>
@@ -265,7 +261,7 @@
                 <SyllableHighlighter
                   :text="readingText"
                   :segments="syllableSegments"
-                  :highlight="-1"
+                  :highlight="isFuerzaTranquilaStage4of6 && readingHighlight ? activeSyllable : -1"
                   :jump-mode="false"
                 />
                 <div class="reading-audio-inline inside-box">
@@ -971,7 +967,9 @@ let syllableTimer = null
 let syllableStepTimeouts = []
 let activeAudioEl = null
 let audioTimeUpdateHandler = null
+let audioProgressRaf = null
 let lastReadingProgress = 0
+let lastTimelineIndex = -1
 const READING_AUDIO_PACE = 0.76
 const ALLOW_DEV_TTS_FALLBACK = import.meta.env.DEV && import.meta.env.VITE_ENABLE_TTS_FALLBACK !== 'false'
 const prefersReducedMotion = ref(false)
@@ -1064,8 +1062,21 @@ const {
 
 const gameViewClasses = computed(() => ({
   'option-status-ok': currentStatus.value === 'ok',
-  'option-status-fail': currentStatus.value === 'fail'
+  'option-status-fail': currentStatus.value === 'fail',
+  'game-view--mono-3-3-centered': isMonoStage3of3.value || isMonoExerciseThirdOfThree.value
 }))
+
+const isMonoStage3of3 = computed(() => {
+  const isLevelThree = Number(level.value) === 3
+  const isStageThree = Number(stage.value) === 3
+  const total = Number(stageContext.value?.totalStages ?? 0)
+  return isLevelThree && isStageThree && (total === 3 || total === 0)
+})
+
+const isMonoExerciseThirdOfThree = computed(() => {
+  const id = String(current.value?.id || '').toUpperCase()
+  return /^L3-[A-Z_]+-3$/.test(id)
+})
 
 const selectedLeft = ref('')
 const currentPairs = ref([])
@@ -1163,46 +1174,6 @@ function segmentTextIntoSyllables(text = '') {
   return segments
 }
 
-function splitWordIntoSyllables(word = '', vowels = '') {
-  const syllables = []
-  let buffer = ''
-
-  for (let i = 0; i < word.length; i += 1) {
-    const char = word[i]
-    const next = word[i + 1]
-    buffer += char
-
-    const isVowel = vowels.includes(char)
-    const nextIsVowel = next ? vowels.includes(next) : false
-    const isLast = i === word.length - 1
-
-    if (isLast) {
-      syllables.push(buffer)
-      buffer = ''
-      continue
-    }
-
-    if (!isVowel) continue
-
-    if (nextIsVowel) {
-      syllables.push(buffer)
-      buffer = ''
-      continue
-    }
-
-    const upcoming = word.slice(i + 1)
-    const nextVowelIndex = upcoming.slice(1).search(/[aeiouáéíóúüAEIOUÁÉÍÓÚÜ]/)
-    if (nextVowelIndex >= 0) {
-      syllables.push(buffer)
-      buffer = ''
-    }
-  }
-
-  if (buffer) syllables.push(buffer)
-
-  return syllables
-}
-
 function segmentTextIntoWords(text = '') {
   const segments = []
   let cursor = 0
@@ -1210,16 +1181,84 @@ function segmentTextIntoWords(text = '') {
 
   for (const part of parts) {
     if (!part) continue
+
     if (/^\s+$/.test(part)) {
       segments.push({ text: part, isGap: true, start: cursor, end: cursor + part.length })
       cursor += part.length
       continue
     }
+
     segments.push({ text: part, isGap: false, start: cursor, end: cursor + part.length })
     cursor += part.length
   }
 
   return segments
+}
+
+function splitWordIntoSyllables(word = '', vowels = '') {
+  const source = String(word || '')
+  if (!source) return []
+
+  const normalized = source.toLowerCase()
+  const isVowel = (char) => vowels.includes(char)
+  const strongVowels = new Set(['a', 'e', 'o', 'á', 'é', 'ó'])
+  const weakVowels = new Set(['i', 'u', 'ü', 'í', 'ú'])
+  const inseparableOnsets = new Set([
+    'bl', 'br', 'cl', 'cr', 'dr', 'fl', 'fr', 'gl', 'gr', 'pl', 'pr', 'tr', 'tl', 'ch', 'll', 'rr'
+  ])
+
+  const breaksDiphthong = (a, b) => {
+    if (!a || !b) return true
+    const aStrong = strongVowels.has(a)
+    const bStrong = strongVowels.has(b)
+    if (aStrong && bStrong) return true
+    if ((a === 'í' || a === 'ú') || (b === 'í' || b === 'ú')) return true
+    return false
+  }
+
+  const pieces = []
+  let i = 0
+  while (i < source.length) {
+    let nucleusStart = i
+    while (nucleusStart < source.length && !isVowel(normalized[nucleusStart])) nucleusStart += 1
+    if (nucleusStart >= source.length) {
+      if (pieces.length) {
+        pieces[pieces.length - 1] += source.slice(i)
+      } else {
+        pieces.push(source.slice(i))
+      }
+      break
+    }
+
+    let nucleusEnd = nucleusStart
+    while (nucleusEnd + 1 < source.length && isVowel(normalized[nucleusEnd + 1])) {
+      const prev = normalized[nucleusEnd]
+      const next = normalized[nucleusEnd + 1]
+      if (breaksDiphthong(prev, next)) break
+      nucleusEnd += 1
+    }
+
+    let consonantRunEnd = nucleusEnd + 1
+    while (consonantRunEnd < source.length && !isVowel(normalized[consonantRunEnd])) consonantRunEnd += 1
+
+    const consonantRun = source.slice(nucleusEnd + 1, consonantRunEnd)
+    let splitInRun = consonantRun.length
+    if (consonantRun.length <= 1) {
+      splitInRun = 0
+    } else if (consonantRun.length === 2) {
+      splitInRun = inseparableOnsets.has(consonantRun.toLowerCase()) ? 0 : 1
+    } else if (consonantRun.length === 3) {
+      splitInRun = inseparableOnsets.has(consonantRun.slice(1).toLowerCase()) ? 1 : 2
+    } else if (consonantRun.length >= 4) {
+      splitInRun = 2
+    }
+
+    const chunkEnd = nucleusEnd + 1 + splitInRun
+    pieces.push(source.slice(i, chunkEnd))
+    i = chunkEnd
+  }
+
+  return pieces.filter(Boolean)
 }
 
 function isFuerzaTranquilaStage4of6Now() {
@@ -1232,6 +1271,16 @@ function isFuerzaTranquilaStage4of6Now() {
   return isTargetLevel && isTargetStage && isTargetTotal
 }
 
+function isFuerzaTranquilaStage2of6Now() {
+  const stageNumber = Number(stage.value ?? 0)
+  const totalStages = Number(stageContext.value?.totalStages ?? 0)
+  const levelName = String(stageContext.value?.levelMeta?.levelName || '').trim().toLowerCase()
+  const isTargetLevel = level.value === 1 || levelName === 'la fuerza tranquila'
+  const isTargetStage = stageNumber === 2
+  const isTargetTotal = totalStages === 0 || totalStages === 6
+  return isTargetLevel && isTargetStage && isTargetTotal
+}
+
 const readingText = computed(() => {
   return normalizeReadingText(current.value?.text || current.value?.sentence || current.value?.prompt || '')
 })
@@ -1239,9 +1288,6 @@ const readingText = computed(() => {
 const readingAudioSrc = computed(() => resolveAsset(current.value?.audio))
 
 const syllableSegments = computed(() => {
-  if (isFuerzaTranquilaStage4of6Now()) {
-    return segmentTextIntoWords(readingText.value)
-  }
   return segmentTextIntoSyllables(readingText.value)
 })
 const spokenSegments = computed(() =>
@@ -1567,6 +1613,7 @@ function cueForOption(option) {
 }
 
 const isFuerzaTranquilaStage4of6 = computed(() => isFuerzaTranquilaStage4of6Now())
+const isFuerzaTranquilaStage2of6 = computed(() => isFuerzaTranquilaStage2of6Now())
 const isStage1of4 = computed(() => {
   const stageNumber = Number(stage.value ?? 0)
   const totalStages = Number(stageContext.value?.totalStages ?? 0)
@@ -1769,41 +1816,6 @@ function resetLetterBuild() {
   letterBuildUsedIndices.value = []
   textAnswer.value = ''
 }
-
-const showExerciseNarration = computed(() => {
-  // Oculta el recuadro de audio en nivel 1 (La fuerza tranquila), en la etapa 1/4 (nivel 4) y 1/5 (nivel 5)
-  if (level.value === 1) return false
-  if (level.value === 3 && [1, 2].includes(stage.value)) return false
-  if (level.value === 2 && stage.value === 1) return false
-  if (level.value === 2 && stage.value === 5) return false
-  if (level.value === 4 && [1, 2, 3].includes(stage.value)) return false
-  if (level.value === 5 && stage.value === 4) return false
-  if (level.value === 5 && stage.value === 5) return false
-  if ((level.value === 4 || level.value === 5) && stage.value === 1) return false
-  return true
-})
-
-const INLINE_AUDIO_TYPES = new Set([
-  'question_sentence',
-  'complete_sentence',
-  'multiple_choice',
-  'sentence_selection',
-  'complete_word',
-  'choose_correct_word',
-  'image_word_match',
-  'read_and_answer',
-  'audio_question',
-  'audio_write',
-  'text_write',
-  'tense_classify',
-  'punctuation_game',
-  'final_exam'
-])
-
-const hasInlineAudioSupport = computed(() => {
-  const type = String(current.value?.type || '').trim().toLowerCase()
-  return INLINE_AUDIO_TYPES.has(type)
-})
 
 const isLevelThreeStageOne = computed(() => level.value === 3 && stage.value === 1)
 const isLevelFourStageOne = computed(() => level.value === 4 && stage.value === 1)
@@ -2090,7 +2102,6 @@ function handleAudioClick(audio) {
   const estimate = getEstimatedReadingDurationMs()
   const effectiveEstimate = getEffectiveDurationMs(estimate, READING_AUDIO_PACE)
   startReadingPulse(effectiveEstimate)
-  startSyllableTickerForDuration(effectiveEstimate)
 
   const audioEl = playSimpleAudio(audio, () => {
     stopReadingPulse()
@@ -2100,11 +2111,19 @@ function handleAudioClick(audio) {
     const updateFromAudio = () => {
       const durationSec =
         isFinite(audioEl.duration) && audioEl.duration > 0
-          ? audioEl.duration / READING_AUDIO_PACE
+          ? audioEl.duration
           : effectiveEstimate / 1000
       if (durationSec > 0) {
         const progress = Math.min(1, Math.max(0, audioEl.currentTime / durationSec))
         syncActiveSyllableByProgress(progress)
+      }
+    }
+    const runProgressLoop = () => {
+      updateFromAudio()
+      if (!audioEl.paused && !audioEl.ended && readingHighlight.value) {
+        audioProgressRaf = requestAnimationFrame(runProgressLoop)
+      } else {
+        audioProgressRaf = null
       }
     }
     audioTimeUpdateHandler = updateFromAudio
@@ -2113,9 +2132,9 @@ function handleAudioClick(audio) {
       const durationMs = isFinite(audioEl.duration) ? audioEl.duration * 1000 : estimate
       const effectiveDuration = getEffectiveDurationMs(durationMs, READING_AUDIO_PACE)
       startReadingPulse(effectiveDuration)
-      startSyllableTickerForDuration(effectiveDuration)
       updateFromAudio()
     })
+    runProgressLoop()
   }
 }
 
@@ -2123,6 +2142,8 @@ function startReadingPulse(autoStopMs) {
   if (readingTimer) clearTimeout(readingTimer)
   const firstIdx = syllableSegments.value.findIndex((segment) => !segment.isGap)
   activeSyllable.value = firstIdx
+  const firstTimelinePos = spokenSyllableTimeline.value.findIndex((entry) => entry.idx === firstIdx)
+  lastTimelineIndex = firstTimelinePos >= 0 ? firstTimelinePos : -1
   readingHighlight.value = true
   if (Number.isFinite(autoStopMs) && autoStopMs > 0) {
     readingTimer = window.setTimeout(() => {
@@ -2146,6 +2167,7 @@ function resetReadingHighlight() {
   readingHighlight.value = false
   activeSyllable.value = -1
   lastReadingProgress = 0
+  lastTimelineIndex = -1
   clearSyllableTicker()
   if (readingTimer) {
     clearTimeout(readingTimer)
@@ -2177,6 +2199,21 @@ async function handleReadingIconClick() {
       volume: audioSettings.voiceVolume,
       onEnd: () => stopReadingPulse()
     })
+  }
+}
+
+function handleCompleteSentenceIconClick() {
+  unlockAudio()
+  playSfx('click')
+  const audioSettings = getAudioSettings()
+  if (!audioSettings.voiceEnabled) return
+  if (current.value?.audio) {
+    handleAudioClick(current.value.audio)
+    return
+  }
+  const spoken = fillBlank(current.value?.prompt || '', current.value?.correct || current.value?.answer || '')
+  if (spoken) {
+    playVoice(spoken, { interrupt: true })
   }
 }
 
@@ -2223,6 +2260,10 @@ function clearAudioListeners() {
   if (activeAudioEl && audioTimeUpdateHandler) {
     activeAudioEl.removeEventListener('timeupdate', audioTimeUpdateHandler)
     audioTimeUpdateHandler = null
+  }
+  if (audioProgressRaf) {
+    cancelAnimationFrame(audioProgressRaf)
+    audioProgressRaf = null
   }
 }
 
@@ -2286,34 +2327,20 @@ function startFaroSyllableSchedule(durationMs) {
 }
 
 function syncActiveSyllableByProgress(progress) {
-  const timingMap = resolvedWordTimingMap.value
-  if (timingMap.length && isFuerzaTranquilaStage4of6Now()) {
-    const lastTimedWord = timingMap[timingMap.length - 1]
-    const audioDuration = Number(lastTimedWord?.end ?? 0)
-    if (audioDuration > 0) {
-      const clamped = Math.min(1, Math.max(0, progress))
-      const monotonic = Math.max(lastReadingProgress, clamped)
-      lastReadingProgress = monotonic
-      const timeSec = monotonic * audioDuration
-      const active =
-        timingMap.find((item) => timeSec >= item.start && timeSec < item.end) ||
-        timingMap.find((item) => timeSec < item.start) ||
-        timingMap[timingMap.length - 1]
-      if (active) {
-        activeSyllable.value = active.idx
-        return
-      }
-    }
-  }
-
   const timeline = spokenSyllableTimeline.value
   if (!timeline.length) return
   const clamped = Math.min(1, Math.max(0, progress))
   // Evita saltos hacia atrás por jitter del reproductor.
   const monotonic = Math.max(lastReadingProgress, clamped)
   lastReadingProgress = monotonic
-  const next = timeline.find((entry) => monotonic <= entry.endProgress) || timeline[timeline.length - 1]
-  activeSyllable.value = next.idx
+  const rawTarget =
+    timeline.findIndex((entry) => monotonic <= entry.endProgress)
+  const targetPos = rawTarget >= 0 ? rawTarget : timeline.length - 1
+  const steppedTarget =
+    lastTimelineIndex >= 0 ? Math.min(targetPos, lastTimelineIndex + 1) : targetPos
+  const safePos = Math.max(0, steppedTarget)
+  lastTimelineIndex = Math.max(lastTimelineIndex, safePos)
+  activeSyllable.value = timeline[safePos].idx
 }
 
 watch(
@@ -3160,24 +3187,6 @@ function shuffleArray(arr) {
   border-color: #0284c7;
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
 }
-.exercise-narration {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 12px;
-  background: #f8fbff;
-  border: 1px solid rgba(14, 165, 233, 0.15);
-}
-.exercise-narration .audio-button {
-  width: 42px;
-  height: 42px;
-}
-.narration-label {
-  font-weight: 700;
-  color: #0f172a;
-  font-size: 0.95rem;
-}
 .audio-prompt-instruction {
   margin: 0.45rem 0 0;
   font-size: clamp(1.02rem, 3.8vw, 1.2rem);
@@ -3196,6 +3205,32 @@ function shuffleArray(arr) {
   line-height: 1.52;
   font-weight: 760;
   color: #0f172a;
+}
+.complete-prompt-box {
+  width: min(100%, 760px);
+  margin: 0 auto 0.2rem;
+  padding: 0.9rem 0.95rem;
+  border: 2px solid rgba(14, 165, 233, 0.26);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef7ff 100%);
+  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.12);
+}
+.complete-prompt-box__text {
+  margin: 0;
+  font-size: clamp(1.18rem, 4.1vw, 1.42rem);
+  line-height: 1.5;
+  font-weight: 760;
+  color: #0f172a;
+}
+.game-view--mono-3-3-centered :deep(.exercise-layout__prompt),
+.game-view--mono-3-3-centered :deep(.audio-prompt-stack),
+.game-view--mono-3-3-centered :deep(.audio-prompt-enunciado),
+.game-view--mono-3-3-centered :deep(.audio-prompt-instruction),
+.game-view--mono-3-3-centered :deep(.exercise-layout__title),
+.game-view--mono-3-3-centered :deep(.exercise-layout__subtitle),
+.game-view--mono-3-3-centered :deep(.text-left) {
+  text-align: center !important;
+  justify-items: center;
 }
 @keyframes avatarRewardPop {
   0% {
@@ -3365,10 +3400,6 @@ function shuffleArray(arr) {
   .audio-icon-static {
     width: 58px;
     height: 58px;
-  }
-  .exercise-narration .audio-button {
-    width: 56px;
-    height: 56px;
   }
 }
 </style>

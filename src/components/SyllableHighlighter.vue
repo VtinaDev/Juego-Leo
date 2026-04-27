@@ -57,17 +57,16 @@ function syllableClass(part, idx) {
 }
 
 .reading-syllable {
-  display: inline-block;
-  border-bottom: 2px solid transparent;
-  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+  display: inline;
+  padding: 0;
+  border-radius: 0;
+  border-bottom: 0;
+  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
 }
 
 .reading-syllable--active {
-  border-bottom-color: #f59e0b;
-  background: rgba(255, 243, 196, 0.85);
+  box-shadow: inset 0 -0.2em 0 rgba(255, 243, 196, 0.95);
   color: #b45309;
-  border-radius: 10px;
-  padding: 2px 4px;
 }
 
 .reading-syllable--jump {
@@ -80,6 +79,7 @@ function syllableClass(part, idx) {
 .reading-syllable--gap {
   border-bottom-color: transparent;
   padding: 0;
+  border-radius: 0;
 }
 
 @keyframes syllableJump {
