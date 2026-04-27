@@ -39,6 +39,7 @@ const levelBlueprint = [
     id: 'sloth',
     levelId: 1,
     characterName: 'Oso perezoso',
+    habitatDescription: 'El árbol',
     habitat: '/images/habitats/sloth-tree.png',
     character: '/images/characters/sloth.png',
     fallbackTitle: 'Árbol de la Calma'
@@ -47,6 +48,7 @@ const levelBlueprint = [
     id: 'fox',
     levelId: 2,
     characterName: 'Zorro',
+    habitatDescription: 'La Madriguera',
     habitat: '/images/habitats/fox-burrow.png',
     character: '/images/characters/fox.png',
     fallbackTitle: 'Madriguera de Palabras'
@@ -55,6 +57,7 @@ const levelBlueprint = [
     id: 'bear',
     levelId: 3,
     characterName: 'Oso',
+    habitatDescription: 'El bosque de Miel',
     habitat: '/images/habitats/bear-honey.png',
     character: '/images/characters/bear.png',
     fallbackTitle: 'Bosque de la Miel'
@@ -63,6 +66,7 @@ const levelBlueprint = [
     id: 'monkey',
     levelId: 4,
     characterName: 'Mono',
+    habitatDescription: 'Mundo lianas',
     habitat: '/images/habitats/monkey-jungle.png',
     character: '/images/characters/monkey.png',
     fallbackTitle: 'Jungla de las Letras'
@@ -71,6 +75,7 @@ const levelBlueprint = [
     id: 'elephant',
     levelId: 5,
     characterName: 'Elefante',
+    habitatDescription: 'La escuela mágica',
     habitat: '/images/habitats/elephant-school.png',
     character: '/images/characters/elephant.png',
     fallbackTitle: 'Escuela del Elefante Sabio'
@@ -94,7 +99,7 @@ const levels = computed(() => {
     return {
       ...entry,
       title: stageTitle,
-      description: `${entry.characterName}, ${stageTitle}.`,
+      description: `${entry.characterName}: ${entry.habitatDescription}.`,
       stars,
       locked,
       route: `/game/${entry.levelId}/${progress.nextStage}`
@@ -129,8 +134,8 @@ onBeforeUnmount(() => {
   padding: clamp(5.6rem, 9vw, 7rem) clamp(0.9rem, 3vw, 2rem) clamp(1.6rem, 4vw, 2.5rem);
   background:
     radial-gradient(circle at 8% 10%, rgba(250, 204, 21, 0.2) 0, transparent 42%),
-    radial-gradient(circle at 92% 8%, rgba(96, 165, 250, 0.2) 0, transparent 45%),
-    linear-gradient(180deg, #dff2ff 0%, #f7fcff 50%, #ffffff 100%);
+    radial-gradient(circle at 92% 8%, rgba(147, 250, 96, 0.2) 0, transparent 45%),
+    linear-gradient(180deg, #f0ffdf 0%, #f7fcff 50%, #ffffff 100%);
 }
 
 .map-view__header {

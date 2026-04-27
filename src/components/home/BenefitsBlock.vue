@@ -9,28 +9,38 @@
       </div>
 
       <div class="benefits-grid" role="list">
-        <article class="benefit-card" role="listitem">
-          <span class="benefit-icon" aria-hidden="true">🧘</span>
-          <h3>Sin presión</h3>
-          <p>Sin tiempo límite, sin comparaciones y con reintentos suaves.</p>
-        </article>
-
-        <article class="benefit-card" role="listitem">
-          <span class="benefit-icon" aria-hidden="true">⏱️</span>
-          <h3>10–15 minutos</h3>
-          <p>Sesiones breves para evitar fatiga y mantener la atención.</p>
-        </article>
-
-        <article class="benefit-card" role="listitem">
-          <span class="benefit-icon" aria-hidden="true">🧩</span>
-          <h3>Paso a paso</h3>
-          <p>Progresión gradual: letras, sílabas, palabras y comprensión.</p>
+        <article v-for="item in benefitItems" :key="item.title" class="benefit-card" role="listitem">
+          <span class="benefit-icon" aria-hidden="true">
+            <img :src="item.icon" :alt="`Icono ${item.title}`" class="benefit-icon-img" loading="lazy" />
+          </span>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.text }}</p>
         </article>
       </div>
 
     </div>
   </section>
 </template>
+
+<script setup>
+const benefitItems = [
+  {
+    title: 'Sin presión',
+    text: 'Sin tiempo límite, sin comparaciones y con reintentos suaves.',
+    icon: '/icons/perfil.PNG'
+  },
+  {
+    title: '10–15 minutos',
+    text: 'Sesiones breves para evitar fatiga y mantener la atención.',
+    icon: '/icons/clock.PNG'
+  },
+  {
+    title: 'Paso a paso',
+    text: 'Progresión gradual: letras, sílabas, palabras y comprensión.',
+    icon: '/icons/puzzle.PNG'
+  }
+]
+</script>
 
 <style scoped>
 .benefits {
@@ -76,7 +86,7 @@
 
 .benefit-card {
   background: rgba(241, 245, 249, 0.86);
-  border: 1px solid rgba(148, 163, 184, 0.45);
+  border: 1px solid rgba(135, 197, 34, 0.5);
   border-radius: 16px;
   padding: 1.1rem 1rem;
   box-shadow: none;
@@ -84,12 +94,38 @@
   display: grid;
   gap: 0.4rem;
   text-align: left;
+  cursor: pointer;
+  transform: scale(1);
+  transform-origin: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  will-change: transform;
+}
+
+.benefit-card:hover,
+.benefit-card:focus-within {
+  transform: translateY(-2px) scale(1.03);
+  border-color: rgba(140, 197, 34, 0.75);
+  box-shadow: 0 14px 26px rgba(129, 197, 34, 0.26);
+}
+
+.benefit-card:active {
+  transform: scale(1.06);
+  box-shadow: 0 16px 30px rgba(132, 197, 34, 0.3);
 }
 
 .benefit-icon {
-  font-size: 2rem;
-  line-height: 1;
-  display: inline-block;
+  width: 3.15rem;
+  height: 3.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.benefit-icon-img {
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.18));
 }
 
 .benefit-card h3 {
@@ -115,6 +151,19 @@
 @media (min-width: 960px) {
   .benefits-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .benefit-card {
+    transition: none;
+  }
+
+  .benefit-card:hover,
+  .benefit-card:focus-within,
+  .benefit-card:active {
+    transform: none;
+    box-shadow: none;
   }
 }
 </style>

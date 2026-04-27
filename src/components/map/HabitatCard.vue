@@ -33,14 +33,18 @@ defineEmits(['enter'])
   width: clamp(220px, 72vw, 280px);
   border-radius: 24px;
   background: linear-gradient(180deg, #ffffff 0%, #f2f8ff 100%);
-  border: 2px solid rgba(147, 197, 253, 0.45);
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.13);
+  border: 2px solid rgba(34, 197, 94, 0.48);
+  box-shadow: none;
   padding: 0.72rem;
   display: grid;
   gap: 0.72rem;
   transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
   outline: none;
   animation: cardIn 0.45s ease both;
+}
+
+.habitat-card:not(.habitat-card--locked) {
+  box-shadow: 0 10px 22px rgba(34, 197, 94, 0.22);
 }
 
 .habitat-card__media {
@@ -71,7 +75,7 @@ defineEmits(['enter'])
 .habitat-card:hover,
 .habitat-card:focus-visible {
   transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 18px 28px rgba(15, 23, 42, 0.2);
+  box-shadow: 0 18px 28px rgba(34, 197, 94, 0.32);
 }
 
 .habitat-card--locked {
@@ -82,7 +86,7 @@ defineEmits(['enter'])
 .habitat-card--locked:hover,
 .habitat-card--locked:focus-visible {
   transform: none;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.13);
+  box-shadow: none;
 }
 
 @keyframes characterIdle {

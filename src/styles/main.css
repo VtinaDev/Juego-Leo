@@ -109,7 +109,10 @@ body,
 
 .footer-wave {
   position: relative;
-  background: linear-gradient(180deg, #c9efc3 0%, #8fd47e 100%);
+  background-image: url('/backgroun_home.png');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
   clip-path: ellipse(100% 120% at 50% 0%);
   color: #0f172a;
   padding-top: 2.5rem;

@@ -107,8 +107,8 @@ defineEmits(['enter'])
   font-weight: 800;
   font-size: 0.94rem;
   color: #fff;
-  background: linear-gradient(160deg, #60a5fa 0%, #2563eb 100%);
-  box-shadow: 0 8px 14px rgba(37, 99, 235, 0.28);
+  background: linear-gradient(160deg, #bcef86 0%, #74c522 52%, #15803d 100%);
+  box-shadow: 0 8px 14px rgba(132, 197, 34, 0.32);
   transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
 }
@@ -117,7 +117,7 @@ defineEmits(['enter'])
 .level-station__btn:focus-visible:enabled {
   transform: translateY(-2px);
   filter: brightness(1.04);
-  box-shadow: 0 12px 18px rgba(37, 99, 235, 0.34);
+  box-shadow: 0 12px 18px rgba(126, 197, 34, 0.4);
 }
 
 .level-station__btn:disabled {

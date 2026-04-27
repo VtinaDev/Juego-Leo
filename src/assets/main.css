@@ -191,7 +191,10 @@ a {
 }
 
 .footer-wave {
-  background: linear-gradient(135deg, #c5ef5f 0%, #d8f86d 45%, #ffe27a 100%);
+  background-image: url('/backgroun_home.png');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
   color: #0f172a;
   padding: 1.25rem 0 1.5rem;
 }

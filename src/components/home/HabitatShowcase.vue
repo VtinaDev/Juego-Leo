@@ -5,7 +5,7 @@
     <div class="showcase-inner">
       <header class="showcase-header">
         <p class="showcase-kicker">Mundo de aventura</p>
-        <h2>Descubre los hábitats mágicos</h2>
+        <h2>Entra a la jungla mágica</h2>
       </header>
 
       <div class="showcase-character-wrap">
@@ -65,31 +65,31 @@ import Zorro from '../../assets/characters/Zorro.png'
 const habitats = [
   {
     id: 'monkey-jungle',
-    title: 'Jungla',
+    title: 'Mundo lianas',
     image: '/images/habitats/monkey-jungle.png',
     character: Mono
   },
   {
     id: 'sloth-tree',
-    title: 'Árbol con lianas',
+    title: 'El árbol',
     image: '/images/habitats/sloth-tree.png',
     character: Perezoso
   },
   {
     id: 'fox-burrow',
-    title: 'Madriguera',
+    title: 'La Madriguera',
     image: '/images/habitats/fox-burrow.png',
     character: Zorro
   },
   {
     id: 'bear-honey',
-    title: 'Bosque de miel',
+    title: 'El bosque de Miel',
     image: '/images/habitats/bear-honey.png',
     character: Oso
   },
   {
     id: 'elephant-school',
-    title: 'Escuela final',
+    title: 'La escuela mágica',
     image: '/images/habitats/elephant-school.png',
     character: Elefante
   }
@@ -188,7 +188,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .habitat-showcase {
   position: relative;
-  background: linear-gradient(180deg, #e7f4ff 0%, #f7fbff 62%, #ffffff 100%);
+  background: linear-gradient(180deg, #fcffe7 0%, #f7fbff 62%, #ffffff 100%);
   padding: 2.4rem clamp(1rem, 4vw, 2.5rem) 2.8rem;
   overflow: hidden;
 }
@@ -222,7 +222,7 @@ onBeforeUnmount(() => {
   font-size: 0.8rem;
   font-weight: 900;
   letter-spacing: 0.12em;
-  color: #0369a1;
+  color: #67a103;
   text-transform: uppercase;
 }
 
@@ -244,7 +244,7 @@ onBeforeUnmount(() => {
   min-height: clamp(190px, 28vw, 300px);
   border-radius: 28px;
   border: 2px solid rgba(255, 255, 255, 0.65);
-  box-shadow: 0 16px 30px rgba(30, 64, 175, 0.18);
+  box-shadow: 0 16px 30px rgba(250, 204, 21, 0.28);
   background-size: cover, cover, cover;
   background-position: center, center, center;
   background-repeat: no-repeat;
@@ -296,9 +296,9 @@ onBeforeUnmount(() => {
   width: var(--card-w);
   border-radius: 24px;
   padding: 0.8rem 0.8rem 0.95rem;
-  background: linear-gradient(180deg, #ffffff 0%, #f3f8ff 100%);
-  border: 2px solid rgba(147, 197, 253, 0.44);
-  box-shadow: 0 10px 20px rgba(30, 64, 175, 0.15);
+  background: linear-gradient(180deg, #ffffff 0%, #fffff3 100%);
+  border: 2px solid rgba(253, 253, 147, 0.44);
+  box-shadow: 0 10px 20px rgba(250, 204, 21, 0.24);
   transform: rotate(2deg);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   outline: none;
@@ -338,7 +338,7 @@ onBeforeUnmount(() => {
 .showcase-card:hover,
 .showcase-card:focus-visible {
   transform: rotate(2deg) translateY(-8px) scale(1.03);
-  box-shadow: 0 18px 30px rgba(30, 64, 175, 0.22);
+  box-shadow: 0 18px 30px rgba(250, 204, 21, 0.34);
 }
 
 .showcase-card:focus-visible {
