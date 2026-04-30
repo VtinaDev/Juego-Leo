@@ -30,11 +30,11 @@ const router = createRouter({
   },
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   if (!to.meta?.requiresAuth) return true
 
   const auth = useAuthStore()
-  auth.load()
+  await auth.load()
 
   if (auth.isAuthenticated) return true
 

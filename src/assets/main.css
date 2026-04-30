@@ -191,19 +191,19 @@ a {
 }
 
 .footer-wave {
-  background: linear-gradient(180deg, #fde68a 0%, #facc15 55%, #eab308 100%);
-  color: #4c2f0d;
+  background: linear-gradient(180deg, hsl(48, 100%, 64%) 0%, #ffe16a 55%, #ffcb2e 100%);
+  color: #8edd0f;
   padding: 1.3rem 0 1.5rem;
 }
 
 .footer-wave a {
-  color: #613e13;
+  color: #203a00;
   text-decoration-thickness: 1.5px;
   text-underline-offset: 2px;
 }
 
 .footer-wave a:hover {
-  color: #4c2f0d;
+  color: #a9d300;
 }
 
 .wave-section {

@@ -301,24 +301,28 @@ function closeAuth() {
   showAuth.value = false
 }
 
-function handleRegister() {
+async function handleRegister() {
   authStatus.value = ''
   authError.value = ''
   resetMode.value = false
-  const ok = auth.register(authForm.value.email, authForm.value.password)
+  const ok = await auth.register(authForm.value.email, authForm.value.password)
   if (ok) {
-    authStatus.value = `Cuenta creada: ${auth.userEmail}`
+    authStatus.value = auth.isAuthenticated
+      ? `Cuenta creada: ${auth.userEmail}`
+      : 'Cuenta creada. Revisa tu correo para confirmar el acceso.'
     authForm.value.password = ''
-    closeAuth()
-    router.push('/profile')
+    if (auth.isAuthenticated) {
+      closeAuth()
+      router.push('/profile')
+    }
   } else authError.value = auth.error
 }
 
-function handleLogin() {
+async function handleLogin() {
   authStatus.value = ''
   authError.value = ''
   resetMode.value = false
-  const ok = auth.login(authForm.value.email, authForm.value.password)
+  const ok = await auth.login(authForm.value.email, authForm.value.password)
   if (ok) {
     authStatus.value = `Sesión iniciada: ${auth.userEmail}`
     authForm.value.password = ''
@@ -327,7 +331,7 @@ function handleLogin() {
   } else authError.value = auth.error
 }
 
-function handleForgot() {
+async function handleForgot() {
   authStatus.value = ''
   authError.value = ''
   const email = authForm.value.email?.trim?.() || ''
@@ -336,16 +340,16 @@ function handleForgot() {
     authError.value = 'Ingresa tu email para enviar el enlace de recuperación.'
     return
   }
-  const ok = auth.requestReset(email)
+  const ok = await auth.requestReset(email)
   if (!ok) {
     authError.value = auth.error
     return
   }
   resetMode.value = true
-  authStatus.value = `Enviamos un enlace de recuperación a ${email} (demo). Introduce la nueva contraseña.`
+  authStatus.value = `Enviamos un enlace de recuperación a ${email}.`
 }
 
-function handleResetPassword() {
+async function handleResetPassword() {
   authStatus.value = ''
   authError.value = ''
   if (!resetMode.value) {
@@ -360,7 +364,7 @@ function handleResetPassword() {
     authError.value = 'Las contraseñas no coinciden.'
     return
   }
-  const ok = auth.resetPassword(newPassword.value)
+  const ok = await auth.resetPassword(newPassword.value)
   if (!ok) {
     authError.value = auth.error
     return
@@ -372,10 +376,10 @@ function handleResetPassword() {
   authForm.value.password = ''
 }
 
-function handleLogout() {
-  auth.logout()
+async function handleLogout() {
+  await auth.logout()
   authStatus.value = ''
-  authError.value = ''
+  authError.value = auth.error
   authForm.value.password = ''
 }
 

@@ -13,9 +13,9 @@
         </label>
       </div>
       <div class="flex flex-wrap items-center gap-2">
-        <button class="btn btn-primary" type="button" @click="handleRegister" :disabled="auth.isAuthenticated">Crear cuenta</button>
-        <button class="btn btn-secondary" type="button" @click="handleLogin" :disabled="auth.isAuthenticated">Iniciar sesión</button>
-        <button class="btn btn-ghost" type="button" @click="handleLogout" :disabled="!auth.isAuthenticated">Cerrar sesión</button>
+        <button class="btn btn-primary" type="button" @click="handleRegister" :disabled="auth.isAuthenticated || auth.loading">Crear cuenta</button>
+        <button class="btn btn-secondary" type="button" @click="handleLogin" :disabled="auth.isAuthenticated || auth.loading">Iniciar sesión</button>
+        <button class="btn btn-ghost" type="button" @click="handleLogout" :disabled="!auth.isAuthenticated || auth.loading">Cerrar sesión</button>
         <span v-if="authStatus" class="text-emerald-700 font-semibold">{{ authStatus }}</span>
         <span v-else-if="authError" class="text-red-600 font-semibold">{{ authError }}</span>
       </div>
@@ -38,8 +38,8 @@
         <input v-model="child.birthdate" type="date" class="w-full px-4 py-3 border rounded-2xl" />
       </label>
       <div class="flex items-center gap-3">
-        <button class="btn btn-primary" type="button" @click="save">Guardar</button>
-        <button class="btn btn-secondary" type="button" @click="handleReport" :disabled="!auth.isAuthenticated">
+        <button class="btn btn-primary" type="button" @click="save" :disabled="profile.loading">Guardar</button>
+        <button class="btn btn-secondary" type="button" @click="handleReport" :disabled="!auth.isAuthenticated || profile.loading">
           Generar informe
         </button>
         <p v-if="successMessage" class="text-emerald-700 font-semibold">{{ successMessage }}</p>
@@ -296,11 +296,16 @@ watch(
   { immediate: true }
 )
 
-onMounted(() => {
+onMounted(async () => {
   if (!child.name) child.name = profile.childName || game.child?.name || ''
   if (!child.birthdate) child.birthdate = profile.childBirthdate || game.child?.birthdate || ''
   if (!authForm.email) authForm.email = auth.userEmail || ''
   if (loginRequiredNotice.value) authError.value = loginRequiredNotice.value
+  
+  if (auth.isAuthenticated) {
+    await profile.loadProfile()
+    await game.loadProgressFromSupabase()
+  }
 })
 
 function redirectToPendingPlay() {
@@ -309,7 +314,7 @@ function redirectToPendingPlay() {
   router.push(redirect)
 }
 
-function save() {
+async function save() {
   errorMessage.value = ''
   successMessage.value = ''
   if (!auth.isAuthenticated) {
@@ -327,37 +332,55 @@ function save() {
     return
   }
 
-  profile.saveProfile({ name, birthdate })
+  const ok = await profile.saveProfile({ name, birthdate })
+  if (!ok) {
+    errorMessage.value = profile.error || 'No se pudo guardar el perfil.'
+    return
+  }
   game.setChild({ name, birthdate })
   successMessage.value = 'Guardado'
 }
 
-function handleRegister() {
+async function handleRegister() {
   authStatus.value = ''
   authError.value = ''
-  const ok = auth.register(authForm.email, authForm.password)
+
+  const ok = await auth.register(authForm.email, authForm.password)
   if (ok) {
-    authStatus.value = `Cuenta creada: ${auth.userEmail}`
+    authStatus.value = auth.isAuthenticated
+      ? `Cuenta creada: ${auth.userEmail}`
+      : 'Cuenta creada. Revisa tu correo para confirmar el acceso.'
     authForm.password = ''
-    redirectToPendingPlay()
-  } else authError.value = auth.error
+    if (auth.isAuthenticated) {
+      await profile.loadProfile()
+      await game.loadProgressFromSupabase()
+      redirectToPendingPlay()
+    }
+  } else {
+    authError.value = auth.error
+  }
 }
 
-function handleLogin() {
+
+async function handleLogin() {
   authStatus.value = ''
   authError.value = ''
-  const ok = auth.login(authForm.email, authForm.password)
+  const ok = await auth.login(authForm.email, authForm.password)
   if (ok) {
     authStatus.value = `Sesión iniciada: ${auth.userEmail}`
     authForm.password = ''
+    await profile.loadProfile()
+    await game.loadProgressFromSupabase()
     redirectToPendingPlay()
   } else authError.value = auth.error
 }
 
-function handleLogout() {
-  auth.logout()
+async function handleLogout() {
+  await auth.logout()
+  profile.clearProfile()
+  game.resetGame()
   authStatus.value = ''
-  authError.value = ''
+  authError.value = auth.error
   successMessage.value = ''
   reportMessage.value = ''
   reportShown.value = false

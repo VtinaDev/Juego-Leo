@@ -1,153 +1,202 @@
 import { defineStore } from 'pinia'
-
-const AUTH_KEY = 'juegoLeo_auth'
+import { getSupabaseConfigError, hasSupabaseConfig, supabase } from '../lib/supabaseClient'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
+    user: null,
+    session: null,
     userEmail: '',
-    token: '',
-    password: '',
-    resetRequested: false,
+    loading: false,
+    initialized: false,
     error: ''
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.token && !!state.userEmail
+    isAuthenticated: (state) => !!state.session?.access_token && !!state.user?.id,
+    isConfigured: () => hasSupabaseConfig
   },
 
   actions: {
-    load() {
+    async load() {
+      if (!hasSupabaseConfig) {
+        this.error = getSupabaseConfigError()
+        this.initialized = true
+        return false
+      }
+
+      this.loading = true
+      this.error = ''
       try {
-        if (typeof window === 'undefined') return
-        const saved = localStorage.getItem(AUTH_KEY)
-        if (saved) {
-          const parsed = JSON.parse(saved)
-          this.userEmail = parsed.userEmail || ''
-          this.token = parsed.token || ''
-          this.password = parsed.password || ''
-          this.resetRequested = false
-        }
+        const { data, error } = await supabase.auth.getSession()
+        if (error) throw error
+        this.setSession(data.session)
+        return true
       } catch (error) {
-        console.error('⚠️ Error al cargar auth:', error)
+        this.clearSession()
+        this.error = getAuthMessage(error)
+        return false
+      } finally {
+        this.loading = false
+        this.initialized = true
       }
     },
 
-    register(email, password) {
+    async register(email, password) {
       this.error = ''
-      if (!isValidEmail(email)) {
+      const normalizedEmail = normalizeEmail(email)
+      const validation = validateCredentials(normalizedEmail, password)
+      if (validation) {
+        this.error = validation
+        return false
+      }
+      if (!hasSupabaseConfig) {
+        this.error = getSupabaseConfigError()
+        return false
+      }
+
+      this.loading = true
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: normalizedEmail,
+          password
+        })
+        if (error) throw error
+        this.setSession(data.session)
+        if (!data.session && data.user) {
+          this.user = data.user
+          this.userEmail = data.user.email || normalizedEmail
+        }
+        return true
+      } catch (error) {
+        this.error = getAuthMessage(error)
+        return false
+      } finally {
+        this.loading = false
+        this.initialized = true
+      }
+    },
+
+    async login(email, password) {
+      this.error = ''
+      const normalizedEmail = normalizeEmail(email)
+      const validation = validateCredentials(normalizedEmail, password)
+      if (validation) {
+        this.error = validation
+        return false
+      }
+      if (!hasSupabaseConfig) {
+        this.error = getSupabaseConfigError()
+        return false
+      }
+
+      this.loading = true
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: normalizedEmail,
+          password
+        })
+        if (error) throw error
+        this.setSession(data.session)
+        return true
+      } catch (error) {
+        this.clearSession()
+        this.error = getAuthMessage(error)
+        return false
+      } finally {
+        this.loading = false
+        this.initialized = true
+      }
+    },
+
+    async logout() {
+      this.error = ''
+      if (hasSupabaseConfig) {
+        const { error } = await supabase.auth.signOut()
+        if (error) this.error = getAuthMessage(error)
+      }
+      this.clearSession()
+      this.initialized = true
+      return !this.error
+    },
+
+    async requestReset(email) {
+      this.error = ''
+      const normalizedEmail = normalizeEmail(email)
+      if (!isValidEmail(normalizedEmail)) {
         this.error = 'Ingresa un email válido'
         return false
       }
-      if (!password || password.length < 6) {
-        this.error = 'La contraseña debe tener al menos 6 caracteres'
+      if (!hasSupabaseConfig) {
+        this.error = getSupabaseConfigError()
         return false
       }
-      this.userEmail = email.trim().toLowerCase()
-      this.token = generateToken()
-      this.password = password
-      this.resetRequested = false
-      persist(this)
+
+      const redirectTo = `${window.location.origin}/profile`
+      const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, { redirectTo })
+      if (error) {
+        this.error = getAuthMessage(error)
+        return false
+      }
       return true
     },
 
-    login(email, password) {
+    async resetPassword(newPassword) {
       this.error = ''
-      if (!isValidEmail(email)) {
-        this.error = 'Ingresa un email válido'
-        return false
-      }
-      const saved = loadRaw()
-      if (!saved || saved.userEmail !== email.trim().toLowerCase()) {
-        this.error = 'No existe una cuenta con ese email'
-        return false
-      }
-      if (!password || password.length < 6 || saved.password !== password) {
-        this.error = 'Contraseña incorrecta'
-        return false
-      }
-      this.userEmail = saved.userEmail
-      this.token = saved.token || generateToken()
-      this.password = saved.password || ''
-      this.resetRequested = false
-      persist(this)
-      return true
-    },
-
-    logout() {
-      this.userEmail = ''
-      this.token = ''
-      this.password = ''
-      this.resetRequested = false
-      this.error = ''
-      if (typeof window !== 'undefined') localStorage.removeItem(AUTH_KEY)
-    },
-
-    requestReset(email) {
-      this.error = ''
-      if (!isValidEmail(email)) {
-        this.error = 'Ingresa un email válido'
-        return false
-      }
-      const saved = loadRaw()
-      if (!saved || saved.userEmail !== email.trim().toLowerCase()) {
-        this.error = 'No existe una cuenta con ese email'
-        return false
-      }
-      this.userEmail = saved.userEmail
-      this.password = saved.password
-      this.token = saved.token
-      this.resetRequested = true
-      persist(this)
-      return true
-    },
-
-    resetPassword(newPassword) {
-      this.error = ''
-      if (!this.resetRequested) {
-        this.error = 'Solicita el enlace de recuperación primero.'
-        return false
-      }
       if (!newPassword || newPassword.length < 6) {
         this.error = 'La nueva contraseña debe tener al menos 6 caracteres'
         return false
       }
-      this.password = newPassword
-      this.token = generateToken()
-      this.resetRequested = false
-      persist(this)
+      if (!hasSupabaseConfig) {
+        this.error = getSupabaseConfigError()
+        return false
+      }
+
+      const { data, error } = await supabase.auth.updateUser({ password: newPassword })
+      if (error) {
+        this.error = getAuthMessage(error)
+        return false
+      }
+      if (data.user) this.user = data.user
       return true
+    },
+
+    setSession(session) {
+      this.session = session || null
+      this.user = session?.user || null
+      this.userEmail = session?.user?.email || ''
+    },
+
+    clearSession() {
+      this.session = null
+      this.user = null
+      this.userEmail = ''
     }
   }
 })
 
-function persist(store) {
-  if (typeof window === 'undefined') return
-  localStorage.setItem(
-    AUTH_KEY,
-    JSON.stringify({
-      userEmail: store.userEmail,
-      token: store.token,
-      password: store.password
-    })
-  )
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase()
 }
 
-function loadRaw() {
-  try {
-    if (typeof window === 'undefined') return null
-    const saved = localStorage.getItem(AUTH_KEY)
-    return saved ? JSON.parse(saved) : null
-  } catch {
-    return null
-  }
-}
-
-function generateToken() {
-  return Math.random().toString(36).slice(2) + Date.now().toString(36)
+function validateCredentials(email, password) {
+  if (!isValidEmail(email)) return 'Ingresa un email válido'
+  if (!password || password.length < 6) return 'La contraseña debe tener al menos 6 caracteres'
+  return ''
 }
 
 function isValidEmail(email) {
   return /\S+@\S+\.\S+/.test(email || '')
+}
+
+function getAuthMessage(error) {
+  const message = error?.message || ''
+  if (/invalid login credentials/i.test(message)) return 'Email o contraseña incorrectos'
+  if (/email not confirmed/i.test(message)) return 'Confirma tu email antes de iniciar sesión'
+  if (/user already registered|already registered/i.test(message)) return 'Ya existe una cuenta con ese email'
+  if (/password/i.test(message) && /weak|short|length/i.test(message)) {
+    return 'La contraseña debe tener al menos 6 caracteres'
+  }
+  return message || 'No se pudo completar la operación'
 }
 
 export default useAuthStore

@@ -80,6 +80,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
+import { getLevelDefinition } from '../engine/logic/utils/validateTemplates'
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
 import Oso from '../assets/characters/Oso.png'
@@ -114,11 +115,21 @@ const stageLabel = computed(() => {
 
 const totalStages = computed(() => {
   const storeTotal = game.getLevelProgress?.(levelNumber.value)?.totalStages ?? 0
-  return storeTotal || totalFromQuery.value || stageNumber.value
+  const def = getLevelDefinition?.(String(levelNumber.value))
+  const definitionTotal =
+    Number(def?.order?.length || 0) ||
+    Number(def?.subtypes ? Object.keys(def.subtypes).length : 0) ||
+    0
+
+  return Math.max(storeTotal, totalFromQuery.value, definitionTotal, stageNumber.value)
 })
 
-const hasNextStage = computed(() => stageNumber.value < totalStages.value)
-const nextStage = computed(() => (hasNextStage.value ? stageNumber.value + 1 : null))
+const nextStage = computed(() => {
+  const storeNext = Number(game.getLevelProgress?.(levelNumber.value)?.nextStage ?? 0)
+  const candidate = storeNext > stageNumber.value ? storeNext : stageNumber.value + 1
+  return candidate <= totalStages.value ? candidate : null
+})
+const hasNextStage = computed(() => nextStage.value !== null)
 
 const levelLabel = computed(() => levelMeta.value?.levelName ?? `Nivel ${levelNumber.value}`)
 const levelColor = computed(() => levelMeta.value?.color ?? '#2563eb')

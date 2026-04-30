@@ -1,20 +1,26 @@
 import { defineStore } from 'pinia'
 import { getLevelDefinition, listLevels } from '../engine/logic/utils/validateTemplates.js'
-
+import { getSupabaseConfigError, hasSupabaseConfig, supabase } from '../lib/supabaseClient'
+import { useAuthStore } from './authStore'
+import { useProfileStore } from './profileStore'
 
 function computeLevelProgress(state, level) {
   const levelKey = String(level)
   const levelDef = getLevelDefinition(levelKey)
+
   const totalStages =
     levelDef?.order?.length ||
     (levelDef?.subtypes ? Object.keys(levelDef.subtypes).length : 0) ||
     1
+
   const levelStages = state.stages?.[levelKey] || {}
   const completedStages = Object.values(levelStages).filter((stage) => stage?.done).length
   const nextStage = Math.min(completedStages + 1, totalStages)
+
   const lastStage = Object.values(levelStages)
     .filter(Boolean)
     .sort((a, b) => new Date(b.completedAt ?? 0) - new Date(a.completedAt ?? 0))[0]
+
   return {
     totalStages,
     completedStages,
@@ -35,6 +41,7 @@ function aggregateLearningInsights(stages = {}) {
   for (const levelStages of Object.values(stages || {})) {
     for (const stage of Object.values(levelStages || {})) {
       if (!stage) continue
+
       const subtype = stage.subtype || 'general'
       const bucket = subtypeMap.get(subtype) || {
         subtype,
@@ -70,6 +77,7 @@ function aggregateLearningInsights(stages = {}) {
       const answered = entry.ok + entry.fail
       const accuracy = answered > 0 ? entry.ok / answered : 0
       const avgAttempts = entry.exercises > 0 ? entry.attempts / entry.exercises : 0
+
       return {
         ...entry,
         accuracy,
@@ -79,6 +87,7 @@ function aggregateLearningInsights(stages = {}) {
     .sort((a, b) => a.accuracy - b.accuracy || b.avgAttempts - a.avgAttempts)
 
   const answered = totalOk + totalFail
+
   return {
     totals: {
       ok: totalOk,
@@ -113,6 +122,7 @@ export const useGameStore = defineStore('game', {
     levelTimeline: (state) =>
       listLevels().map((levelId) => {
         const def = getLevelDefinition(levelId)
+
         return {
           levelId: Number(levelId),
           levelName: def?.meta?.levelName ?? `Nivel ${levelId}`,
@@ -129,7 +139,9 @@ export const useGameStore = defineStore('game', {
     load() {
       try {
         if (typeof window === 'undefined') return
+
         const saved = localStorage.getItem('gameData')
+
         if (saved) {
           const parsed = JSON.parse(saved)
           Object.assign(this, parsed)
@@ -139,9 +151,69 @@ export const useGameStore = defineStore('game', {
       }
     },
 
+    async loadProgressFromSupabase() {
+      if (!hasSupabaseConfig) {
+        console.warn(getSupabaseConfigError())
+        return false
+      }
+
+      const auth = useAuthStore()
+      if (!auth.initialized) await auth.load()
+
+      if (!auth.user?.id) {
+        return false
+      }
+
+      const profile = useProfileStore()
+      if (!profile.childId) {
+        await profile.loadProfile()
+      }
+
+      const { data, error } = await supabase
+        .from('game_progress')
+        .select('level_id, stage_id, stars, points, completed, completed_at')
+        .eq('user_id', auth.user.id)
+        .eq('child_id', profile.childId)
+
+      if (error) {
+        console.error('Error cargando progreso desde Supabase:', error)
+        return false
+      }
+
+      const nextStages = {}
+      let nextStars = 0
+      let nextPoints = 0
+
+      for (const item of data || []) {
+        const levelKey = String(item.level_id)
+        const stageKey = String(item.stage_id)
+
+        if (!nextStages[levelKey]) nextStages[levelKey] = {}
+
+        nextStages[levelKey][stageKey] = {
+          done: Boolean(item.completed),
+          stars: Number(item.stars || 0),
+          points: Number(item.points || 0),
+          completedAt: item.completed_at
+        }
+
+        nextStars += Number(item.stars || 0)
+        nextPoints += Number(item.points || 0)
+      }
+
+      this.stages = nextStages
+      this.stars = nextStars
+      this.points = nextPoints
+
+      this.save()
+
+      return true
+    },
+
     save() {
       try {
         if (typeof window === 'undefined') return
+
         localStorage.setItem('gameData', JSON.stringify(this.$state))
       } catch (error) {
         console.error('⚠️ Error al guardar gameData:', error)
@@ -153,11 +225,65 @@ export const useGameStore = defineStore('game', {
       this.save()
     },
 
-    setStageResult(level, stage, result) {
+    async setStageResult(level, stage, result) {
       if (!this.stages[level]) this.stages[level] = {}
-      this.stages[level][stage] = result
+
+      const completedAt = result?.completedAt || new Date().toISOString()
+
+      this.stages[level][stage] = {
+        ...result,
+        done: true,
+        completedAt
+      }
+
       this.updateStars()
       this.save()
+
+      await this.saveStageProgressToSupabase(level, stage, this.stages[level][stage])
+    },
+
+    async saveStageProgressToSupabase(level, stage, result) {
+      if (!hasSupabaseConfig) {
+        console.warn(getSupabaseConfigError())
+        return false
+      }
+
+      const auth = useAuthStore()
+      if (!auth.initialized) await auth.load()
+
+      if (!auth.user?.id) {
+        return false
+      }
+
+      const profile = useProfileStore()
+      if (!profile.childId) {
+        await profile.loadProfile()
+      }
+
+      const { error } = await supabase
+        .from('game_progress')
+        .upsert(
+          {
+            user_id: auth.user.id,
+            child_id: profile.childId || null,
+            level_id: Number(level),
+            stage_id: Number(stage),
+            stars: Number(result?.stars || 0),
+            points: Number(result?.points || 0),
+            completed: Boolean(result?.done ?? true),
+            completed_at: result?.completedAt || new Date().toISOString()
+          },
+          {
+            onConflict: 'user_id,child_id,level_id,stage_id'
+          }
+        )
+
+      if (error) {
+        console.error('Error guardando progreso en Supabase:', error)
+        return false
+      }
+
+      return true
     },
 
     setChild(payload) {
@@ -165,16 +291,19 @@ export const useGameStore = defineStore('game', {
         name: payload?.name?.trim() || '',
         birthdate: payload?.birthdate || ''
       }
+
       this.save()
     },
 
     updateStars() {
       let total = 0
+
       for (const level of Object.values(this.stages)) {
         for (const stage of Object.values(level)) {
           if (stage.stars) total += stage.stars
         }
       }
+
       this.stars = total
     },
 
@@ -183,7 +312,10 @@ export const useGameStore = defineStore('game', {
       this.stars = 0
       this.stages = {}
       this.child = { name: '', birthdate: '' }
+
       this.save()
-    },
-  },
+    }
+  }
 })
+
+export default useGameStore
