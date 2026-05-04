@@ -59,7 +59,7 @@
               class="btn btn-icon header-action-btn profile-btn"
               type="button"
               aria-label="Perfil"
-              @click="openAuthModal"
+              @click="openProfileAccess"
               @mouseenter="setTip('profile', true)"
               @mouseleave="setTip('profile', false)"
               @focus="setTip('profile', true)"
@@ -202,10 +202,8 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { useAuthStore } from './store/authStore'
 import { useGameStore } from './store/gameStore'
-
 import AudioToggles from './components/AudioToggles.vue'
 import { unlockAudio, playSfx, getAudioSettings } from './engine/audio/audioManager.js'
-
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
@@ -294,10 +292,22 @@ function toggleSettings() {
   showSettings.value = !showSettings.value
 }
 
-function openAuthModal() {
-  showAuth.value = true
+async function openProfileAccess() {
   authStatus.value = ''
   authError.value = ''
+
+  if (!auth.initialized) {
+    await auth.load()
+  }
+
+  if (auth.isAuthenticated) {
+    showAuth.value = false
+    router.push('/profile').catch(() => {})
+    return
+  }
+
+  authForm.value.email = auth.userEmail || authForm.value.email
+  showAuth.value = true
 }
 
 function closeAuth() {

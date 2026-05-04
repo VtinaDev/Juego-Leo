@@ -1,154 +1,92 @@
 <template>
-  <section class="grid gap-6">
-    <div class="card space-y-3">
-      <h2 class="text-2xl font-bold">Cuenta</h2>
-      <div class="grid md:grid-cols-2 gap-3">
-        <label class="block">
-          <span>Email</span>
-          <input v-model.trim="authForm.email" type="email" inputmode="email" class="w-full px-4 py-3 border rounded-2xl" />
-        </label>
-        <label class="block">
-          <span>Contraseña</span>
-          <input v-model.trim="authForm.password" type="password" class="w-full px-4 py-3 border rounded-2xl" />
-        </label>
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <button class="btn btn-primary" type="button" @click="handleRegister" :disabled="auth.isAuthenticated || auth.loading">Crear cuenta</button>
-        <button class="btn btn-secondary" type="button" @click="handleLogin" :disabled="auth.isAuthenticated || auth.loading">Iniciar sesión</button>
-        <button class="btn btn-ghost" type="button" @click="handleLogout" :disabled="!auth.isAuthenticated || auth.loading">Cerrar sesión</button>
-        <span v-if="authStatus" class="text-emerald-700 font-semibold">{{ authStatus }}</span>
-        <span v-else-if="authError" class="text-red-600 font-semibold">{{ authError }}</span>
-      </div>
-      <p v-if="loginRequiredNotice" class="text-red-600 font-semibold">
-        {{ loginRequiredNotice }}
-      </p>
-      <p class="text-sm text-slate-600">
-        Inicia sesión para guardar el perfil y generar informes de la evolución de aprendizaje.
-      </p>
+  <section class="profile-page">
+    <div v-if="!auth.initialized" class="card profile-loading" role="status">
+      Cargando cuenta...
     </div>
 
-    <div class="card space-y-3">
-      <h2 class="text-2xl font-bold">Perfil del niño</h2>
-      <label class="block">
-        <span>Nombre</span>
-        <input v-model="child.name" class="w-full px-4 py-3 border rounded-2xl" />
-      </label>
-      <label class="block">
-        <span>Fecha de nacimiento</span>
-        <input v-model="child.birthdate" type="date" class="w-full px-4 py-3 border rounded-2xl" />
-      </label>
-      <div class="flex items-center gap-3">
-        <button class="btn btn-primary" type="button" @click="save" :disabled="profile.loading">Guardar</button>
-        <button class="btn btn-secondary" type="button" @click="handleReport" :disabled="!auth.isAuthenticated || profile.loading">
-          Generar informe
-        </button>
-        <p v-if="successMessage" class="text-emerald-700 font-semibold">{{ successMessage }}</p>
-        <p v-else-if="errorMessage" class="text-red-600 font-semibold">{{ errorMessage }}</p>
-        <p v-else-if="reportMessage" class="text-emerald-700 font-semibold">{{ reportMessage }}</p>
-      </div>
-      <div v-if="auth.isAuthenticated && reportShown" class="report-summary" aria-live="polite">
-        <h3 class="text-lg font-bold mb-2">Resumen para el informe</h3>
-        <p class="text-slate-700 mb-1"><strong>Niñ@:</strong> {{ summary.childName || 'Sin nombre' }}</p>
-        <p class="text-slate-700 mb-1"><strong>Nacimiento:</strong> {{ summary.birthdate || '—' }}</p>
-        <p class="text-slate-700 mb-2">
-          <strong>Progreso general:</strong> {{ summary.stars }} estrellas · {{ summary.points }} puntos
-        </p>
-        <p class="text-slate-700 mb-2">
-          <strong>Estado actual:</strong> {{ progressState.label }}
-        </p>
-        <p class="text-slate-700 mb-2">
-          <strong>Avance total:</strong> {{ progressState.completedStages }}/{{ progressState.totalStages }}
-          etapas ({{ progressState.percent }}%)
-        </p>
-        <p class="text-slate-700 mb-3"><strong>Observación:</strong> {{ summary.observation }}</p>
+    <AuthSection
+      v-else-if="!isLoggedIn"
+      v-model:email="authForm.email"
+      v-model:password="authForm.password"
+      :loading="auth.loading"
+      :status="authStatus"
+      :error="authError"
+      :login-required-notice="loginRequiredNotice"
+      @login="handleLogin"
+      @register="handleRegister"
+    />
+
+    <template v-else>
+      <header class="profile-hero">
         <div>
-          <p class="font-semibold text-slate-800 mb-1">Niveles recientes</p>
-          <ul class="report-levels">
-            <li v-for="item in recentLevels" :key="item.levelId">
-              <span class="level-name">{{ item.levelName }}</span>
-              <span class="level-progress">Etapa {{ item.progress.completedStages }}/{{ item.progress.totalStages }}</span>
-              <span v-if="item.progress.lastStage" class="level-date">Última sesión: {{ formatDate(item.progress.lastStage.completedAt) }}</span>
-            </li>
-            <li v-if="!recentLevels.length" class="text-slate-500">Aún no hay sesiones registradas.</li>
-          </ul>
+          <p class="profile-kicker">Panel familiar</p>
+          <h1>Hola de nuevo 👋</h1>
+          <p>
+            Sigue el ritmo de lectura, revisa fortalezas y acompaña el próximo paso de
+            {{ child.name || profile.childName || 'tu peque' }}.
+          </p>
         </div>
-      </div>
-    </div>
-
-    <div class="card grid md:grid-cols-2 gap-4">
-      <div>
-        <h3 class="text-xl font-bold mb-2">Resumen</h3>
-        <p>Estrellas: <strong>{{ game.stars }}</strong></p>
-        <p>Puntos: <strong>{{ game.points }}</strong></p>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold mb-2">Progreso actual</h3>
-        <p v-if="currentLevel">
-          {{ currentLevel.levelName }} · etapa {{ currentLevel.progress.nextStage }} de
-          {{ currentLevel.progress.totalStages }}
-        </p>
-        <p v-else>¡Aún no has comenzado una aventura!</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 class="text-xl font-bold mb-3">Informe pedagógico</h3>
-      <p class="mb-4 text-slate-700">
-        Precisión global: <strong>{{ formatPercent(learningTotals.accuracy) }}</strong>
-        · Ejercicios resueltos: <strong>{{ learningTotals.exercises }}</strong>
-      </p>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div>
-          <h4 class="font-bold text-slate-800 mb-2">Fortalezas</h4>
-          <ul class="report-levels">
-            <li v-for="item in strongestSubtypes" :key="`strong-${item.subtype}`">
-              <span class="level-name">{{ subtypeLabel(item.subtype) }}</span>
-              <span class="level-progress">{{ formatPercent(item.accuracy) }} precisión</span>
-            </li>
-            <li v-if="!strongestSubtypes.length" class="text-slate-500">Aún no hay datos suficientes.</li>
-          </ul>
+        <div class="profile-hero__actions">
+          <RouterLink class="btn btn-primary" :to="continueLearningRoute">Continuar aprendizaje</RouterLink>
+          <button class="btn btn-ghost" type="button" :disabled="auth.loading" @click="handleLogout">
+            Cerrar sesión
+          </button>
         </div>
-        <div>
-          <h4 class="font-bold text-slate-800 mb-2">Áreas a reforzar</h4>
-          <ul class="report-levels">
-            <li v-for="item in weakestSubtypes" :key="`weak-${item.subtype}`">
-              <span class="level-name">{{ subtypeLabel(item.subtype) }}</span>
-              <span class="level-progress">
-                {{ formatPercent(item.accuracy) }} precisión · {{ item.avgAttempts.toFixed(1) }} intentos/ejercicio
-              </span>
-            </li>
-            <li v-if="!weakestSubtypes.length" class="text-slate-500">Aún no hay datos suficientes.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+      </header>
 
-    <div class="card">
-      <h3 class="text-xl font-bold mb-4">Mapa personalizado</h3>
-      <ul class="timeline">
-        <li v-for="item in timeline" :key="item.levelId">
-          <div class="timeline-icon" :style="{ background: item.color }">{{ item.icon }}</div>
-          <div>
-            <p class="timeline-level">{{ item.levelName }}</p>
-            <p class="timeline-progress">
-              Etapa {{ item.progress.completedStages }}/{{ item.progress.totalStages }}
-            </p>
-            <p class="timeline-note" v-if="item.progress.lastStage">
-              Última sesión: {{ formatDate(item.progress.lastStage.completedAt) }}
-            </p>
-          </div>
-        </li>
-      </ul>
-    </div>
+      <ChildProfileForm
+        v-model:name="child.name"
+        v-model:birthdate="child.birthdate"
+        :loading="profile.loading"
+        :success-message="successMessage"
+        :error-message="errorMessage"
+        :report-message="reportMessage"
+        @save="save"
+        @report="handleReport"
+      />
+
+      <SummarySection
+        :stars="game.stars"
+        :points="game.points"
+        :current-level="currentLevel"
+        :has-progress="hasProgress"
+        :continue-route="continueLearningRoute"
+      />
+
+      <LearningReport
+        :has-progress="hasProgress"
+        :has-insights="hasInsights"
+        :learning-totals="learningTotals"
+        :strongest-items="strongestReportItems"
+        :weakest-items="weakestReportItems"
+        :report-shown="reportShown"
+        :summary="summary"
+        :progress-state="progressState"
+        :recent-levels="recentLevels"
+      />
+
+      <LearningMap
+        :timeline="timeline"
+        :current-level-id="currentLevel?.levelId"
+        :has-progress="hasProgress"
+        :continue-route="continueLearningRoute"
+        :format-date="formatDate"
+      />
+    </template>
   </section>
 </template>
 
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AuthSection from '../components/profile/AuthSection.vue'
+import ChildProfileForm from '../components/profile/ChildProfileForm.vue'
+import LearningMap from '../components/profile/LearningMap.vue'
+import LearningReport from '../components/profile/LearningReport.vue'
+import SummarySection from '../components/profile/SummarySection.vue'
+import { useAuthStore } from '../store/authStore'
 import { useGameStore } from '../store/gameStore'
 import { useProfileStore } from '../store/profileStore'
-import { useAuthStore } from '../store/authStore'
 
 const route = useRoute()
 const router = useRouter()
@@ -156,7 +94,6 @@ const game = useGameStore()
 game.load()
 
 const profile = useProfileStore()
-profile.loadProfile()
 const auth = useAuthStore()
 auth.load()
 
@@ -175,9 +112,27 @@ const authForm = reactive({
 })
 const reportMessage = ref('')
 const reportShown = ref(false)
+
+const isLoggedIn = computed(() => auth.isAuthenticated)
+const timeline = computed(() => game.levelTimeline)
+const hasProgress = computed(() => Number(game.points || 0) > 0 || Number(game.stars || 0) > 0)
+const currentLevel = computed(() => timeline.value.find((item) => item.progress.percent < 1) || timeline.value[0])
+const continueLearningRoute = computed(() => {
+  const levelId = currentLevel.value?.levelId || 1
+  const stageId = currentLevel.value?.progress?.nextStage || 1
+  return `/game/${levelId}/${stageId}`
+})
+const learningInsights = computed(() => game.learningInsights || { totals: {}, weakest: [], strongest: [] })
+const learningTotals = computed(() => learningInsights.value.totals || { accuracy: 0, exercises: 0 })
+const hasInsights = computed(() => Number(learningTotals.value.exercises || 0) > 0)
+const weakestSubtypes = computed(() => learningInsights.value.weakest || [])
+const strongestSubtypes = computed(() => learningInsights.value.strongest || [])
+const strongestReportItems = computed(() => strongestSubtypes.value.map(toReportItem))
+const weakestReportItems = computed(() => weakestSubtypes.value.map(toReportItem))
+
 const loginRequiredNotice = computed(() =>
   route.query.loginRequired === '1' && !auth.isAuthenticated
-    ? 'Debes iniciar sesión primero para jugar.'
+    ? 'Inicia sesión para guardar el avance y continuar jugando.'
     : ''
 )
 
@@ -196,14 +151,14 @@ const progressState = computed(() => {
   const levels = timeline.value || []
   const totalStages = levels.reduce((sum, item) => sum + Number(item?.progress?.totalStages || 0), 0)
   const completedStages = levels.reduce((sum, item) => sum + Number(item?.progress?.completedStages || 0), 0)
-  const current = currentLevel.value || levels[levels.length - 1]
+  const current = currentLevel.value || levels[0]
   const percent = totalStages > 0 ? Math.round((completedStages / totalStages) * 100) : 0
 
-  let label = 'Sin iniciar'
+  let label = 'Listo para empezar'
   if (totalStages > 0 && completedStages >= totalStages) {
-    label = 'Juego completado'
+    label = 'Ruta completada'
   } else if (completedStages > 0) {
-    label = `En progreso: ${current?.levelName || 'Nivel'} · etapa ${current?.progress?.nextStage || 1} de ${current?.progress?.totalStages || 1}`
+    label = `${current?.levelName || 'Nivel actual'} · etapa ${current?.progress?.nextStage || 1} de ${current?.progress?.totalStages || 1}`
   }
 
   return {
@@ -225,21 +180,33 @@ const summary = computed(() => {
   }
 })
 
-const timeline = computed(() => game.levelTimeline)
-const currentLevel = computed(() => timeline.value.find((item) => item.progress.percent < 1))
-const learningInsights = computed(() => game.learningInsights || { totals: {}, weakest: [], strongest: [] })
-const learningTotals = computed(() => learningInsights.value.totals || { accuracy: 0, exercises: 0 })
-const weakestSubtypes = computed(() => learningInsights.value.weakest || [])
-const strongestSubtypes = computed(() => learningInsights.value.strongest || [])
-
 function formatDate(date) {
-  if (!date) return '—'
+  if (!date) return 'Sin sesiones todavía'
   return new Intl.DateTimeFormat('es', { day: 'numeric', month: 'long' }).format(new Date(date))
 }
 
-function formatPercent(value) {
-  const num = Number(value || 0)
-  return `${Math.round(num * 100)}%`
+function toReportItem(item) {
+  return {
+    subtype: item.subtype,
+    label: subtypeLabel(item.subtype),
+    tone: learningTone(item.accuracy),
+    detail: learningDetail(item)
+  }
+}
+
+function learningTone(accuracy) {
+  const value = Number(accuracy || 0)
+  if (value <= 0) return 'Está empezando su aprendizaje ✨'
+  if (value >= 0.85) return 'Domina muy bien este tipo de ejercicios 💪'
+  if (value >= 0.6) return 'Avanza con buena seguridad'
+  return 'Conviene practicarlo con apoyo cercano'
+}
+
+function learningDetail(item) {
+  const attempts = Number(item.avgAttempts || 0)
+  if (attempts > 2) return 'Puede necesitar más tiempo o pistas antes de responder.'
+  if (Number(item.accuracy || 0) >= 0.85) return 'Responde con confianza y pocos intentos.'
+  return 'Sigue construyendo confianza paso a paso.'
 }
 
 function subtypeLabel(subtype) {
@@ -249,6 +216,10 @@ function subtypeLabel(subtype) {
 }
 
 function buildObservation(levels = []) {
+  if (!hasProgress.value) {
+    return 'Empieza el primer ejercicio para descubrir las fortalezas del niño ✨'
+  }
+
   const stars = game.stars ?? 0
   const points = game.points ?? 0
   const latest = levels[0]
@@ -258,23 +229,23 @@ function buildObservation(levels = []) {
   const completeness = latest?.progress?.completedStages || 0
   const total = latest?.progress?.totalStages || 1
 
-  const pace = points > 1200 ? 'avance sostenido' : points > 500 ? 'buen ritmo' : 'ritmo inicial'
+  const pace = points > 1200 ? 'mantiene un avance muy constante' : points > 500 ? 'progresa con buen ritmo' : 'está dando sus primeros pasos'
   const focus =
     completeness / Math.max(1, total) >= 0.8
-      ? 'mantuvo constancia en la última etapa'
-      : 'requiere apoyo para cerrar la etapa actual'
+      ? 'ya muestra constancia en este nivel'
+      : 'puede beneficiarse de sesiones breves y repetidas'
 
   const levelNotes = {
-    1: 'Refuerza conciencia fonológica y reconocimiento de letras base.',
-    2: 'Trabaja sílabas directas y velocidad lectora con control.',
-    3: 'Integra sílabas trabadas y comprensión de frases cortas.',
-    4: 'Practica lectura fluida y vocabulario ampliado.',
-    5: 'Consolida comprensión y entonación en textos más largos.'
+    1: 'Está reforzando conciencia fonológica y reconocimiento de letras.',
+    2: 'Está practicando sílabas directas y velocidad lectora.',
+    3: 'Está integrando sílabas trabadas y frases cortas.',
+    4: 'Está ampliando fluidez lectora y vocabulario.',
+    5: 'Está consolidando comprensión en textos más largos.'
   }
 
   const note = levelNotes[levelId] || 'Continúa desarrollando comprensión y confianza lectora.'
 
-  return `Ha reunido ${stars} estrellas y ${points} puntos; ${pace}. Actualmente en ${levelName}, etapa ${stage}; ${focus}. En este nivel: ${note}`
+  return `Ha reunido ${stars} estrellas y ${points} puntos; ${pace}. Ahora está en ${levelName}, etapa ${stage}; ${focus}. ${note}`
 }
 
 watch(
@@ -301,12 +272,21 @@ onMounted(async () => {
   if (!child.birthdate) child.birthdate = profile.childBirthdate || game.child?.birthdate || ''
   if (!authForm.email) authForm.email = auth.userEmail || ''
   if (loginRequiredNotice.value) authError.value = loginRequiredNotice.value
-  
-  if (auth.isAuthenticated) {
-    await profile.loadProfile()
-    await game.loadProgressFromSupabase()
-  }
+
+  await hydrateAuthenticatedProfile()
 })
+
+watch(isLoggedIn, async (loggedIn) => {
+  if (!loggedIn) return
+  await hydrateAuthenticatedProfile()
+})
+
+async function hydrateAuthenticatedProfile() {
+  if (!auth.initialized) await auth.load()
+  if (!auth.isAuthenticated) return
+  await profile.loadProfile()
+  await game.loadProgressFromSupabase()
+}
 
 function redirectToPendingPlay() {
   const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : ''
@@ -338,7 +318,7 @@ async function save() {
     return
   }
   game.setChild({ name, birthdate })
-  successMessage.value = 'Guardado'
+  successMessage.value = 'Perfil guardado 🎉'
 }
 
 async function handleRegister() {
@@ -348,7 +328,7 @@ async function handleRegister() {
   const ok = await auth.register(authForm.email, authForm.password)
   if (ok) {
     authStatus.value = auth.isAuthenticated
-      ? `Cuenta creada: ${auth.userEmail}`
+      ? 'Cuenta creada. ¡Ya podéis empezar! 🎉'
       : 'Cuenta creada. Revisa tu correo para confirmar el acceso.'
     authForm.password = ''
     if (auth.isAuthenticated) {
@@ -361,13 +341,12 @@ async function handleRegister() {
   }
 }
 
-
 async function handleLogin() {
   authStatus.value = ''
   authError.value = ''
   const ok = await auth.login(authForm.email, authForm.password)
   if (ok) {
-    authStatus.value = `Sesión iniciada: ${auth.userEmail}`
+    authStatus.value = 'Hola de nuevo 👋'
     authForm.password = ''
     await profile.loadProfile()
     await game.loadProgressFromSupabase()
@@ -393,7 +372,6 @@ function handleReport() {
     errorMessage.value = 'Inicia sesión para generar un informe.'
     return
   }
-  // Simulación de informe: se crea un JSON de progreso.
   const report = {
     generatedAt: new Date().toISOString(),
     child: {
@@ -415,7 +393,7 @@ function handleReport() {
     a.download = 'informe-juego-leo.json'
     a.click()
     URL.revokeObjectURL(url)
-    reportMessage.value = 'Informe generado (JSON)'
+    reportMessage.value = 'Informe generado'
     reportShown.value = true
   } catch (e) {
     errorMessage.value = 'No se pudo generar el informe.'
@@ -424,74 +402,72 @@ function handleReport() {
 </script>
 
 <style scoped>
-.timeline {
+.profile-page {
   display: grid;
-  gap: 1rem;
-}
-.btn {
-  min-height: 48px;
-  min-width: 140px;
+  gap: 1.25rem;
 }
 
-.report-summary {
-  margin-top: 0.75rem;
-  padding: 0.9rem 1rem;
-  border-radius: 14px;
-  background: #f8fafc;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-.report-levels {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.profile-hero {
   display: grid;
-  gap: 0.4rem;
-}
-.report-levels li {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid rgba(15, 23, 42, 0.06);
-}
-.level-name {
-  font-weight: 700;
-  color: #0f172a;
-}
-.level-progress,
-.level-date {
-  color: #475569;
-  font-size: 0.93rem;
-}
-.timeline li {
-  display: flex;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 1rem;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
-  background: #f8fafc;
+  align-items: center;
+  padding: clamp(1.2rem, 3vw, 1.75rem);
+  border-radius: 22px;
+  background: linear-gradient(135deg, #fff7d7, #e8f7df 55%, #f8fafc);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
 }
-.timeline-icon {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 1rem;
+
+.profile-kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: #2f7d47;
+}
+
+.profile-hero h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.05;
+  color: #13210f;
+}
+
+.profile-hero p {
+  margin: 0.55rem 0 0;
+  max-width: 62ch;
+  color: #475569;
+  font-size: 1.05rem;
+}
+
+.profile-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.profile-loading {
+  min-height: 180px;
   display: grid;
   place-items: center;
-  font-size: 1.4rem;
-  color: #0f172a;
-}
-.timeline-level {
-  font-weight: 600;
-}
-.timeline-progress {
-  font-size: 0.95rem;
   color: #475569;
+  font-weight: 800;
 }
-.timeline-note {
-  font-size: 0.85rem;
-  color: #94a3b8;
+
+@media (max-width: 760px) {
+  .profile-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-hero__actions {
+    justify-content: stretch;
+  }
+
+  .profile-hero__actions .btn {
+    width: 100%;
+  }
 }
 </style>
