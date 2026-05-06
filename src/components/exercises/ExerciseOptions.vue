@@ -92,32 +92,38 @@ watch(
 .exercise-options {
   width: min(100%, 760px);
   margin: 0 auto;
-  display: grid;
-  gap: 0.95rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
   font-family: var(--font-readable, 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif);
 }
 
 .exercise-options__button {
-  width: 100%;
-  min-height: 68px;
-  padding: 1.05rem 1.1rem;
-  border-radius: 16px;
-  border: 2px solid #b7cee6;
-  background: linear-gradient(180deg, #f7fbff 0%, #e8f3ff 100%);
+  width: auto;
+  min-width: clamp(96px, 24vw, 180px);
+  max-width: min(100%, 320px);
+  min-height: 56px;
+  padding: 0.68rem 1.05rem;
+  border-radius: 18px;
+  border: 2px solid rgba(14, 165, 233, 0.22);
+  background: #ffffff;
   color: #0f172a;
-  font-size: clamp(1.24rem, 4.9vw, 1.46rem);
-  line-height: 1.5;
-  font-weight: 750;
+  font-size: clamp(1.14rem, 4.4vw, 1.38rem);
+  line-height: 1.18;
+  font-weight: 900;
   text-align: center;
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 0 rgba(14, 165, 233, 0.16), 0 13px 20px rgba(15, 23, 42, 0.1);
   transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
   transform: scale(1);
 }
 
 .exercise-options__button:hover {
   border-color: #0ea5e9;
-  background: linear-gradient(180deg, #ffffff 0%, #d9ecff 100%);
-  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  background: #f8fdff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 0 rgba(14, 165, 233, 0.18), 0 16px 24px rgba(14, 165, 233, 0.16);
 }
 
 .exercise-options__button:focus-visible {
@@ -126,24 +132,37 @@ watch(
 }
 
 .exercise-options__button:active {
-  transform: scale(0.95);
+  transform: translateY(5px) scale(0.99);
+  box-shadow: 0 3px 0 rgba(14, 165, 233, 0.18), 0 8px 12px rgba(15, 23, 42, 0.1);
 }
 
 .exercise-options__button--pressed {
-  transform: scale(0.95);
+  transform: translateY(5px) scale(0.99);
+  box-shadow: 0 3px 0 rgba(14, 165, 233, 0.18), 0 8px 12px rgba(15, 23, 42, 0.1);
 }
 
 .exercise-options__button--correct {
-  border-color: #b8d956;
-  background: linear-gradient(135deg, #c5ef5f 0%, #d8f86d 45%, #ffe27a 100%);
+  border-color: rgba(132, 204, 22, 0.42);
+  background: #f0fdf4;
   color: #0f172a;
-  box-shadow: 0 10px 20px rgba(197, 239, 95, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 0 rgba(132, 204, 22, 0.22), 0 14px 22px rgba(132, 204, 22, 0.18);
 }
 
 .exercise-options__button--incorrect {
-  border-color: #ea7a14;
-  background: linear-gradient(180deg, #ffb347 0%, #ff7a00 100%);
-  color: #ffffff;
-  box-shadow: 0 10px 20px rgba(234, 122, 20, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(245, 158, 11, 0.42);
+  background: #fff8db;
+  color: #334155;
+  box-shadow: 0 8px 0 rgba(245, 158, 11, 0.18), 0 14px 22px rgba(245, 158, 11, 0.12);
+}
+
+@media (max-width: 640px) {
+  .exercise-options {
+    gap: 0.55rem;
+  }
+  .exercise-options__button {
+    min-width: min(46%, 170px);
+    min-height: 52px;
+    padding: 0.58rem 0.72rem;
+  }
 }
 </style>

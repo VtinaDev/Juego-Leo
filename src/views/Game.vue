@@ -94,37 +94,23 @@
 
             </div>
             <div class="smartick-card-content space-y-4">
-            <div v-if="currentStatus === 'ok'" class="status-banner success-banner">
-              <img src="/icons/celebration.png" alt="Celebración" class="status-icon" />
-              <span>¡Muy bien! 🎉</span>
-            </div>
+            <CelebrationCard
+              v-if="currentStatus === 'ok'"
+              :character-img="characterImage"
+              message="¡Muy bien!"
+            />
             <div v-else-if="progressiveFeedbackText" class="status-banner fail-banner" role="status" aria-live="polite">
               <span class="status-soft-dot" aria-hidden="true"></span>
               <span>{{ progressiveFeedbackText }}</span>
             </div>
-            <div v-if="guidedTutor" class="guided-tutor" :class="`guided-tutor--${guidedTutor.key}`">
-              <div class="guided-tutor__character" aria-hidden="true">
-                <img :src="characterImage" alt="" />
-              </div>
-              <div class="guided-tutor__bubble" role="status" aria-live="polite">
-                <span class="guided-tutor__word">{{ guidedTutor.label }}</span>
-                <button
-                  class="guided-tutor__audio"
-                  type="button"
-                  :aria-label="`Repetir: ${guidedTutor.label}`"
-                  @click="playTutorCue"
-                >
-                  <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
-                </button>
-                <div class="guided-tutor__dots" aria-hidden="true">
-                  <span
-                    v-for="(_, stepIdx) in tutorSteps"
-                    :key="`tutor-step-${stepIdx}`"
-                    :class="{ active: stepIdx === tutorStepIndex }"
-                  />
-                </div>
-              </div>
-            </div>
+            <GuidedTutor
+              v-if="guidedTutor"
+              :character-img="characterImage"
+              :step="guidedTutor"
+              :steps="tutorSteps"
+              :step-index="tutorStepIndex"
+              @play="playTutorCue"
+            />
             <div v-if="conceptMiniLesson" class="concept-mini-lesson" aria-label="Mini lección visual">
               <span
                 v-for="item in conceptMiniLesson"
@@ -144,6 +130,7 @@
                 !(mobileViewport && isHabitatVisualMobile) &&
                 current.type !== 'CHOOSE_CORRECT_WORD' &&
                 current.type !== 'IMAGE_WORD_MATCH' &&
+                current.type !== 'COMPLETE_WORD' &&
                 !(current.type === 'complete_sentence' && current.image) &&
                 !(current.type === 'multiple_choice' && (current.image || current.emoji)) &&
                 !(current.type === 'sentence_selection' && current.image)
@@ -172,27 +159,6 @@
             <!-- Pregunta sobre frase (L1) -->
             <section v-if="current.type === 'question_sentence'">
               <BaseExerciseLayout aria-label="Pregunta sobre frase">
-                <template #prompt>
-                  <div class="audio-prompt-stack">
-                    <SentenceAudioRow
-                      :text="current.sentence || ''"
-                      :speak-text="current.sentence || ''"
-                      :exercise="current"
-                      :audio-src="current.audio"
-                      text-class="text-3xl font-semibold leading-snug text-slate-700"
-                      aria-label="Escuchar frase"
-                      @fallback-audio="(src) => playSimpleAudio(src)"
-                    />
-                    <p
-                      v-if="shouldShowEnunciado(questionMaskedSentence || current.prompt || 'Elige la respuesta correcta', current.sentence || '')"
-                      class="audio-prompt-enunciado"
-                    >
-                      {{ questionMaskedSentence || current.prompt || 'Elige la respuesta correcta' }}
-                    </p>
-                    <p class="audio-prompt-instruction">Escucha la frase y selecciona una sola respuesta.</p>
-                  </div>
-                </template>
-
                 <ExerciseOptions
                   :options="current.options || []"
                   :status="currentStatus"
@@ -219,43 +185,6 @@
                   />
                 </template>
 
-                <template #prompt>
-                  <div class="audio-prompt-stack">
-                    <SentenceAudioRow
-                      v-if="!isFuerzaTranquilaStage2of6"
-                      :text="fillBlank(current.prompt, current.correct || current.answer)"
-                      :speak-text="fillBlank(current.prompt, current.correct || current.answer)"
-                      :exercise="current"
-                      :audio-src="current.audio"
-                      text-class="text-3xl font-semibold leading-snug text-slate-700"
-                      aria-label="Escuchar frase"
-                      @fallback-audio="(src) => playSimpleAudio(src)"
-                    />
-                    <p
-                      v-if="!isFuerzaTranquilaStage2of6 && shouldShowEnunciado(current.prompt || 'Completa la frase', fillBlank(current.prompt, current.correct || current.answer))"
-                      class="audio-prompt-enunciado"
-                    >
-                      {{ current.prompt || 'Completa la frase' }}
-                    </p>
-                    <div v-if="isFuerzaTranquilaStage2of6" class="reading-box complete-prompt-box">
-                      <p class="complete-prompt-box__text">
-                        {{ current.prompt || 'Completa la frase' }}
-                      </p>
-                      <div class="reading-audio-inline inside-box">
-                        <button
-                          class="btn btn-ghost reading-cta icon-only"
-                          type="button"
-                          aria-label="Escuchar frase"
-                          @click="handleCompleteSentenceIconClick"
-                        >
-                          <img src="/icons/audio.PNG" alt="" class="audio-icon-static" />
-                        </button>
-                      </div>
-                    </div>
-                    <p class="audio-prompt-instruction">Elige una sola palabra para completar correctamente.</p>
-                  </div>
-                </template>
-
                 <ExerciseOptions
                   :options="current.options || []"
                   :status="currentStatus"
@@ -275,7 +204,7 @@
             <!-- Ordenar frase (L1) -->
             <section v-else-if="current.type === 'order_sentence'">
               <DragDropBoard
-                :prompt="current.instructions || ''"
+                prompt=""
                 :words="current.words"
                 :correct="current.correct || current.correctOrder"
                 :hide-submit="level === 1 && stage === 1"
@@ -317,20 +246,6 @@
                   </div>
                 </template>
 
-                <template #prompt>
-                  <div class="audio-prompt-stack">
-                    <SentenceAudioRow
-                      :text="current.question || current.prompt || 'Elige la opción correcta'"
-                      :exercise="current"
-                      :audio-src="current.audio"
-                      text-class="text-3xl font-semibold leading-snug text-slate-700"
-                      aria-label="Escuchar pregunta"
-                      @fallback-audio="(src) => playSimpleAudio(src)"
-                    />
-                    <p class="audio-prompt-instruction">Selecciona una sola respuesta.</p>
-                  </div>
-                </template>
-
                 <ExerciseOptions
                   :options="current.options || []"
                   :status="currentStatus"
@@ -349,7 +264,6 @@
 
             <!-- Sinónimos (L2) -->
             <section v-else-if="current.type === 'pair_synonyms'">
-              <p class="text-base text-left text-gray-600 mb-2">Elige la palabra y luego su sinónimo.</p>
               <div class="pair-board">
                 <div class="pair-column">
                   <button
@@ -380,7 +294,6 @@
 
             <!-- Antónimos (L2) -->
             <section v-else-if="current.type === 'pair_antonyms'">
-              <p class="text-base text-left text-gray-600 mb-2">Elige la palabra y luego su opuesto.</p>
               <div class="pair-board">
                 <div class="pair-column">
                   <button
@@ -412,9 +325,6 @@
             <!-- ========== NUEVOS TIPOS ========== -->
 
             <section v-else-if="current.type === 'UNSCRAMBLE_WORD'">
-              <p class="text-xl font-semibold mb-3 leading-snug text-left">
-                Ordena las letras para formar la palabra
-              </p>
               <div class="options-row" :class="optionLayout(current.letters)">
                 <button
                   v-for="(letter, idx) in current.letters"
@@ -438,57 +348,17 @@
             </section>
 
             <section v-else-if="current.type === 'COMPLETE_WORD'">
-              <SentenceAudioRow
-                :text="current.prompt || 'Completa la palabra'"
-                :speak-text="completeWordSpokenText"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-3 leading-snug text-left"
-                aria-label="Escuchar enunciado"
-                @fallback-audio="(src) => playSimpleAudio(src)"
+              <CompleteWordVisual
+                :image-src="resolveAsset(current.image || '')"
+                :image-alt="current.imageAlt || completeWordSpokenText"
+                :target-word="completeWordSpokenText"
+                :slots="completeWordSlots"
+                :values="completeWordInputs"
+                :letters="completeWordLetterChoices"
+                @select-letter="fillNextCompleteWordBlank"
+                @submit="handleTextSubmit"
+                @reset="resetCompleteWordInputs"
               />
-              <div class="text-center">
-                <div v-if="showCompleteWordSupport" class="word-support" aria-live="polite">
-                  {{ completeWordSpokenText }}
-                </div>
-                <div class="complete-word-pattern" aria-label="Completa la palabra por casillas">
-                  <template v-for="(slot, idx) in completeWordSlots" :key="`cw-slot-${idx}`">
-                    <span v-if="slot.type === 'fixed'" class="cw-fixed">{{ slot.char }}</span>
-                    <input
-                      v-else
-                      :ref="(el) => setCompleteWordInputRef(el, slot.blankIndex)"
-                      v-model="completeWordInputs[slot.blankIndex]"
-                      type="text"
-                      inputmode="text"
-                      autocomplete="off"
-                      autocapitalize="none"
-                      spellcheck="false"
-                      maxlength="1"
-                      class="cw-input"
-                      aria-label="Letra faltante"
-                      @input="handleCompleteWordInput(slot.blankIndex, $event)"
-                      @keydown.backspace="handleCompleteWordBackspace(slot.blankIndex, $event)"
-                      @keydown.enter.prevent="handleTextSubmit"
-                    />
-                  </template>
-                </div>
-                <div v-if="missingLetterPieces.length" class="missing-letter-pieces" aria-label="Letras de apoyo">
-                  <button
-                    v-for="(letter, idx) in missingLetterPieces"
-                    :key="`missing-letter-${idx}-${letter}`"
-                    class="missing-letter-piece"
-                    type="button"
-                    @click="fillNextCompleteWordBlank(letter)"
-                  >
-                    {{ letter }}
-                  </button>
-                </div>
-              </div>
-              <div class="flex justify-center mt-4">
-                <button class="btn btn-primary" type="button" @click="handleTextSubmit">
-                  Confirmar
-                </button>
-              </div>
             </section>
 
             <section v-else-if="current.type === 'CHOOSE_CORRECT_WORD'">
@@ -504,8 +374,8 @@
                 <button
                   class="guided-word-repeat"
                   type="button"
-                  :aria-label="`Repetir palabra ${guidedTargetWord}`"
-                  @click="playGuidedTargetAudio"
+                  :aria-label="`Repetir: ${tutorStatementText}`"
+                  @click="playTutorStatementAudio"
                 >
                   <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
                 </button>
@@ -526,9 +396,6 @@
             </section>
 
             <section v-else-if="current.type === 'SYLLABLE_ORDER'">
-              <p class="text-xl font-semibold mb-3 leading-snug text-left">
-                Ordena las sílabas
-              </p>
               <div class="options-row syllable-order-source" :class="optionLayout(current.syllables)">
                 <button
                   v-for="syllable in current.syllables"
@@ -556,9 +423,6 @@
             </section>
 
             <section v-else-if="current.type === 'PUZZLE_ORDER'">
-              <p class="text-xl font-semibold mb-3 leading-snug text-left">
-                {{ current.prompt || 'Ordena las piezas del rompecabezas' }}
-              </p>
               <div class="options-row" :class="optionLayout(current.segments)">
                 <button
                   v-for="segment in current.segments"
@@ -594,8 +458,8 @@
                 <button
                   class="guided-word-repeat"
                   type="button"
-                  :aria-label="`Repetir palabra ${guidedTargetWord}`"
-                  @click="playGuidedTargetAudio"
+                  :aria-label="`Repetir: ${tutorStatementText}`"
+                  @click="playTutorStatementAudio"
                 >
                   <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
                 </button>
@@ -616,16 +480,8 @@
             </section>
 
             <section v-else-if="current.type === 'READ_AND_ANSWER'">
-              <SentenceAudioRow
-                :text="current.text || current.context || current.reading"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-xl font-semibold mb-3 leading-snug text-left reading-paragraph"
-                aria-label="Escuchar texto"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
-              <p v-if="current.question" class="read-answer-question">
-                {{ current.question }}
+              <p v-if="current.text || current.context || current.reading" class="audio-visible-text reading-paragraph">
+                {{ current.text || current.context || current.reading }}
               </p>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
@@ -654,20 +510,6 @@
                   />
                 </template>
 
-                <template #prompt>
-                  <div class="audio-prompt-stack">
-                    <SentenceAudioRow
-                      :text="current.prompt || 'Elige la frase que tenga más sentido.'"
-                      :exercise="current"
-                      :audio-src="current.audio"
-                      text-class="text-3xl font-semibold leading-snug text-slate-700"
-                      aria-label="Escuchar enunciado"
-                      @fallback-audio="(src) => playSimpleAudio(src)"
-                    />
-                    <p class="audio-prompt-instruction">Elige la frase que tenga más sentido.</p>
-                  </div>
-                </template>
-
                 <ExerciseOptions
                   :options="current.options || []"
                   :status="currentStatus"
@@ -686,15 +528,6 @@
 
             <!-- Pregunta con contexto / audio -->
             <section v-else-if="current.type === 'audio_question'">
-              <p v-if="current.question" class="audio-visible-text">{{ current.question }}</p>
-              <div class="audio-icon-wrapper audio-icon-wrapper--solo">
-                <AudioButton
-                  :exercise="current"
-                  :audio-src="current.audio"
-                  aria-label="Escuchar pregunta"
-                  @fallback-audio="(src) => playSimpleAudio(src)"
-                />
-              </div>
               <div v-if="current.image" class="choice-visual">
                 <img
                   :src="resolveAsset(current.image)"
@@ -730,16 +563,6 @@
                   @error="$event.target.style.display = 'none'"
                 />
               </div>
-              <p v-if="current.fallbackText || current.instruction" class="audio-visible-text">
-                {{ current.fallbackText || current.instruction }}
-              </p>
-              <div class="audio-icon-wrapper audio-icon-wrapper--solo">
-                <AudioButton
-                  :exercise="current"
-                  :audio-src="current.audio"
-                  @fallback-audio="(src) => playSimpleAudio(src)"
-                />
-              </div>
               <textarea
                 v-model="textAnswer"
                 rows="2"
@@ -763,15 +586,6 @@
                   @error="$event.target.style.display = 'none'"
                 />
               </div>
-              <SentenceAudioRow
-                :text="current.instruction || 'Escribe una frase.'"
-                :speak-text="current.narrationText || ''"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-3 leading-snug"
-                aria-label="Escuchar enunciado"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
               <div v-if="isLetterBuildExercise" class="letter-build">
                 <div class="options-row letter-build-tiles">
                   <button
@@ -805,9 +619,6 @@
                 class="w-full border rounded-xl p-2 text-xl font-bold"
                 :placeholder="current.placeholder || 'Escribe aquí tu frase mágica...'"
               />
-              <p class="text-sm text-gray-600 mt-1">
-                {{ current.hint || 'Completa la frase con la palabra que mejor encaje.' }}
-              </p>
               <div class="mt-3 flex justify-end">
                 <button class="btn btn-primary" type="button" @click="handleTextSubmit">
                   Continuar
@@ -819,18 +630,7 @@
 
             <!-- Clasificar tiempos verbales -->
             <section v-else-if="current.type === 'tense_classify'">
-              <p v-if="current.prompt" class="tense-guide">
-                {{ current.prompt }}
-              </p>
-              <SentenceAudioRow
-                :text="current.sentence || ''"
-                :speak-text="current.prompt || ''"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-3xl font-semibold mb-4 leading-snug"
-                aria-label="Escuchar frase"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
+              <p v-if="current.sentence" class="audio-visible-text">{{ current.sentence }}</p>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -848,7 +648,6 @@
 
             <!-- Singular / plural -->
             <section v-else-if="current.type === 'singular_plural'">
-              <p class="text-base text-left text-gray-600 mb-2">Elige el singular y luego su plural.</p>
               <div class="pair-board">
                 <div class="pair-column">
                   <button
@@ -879,9 +678,6 @@
 
             <!-- Tildes mágicas -->
             <section v-else-if="current.type === 'accent_game'">
-              <p class="text-2xl font-semibold mb-3 leading-snug">
-                ¿Dónde va la tilde en: <strong>{{ current.word }}</strong>?
-              </p>
               <div class="options-row" :class="optionLayout(current.syllables)">
                 <button
                   v-for="syllable in current.syllables"
@@ -899,17 +695,7 @@
 
             <!-- Signos de puntuación -->
             <section v-else-if="current.type === 'punctuation_game'">
-              <SentenceAudioRow
-                :text="current.sentence"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-3xl font-semibold mb-4 leading-snug"
-                aria-label="Escuchar frase"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
-              <p class="text-sm text-gray-500 mb-2">
-                Elige el signo correcto para esta frase.
-              </p>
+              <p v-if="current.sentence" class="audio-visible-text">{{ current.sentence }}</p>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -927,14 +713,6 @@
 
             <!-- Examen final (opción múltiple) -->
             <section v-else-if="current.type === 'final_exam'">
-              <SentenceAudioRow
-                :text="current.question || current.prompt"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-3xl font-semibold mb-4 leading-snug"
-                aria-label="Escuchar enunciado"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -990,11 +768,13 @@ import { VOICE_PRESET } from '../engine/audio/voiceProfile'
 import ExerciseShell from '../components/ExerciseShell.vue'
 import DragDropBoard from '../components/DragDropBoard.vue'
 import AudioButton from '../components/AudioButton.vue'
-import SentenceAudioRow from '../components/SentenceAudioRow.vue'
 import BaseExerciseLayout from '../components/exercises/BaseExerciseLayout.vue'
 import ExerciseImage from '../components/exercises/ExerciseImage.vue'
 import ExerciseOptions from '../components/exercises/ExerciseOptions.vue'
 import ExerciseFeedback from '../components/exercises/ExerciseFeedback.vue'
+import GuidedTutor from '../components/exercises/GuidedTutor.vue'
+import CompleteWordVisual from '../components/exercises/CompleteWordVisual.vue'
+import CelebrationCard from '../components/exercises/CelebrationCard.vue'
 
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
@@ -1130,32 +910,37 @@ let guidedOptionTimer = null
 
 const guidedChoiceTypes = new Set(['CHOOSE_CORRECT_WORD', 'IMAGE_WORD_MATCH'])
 const isGuidedWordChoice = computed(() => guidedChoiceTypes.has(String(current.value?.type || '')))
+const isCompleteWordExercise = computed(() => current.value?.type === 'COMPLETE_WORD')
 const guidedTargetWord = computed(() => {
   const exercise = current.value
   if (!exercise) return ''
-  return resolveOptionText(exercise.correct ?? exercise.answer ?? exercise.word ?? exercise.options?.[0])
+  return resolveOptionText(
+    exercise.solution ?? exercise.correct ?? exercise.answer ?? exercise.word ?? exercise.options?.[0]
+  )
 })
+const tutorStatementText = computed(() => getTutorStatementText(current.value))
 
 const tutorSteps = computed(() => {
   if (!current.value || currentStatus.value === 'ok' || currentStatus.value === 'skipped') return []
+  const label = tutorStatementText.value || exerciseNarrationText.value || 'Vamos juntos'
 
   return [
     {
       key: 'look',
-      label: 'Mira',
-      cue: 'Mira',
+      label,
+      cue: label,
       focus: 'visual'
     },
     {
       key: 'listen',
-      label: 'Escucha',
-      cue: 'Escucha',
+      label,
+      cue: label,
       focus: 'audio'
     },
     {
       key: 'choose',
-      label: getTutorActionLabel(),
-      cue: getTutorActionCue(),
+      label,
+      cue: label,
       focus: 'options'
     }
   ]
@@ -1204,64 +989,21 @@ function clearTutorTimers() {
   }
 }
 
-function getTutorActionLabel() {
-  if (isGuidedWordChoice.value && guidedTargetWord.value) {
-    return `Busca '${guidedTargetWord.value}'`
-  }
-  return current.value?.type === 'audio_write' || current.value?.type === 'text_write' ? 'Escribe' : 'Busca'
-}
-
-function getTutorActionCue() {
-  if (isGuidedWordChoice.value && guidedTargetWord.value) {
-    return `Busca ${guidedTargetWord.value}`
-  }
-  return getTutorActionLabel()
-}
-
 function playTutorCue() {
-  const step = guidedTutor.value
-  if (!step) return
+  playTutorStatementAudio()
+}
 
+function playTutorStatementAudio() {
   const audioSettings = getAudioSettings()
   if (!audioSettings.voiceEnabled) return
-
-  if ((step.key === 'look' || step.key === 'listen') && isGuidedWordChoice.value) {
-    playGuidedTargetAudio()
-    return
-  }
-
-  if (step.key === 'listen' && current.value?.audio) {
+  if (current.value?.audio) {
     playSimpleAudio(current.value.audio)
     return
   }
-
-  if (step.key === 'listen' && Array.isArray(current.value?.syllables) && current.value.syllables.length) {
-    const syllables = current.value.syllables.join('... ')
-    const fullWord = Array.isArray(current.value.correctOrder)
-      ? current.value.correctOrder.join('')
-      : current.value.syllables.join('')
-    playVoice(`${syllables}... ${fullWord}`, {
-      interrupt: true,
-      rate: VOICE_PRESET.rate,
-      pitch: VOICE_PRESET.pitch,
-      lang: VOICE_PRESET.lang,
-      volume: audioSettings.voiceVolume
-    })
-    return
-  }
-
-  if (step.key === 'listen' && exerciseNarrationText.value) {
-    playVoice(exerciseNarrationText.value, {
-      interrupt: true,
-      rate: VOICE_PRESET.rate,
-      pitch: VOICE_PRESET.pitch,
-      lang: VOICE_PRESET.lang,
-      volume: audioSettings.voiceVolume
-    })
-    return
-  }
-
-  playVoice(step.cue, {
+  const text = tutorStatementText.value || exerciseNarrationText.value || guidedTutor.value?.cue
+  if (!text) return
+  unlockAudio()
+  playVoice(text, {
     interrupt: true,
     rate: VOICE_PRESET.rate,
     pitch: VOICE_PRESET.pitch,
@@ -1366,6 +1108,24 @@ function optionLayout(list) {
 
 function normalizeReadingText(text = '') {
   return text.replace(/\s+/g, ' ').trim()
+}
+
+function getTutorStatementText(exercise) {
+  if (!exercise) return ''
+  const values = [
+    exercise.narrationText,
+    exercise.prompt,
+    exercise.question,
+    exercise.instruction,
+    exercise.sentence,
+    exercise.text,
+    exercise.context,
+    exercise.phrase,
+    exercise.targetText,
+    exercise.hint
+  ]
+  const text = values.find((value) => typeof value === 'string' && value.trim())
+  return String(text || '').replace(/\s+/g, ' ').trim()
 }
 
 function getEstimatedReadingDurationMs() {
@@ -1867,8 +1627,8 @@ watch(
     const audioSettings = getAudioSettings()
     if (!audioSettings.voiceEnabled) return
     unlockAudio()
-    if (isGuidedWordChoice.value) {
-      playGuidedTargetAudio()
+    if (tutorStatementText.value || exercise?.audio) {
+      playTutorStatementAudio()
       return
     }
     const cue = cueForExercise(exercise)
@@ -1978,13 +1738,29 @@ const showCompleteWordSupport = computed(() =>
 
 const missingLetterPieces = computed(() => {
   if (current.value?.type !== 'COMPLETE_WORD') return []
-  const solution = completeWordSpokenText.value
-  if (!solution || !completeWordSlots.value.length) return []
-  const missingCount = completeWordSlots.value.filter((slot) => slot.type === 'blank').length
-  return solution
+  return completeWordMissingLetters.value
+})
+
+const completeWordMissingLetters = computed(() => {
+  if (current.value?.type !== 'COMPLETE_WORD') return []
+  const solution = completeWordSpokenText.value.toLowerCase()
+  const pattern = completeWordPattern.value
+  if (!solution || !pattern) return []
+  return pattern
     .split('')
+    .map((char, idx) => (char === '_' ? solution[idx] : ''))
     .filter((char) => /[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/u.test(char))
-    .slice(-missingCount)
+})
+
+const completeWordLetterChoices = computed(() => {
+  if (current.value?.type !== 'COMPLETE_WORD') return []
+  const base = Array.from(new Set(completeWordMissingLetters.value.map((letter) => letter.toUpperCase())))
+  const vowels = ['A', 'E', 'I', 'O', 'U']
+  for (const vowel of vowels) {
+    if (base.length >= 5) break
+    if (!base.includes(vowel)) base.push(vowel)
+  }
+  return base
 })
 
 const levelHeading = computed(() => {
@@ -2187,46 +1963,6 @@ function handleSimpleOption(option) {
   checkAnswer(option, { autoAdvance: true })
 }
 
-function playGuidedTargetAudio() {
-  const audioSettings = getAudioSettings()
-  if (!audioSettings.voiceEnabled) return
-  unlockAudio()
-  const target = guidedTargetWord.value
-  const optionCue = cueForOption(target)
-  if (optionCue) {
-    playVoiceCue(optionCue, { interrupt: true })
-    return
-  }
-  if (ALLOW_DEV_TTS_FALLBACK && target) {
-    playVoice(target, {
-      interrupt: true,
-      rate: VOICE_PRESET.rate,
-      pitch: VOICE_PRESET.pitch,
-      lang: VOICE_PRESET.lang,
-      volume: audioSettings.voiceVolume
-    })
-    return
-  }
-  if (speakGuidedTargetWithBrowserVoice(target, audioSettings.voiceVolume)) {
-    return
-  }
-  if (current.value?.audio) {
-    playSimpleAudio(current.value.audio)
-  }
-}
-
-function speakGuidedTargetWithBrowserVoice(text, volume = 1) {
-  if (!text || typeof window === 'undefined' || !('speechSynthesis' in window)) return false
-  stopVoice()
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = VOICE_PRESET.lang
-  utterance.rate = VOICE_PRESET.rate
-  utterance.pitch = VOICE_PRESET.pitch
-  utterance.volume = volume
-  window.speechSynthesis.speak(utterance)
-  return true
-}
-
 function startGuidedOptionHighlight() {
   if (!isGuidedWordChoice.value || !Array.isArray(current.value?.options) || current.value.options.length === 0) {
     guidedOptionIndex.value = -1
@@ -2277,22 +2013,8 @@ function resolveOptionText(option) {
   )
 }
 
-function normalizePromptText(value) {
-  return String(value ?? '')
-    .replace(/_+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase()
-}
-
 function normalizeStringLoose(value) {
   return String(value ?? '').trim().toLowerCase()
-}
-
-function shouldShowEnunciado(enunciado, frase) {
-  const enunciadoNorm = normalizePromptText(enunciado)
-  const fraseNorm = normalizePromptText(frase)
-  return !!enunciadoNorm && enunciadoNorm !== fraseNorm
 }
 
 function handleOptionPreview(option) {
@@ -2541,21 +2263,6 @@ async function handleReadingIconClick() {
       volume: audioSettings.voiceVolume,
       onEnd: () => stopReadingPulse()
     })
-  }
-}
-
-function handleCompleteSentenceIconClick() {
-  unlockAudio()
-  playSfx('click')
-  const audioSettings = getAudioSettings()
-  if (!audioSettings.voiceEnabled) return
-  if (current.value?.audio) {
-    handleAudioClick(current.value.audio)
-    return
-  }
-  const spoken = fillBlank(current.value?.prompt || '', current.value?.correct || current.value?.answer || '')
-  if (spoken) {
-    playVoice(spoken, { interrupt: true })
   }
 }
 
@@ -2827,43 +2534,44 @@ function shuffleArray(arr) {
 }
 .btn-option {
   display: inline-flex;
-  width: min(100%, 760px);
-  min-width: 0;
-  max-width: 760px;
+  width: auto;
+  min-width: clamp(96px, 24vw, 180px);
+  max-width: min(100%, 320px);
   text-align: center;
   justify-content: center;
   align-items: center;
-  padding: 1.02rem 1.15rem;
-  min-height: 68px;
-  border-radius: 16px;
-  border: 2px solid #b7cee6;
-  background: linear-gradient(180deg, #f7fbff 0%, #e8f3ff 100%);
-  font-weight: 750;
-  font-size: clamp(1.24rem, 4.9vw, 1.46rem);
-  line-height: 1.5;
+  padding: 0.68rem 1.05rem;
+  min-height: 56px;
+  border-radius: 18px;
+  border: 2px solid rgba(14, 165, 233, 0.22);
+  background: #ffffff;
+  font-weight: 900;
+  font-size: clamp(1.14rem, 4.4vw, 1.38rem);
+  line-height: 1.18;
   color: #0f172a;
   text-transform: none;
   transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 0 rgba(14, 165, 233, 0.16), 0 13px 20px rgba(15, 23, 42, 0.1);
   transform: scale(1);
 }
 .btn-option:hover {
   border-color: #0ea5e9;
-  background: linear-gradient(180deg, #ffffff 0%, #d9ecff 100%);
-  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.85);
-  transform: translateY(-2px) scale(1.02);
+  background: #f8fdff;
+  box-shadow: 0 10px 0 rgba(14, 165, 233, 0.18), 0 16px 24px rgba(14, 165, 233, 0.16);
+  transform: translateY(-2px);
 }
 .btn-option:focus-visible {
   outline: 3px solid #0ea5e9;
   outline-offset: 2px;
 }
 .btn-option:active {
-  transform: scale(0.95);
+  transform: translateY(5px) scale(0.99);
+  box-shadow: 0 3px 0 rgba(14, 165, 233, 0.18), 0 8px 12px rgba(15, 23, 42, 0.1);
 }
 .btn-option.btn-active {
   border-color: #38bdf8;
-  background: linear-gradient(180deg, #f2f9ff 0%, #cbe6ff 100%);
-  box-shadow: 0 10px 20px rgba(56, 189, 248, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: #f2fbff;
+  box-shadow: 0 8px 0 rgba(56, 189, 248, 0.22), 0 14px 22px rgba(56, 189, 248, 0.18);
 }
 .letter-option {
   min-width: 72px;
@@ -2882,23 +2590,24 @@ function shuffleArray(arr) {
 }
 
 .game-view.option-status-ok .btn-option.btn-active {
-  border-color: #b8d956;
-  background: linear-gradient(135deg, #c5ef5f 0%, #d8f86d 45%, #ffe27a 100%);
+  border-color: rgba(132, 204, 22, 0.42);
+  background: #f0fdf4;
   color: #0f172a;
-  box-shadow: 0 10px 20px rgba(197, 239, 95, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 0 rgba(132, 204, 22, 0.22), 0 14px 22px rgba(132, 204, 22, 0.18);
 }
 
 .game-view.option-status-fail .btn-option.btn-active {
-  border-color: #f8d36d;
-  background: linear-gradient(180deg, #fff8db 0%, #f1f8ff 100%);
+  border-color: rgba(245, 158, 11, 0.42);
+  background: #fff8db;
   color: #334155;
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  box-shadow: 0 8px 0 rgba(245, 158, 11, 0.18), 0 14px 22px rgba(245, 158, 11, 0.12);
 }
 .options-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.7rem;
   width: 100%;
 }
 .word-build-preview {
@@ -2994,7 +2703,7 @@ function shuffleArray(arr) {
   font-size: 1.02rem;
 }
 .options-column {
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 .btn-audio {
@@ -3029,8 +2738,8 @@ function shuffleArray(arr) {
   justify-items: center;
 }
 .pair-column .btn-option {
-  width: 100%;
-  min-width: 0;
+  width: auto;
+  min-width: clamp(110px, 28vw, 210px);
 }
 .choice-visual {
   display: grid;
@@ -3458,6 +3167,15 @@ function shuffleArray(arr) {
     box-shadow: 0 0 0 8px rgba(56, 189, 248, 0.12);
   }
 }
+@keyframes tutorButtonGlow {
+  0%,
+  100% {
+    filter: none;
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.2));
+  }
+}
 @keyframes guidedImageBounce {
   0%,
   100% {
@@ -3754,14 +3472,15 @@ function shuffleArray(arr) {
 .tutor-focus-visual .choice-visual,
 .tutor-focus-visual :deep(.exercise-layout__media),
 .tutor-focus-audio .audio-icon-wrapper,
-.tutor-focus-audio .sentence-audio-btn,
-.tutor-focus-options :deep(.exercise-options),
-.tutor-focus-options .options-row,
-.tutor-focus-options .pair-board {
+.tutor-focus-audio .sentence-audio-btn {
   outline: 4px solid rgba(56, 189, 248, 0.34);
   outline-offset: 6px;
   border-radius: 20px;
   animation: tutorHighlight 1.5s ease-in-out infinite;
+}
+.tutor-focus-options .btn-option,
+.tutor-focus-options :deep(.exercise-options__button) {
+  animation: tutorButtonGlow 1.5s ease-in-out infinite;
 }
 :deep(.exercise-layout) {
   width: 100%;
@@ -3798,21 +3517,21 @@ function shuffleArray(arr) {
   margin: 0 auto;
 }
 :deep(.exercise-options__button) {
-  border-color: #b7cee6;
-  background: linear-gradient(180deg, #f7fbff 0%, #e8f3ff 100%);
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  border-color: rgba(14, 165, 233, 0.22);
+  background: #ffffff;
+  box-shadow: 0 8px 0 rgba(14, 165, 233, 0.16), 0 13px 20px rgba(15, 23, 42, 0.1);
 }
 :deep(.exercise-options__button.exercise-options__button--correct) {
-  border-color: #b8d956;
-  background: linear-gradient(135deg, #c5ef5f 0%, #d8f86d 45%, #ffe27a 100%);
+  border-color: rgba(132, 204, 22, 0.42);
+  background: #f0fdf4;
   color: #0f172a;
-  box-shadow: 0 10px 20px rgba(197, 239, 95, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 0 rgba(132, 204, 22, 0.22), 0 14px 22px rgba(132, 204, 22, 0.18);
 }
 :deep(.exercise-options__button.exercise-options__button--incorrect) {
-  border-color: #f8d36d;
-  background: linear-gradient(180deg, #fff8db 0%, #f1f8ff 100%);
+  border-color: rgba(245, 158, 11, 0.42);
+  background: #fff8db;
   color: #334155;
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  box-shadow: 0 8px 0 rgba(245, 158, 11, 0.18), 0 14px 22px rgba(245, 158, 11, 0.12);
 }
 .smartick-card .exercise-visual {
   max-width: 320px;
@@ -3949,12 +3668,13 @@ function shuffleArray(arr) {
     overflow: visible;
   }
   .btn-option {
-    width: 100%;
+    width: auto;
     max-width: none;
-    min-width: 0;
-    min-height: 66px;
-    font-size: clamp(1.2rem, 5.2vw, 1.38rem);
-    line-height: 1.52;
+    min-width: min(46%, 170px);
+    min-height: 52px;
+    font-size: clamp(1.08rem, 4.8vw, 1.3rem);
+    line-height: 1.18;
+    padding: 0.58rem 0.72rem;
   }
   .guided-tutor {
     grid-template-columns: 74px minmax(0, 1fr);
@@ -4022,10 +3742,10 @@ function shuffleArray(arr) {
     margin-bottom: 0.45rem;
   }
   .game-view.compact-mobile .btn-option {
-    min-height: 58px;
-    font-size: clamp(1.1rem, 4.8vw, 1.26rem);
-    line-height: 1.42;
-    padding: 0.74rem 0.78rem;
+    min-height: 50px;
+    font-size: clamp(1.02rem, 4.5vw, 1.18rem);
+    line-height: 1.16;
+    padding: 0.54rem 0.66rem;
   }
   .game-view.ultra-compact-mobile .smartick-card {
     padding: 0.5rem 0.45rem 0.55rem;
@@ -4039,10 +3759,10 @@ function shuffleArray(arr) {
     padding: 0.24rem 0.52rem;
   }
   .game-view.ultra-compact-mobile .btn-option {
-    min-height: 52px;
-    font-size: clamp(1rem, 4.5vw, 1.12rem);
-    line-height: 1.33;
-    padding: 0.6rem 0.62rem;
+    min-height: 48px;
+    font-size: clamp(0.98rem, 4.3vw, 1.08rem);
+    line-height: 1.14;
+    padding: 0.5rem 0.58rem;
     border-radius: 12px;
   }
   .game-view.ultra-compact-mobile .exercise-visual {
