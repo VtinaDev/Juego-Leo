@@ -96,10 +96,44 @@
             <div class="smartick-card-content space-y-4">
             <div v-if="currentStatus === 'ok'" class="status-banner success-banner">
               <img src="/icons/celebration.png" alt="Celebración" class="status-icon" />
-              <span>¡Excelente!</span>
+              <span>¡Muy bien! 🎉</span>
             </div>
-            <div v-else-if="currentStatus === 'fail'" class="status-banner fail-banner">
-              <img src="/icons/back.PNG" alt="Respuesta incorrecta" class="status-icon" />
+            <div v-else-if="progressiveFeedbackText" class="status-banner fail-banner" role="status" aria-live="polite">
+              <span class="status-soft-dot" aria-hidden="true"></span>
+              <span>{{ progressiveFeedbackText }}</span>
+            </div>
+            <div v-if="guidedTutor" class="guided-tutor" :class="`guided-tutor--${guidedTutor.key}`">
+              <div class="guided-tutor__character" aria-hidden="true">
+                <img :src="characterImage" alt="" />
+              </div>
+              <div class="guided-tutor__bubble" role="status" aria-live="polite">
+                <span class="guided-tutor__word">{{ guidedTutor.label }}</span>
+                <button
+                  class="guided-tutor__audio"
+                  type="button"
+                  :aria-label="`Repetir: ${guidedTutor.label}`"
+                  @click="playTutorCue"
+                >
+                  <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
+                </button>
+                <div class="guided-tutor__dots" aria-hidden="true">
+                  <span
+                    v-for="(_, stepIdx) in tutorSteps"
+                    :key="`tutor-step-${stepIdx}`"
+                    :class="{ active: stepIdx === tutorStepIndex }"
+                  />
+                </div>
+              </div>
+            </div>
+            <div v-if="conceptMiniLesson" class="concept-mini-lesson" aria-label="Mini lección visual">
+              <span
+                v-for="item in conceptMiniLesson"
+                :key="item.label"
+                class="concept-mini-lesson__item"
+              >
+                <span aria-hidden="true">{{ item.icon }}</span>
+                <strong>{{ item.label }}</strong>
+              </span>
             </div>
             <!-- ========= VISUAL COMÚN (todos los niveles) ========= -->
             <div
@@ -108,6 +142,7 @@
                 !hideLevelVisuals &&
                 !isLevelFour &&
                 !(mobileViewport && isHabitatVisualMobile) &&
+                current.type !== 'CHOOSE_CORRECT_WORD' &&
                 current.type !== 'IMAGE_WORD_MATCH' &&
                 !(current.type === 'complete_sentence' && current.image) &&
                 !(current.type === 'multiple_choice' && (current.image || current.emoji)) &&
@@ -168,9 +203,8 @@
                 />
 
                 <ExerciseFeedback
-                  :status="currentStatus === 'ok' ? 'success' : currentStatus === 'fail' ? 'error' : 'idle'"
-                  success-text="¡Excelente!"
-                  error-text="Inténtalo de nuevo con calma."
+                  :status="currentStatus === 'ok' ? 'success' : 'idle'"
+                  success-text="¡Muy bien! 🎉"
                 />
               </BaseExerciseLayout>
             </section>
@@ -232,9 +266,8 @@
                 />
 
                 <ExerciseFeedback
-                  :status="currentStatus === 'ok' ? 'success' : currentStatus === 'fail' ? 'error' : 'idle'"
-                  success-text="¡Excelente!"
-                  error-text="Inténtalo de nuevo con calma."
+                  :status="currentStatus === 'ok' ? 'success' : 'idle'"
+                  success-text="¡Muy bien! 🎉"
                 />
               </BaseExerciseLayout>
             </section>
@@ -252,32 +285,17 @@
 
             <!-- Leer con o sin audio (L1) -->
             <section v-else-if="current.type === 'read_with_audio'" class="space-y-4">
-              <div
-                class="reading-box"
-                :class="{
-                  'reading-box--flat': isFuerzaTranquilaStage4of6
-                }"
-              >
-                <SyllableHighlighter
-                  :text="readingText"
-                  :segments="syllableSegments"
-                  :highlight="isFuerzaTranquilaStage4of6 && readingHighlight ? activeSyllable : -1"
-                  :jump-mode="false"
-                />
-                <div class="reading-audio-inline inside-box">
-                  <button
-                    class="btn btn-ghost reading-cta icon-only"
-                    type="button"
-                    aria-label="Escuchar frase"
-                    @click="handleReadingIconClick"
-                  >
-                    <img src="/icons/audio.PNG" alt="" class="audio-icon-static" />
-                  </button>
-                </div>
+              <div class="audio-icon-wrapper audio-icon-wrapper--solo">
+                <button
+                  class="btn btn-ghost reading-cta icon-only"
+                  type="button"
+                  aria-label="Escuchar frase"
+                  @click="handleReadingIconClick"
+                >
+                  <img src="/icons/audio.PNG" alt="" class="audio-icon-static" />
+                </button>
               </div>
-              <p v-if="!current.audio" class="text-sm text-gray-500">
-                Lee la frase tú mismo 🪄
-              </p>
+              <p class="audio-visible-text">{{ readingText }}</p>
               <button class="btn btn-primary" type="button" @click="handleReadConfirm">
                 Ya la leí
               </button>
@@ -323,9 +341,8 @@
                 />
 
                 <ExerciseFeedback
-                  :status="currentStatus === 'ok' ? 'success' : currentStatus === 'fail' ? 'error' : 'idle'"
-                  success-text="¡Excelente!"
-                  error-text="Inténtalo de nuevo con calma."
+                  :status="currentStatus === 'ok' ? 'success' : 'idle'"
+                  success-text="¡Muy bien! 🎉"
                 />
               </BaseExerciseLayout>
             </section>
@@ -402,15 +419,15 @@
                 <button
                   v-for="(letter, idx) in current.letters"
                   :key="`letter-${idx}-${letter}`"
-                  class="btn-option"
+                  :class="['btn-option', 'letter-option', { 'letter-option--selected': lastUnscrambleLetterIndex === idx }]"
                   type="button"
-                  @click="handleUnscramble(letter)"
+                  @click="handleUnscramble(letter, idx)"
                 >
                   {{ letter }}
                 </button>
               </div>
               <div class="mt-3 text-center">
-                <p class="text-lg font-semibold tracking-wide">{{ unscrambleAttempt }}</p>
+                <p class="word-build-preview">{{ unscrambleAttempt || '...' }}</p>
                 <button class="btn btn-primary mt-2" type="button" @click="submitUnscramble">
                   Confirmar
                 </button>
@@ -431,6 +448,9 @@
                 @fallback-audio="(src) => playSimpleAudio(src)"
               />
               <div class="text-center">
+                <div v-if="showCompleteWordSupport" class="word-support" aria-live="polite">
+                  {{ completeWordSpokenText }}
+                </div>
                 <div class="complete-word-pattern" aria-label="Completa la palabra por casillas">
                   <template v-for="(slot, idx) in completeWordSlots" :key="`cw-slot-${idx}`">
                     <span v-if="slot.type === 'fixed'" class="cw-fixed">{{ slot.char }}</span>
@@ -452,6 +472,17 @@
                     />
                   </template>
                 </div>
+                <div v-if="missingLetterPieces.length" class="missing-letter-pieces" aria-label="Letras de apoyo">
+                  <button
+                    v-for="(letter, idx) in missingLetterPieces"
+                    :key="`missing-letter-${idx}-${letter}`"
+                    class="missing-letter-piece"
+                    type="button"
+                    @click="fillNextCompleteWordBlank(letter)"
+                  >
+                    {{ letter }}
+                  </button>
+                </div>
               </div>
               <div class="flex justify-center mt-4">
                 <button class="btn btn-primary" type="button" @click="handleTextSubmit">
@@ -461,19 +492,29 @@
             </section>
 
             <section v-else-if="current.type === 'CHOOSE_CORRECT_WORD'">
-              <SentenceAudioRow
-                :text="current.prompt || current.question"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-3xl font-semibold mb-3 leading-snug text-left"
-                aria-label="Escuchar enunciado"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
+              <div v-if="current.image" class="choice-visual guided-word-visual">
+                <img
+                  :src="resolveAsset(current.image)"
+                  :alt="current.imageAlt || guidedTargetWord || 'Ilustración'"
+                  class="choice-visual-img"
+                  @error="$event.target.style.display = 'none'"
+                />
+              </div>
+              <div class="guided-word-audio">
+                <button
+                  class="guided-word-repeat"
+                  type="button"
+                  :aria-label="`Repetir palabra ${guidedTargetWord}`"
+                  @click="playGuidedTargetAudio"
+                >
+                  <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
+                </button>
+              </div>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
-                  v-for="option in current.options"
+                  v-for="(option, optionIdx) in current.options"
                   :key="option"
-                  class="btn-option"
+                  :class="guidedChoiceOptionClass(option, optionIdx)"
                   type="button"
                   @click="handleSimpleOption(option)"
                   @mouseenter="handleOptionPreview(option)"
@@ -541,27 +582,29 @@
             </section>
 
             <section v-else-if="current.type === 'IMAGE_WORD_MATCH'">
-              <div v-if="current.image" class="choice-visual">
+              <div v-if="current.image" class="choice-visual guided-word-visual">
                 <img
                   :src="resolveAsset(current.image)"
-                  :alt="current.imageAlt || 'Ilustración'"
+                  :alt="current.imageAlt || guidedTargetWord || 'Ilustración'"
                   class="choice-visual-img"
                   @error="$event.target.style.display = 'none'"
                 />
               </div>
-              <SentenceAudioRow
-                :text="current.prompt || 'Elige la palabra correcta'"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-2xl font-semibold mb-3 leading-snug text-left"
-                aria-label="Escuchar enunciado"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
+              <div class="guided-word-audio">
+                <button
+                  class="guided-word-repeat"
+                  type="button"
+                  :aria-label="`Repetir palabra ${guidedTargetWord}`"
+                  @click="playGuidedTargetAudio"
+                >
+                  <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
+                </button>
+              </div>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
-                  v-for="option in current.options"
+                  v-for="(option, optionIdx) in current.options"
                   :key="option"
-                  class="btn-option"
+                  :class="guidedChoiceOptionClass(option, optionIdx)"
                   type="button"
                   @click="handleSimpleOption(option)"
                   @mouseenter="handleOptionPreview(option)"
@@ -635,23 +678,23 @@
                 />
 
                 <ExerciseFeedback
-                  :status="currentStatus === 'ok' ? 'success' : currentStatus === 'fail' ? 'error' : 'idle'"
-                  success-text="¡Excelente!"
-                  error-text="Inténtalo de nuevo con calma."
+                  :status="currentStatus === 'ok' ? 'success' : 'idle'"
+                  success-text="¡Muy bien! 🎉"
                 />
               </BaseExerciseLayout>
             </section>
 
             <!-- Pregunta con contexto / audio -->
             <section v-else-if="current.type === 'audio_question'">
-              <SentenceAudioRow
-                :text="current.question"
-                :exercise="current"
-                :audio-src="current.audio"
-                text-class="text-3xl font-semibold mb-3 leading-snug text-slate-700"
-                aria-label="Escuchar pregunta"
-                @fallback-audio="(src) => playSimpleAudio(src)"
-              />
+              <p v-if="current.question" class="audio-visible-text">{{ current.question }}</p>
+              <div class="audio-icon-wrapper audio-icon-wrapper--solo">
+                <AudioButton
+                  :exercise="current"
+                  :audio-src="current.audio"
+                  aria-label="Escuchar pregunta"
+                  @fallback-audio="(src) => playSimpleAudio(src)"
+                />
+              </div>
               <div v-if="current.image" class="choice-visual">
                 <img
                   :src="resolveAsset(current.image)"
@@ -679,19 +722,24 @@
 
             <!-- Dictado / escribir palabra o frase -->
             <section v-else-if="current.type === 'audio_write'">
-              <p class="text-xl font-semibold mb-3 leading-snug">
-                {{ current.instruction || current.fallbackText || 'Escribe lo que escuchas.' }}
+              <div v-if="current.image" class="choice-visual">
+                <img
+                  :src="resolveAsset(current.image)"
+                  :alt="current.imageAlt || current.fallbackText || current.instruction || 'Ilustración del ejercicio'"
+                  class="choice-visual-img"
+                  @error="$event.target.style.display = 'none'"
+                />
+              </div>
+              <p v-if="current.fallbackText || current.instruction" class="audio-visible-text">
+                {{ current.fallbackText || current.instruction }}
               </p>
-              <div class="audio-icon-wrapper">
+              <div class="audio-icon-wrapper audio-icon-wrapper--solo">
                 <AudioButton
                   :exercise="current"
                   :audio-src="current.audio"
                   @fallback-audio="(src) => playSimpleAudio(src)"
                 />
               </div>
-              <p v-if="(current.fallbackText || current.instruction) && !isLevelFourStageOne" class="audio-context">
-                {{ current.fallbackText || current.instruction }}
-              </p>
               <textarea
                 v-model="textAnswer"
                 rows="2"
@@ -707,6 +755,14 @@
 
             <!-- Escritura creativa / guiada -->
             <section v-else-if="current.type === 'text_write'">
+              <div v-if="current.image" class="choice-visual">
+                <img
+                  :src="resolveAsset(current.image)"
+                  :alt="current.imageAlt || current.instruction || 'Ilustración del ejercicio'"
+                  class="choice-visual-img"
+                  @error="$event.target.style.display = 'none'"
+                />
+              </div>
               <SentenceAudioRow
                 :text="current.instruction || 'Escribe una frase.'"
                 :speak-text="current.narrationText || ''"
@@ -934,7 +990,6 @@ import { VOICE_PRESET } from '../engine/audio/voiceProfile'
 import ExerciseShell from '../components/ExerciseShell.vue'
 import DragDropBoard from '../components/DragDropBoard.vue'
 import AudioButton from '../components/AudioButton.vue'
-import SyllableHighlighter from '../components/SyllableHighlighter.vue'
 import SentenceAudioRow from '../components/SentenceAudioRow.vue'
 import BaseExerciseLayout from '../components/exercises/BaseExerciseLayout.vue'
 import ExerciseImage from '../components/exercises/ExerciseImage.vue'
@@ -1050,6 +1105,7 @@ const {
   index,
   canNext,
   lastResult,
+  progressiveFeedback,
   stageContext,
   checkAnswer,
   recordResult,
@@ -1060,9 +1116,184 @@ const {
   stopAllMedia
 } = engine
 
+const progressiveFeedbackText = computed(() => {
+  if (currentStatus.value !== 'fail') return ''
+  return progressiveFeedback.value?.message || '¡Casi! Vamos juntos 💪'
+})
+
+const tutorStepIndex = ref(0)
+const guidedOptionIndex = ref(-1)
+const selectedOptionText = ref('')
+let tutorStepTimer = null
+let tutorAutoAudioTimer = null
+let guidedOptionTimer = null
+
+const guidedChoiceTypes = new Set(['CHOOSE_CORRECT_WORD', 'IMAGE_WORD_MATCH'])
+const isGuidedWordChoice = computed(() => guidedChoiceTypes.has(String(current.value?.type || '')))
+const guidedTargetWord = computed(() => {
+  const exercise = current.value
+  if (!exercise) return ''
+  return resolveOptionText(exercise.correct ?? exercise.answer ?? exercise.word ?? exercise.options?.[0])
+})
+
+const tutorSteps = computed(() => {
+  if (!current.value || currentStatus.value === 'ok' || currentStatus.value === 'skipped') return []
+
+  return [
+    {
+      key: 'look',
+      label: 'Mira',
+      cue: 'Mira',
+      focus: 'visual'
+    },
+    {
+      key: 'listen',
+      label: 'Escucha',
+      cue: 'Escucha',
+      focus: 'audio'
+    },
+    {
+      key: 'choose',
+      label: getTutorActionLabel(),
+      cue: getTutorActionCue(),
+      focus: 'options'
+    }
+  ]
+})
+
+const guidedTutor = computed(() => tutorSteps.value[tutorStepIndex.value] ?? null)
+
+const conceptMiniLesson = computed(() => {
+  if (!current.value || currentStatus.value === 'ok' || Number(level.value) !== 5) return null
+  if (current.value.type === 'tense_classify') {
+    return [
+      { icon: '🌙', label: 'Ayer' },
+      { icon: '☀️', label: 'Hoy' },
+      { icon: '🌱', label: 'Mañana' }
+    ]
+  }
+  if (current.value.type === 'accent_game') {
+    return [
+      { icon: '👏', label: 'Sílaba' },
+      { icon: '🔊', label: 'Fuerte' },
+      { icon: '´', label: 'Tilde' }
+    ]
+  }
+  if (current.value.type === 'punctuation_game' || current.value.type === 'final_exam') {
+    return [
+      { icon: '❓', label: 'Pregunta' },
+      { icon: '🎉', label: 'Emoción' },
+      { icon: '•', label: 'Punto' }
+    ]
+  }
+  return null
+})
+
+function clearTutorTimers() {
+  if (tutorStepTimer) {
+    clearTimeout(tutorStepTimer)
+    tutorStepTimer = null
+  }
+  if (tutorAutoAudioTimer) {
+    clearTimeout(tutorAutoAudioTimer)
+    tutorAutoAudioTimer = null
+  }
+  if (guidedOptionTimer) {
+    clearInterval(guidedOptionTimer)
+    guidedOptionTimer = null
+  }
+}
+
+function getTutorActionLabel() {
+  if (isGuidedWordChoice.value && guidedTargetWord.value) {
+    return `Busca '${guidedTargetWord.value}'`
+  }
+  return current.value?.type === 'audio_write' || current.value?.type === 'text_write' ? 'Escribe' : 'Busca'
+}
+
+function getTutorActionCue() {
+  if (isGuidedWordChoice.value && guidedTargetWord.value) {
+    return `Busca ${guidedTargetWord.value}`
+  }
+  return getTutorActionLabel()
+}
+
+function playTutorCue() {
+  const step = guidedTutor.value
+  if (!step) return
+
+  const audioSettings = getAudioSettings()
+  if (!audioSettings.voiceEnabled) return
+
+  if ((step.key === 'look' || step.key === 'listen') && isGuidedWordChoice.value) {
+    playGuidedTargetAudio()
+    return
+  }
+
+  if (step.key === 'listen' && current.value?.audio) {
+    playSimpleAudio(current.value.audio)
+    return
+  }
+
+  if (step.key === 'listen' && Array.isArray(current.value?.syllables) && current.value.syllables.length) {
+    const syllables = current.value.syllables.join('... ')
+    const fullWord = Array.isArray(current.value.correctOrder)
+      ? current.value.correctOrder.join('')
+      : current.value.syllables.join('')
+    playVoice(`${syllables}... ${fullWord}`, {
+      interrupt: true,
+      rate: VOICE_PRESET.rate,
+      pitch: VOICE_PRESET.pitch,
+      lang: VOICE_PRESET.lang,
+      volume: audioSettings.voiceVolume
+    })
+    return
+  }
+
+  if (step.key === 'listen' && exerciseNarrationText.value) {
+    playVoice(exerciseNarrationText.value, {
+      interrupt: true,
+      rate: VOICE_PRESET.rate,
+      pitch: VOICE_PRESET.pitch,
+      lang: VOICE_PRESET.lang,
+      volume: audioSettings.voiceVolume
+    })
+    return
+  }
+
+  playVoice(step.cue, {
+    interrupt: true,
+    rate: VOICE_PRESET.rate,
+    pitch: VOICE_PRESET.pitch,
+    lang: VOICE_PRESET.lang,
+    volume: audioSettings.voiceVolume
+  })
+}
+
+function scheduleTutorStep() {
+  clearTutorTimers()
+  if (!guidedTutor.value) return
+
+  tutorAutoAudioTimer = setTimeout(() => {
+    playTutorCue()
+  }, 260)
+
+  if (tutorStepIndex.value < tutorSteps.value.length - 1) {
+    tutorStepTimer = setTimeout(() => {
+      tutorStepIndex.value += 1
+      scheduleTutorStep()
+    }, prefersReducedMotion.value ? 2200 : 1750)
+  } else if (guidedTutor.value?.key === 'choose') {
+    startGuidedOptionHighlight()
+  }
+}
+
 const gameViewClasses = computed(() => ({
   'option-status-ok': currentStatus.value === 'ok',
   'option-status-fail': currentStatus.value === 'fail',
+  'tutor-focus-visual': guidedTutor.value?.focus === 'visual',
+  'tutor-focus-audio': guidedTutor.value?.focus === 'audio',
+  'tutor-focus-options': guidedTutor.value?.focus === 'options',
   'game-view--mono-3-3-centered': isMonoStage3of3.value || isMonoExerciseThirdOfThree.value
 }))
 
@@ -1441,8 +1672,6 @@ watch(
         celebrateAvatar.value = false
       }, 950)
     } else if (status === 'fail') {
-      unlockAudio()
-      playSfx('wrong')
       celebrateAvatar.value = false
     }
   }
@@ -1638,6 +1867,10 @@ watch(
     const audioSettings = getAudioSettings()
     if (!audioSettings.voiceEnabled) return
     unlockAudio()
+    if (isGuidedWordChoice.value) {
+      playGuidedTargetAudio()
+      return
+    }
     const cue = cueForExercise(exercise)
     if (cue) {
       playVoiceCue(cue)
@@ -1670,10 +1903,12 @@ const characterImage = computed(() => {
 
 const hideHeaders = computed(() => (level.value === 1 && stage.value === 1) || [2, 3, 4, 5].includes(level.value))
 const shellTitle = computed(() => {
+  if (isGuidedWordChoice.value) return ''
   if (hideHeaders.value) return ''
   return meta.value?.title ?? current.value?.title ?? 'Ejercicio mágico'
 })
 const shellInstructions = computed(() => {
+  if (isGuidedWordChoice.value) return ''
   if (hideHeaders.value) return ''
   return current.value?.instructions ?? meta.value?.description ?? 'Sigue las indicaciones con calma.'
 })
@@ -1733,6 +1968,23 @@ const completeWordSlots = computed(() => {
 const completeWordSpokenText = computed(() => {
   if (current.value?.type !== 'COMPLETE_WORD') return ''
   return String(current.value?.solution || current.value?.correct || current.value?.answer || current.value?.prompt || '')
+})
+
+const showCompleteWordSupport = computed(() =>
+  current.value?.type === 'COMPLETE_WORD' &&
+  currentStatus.value === 'fail' &&
+  Boolean(completeWordSpokenText.value)
+)
+
+const missingLetterPieces = computed(() => {
+  if (current.value?.type !== 'COMPLETE_WORD') return []
+  const solution = completeWordSpokenText.value
+  if (!solution || !completeWordSlots.value.length) return []
+  const missingCount = completeWordSlots.value.filter((slot) => slot.type === 'blank').length
+  return solution
+    .split('')
+    .filter((char) => /[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]/u.test(char))
+    .slice(-missingCount)
 })
 
 const levelHeading = computed(() => {
@@ -1839,13 +2091,16 @@ const questionMaskedSentence = computed(() => {
 
 // UNSCRAMBLE
 const unscrambleAttempt = ref('')
-function handleUnscramble(letter) {
+const lastUnscrambleLetterIndex = ref(null)
+function handleUnscramble(letter, index = null) {
   unlockAudio()
   playSfx('click')
+  lastUnscrambleLetterIndex.value = index
   unscrambleAttempt.value += letter
 }
 function resetUnscramble() {
   unscrambleAttempt.value = ''
+  lastUnscrambleLetterIndex.value = null
 }
 function submitUnscramble() {
   if (!current.value) return
@@ -1853,6 +2108,14 @@ function submitUnscramble() {
   playSfx('click')
   checkAnswer(unscrambleAttempt.value, { autoAdvance: true })
   unscrambleAttempt.value = ''
+  lastUnscrambleLetterIndex.value = null
+}
+
+function fillNextCompleteWordBlank(letter) {
+  const nextIndex = completeWordInputs.value.findIndex((value) => !String(value || '').trim())
+  const targetIndex = nextIndex >= 0 ? nextIndex : 0
+  completeWordInputs.value[targetIndex] = String(letter || '').slice(0, 1).toLowerCase()
+  focusCompleteWordInput(targetIndex + 1)
 }
 
 // SYLLABLE ORDER
@@ -1891,8 +2154,8 @@ function submitPuzzleOrder() {
   puzzleAttempt.value = []
 }
 
-function handleStageComplete(summary) {
-  game.setStageResult?.(summary.level, summary.stage, {
+async function handleStageComplete(summary) {
+  await game.setStageResult?.(summary.level, summary.stage, {
     ...summary,
     done: true
   })
@@ -1920,7 +2183,83 @@ function handleStageComplete(summary) {
 function handleSimpleOption(option) {
   unlockAudio()
   playSfx('click')
+  selectedOptionText.value = resolveOptionText(option)
   checkAnswer(option, { autoAdvance: true })
+}
+
+function playGuidedTargetAudio() {
+  const audioSettings = getAudioSettings()
+  if (!audioSettings.voiceEnabled) return
+  unlockAudio()
+  const target = guidedTargetWord.value
+  const optionCue = cueForOption(target)
+  if (optionCue) {
+    playVoiceCue(optionCue, { interrupt: true })
+    return
+  }
+  if (ALLOW_DEV_TTS_FALLBACK && target) {
+    playVoice(target, {
+      interrupt: true,
+      rate: VOICE_PRESET.rate,
+      pitch: VOICE_PRESET.pitch,
+      lang: VOICE_PRESET.lang,
+      volume: audioSettings.voiceVolume
+    })
+    return
+  }
+  if (speakGuidedTargetWithBrowserVoice(target, audioSettings.voiceVolume)) {
+    return
+  }
+  if (current.value?.audio) {
+    playSimpleAudio(current.value.audio)
+  }
+}
+
+function speakGuidedTargetWithBrowserVoice(text, volume = 1) {
+  if (!text || typeof window === 'undefined' || !('speechSynthesis' in window)) return false
+  stopVoice()
+  const utterance = new SpeechSynthesisUtterance(text)
+  utterance.lang = VOICE_PRESET.lang
+  utterance.rate = VOICE_PRESET.rate
+  utterance.pitch = VOICE_PRESET.pitch
+  utterance.volume = volume
+  window.speechSynthesis.speak(utterance)
+  return true
+}
+
+function startGuidedOptionHighlight() {
+  if (!isGuidedWordChoice.value || !Array.isArray(current.value?.options) || current.value.options.length === 0) {
+    guidedOptionIndex.value = -1
+    return
+  }
+  guidedOptionIndex.value = 0
+  if (prefersReducedMotion.value) return
+  guidedOptionTimer = setInterval(() => {
+    const total = current.value?.options?.length || 0
+    if (!total) {
+      guidedOptionIndex.value = -1
+      return
+    }
+    guidedOptionIndex.value = (guidedOptionIndex.value + 1) % total
+  }, 780)
+}
+
+function guidedChoiceOptionClass(option, optionIdx) {
+  const optionText = resolveOptionText(option)
+  const selected = selectedOptionText.value && normalizeStringLoose(selectedOptionText.value) === normalizeStringLoose(optionText)
+  const isCorrect = currentCorrectAnswers.value.some(
+    (answer) => normalizeStringLoose(answer) === normalizeStringLoose(optionText)
+  )
+  return [
+    'btn-option',
+    'guided-choice-option',
+    {
+      'guided-choice-option--spotlight': guidedTutor.value?.key === 'choose' && optionIdx === guidedOptionIndex.value,
+      'guided-choice-option--selected': selected,
+      'guided-choice-option--correct': currentStatus.value === 'ok' && isCorrect,
+      'guided-choice-option--incorrect': currentStatus.value === 'fail' && selected && !isCorrect
+    }
+  ]
 }
 
 function resolveOptionText(option) {
@@ -1944,6 +2283,10 @@ function normalizePromptText(value) {
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase()
+}
+
+function normalizeStringLoose(value) {
+  return String(value ?? '').trim().toLowerCase()
 }
 
 function shouldShowEnunciado(enunciado, frase) {
@@ -2032,7 +2375,6 @@ function handlePairMatch(option) {
       selectedLeft.value = ''
       return
     }
-    playSfx('wrong')
     checkAnswer(payload, { autoAdvance: false })
     selectedLeft.value = ''
     return
@@ -2347,6 +2689,10 @@ watch(
   () => current.value?.id,
   () => {
     // Limpieza fuerte al cambiar ejercicio para evitar timers/audio residuales fuera de fase.
+    clearTutorTimers()
+    tutorStepIndex.value = 0
+    guidedOptionIndex.value = -1
+    selectedOptionText.value = ''
     resetReadingHighlight()
     stopVoice()
     clearAudioListeners()
@@ -2354,7 +2700,24 @@ watch(
     activeSyllable.value = -1
     resetCompleteWordInputs()
     resetLetterBuild()
+    setTimeout(() => {
+      scheduleTutorStep()
+    }, 180)
   }
+)
+
+watch(
+  () => currentStatus.value,
+  (status) => {
+    clearTutorTimers()
+    if (status === 'pending' || status === 'fail') {
+      if (status === 'pending') tutorStepIndex.value = 0
+      setTimeout(() => {
+        scheduleTutorStep()
+      }, status === 'fail' ? 420 : 180)
+    }
+  },
+  { immediate: true }
 )
 
 function handleSkip() {
@@ -2381,6 +2744,7 @@ function handleRepeat() {
 
 onBeforeUnmount(() => {
   stopAllMedia()
+  clearTutorTimers()
   if (confettiTimer) clearTimeout(confettiTimer)
   if (avatarCelebrateTimer) clearTimeout(avatarCelebrateTimer)
   if (readingTimer) clearTimeout(readingTimer)
@@ -2487,6 +2851,7 @@ function shuffleArray(arr) {
   border-color: #0ea5e9;
   background: linear-gradient(180deg, #ffffff 0%, #d9ecff 100%);
   box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  transform: translateY(-2px) scale(1.02);
 }
 .btn-option:focus-visible {
   outline: 3px solid #0ea5e9;
@@ -2500,6 +2865,21 @@ function shuffleArray(arr) {
   background: linear-gradient(180deg, #f2f9ff 0%, #cbe6ff 100%);
   box-shadow: 0 10px 20px rgba(56, 189, 248, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
+.letter-option {
+  min-width: 72px;
+  max-width: 92px;
+  min-height: 64px;
+  padding: 0.55rem 0.7rem;
+  font-size: clamp(2rem, 8vw, 2.7rem);
+  line-height: 1;
+  font-weight: 900;
+}
+.letter-option--selected {
+  border-color: #22c55e;
+  background: linear-gradient(180deg, #ecfccb 0%, #bbf7d0 100%);
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 14px 24px rgba(34, 197, 94, 0.22);
+}
 
 .game-view.option-status-ok .btn-option.btn-active {
   border-color: #b8d956;
@@ -2509,10 +2889,10 @@ function shuffleArray(arr) {
 }
 
 .game-view.option-status-fail .btn-option.btn-active {
-  border-color: #ea7a14;
-  background: linear-gradient(180deg, #ffb347 0%, #ff7a00 100%);
-  color: #ffffff;
-  box-shadow: 0 10px 20px rgba(234, 122, 20, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: #f8d36d;
+  background: linear-gradient(180deg, #fff8db 0%, #f1f8ff 100%);
+  color: #334155;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 .options-row {
   display: flex;
@@ -2520,6 +2900,49 @@ function shuffleArray(arr) {
   justify-content: center;
   gap: 0.75rem;
   width: 100%;
+}
+.word-build-preview {
+  min-height: 48px;
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 2.8rem);
+  line-height: 1.1;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: 0.08em;
+}
+.audio-visible-text,
+.word-support {
+  width: min(100%, 680px);
+  margin: 0.35rem auto 0.85rem;
+  padding: 0.8rem 1rem;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+  font-size: clamp(1.45rem, 6vw, 2.1rem);
+  line-height: 1.35;
+  font-weight: 850;
+  text-align: center;
+}
+.missing-letter-pieces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-top: 0.8rem;
+}
+.missing-letter-piece {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #93c5fd;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+  color: #0f172a;
+  font-size: 1.75rem;
+  font-weight: 900;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
 }
 .letter-build {
   width: 100%;
@@ -2628,6 +3051,67 @@ function shuffleArray(arr) {
   background: transparent;
   box-shadow: none;
   border-radius: var(--exercise-image-radius);
+}
+.guided-word-visual {
+  max-width: 310px;
+  margin-bottom: 0.45rem;
+}
+.guided-word-visual .choice-visual-img {
+  animation: guidedImageBounce 2.2s ease-in-out infinite;
+  transform-origin: center bottom;
+  cursor: pointer;
+}
+.guided-word-visual .choice-visual-img:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 12px 20px rgba(14, 165, 233, 0.2));
+}
+.guided-word-audio {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 0.65rem;
+}
+.guided-word-repeat {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 18px;
+  background: #fff7d6;
+  box-shadow: 0 10px 18px rgba(245, 158, 11, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.guided-word-repeat:hover {
+  transform: translateY(-1px) scale(1.04);
+  box-shadow: 0 13px 22px rgba(245, 158, 11, 0.26);
+}
+.guided-word-repeat:active {
+  transform: scale(0.96);
+}
+.guided-word-repeat img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+.guided-choice-option--spotlight {
+  border-color: #38bdf8;
+  background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+  box-shadow: 0 0 0 7px rgba(56, 189, 248, 0.14), 0 12px 22px rgba(14, 165, 233, 0.18);
+  transform: translateY(-2px) scale(1.02);
+}
+.guided-choice-option--selected {
+  border-color: #f59e0b;
+  background: linear-gradient(180deg, #fff8db 0%, #fef3c7 100%);
+}
+.guided-choice-option--correct {
+  border-color: #84cc16;
+  background: linear-gradient(135deg, #d9f99d 0%, #bef264 48%, #fde68a 100%);
+  box-shadow: 0 12px 22px rgba(132, 204, 22, 0.24);
+}
+.guided-choice-option--incorrect {
+  border-color: #fb923c;
+  background: linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%);
+  box-shadow: 0 10px 18px rgba(251, 146, 60, 0.16);
 }
 .choice-emoji {
   font-size: 3rem;
@@ -2803,16 +3287,6 @@ function shuffleArray(arr) {
   justify-content: center;
   margin-bottom: 0.85rem;
 }
-.audio-context {
-  background: #fff8e1;
-  color: #92400e;
-  border-radius: 14px;
-  padding: 0.85rem 1rem;
-  margin: 0 0 1rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 8px 18px rgba(251, 191, 36, 0.2);
-}
 @keyframes syllablePulse {
   0%,
   100% {
@@ -2828,6 +3302,7 @@ function shuffleArray(arr) {
   .reading-animated {
     animation: none;
   }
+  .guided-word-visual .choice-visual-img,
   .avatar-chip--celebrate,
   .avatar-reward {
     animation: none;
@@ -2866,9 +3341,17 @@ function shuffleArray(arr) {
   box-shadow: 0 10px 24px rgba(34, 197, 94, 0.18);
 }
 .fail-banner {
-  background: #fff1f2;
-  color: #b91c1c;
-  box-shadow: 0 10px 24px rgba(248, 113, 113, 0.18);
+  background: linear-gradient(180deg, #fff8e7 0%, #eef9ff 100%);
+  color: #334155;
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+}
+.status-soft-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #facc15;
+  box-shadow: 0 0 0 5px rgba(250, 204, 21, 0.18);
 }
 .status-icon {
   width: 48px;
@@ -2936,6 +3419,52 @@ function shuffleArray(arr) {
   100% {
     transform: translate3d(0, 130vh, 0) rotate(540deg);
     opacity: 0;
+  }
+}
+@keyframes tutorFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes tutorIdle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes tutorAudioPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+}
+@keyframes tutorHighlight {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(56, 189, 248, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(56, 189, 248, 0.12);
+  }
+}
+@keyframes guidedImageBounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: translateY(-4px) scale(1.045);
   }
 }
 .smartick-shell {
@@ -3099,6 +3628,141 @@ function shuffleArray(arr) {
 .smartick-card-content {
   position: relative;
 }
+.guided-tutor {
+  width: min(100%, 760px);
+  margin: 0 auto 0.25rem;
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr);
+  align-items: end;
+  gap: 0;
+  animation: tutorFadeIn 0.28s ease both;
+}
+.guided-tutor__character {
+  width: 92px;
+  height: 92px;
+  display: grid;
+  place-items: center;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  animation: tutorIdle 2.8s ease-in-out infinite;
+  z-index: 2;
+}
+.guided-tutor__character img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 16px rgba(15, 23, 42, 0.16));
+}
+.guided-tutor__bubble {
+  position: relative;
+  min-height: 82px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.55rem;
+  margin-left: -8px;
+  margin-bottom: 12px;
+  padding: 0.75rem 0.85rem 0.5rem 1.45rem;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 2px solid rgba(14, 165, 233, 0.2);
+  box-shadow: 0 10px 0 rgba(14, 165, 233, 0.14), 0 14px 24px rgba(15, 23, 42, 0.1);
+}
+.guided-tutor__bubble::before {
+  content: '';
+  position: absolute;
+  left: -11px;
+  top: 30px;
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  border-left: 2px solid rgba(14, 165, 233, 0.2);
+  border-bottom: 2px solid rgba(14, 165, 233, 0.2);
+  transform: rotate(45deg);
+}
+.guided-tutor__word {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1.45rem, 5.6vw, 2.15rem);
+  line-height: 1.08;
+  font-weight: 900;
+  color: #0f172a;
+  text-wrap: balance;
+}
+.guided-tutor__audio {
+  position: relative;
+  z-index: 1;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 16px;
+  background: #fff7d6;
+  box-shadow: 0 10px 18px rgba(245, 158, 11, 0.2);
+  animation: tutorAudioPulse 1.9s ease-in-out infinite;
+}
+.guided-tutor__audio img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.guided-tutor__dots {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+.guided-tutor__dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+.guided-tutor__dots span.active {
+  width: 24px;
+  background: #38bdf8;
+}
+.concept-mini-lesson {
+  width: min(100%, 760px);
+  margin: 0 auto 0.55rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+.concept-mini-lesson__item {
+  min-height: 76px;
+  display: grid;
+  place-items: center;
+  gap: 0.2rem;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+  border: 2px solid rgba(34, 197, 94, 0.18);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.07);
+  color: #0f172a;
+}
+.concept-mini-lesson__item span {
+  font-size: 2rem;
+  line-height: 1;
+}
+.concept-mini-lesson__item strong {
+  font-size: clamp(1rem, 4vw, 1.28rem);
+  line-height: 1;
+}
+.tutor-focus-visual .exercise-visual,
+.tutor-focus-visual .choice-visual,
+.tutor-focus-visual :deep(.exercise-layout__media),
+.tutor-focus-audio .audio-icon-wrapper,
+.tutor-focus-audio .sentence-audio-btn,
+.tutor-focus-options :deep(.exercise-options),
+.tutor-focus-options .options-row,
+.tutor-focus-options .pair-board {
+  outline: 4px solid rgba(56, 189, 248, 0.34);
+  outline-offset: 6px;
+  border-radius: 20px;
+  animation: tutorHighlight 1.5s ease-in-out infinite;
+}
 :deep(.exercise-layout) {
   width: 100%;
   margin: 0;
@@ -3145,10 +3809,10 @@ function shuffleArray(arr) {
   box-shadow: 0 10px 20px rgba(197, 239, 95, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 :deep(.exercise-options__button.exercise-options__button--incorrect) {
-  border-color: #ea7a14;
-  background: linear-gradient(180deg, #ffb347 0%, #ff7a00 100%);
-  color: #ffffff;
-  box-shadow: 0 10px 20px rgba(234, 122, 20, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: #f8d36d;
+  background: linear-gradient(180deg, #fff8db 0%, #f1f8ff 100%);
+  color: #334155;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 .smartick-card .exercise-visual {
   max-width: 320px;
@@ -3164,20 +3828,20 @@ function shuffleArray(arr) {
   margin: 0.4rem 0 0.2rem;
 }
 .cw-fixed {
-  min-width: 1.4rem;
-  font-size: 1.7rem;
+  min-width: 1.8rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #0f172a;
   text-transform: lowercase;
 }
 .cw-input {
-  width: 2.2rem;
-  height: 2.6rem;
-  border-radius: 0.75rem;
+  width: clamp(3rem, 12vw, 4rem);
+  height: clamp(3.2rem, 13vw, 4.2rem);
+  border-radius: 1rem;
   border: 2px solid #93c5fd;
   background: #eff6ff;
   text-align: center;
-  font-size: 1.4rem;
+  font-size: clamp(1.8rem, 7vw, 2.45rem);
   font-weight: 800;
   text-transform: lowercase;
   color: #1e3a8a;
@@ -3291,6 +3955,35 @@ function shuffleArray(arr) {
     min-height: 66px;
     font-size: clamp(1.2rem, 5.2vw, 1.38rem);
     line-height: 1.52;
+  }
+  .guided-tutor {
+    grid-template-columns: 74px minmax(0, 1fr);
+    width: 100%;
+    margin-bottom: 0.15rem;
+  }
+  .guided-tutor__character,
+  .guided-tutor__character img {
+    width: 80px;
+    height: 80px;
+  }
+  .guided-tutor__bubble {
+    min-height: 72px;
+    margin-left: -6px;
+    margin-bottom: 8px;
+    padding: 0.62rem 0.66rem 0.42rem 1.05rem;
+    border-radius: 18px;
+  }
+  .guided-tutor__word {
+    font-size: clamp(1.22rem, 6.2vw, 1.7rem);
+  }
+  .guided-tutor__audio {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+  }
+  .guided-tutor__audio img {
+    width: 34px;
+    height: 34px;
   }
   .smartick-card-head {
     margin-bottom: 0.75rem;
