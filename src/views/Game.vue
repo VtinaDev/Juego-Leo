@@ -78,6 +78,9 @@
                   <div class="stage-pill">
                     <span>{{ stageLabel }}</span>
                   </div>
+                  <div v-if="exerciseCounterLabel" class="exercise-counter-pill">
+                    {{ exerciseCounterLabel }}
+                  </div>
                 </div>
                 <div class="smartick-actions">
                   <RouterLink class="map-only-link" to="/mapview" aria-label="Volver al mapa">
@@ -880,6 +883,7 @@ const {
   error,
   errorMessage,
   meta,
+  total,
   current,
   currentStatus,
   index,
@@ -1677,6 +1681,11 @@ const stageLabel = computed(() => {
   if (meta.value?.stageLabel) return meta.value.stageLabel
   if (context?.stageMeta?.title) return context.stageMeta.title
   return `Etapa ${stage.value}`
+})
+const exerciseCounterLabel = computed(() => {
+  const count = Number(total.value || 0)
+  if (!count) return ''
+  return `Ejercicio ${Number(index.value || 0) + 1}/${count}`
 })
 
 const blankSymbol = '_____'
@@ -3317,10 +3326,12 @@ function shuffleArray(arr) {
   margin: 0 auto;
 }
 .smartick-stage {
-  display: flex;
+  display: grid;
   justify-content: center;
+  gap: 0.35rem;
   margin: 0;
   justify-self: center;
+  text-align: center;
 }
 .stage-pill {
   padding: 0.4rem 0.85rem;
@@ -3329,6 +3340,18 @@ function shuffleArray(arr) {
   color: #0ea5e9;
   font-weight: 700;
   font-size: 0.95rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+.exercise-counter-pill {
+  width: max-content;
+  justify-self: center;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: #fcefb4;
+  color: #7c4a03;
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.1;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 .smartick-card {
@@ -3736,6 +3759,10 @@ function shuffleArray(arr) {
   .game-view.compact-mobile .stage-pill {
     padding: 0.3rem 0.65rem;
     font-size: 0.82rem;
+  }
+  .game-view.compact-mobile .exercise-counter-pill {
+    padding: 0.22rem 0.48rem;
+    font-size: 0.72rem;
   }
   .game-view.compact-mobile .exercise-visual {
     max-width: 280px;
