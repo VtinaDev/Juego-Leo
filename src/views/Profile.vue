@@ -8,6 +8,11 @@
       v-else-if="!isLoggedIn"
       v-model:email="authForm.email"
       v-model:password="authForm.password"
+      v-model:child-name="child.name"
+      v-model:child-birthdate="child.birthdate"
+      v-model:selected-learning-needs="child.learningNeeds"
+      v-model:other-learning-need="child.otherLearningNeed"
+      v-model:learning-profile="child.learningProfile"
       :loading="auth.loading"
       :status="authStatus"
       :error="authError"
@@ -37,6 +42,9 @@
       <ChildProfileForm
         v-model:name="child.name"
         v-model:birthdate="child.birthdate"
+        v-model:selected-learning-needs="child.learningNeeds"
+        v-model:other-learning-need="child.otherLearningNeed"
+        v-model:learning-profile="child.learningProfile"
         :loading="profile.loading"
         :success-message="successMessage"
         :error-message="errorMessage"
@@ -84,6 +92,11 @@ import ChildProfileForm from '../components/profile/ChildProfileForm.vue'
 import LearningMap from '../components/profile/LearningMap.vue'
 import LearningReport from '../components/profile/LearningReport.vue'
 import SummarySection from '../components/profile/SummarySection.vue'
+import {
+  OTHER_NEED_VALUE,
+  createEmptyLearningProfile,
+  normalizeLearningProfile
+} from '../data/onboardingQuestionnaire'
 import { useAuthStore } from '../store/authStore'
 import { useGameStore } from '../store/gameStore'
 import { useProfileStore } from '../store/profileStore'
@@ -99,7 +112,10 @@ auth.load()
 
 const child = reactive({
   name: '',
-  birthdate: ''
+  birthdate: '',
+  learningNeeds: [],
+  otherLearningNeed: '',
+  learningProfile: createEmptyLearningProfile()
 })
 
 const successMessage = ref('')
@@ -112,6 +128,20 @@ const authForm = reactive({
 })
 const reportMessage = ref('')
 const reportShown = ref(false)
+
+const OTHER_LEARNING_NEED = OTHER_NEED_VALUE
+const PENDING_ONBOARDING_KEY = 'juego-leo-pending-onboarding'
+const learningNeedLabels = {
+  attention_difficulty: 'TDA / dificultad de atención',
+  adhd: 'TDAH',
+  dyslexia: 'Dislexia',
+  reading_comprehension_difficulty: 'Dificultades de comprensión lectora',
+  sounds_letters_difficulty: 'Dificultades con sonidos o letras',
+  sensory_sensitivity: 'Sensibilidad a estímulos visuales o auditivos',
+  not_sure_yet: 'No lo sé todavía',
+  none_identified: 'Ninguna condición identificada',
+  other: 'Otra'
+}
 
 const isLoggedIn = computed(() => auth.isAuthenticated)
 const timeline = computed(() => game.levelTimeline)
@@ -174,6 +204,9 @@ const summary = computed(() => {
   return {
     childName: child.name || profile.childName || '',
     birthdate: child.birthdate || profile.childBirthdate || '',
+    learningNeeds: child.learningNeeds || profile.childLearningNeeds || [],
+    otherLearningNeed: child.otherLearningNeed || profile.childOtherLearningNeed || '',
+    learningProfile: normalizeLearningProfile(child.learningProfile || profile.childLearningProfile),
     stars: game.stars ?? 0,
     points: game.points ?? 0,
     observation
@@ -259,10 +292,19 @@ watch(
 )
 
 watch(
-  () => [profile.childName, profile.childBirthdate],
-  ([name, birthdate]) => {
+  () => [
+    profile.childName,
+    profile.childBirthdate,
+    profile.childLearningNeeds,
+    profile.childOtherLearningNeed,
+    profile.childLearningProfile
+  ],
+  ([name, birthdate, learningNeeds, otherLearningNeed, learningProfile]) => {
     child.name = name || child.name
     child.birthdate = birthdate || child.birthdate
+    child.learningNeeds = [...(learningNeeds || [])]
+    child.otherLearningNeed = otherLearningNeed || ''
+    child.learningProfile = normalizeLearningProfile(learningProfile)
   },
   { immediate: true }
 )
@@ -270,6 +312,9 @@ watch(
 onMounted(async () => {
   if (!child.name) child.name = profile.childName || game.child?.name || ''
   if (!child.birthdate) child.birthdate = profile.childBirthdate || game.child?.birthdate || ''
+  if (!child.learningNeeds.length) child.learningNeeds = [...(profile.childLearningNeeds || [])]
+  if (!child.otherLearningNeed) child.otherLearningNeed = profile.childOtherLearningNeed || ''
+  child.learningProfile = normalizeLearningProfile(child.learningProfile || profile.childLearningProfile)
   if (!authForm.email) authForm.email = auth.userEmail || ''
   if (loginRequiredNotice.value) authError.value = loginRequiredNotice.value
 
@@ -311,12 +356,28 @@ async function save() {
     errorMessage.value = 'La fecha no puede ser futura.'
     return
   }
+  const learningNeeds = normalizeLearningNeeds(child.learningNeeds)
+  const otherLearningNeed = child.otherLearningNeed?.trim?.() || ''
+  if (learningNeeds.includes(OTHER_LEARNING_NEED) && otherLearningNeed.length < 2) {
+    errorMessage.value = 'Especifica la otra necesidad de apoyo o desmarca "Otra".'
+    return
+  }
 
-  const ok = await profile.saveProfile({ name, birthdate })
+  const learningProfile = normalizeLearningProfile(child.learningProfile)
+  const ok = await profile.saveProfile({
+    name,
+    birthdate,
+    learningNeeds,
+    otherLearningNeed,
+    learningProfile
+  })
   if (!ok) {
     errorMessage.value = profile.error || 'No se pudo guardar el perfil.'
     return
   }
+  child.learningNeeds = [...learningNeeds]
+  child.learningProfile = learningProfile
+  if (!learningNeeds.includes(OTHER_LEARNING_NEED)) child.otherLearningNeed = ''
   game.setChild({ name, birthdate })
   successMessage.value = 'Perfil guardado 🎉'
 }
@@ -325,14 +386,29 @@ async function handleRegister() {
   authStatus.value = ''
   authError.value = ''
 
+  const profileValidation = validateOnboardingProfile()
+  if (profileValidation) {
+    authError.value = profileValidation
+    return
+  }
+
   const ok = await auth.register(authForm.email, authForm.password)
   if (ok) {
+    const shouldSaveChild = auth.isAuthenticated
+    if (shouldSaveChild) {
+      const saved = await saveOnboardingProfile()
+      if (!saved) {
+        authError.value = errorMessage.value || profile.error || 'Cuenta creada, pero no se pudo guardar el cuestionario.'
+        return
+      }
+    } else {
+      savePendingOnboardingProfile()
+    }
     authStatus.value = auth.isAuthenticated
-      ? 'Cuenta creada. ¡Ya podéis empezar! 🎉'
+      ? 'Cuenta creada y cuestionario guardado. ¡Ya podéis empezar! 🎉'
       : 'Cuenta creada. Revisa tu correo para confirmar el acceso.'
     authForm.password = ''
     if (auth.isAuthenticated) {
-      await profile.loadProfile()
       await game.loadProgressFromSupabase()
       redirectToPendingPlay()
     }
@@ -349,6 +425,7 @@ async function handleLogin() {
     authStatus.value = 'Hola de nuevo 👋'
     authForm.password = ''
     await profile.loadProfile()
+    await restorePendingOnboardingProfile()
     await game.loadProgressFromSupabase()
     redirectToPendingPlay()
   } else authError.value = auth.error
@@ -376,7 +453,10 @@ function handleReport() {
     generatedAt: new Date().toISOString(),
     child: {
       name: child.name || profile.childName,
-      birthdate: child.birthdate || profile.childBirthdate
+      birthdate: child.birthdate || profile.childBirthdate,
+      learningNeeds: (child.learningNeeds || []).map((need) => learningNeedLabels[need] || need),
+      otherLearningNeed: child.otherLearningNeed || profile.childOtherLearningNeed || '',
+      learningProfile: normalizeLearningProfile(child.learningProfile || profile.childLearningProfile)
     },
     progress: timeline.value,
     currentState: progressState.value,
@@ -397,6 +477,116 @@ function handleReport() {
     reportShown.value = true
   } catch (e) {
     errorMessage.value = 'No se pudo generar el informe.'
+  }
+}
+
+function normalizeLearningNeeds(value) {
+  if (!Array.isArray(value)) return []
+
+  const selected = [...new Set(value.filter(Boolean).map(String))]
+  if (selected.includes('none_identified')) return ['none_identified']
+  return selected
+}
+
+function validateOnboardingProfile() {
+  const name = child.name?.trim?.() || ''
+  if (name.length < 2) return 'Antes de crear la cuenta, escribe el nombre del niño/a.'
+  if (child.birthdate && new Date(child.birthdate) > new Date()) {
+    return 'La fecha de nacimiento no puede ser futura.'
+  }
+
+  const learningNeeds = normalizeLearningNeeds(child.learningNeeds)
+  const otherLearningNeed = child.otherLearningNeed?.trim?.() || ''
+  if (learningNeeds.includes(OTHER_LEARNING_NEED) && otherLearningNeed.length < 2) {
+    return 'Especifica la otra necesidad de apoyo o desmarca "Otra".'
+  }
+
+  const learningProfile = normalizeLearningProfile(child.learningProfile)
+  if (!learningProfile.educationLevel) return 'Selecciona el nivel educativo.'
+  if (!learningProfile.readingLevel) return 'Selecciona el nivel lector actual.'
+  if (!learningProfile.attentionSpan) return 'Selecciona el tiempo de atención aproximado.'
+  if (!learningProfile.learningPace) return 'Selecciona el ritmo de aprendizaje.'
+
+  return ''
+}
+
+async function saveOnboardingProfile() {
+  errorMessage.value = ''
+  successMessage.value = ''
+  const name = child.name?.trim?.() || ''
+  const birthdate = child.birthdate || ''
+  const learningNeeds = normalizeLearningNeeds(child.learningNeeds)
+  const otherLearningNeed = child.otherLearningNeed?.trim?.() || ''
+  const learningProfile = normalizeLearningProfile(child.learningProfile)
+
+  const ok = await profile.saveProfile({
+    name,
+    birthdate,
+    learningNeeds,
+    otherLearningNeed,
+    learningProfile
+  })
+  if (!ok) {
+    errorMessage.value = profile.error || 'No se pudo guardar el cuestionario.'
+    return false
+  }
+
+  child.learningNeeds = [...learningNeeds]
+  child.learningProfile = learningProfile
+  if (!learningNeeds.includes(OTHER_LEARNING_NEED)) child.otherLearningNeed = ''
+  game.setChild({ name, birthdate })
+  clearPendingOnboardingProfile()
+  return true
+}
+
+function getOnboardingPayload() {
+  return {
+    email: authForm.email.trim().toLowerCase(),
+    name: child.name?.trim?.() || '',
+    birthdate: child.birthdate || '',
+    learningNeeds: normalizeLearningNeeds(child.learningNeeds),
+    otherLearningNeed: child.otherLearningNeed?.trim?.() || '',
+    learningProfile: normalizeLearningProfile(child.learningProfile)
+  }
+}
+
+function savePendingOnboardingProfile() {
+  try {
+    localStorage.setItem(PENDING_ONBOARDING_KEY, JSON.stringify(getOnboardingPayload()))
+  } catch (error) {
+    // Non-critical: the user can still complete the profile after confirming email.
+  }
+}
+
+async function restorePendingOnboardingProfile() {
+  let pending = null
+  try {
+    pending = JSON.parse(localStorage.getItem(PENDING_ONBOARDING_KEY) || 'null')
+  } catch (error) {
+    clearPendingOnboardingProfile()
+    return false
+  }
+
+  if (!pending || pending.email !== auth.userEmail?.toLowerCase?.()) return false
+  if (profile.childId) {
+    clearPendingOnboardingProfile()
+    return false
+  }
+
+  child.name = pending.name || child.name
+  child.birthdate = pending.birthdate || child.birthdate
+  child.learningNeeds = normalizeLearningNeeds(pending.learningNeeds)
+  child.otherLearningNeed = pending.otherLearningNeed || ''
+  child.learningProfile = normalizeLearningProfile(pending.learningProfile)
+
+  return saveOnboardingProfile()
+}
+
+function clearPendingOnboardingProfile() {
+  try {
+    localStorage.removeItem(PENDING_ONBOARDING_KEY)
+  } catch (error) {
+    // Ignore storage cleanup failures.
   }
 }
 </script>

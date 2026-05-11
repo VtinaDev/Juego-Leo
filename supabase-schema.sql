@@ -12,8 +12,16 @@ create table if not exists public.children (
   user_id uuid references auth.users(id) on delete cascade not null,
   name text not null,
   birthdate date,
+  learning_needs text[] not null default '{}',
+  other_learning_need text default '',
+  learning_profile jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now()
 );
+
+alter table public.children
+  add column if not exists learning_needs text[] not null default '{}',
+  add column if not exists other_learning_need text default '',
+  add column if not exists learning_profile jsonb not null default '{}'::jsonb;
 
 alter table public.children enable row level security;
 

@@ -375,6 +375,388 @@
           "hint": "Respeta el orden natural de sujeto y verbo.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry"
+        },
+        {
+          "id": "L1-OS-NEW-1",
+          "type": "order_sentence",
+          "words": [
+            "lee",
+            "un",
+            "Leo",
+            "cuento"
+          ],
+          "correctOrder": [
+            "Leo",
+            "lee",
+            "un",
+            "cuento"
+          ],
+          "image": "/images/L1/cuento.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-2",
+          "type": "order_sentence",
+          "words": [
+            "luna",
+            "La",
+            "brilla"
+          ],
+          "correctOrder": [
+            "La",
+            "luna",
+            "brilla"
+          ],
+          "image": "/images/L1/luna.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-3",
+          "type": "order_sentence",
+          "words": [
+            "perro",
+            "El",
+            "corre"
+          ],
+          "correctOrder": [
+            "El",
+            "perro",
+            "corre"
+          ],
+          "image": "/images/L1/nino.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-4",
+          "type": "order_sentence",
+          "words": [
+            "cocina",
+            "Mamá",
+            "sopa"
+          ],
+          "correctOrder": [
+            "Mamá",
+            "cocina",
+            "sopa"
+          ],
+          "image": "/images/L1/mesa.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-5",
+          "type": "order_sentence",
+          "words": [
+            "niña",
+            "come",
+            "La",
+            "manzana"
+          ],
+          "correctOrder": [
+            "La",
+            "niña",
+            "come",
+            "manzana"
+          ],
+          "image": "/images/L1/nino.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-6",
+          "type": "order_sentence",
+          "words": [
+            "gato",
+            "El",
+            "duerme"
+          ],
+          "correctOrder": [
+            "El",
+            "gato",
+            "duerme"
+          ],
+          "image": "/images/L1/buho.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-7",
+          "type": "order_sentence",
+          "words": [
+            "mira",
+            "el",
+            "Papá",
+            "mapa"
+          ],
+          "correctOrder": [
+            "Papá",
+            "mira",
+            "el",
+            "mapa"
+          ],
+          "image": "/images/L1/faro.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-8",
+          "type": "order_sentence",
+          "words": [
+            "rana",
+            "salta",
+            "La",
+            "alto"
+          ],
+          "correctOrder": [
+            "La",
+            "rana",
+            "salta",
+            "alto"
+          ],
+          "image": "/images/L1/sapo.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-9",
+          "type": "order_sentence",
+          "words": [
+            "sol",
+            "sale",
+            "El",
+            "temprano"
+          ],
+          "correctOrder": [
+            "El",
+            "sol",
+            "sale",
+            "temprano"
+          ],
+          "image": "/images/L1/sol.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-10",
+          "type": "order_sentence",
+          "words": [
+            "amigo",
+            "juega",
+            "Mi",
+            "feliz"
+          ],
+          "correctOrder": [
+            "Mi",
+            "amigo",
+            "juega",
+            "feliz"
+          ],
+          "image": "/images/L1/nino.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-11",
+          "type": "order_sentence",
+          "words": [
+            "flor",
+            "crece",
+            "La",
+            "rápido"
+          ],
+          "correctOrder": [
+            "La",
+            "flor",
+            "crece",
+            "rápido"
+          ],
+          "image": "/images/L1/florazul.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-12",
+          "type": "order_sentence",
+          "words": [
+            "pez",
+            "nada",
+            "El",
+            "solo"
+          ],
+          "correctOrder": [
+            "El",
+            "pez",
+            "nada",
+            "solo"
+          ],
+          "image": "/images/L1/rio.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-13",
+          "type": "order_sentence",
+          "words": [
+            "maestra",
+            "lee",
+            "La",
+            "cuentos"
+          ],
+          "correctOrder": [
+            "La",
+            "maestra",
+            "lee",
+            "cuentos"
+          ],
+          "image": "/images/L1/cuento.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-14",
+          "type": "order_sentence",
+          "words": [
+            "tren",
+            "llega",
+            "El",
+            "hoy"
+          ],
+          "correctOrder": [
+            "El",
+            "tren",
+            "llega",
+            "hoy"
+          ],
+          "image": "/images/L1/campana.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L1-OS-NEW-15",
+          "type": "order_sentence",
+          "words": [
+            "estrella",
+            "brilla",
+            "La",
+            "mucho"
+          ],
+          "correctOrder": [
+            "La",
+            "estrella",
+            "brilla",
+            "mucho"
+          ],
+          "image": "/images/L1/estrella.PNG",
+          "hint": "Toca primero quién hace la acción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
         }
       ],
       "read_with_audio": [
@@ -1032,6 +1414,336 @@
             "Se divierten",
             "Se aburren"
           ]
+        },
+        {
+          "id": "L3-AQ-VC-1",
+          "type": "audio_question",
+          "question": "¿Qué está pasando?",
+          "context": "El niño lee un libro.",
+          "options": [
+            "Está leyendo",
+            "Está corriendo",
+            "Está durmiendo"
+          ],
+          "correct": "Está leyendo",
+          "image": "/images/L3/l3-aq-1.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-2",
+          "type": "audio_question",
+          "question": "¿Qué está haciendo?",
+          "context": "La niña come una manzana.",
+          "options": [
+            "Está comiendo",
+            "Está cantando",
+            "Está saltando"
+          ],
+          "correct": "Está comiendo",
+          "image": "/images/L3/l3-aq-2.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-3",
+          "type": "audio_question",
+          "question": "¿Qué hace el perro?",
+          "context": "El perro corre por el parque.",
+          "options": [
+            "Corre",
+            "Duerme",
+            "Lee"
+          ],
+          "correct": "Corre",
+          "image": "/images/L3/l3-aq-3.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-4",
+          "type": "audio_question",
+          "question": "¿Qué prepara mamá?",
+          "context": "Mamá cocina sopa.",
+          "options": [
+            "Sopa",
+            "Un mapa",
+            "Una nube"
+          ],
+          "correct": "Sopa",
+          "image": "/images/L3/l3-aq-1.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-5",
+          "type": "audio_question",
+          "question": "¿Qué mira Leo?",
+          "context": "Leo mira la luna.",
+          "options": [
+            "La luna",
+            "El zapato",
+            "La silla"
+          ],
+          "correct": "La luna",
+          "image": "/images/L3/l3-aq-2.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-6",
+          "type": "audio_question",
+          "question": "¿Qué hace la rana?",
+          "context": "La rana salta en el lago.",
+          "options": [
+            "Salta",
+            "Escribe",
+            "Cocina"
+          ],
+          "correct": "Salta",
+          "image": "/images/L3/l3-aq-3.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-7",
+          "type": "audio_question",
+          "question": "¿Dónde duerme el gato?",
+          "context": "El gato duerme en la cama.",
+          "options": [
+            "En la cama",
+            "En el río",
+            "En la escuela"
+          ],
+          "correct": "En la cama",
+          "image": "/images/L3/l3-aq-1.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-8",
+          "type": "audio_question",
+          "question": "¿Qué pinta la niña?",
+          "context": "La niña pinta una flor.",
+          "options": [
+            "Una flor",
+            "Un tren",
+            "Una taza"
+          ],
+          "correct": "Una flor",
+          "image": "/images/L3/l3-aq-2.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-9",
+          "type": "audio_question",
+          "question": "¿Qué hace el abuelo?",
+          "context": "El abuelo lee el periódico.",
+          "options": [
+            "Lee",
+            "Baila",
+            "Nada"
+          ],
+          "correct": "Lee",
+          "image": "/images/L3/l3-aq-3.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-10",
+          "type": "audio_question",
+          "question": "¿Qué ilumina el sol?",
+          "context": "El sol ilumina la casa.",
+          "options": [
+            "La casa",
+            "La mochila",
+            "El pez"
+          ],
+          "correct": "La casa",
+          "image": "/images/L3/l3-aq-1.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-11",
+          "type": "audio_question",
+          "question": "¿Dónde escribe?",
+          "context": "La maestra escribe en la pizarra.",
+          "options": [
+            "En la pizarra",
+            "En el árbol",
+            "En la sopa"
+          ],
+          "correct": "En la pizarra",
+          "image": "/images/L3/l3-aq-2.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-12",
+          "type": "audio_question",
+          "question": "¿Cómo está el bebé?",
+          "context": "El bebé ríe con su pelota.",
+          "options": [
+            "Contento",
+            "Enfadado",
+            "Dormido"
+          ],
+          "correct": "Contento",
+          "image": "/images/L3/l3-aq-3.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-13",
+          "type": "audio_question",
+          "question": "¿Por dónde camina?",
+          "context": "La familia camina por el bosque.",
+          "options": [
+            "Por el bosque",
+            "Por el mar",
+            "Por la cocina"
+          ],
+          "correct": "Por el bosque",
+          "image": "/images/L3/l3-aq-1.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-14",
+          "type": "audio_question",
+          "question": "¿Qué hace el pájaro?",
+          "context": "El pájaro canta en la rama.",
+          "options": [
+            "Canta",
+            "Plancha",
+            "Compra"
+          ],
+          "correct": "Canta",
+          "image": "/images/L3/l3-aq-2.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L3-AQ-VC-15",
+          "type": "audio_question",
+          "question": "¿Qué bebe la niña?",
+          "context": "La niña bebe agua fresca.",
+          "options": [
+            "Agua",
+            "Leche roja",
+            "Arena"
+          ],
+          "correct": "Agua",
+          "image": "/images/L3/l3-aq-3.png",
+          "hint": "Mira la imagen y lee la frase corta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
         }
       ]
     }
@@ -1296,6 +2008,351 @@
             "Presente",
             "Futuro"
           ]
+        },
+        {
+          "id": "L5-TC-4",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Ayer caminé hasta la biblioteca.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Pasado",
+          "image": "/images/L5/l5-tc-1.png",
+          "hint": "Ayer indica algo que ya ocurrió.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-5",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Hoy estudio con Leo.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Presente",
+          "image": "/images/L5/l5-tc-2.png",
+          "hint": "Hoy indica que ocurre ahora.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-6",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Mañana visitaré el museo.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Futuro",
+          "image": "/images/L5/l5-tc-3.png",
+          "hint": "Mañana indica algo que ocurrirá después.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-7",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Anoche escuché una canción suave.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Pasado",
+          "image": "/images/L5/l5-tc-1.png",
+          "hint": "Anoche ya pasó.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-8",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Ahora escribo una frase corta.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Presente",
+          "image": "/images/L5/l5-tc-2.png",
+          "hint": "Ahora significa en este momento.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-9",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Después dormiré temprano.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Futuro",
+          "image": "/images/L5/l5-tc-3.png",
+          "hint": "Después habla de algo que vendrá.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-10",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "El lunes pasado jugué en el parque.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Pasado",
+          "image": "/images/L5/l5-tc-1.png",
+          "hint": "Pasado: ya ocurrió.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-11",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Leo come una manzana.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Presente",
+          "image": "/images/L5/l5-tc-2.png",
+          "hint": "La acción ocurre ahora.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-12",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Pronto cocinaré sopa con mamá.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Futuro",
+          "image": "/images/L5/l5-tc-3.png",
+          "hint": "Pronto señala futuro.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-13",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Antes hablé con mi abuela.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Pasado",
+          "image": "/images/L5/l5-tc-1.png",
+          "hint": "Antes indica pasado.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-14",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Vivo cerca de la escuela.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Presente",
+          "image": "/images/L5/l5-tc-2.png",
+          "hint": "Vivo habla de ahora.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-15",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "El sábado buscaré mi cuaderno.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Futuro",
+          "image": "/images/L5/l5-tc-3.png",
+          "hint": "Buscaré ocurrirá después.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-16",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Canté en la fiesta.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Pasado",
+          "image": "/images/L5/l5-tc-1.png",
+          "hint": "Canté ya ocurrió.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-17",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Juego con mis letras.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Presente",
+          "image": "/images/L5/l5-tc-2.png",
+          "hint": "Juego ocurre ahora.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-TC-18",
+          "type": "tense_classify",
+          "prompt": "Elige el tiempo verbal.",
+          "sentence": "Iré al río mañana.",
+          "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
+          "options": [
+            "Pasado",
+            "Presente",
+            "Futuro"
+          ],
+          "correct": "Futuro",
+          "image": "/images/L5/l5-tc-3.png",
+          "hint": "Iré indica futuro.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
         }
       ],
       "singular_plural": [
@@ -1367,6 +2424,343 @@
           "hint": "Imagina dónde suena más fuerte la palabra.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry"
+        },
+        {
+          "id": "L5-AG-3",
+          "type": "accent_game",
+          "word": "café",
+          "syllables": [
+            "ca",
+            "fé"
+          ],
+          "correctSyllable": "fé",
+          "accentType": "Aguda",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-4",
+          "type": "accent_game",
+          "word": "corazón",
+          "syllables": [
+            "co",
+            "ra",
+            "zón"
+          ],
+          "correctSyllable": "zón",
+          "accentType": "Aguda",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-2.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-5",
+          "type": "accent_game",
+          "word": "canción",
+          "syllables": [
+            "can",
+            "ción"
+          ],
+          "correctSyllable": "ción",
+          "accentType": "Aguda",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-6",
+          "type": "accent_game",
+          "word": "sofá",
+          "syllables": [
+            "so",
+            "fá"
+          ],
+          "correctSyllable": "fá",
+          "accentType": "Aguda",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-2.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-7",
+          "type": "accent_game",
+          "word": "árbol",
+          "syllables": [
+            "ár",
+            "bol"
+          ],
+          "correctSyllable": "ár",
+          "accentType": "Grave",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-8",
+          "type": "accent_game",
+          "word": "lápiz",
+          "syllables": [
+            "lá",
+            "piz"
+          ],
+          "correctSyllable": "lá",
+          "accentType": "Grave",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-2.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-9",
+          "type": "accent_game",
+          "word": "casa",
+          "syllables": [
+            "ca",
+            "sa"
+          ],
+          "correctSyllable": "ca",
+          "accentType": "Grave",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-10",
+          "type": "accent_game",
+          "word": "mesa",
+          "syllables": [
+            "me",
+            "sa"
+          ],
+          "correctSyllable": "me",
+          "accentType": "Grave",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-2.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-11",
+          "type": "accent_game",
+          "word": "música",
+          "syllables": [
+            "mú",
+            "si",
+            "ca"
+          ],
+          "correctSyllable": "mú",
+          "accentType": "Esdrújula",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-12",
+          "type": "accent_game",
+          "word": "pájaro",
+          "syllables": [
+            "pá",
+            "ja",
+            "ro"
+          ],
+          "correctSyllable": "pá",
+          "accentType": "Esdrújula",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-2.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-13",
+          "type": "accent_game",
+          "word": "teléfono",
+          "syllables": [
+            "te",
+            "lé",
+            "fo",
+            "no"
+          ],
+          "correctSyllable": "lé",
+          "accentType": "Esdrújula",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-14",
+          "type": "accent_game",
+          "word": "rápido",
+          "syllables": [
+            "rá",
+            "pi",
+            "do"
+          ],
+          "correctSyllable": "rá",
+          "accentType": "Esdrújula",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-2.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-15",
+          "type": "accent_game",
+          "word": "plátano",
+          "syllables": [
+            "plá",
+            "ta",
+            "no"
+          ],
+          "correctSyllable": "plá",
+          "accentType": "Esdrújula",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-16",
+          "type": "accent_game",
+          "word": "fácil",
+          "syllables": [
+            "fá",
+            "cil"
+          ],
+          "correctSyllable": "fá",
+          "accentType": "Grave",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-2.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-AG-17",
+          "type": "accent_game",
+          "word": "papel",
+          "syllables": [
+            "pa",
+            "pel"
+          ],
+          "correctSyllable": "pel",
+          "accentType": "Aguda",
+          "rule": "Aguda: última. Grave: penúltima. Esdrújula: antepenúltima.",
+          "image": "/images/L5/l5-ag-1.png",
+          "hint": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
         }
       ],
       "punctuation_game": [
@@ -1432,6 +2826,336 @@
             ".",
             ","
           ]
+        },
+        {
+          "id": "L5-PG-4",
+          "type": "punctuation_game",
+          "sentence": "¿Cómo te llamas __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": "?",
+          "image": "/images/L5/l5-pg-1.png",
+          "hint": "Es una pregunta.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-5",
+          "type": "punctuation_game",
+          "sentence": "¡Qué alegría verte __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": "!",
+          "image": "/images/L5/l5-pg-2.png",
+          "hint": "Expresa emoción.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-6",
+          "type": "punctuation_game",
+          "sentence": "Hoy estudiamos __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": ".",
+          "image": "/images/L5/l5-pg-3.png",
+          "hint": "Una oración afirmativa termina con punto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-7",
+          "type": "punctuation_game",
+          "sentence": "Traje lápiz __ cuaderno y regla.",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": ",",
+          "image": "/images/L5/l5-pg-1.png",
+          "hint": "La coma separa elementos de una lista.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-8",
+          "type": "punctuation_game",
+          "sentence": "¿Dónde está Leo __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": "?",
+          "image": "/images/L5/l5-pg-2.png",
+          "hint": "Pregunta por un lugar.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-9",
+          "type": "punctuation_game",
+          "sentence": "¡Bravo, lo lograste __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": "!",
+          "image": "/images/L5/l5-pg-3.png",
+          "hint": "Expresa entusiasmo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-10",
+          "type": "punctuation_game",
+          "sentence": "Me gusta leer __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": ".",
+          "image": "/images/L5/l5-pg-1.png",
+          "hint": "La idea termina con punto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-11",
+          "type": "punctuation_game",
+          "sentence": "Compré pan __ leche y fruta.",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": ",",
+          "image": "/images/L5/l5-pg-2.png",
+          "hint": "La coma marca una pausa en una lista.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-12",
+          "type": "punctuation_game",
+          "sentence": "¿Quieres jugar conmigo __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": "?",
+          "image": "/images/L5/l5-pg-3.png",
+          "hint": "La frase pregunta algo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-13",
+          "type": "punctuation_game",
+          "sentence": "¡Qué sorpresa __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": "!",
+          "image": "/images/L5/l5-pg-1.png",
+          "hint": "Hay emoción fuerte.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-14",
+          "type": "punctuation_game",
+          "sentence": "El sol brilla __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": ".",
+          "image": "/images/L5/l5-pg-2.png",
+          "hint": "La oración termina.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-15",
+          "type": "punctuation_game",
+          "sentence": "Tengo goma __ lápiz y regla.",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": ",",
+          "image": "/images/L5/l5-pg-3.png",
+          "hint": "Separa palabras de una lista.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-16",
+          "type": "punctuation_game",
+          "sentence": "¿Cuándo vienes __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": "?",
+          "image": "/images/L5/l5-pg-1.png",
+          "hint": "Pregunta por tiempo.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-17",
+          "type": "punctuation_game",
+          "sentence": "¡Cuidado __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": "!",
+          "image": "/images/L5/l5-pg-2.png",
+          "hint": "Es una exclamación.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-PG-18",
+          "type": "punctuation_game",
+          "sentence": "La luna sale de noche __",
+          "options": [
+            ".",
+            ",",
+            "?",
+            "!"
+          ],
+          "correct": ".",
+          "image": "/images/L5/l5-pg-3.png",
+          "hint": "Es una afirmación.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
         }
       ],
       "final_exam": [
@@ -1488,6 +3212,321 @@
           "hint": "Piensa en cómo suena la sílaba fuerte.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry"
+        },
+        {
+          "id": "L5-FE-TCOMP-1",
+          "type": "final_exam",
+          "question": "Completa: Yo ____ en la piscina.",
+          "options": [
+            "nado",
+            "nadé",
+            "nadaré"
+          ],
+          "correct": "nado",
+          "image": "/images/L5/l5-fe-1.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-2",
+          "type": "final_exam",
+          "question": "Completa: Ayer ____ en el mar.",
+          "options": [
+            "nado",
+            "nadé",
+            "nadaré"
+          ],
+          "correct": "nadé",
+          "image": "/images/L5/l5-fe-2.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-3",
+          "type": "final_exam",
+          "question": "Completa: Mañana ____ en el río.",
+          "options": [
+            "nado",
+            "nadé",
+            "nadaré"
+          ],
+          "correct": "nadaré",
+          "image": "/images/L5/l5-fe-3.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-4",
+          "type": "final_exam",
+          "question": "Completa: Yo ____ una manzana.",
+          "options": [
+            "como",
+            "comí",
+            "comeré"
+          ],
+          "correct": "como",
+          "image": "/images/L5/l5-fe-1.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-5",
+          "type": "final_exam",
+          "question": "Completa: Ayer ____ sopa.",
+          "options": [
+            "como",
+            "comí",
+            "comeré"
+          ],
+          "correct": "comí",
+          "image": "/images/L5/l5-fe-2.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-6",
+          "type": "final_exam",
+          "question": "Completa: Después ____ con mi familia.",
+          "options": [
+            "como",
+            "comí",
+            "comeré"
+          ],
+          "correct": "comeré",
+          "image": "/images/L5/l5-fe-3.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-7",
+          "type": "final_exam",
+          "question": "Completa: Hoy ____ en el patio.",
+          "options": [
+            "juego",
+            "jugué",
+            "jugaré"
+          ],
+          "correct": "juego",
+          "image": "/images/L5/l5-fe-1.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-8",
+          "type": "final_exam",
+          "question": "Completa: Ayer ____ a las escondidas.",
+          "options": [
+            "juego",
+            "jugué",
+            "jugaré"
+          ],
+          "correct": "jugué",
+          "image": "/images/L5/l5-fe-2.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-9",
+          "type": "final_exam",
+          "question": "Completa: Mañana ____ con mis amigos.",
+          "options": [
+            "juego",
+            "jugué",
+            "jugaré"
+          ],
+          "correct": "jugaré",
+          "image": "/images/L5/l5-fe-3.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-10",
+          "type": "final_exam",
+          "question": "Completa: Yo ____ temprano.",
+          "options": [
+            "duermo",
+            "dormí",
+            "dormiré"
+          ],
+          "correct": "duermo",
+          "image": "/images/L5/l5-fe-1.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-11",
+          "type": "final_exam",
+          "question": "Completa: Anoche ____ muy bien.",
+          "options": [
+            "duermo",
+            "dormí",
+            "dormiré"
+          ],
+          "correct": "dormí",
+          "image": "/images/L5/l5-fe-2.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-12",
+          "type": "final_exam",
+          "question": "Completa: Luego ____ una siesta.",
+          "options": [
+            "duermo",
+            "dormí",
+            "dormiré"
+          ],
+          "correct": "dormiré",
+          "image": "/images/L5/l5-fe-3.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-13",
+          "type": "final_exam",
+          "question": "Completa: Ahora ____ una carta.",
+          "options": [
+            "escribo",
+            "escribí",
+            "escribiré"
+          ],
+          "correct": "escribo",
+          "image": "/images/L5/l5-fe-1.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-14",
+          "type": "final_exam",
+          "question": "Completa: Antes ____ mi nombre.",
+          "options": [
+            "escribo",
+            "escribí",
+            "escribiré"
+          ],
+          "correct": "escribí",
+          "image": "/images/L5/l5-fe-2.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
+        },
+        {
+          "id": "L5-FE-TCOMP-15",
+          "type": "final_exam",
+          "question": "Completa: Pronto ____ un cuento.",
+          "options": [
+            "escribo",
+            "escribí",
+            "escribiré"
+          ],
+          "correct": "escribiré",
+          "image": "/images/L5/l5-fe-3.png",
+          "hint": "Fíjate en la palabra de tiempo: ayer, hoy, mañana, luego o pronto.",
+          "onCorrect": "celebrate",
+          "onError": "gentleRetry",
+          "allowRetry": true,
+          "feedbackStyle": "calm",
+          "progressiveHints": true,
+          "calmFeedback": true,
+          "structuredLearning": true,
+          "teachBeforeAssess": true
         }
       ]
     }

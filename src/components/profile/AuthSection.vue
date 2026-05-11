@@ -6,7 +6,7 @@
       <p>Inicia sesión para guardar el avance, ver informes y continuar la ruta de lectura.</p>
     </div>
 
-    <form class="auth-form" @submit.prevent="$emit('login')">
+    <form class="auth-form" @submit.prevent>
       <label>
         <span>Email</span>
         <input
@@ -29,8 +29,24 @@
         />
       </label>
 
+      <LearningQuestionnaire
+        show-child-fields
+        :child-name="childName"
+        :child-birthdate="childBirthdate"
+        :selected-learning-needs="selectedLearningNeeds"
+        :other-learning-need="otherLearningNeed"
+        :learning-profile="learningProfile"
+        @update:child-name="$emit('update:childName', $event)"
+        @update:child-birthdate="$emit('update:childBirthdate', $event)"
+        @update:selected-learning-needs="$emit('update:selectedLearningNeeds', $event)"
+        @update:other-learning-need="$emit('update:otherLearningNeed', $event)"
+        @update:learning-profile="$emit('update:learningProfile', $event)"
+      />
+
       <div class="auth-actions">
-        <button class="btn btn-primary" type="submit" :disabled="loading">Iniciar sesión</button>
+        <button class="btn btn-primary" type="button" :disabled="loading" @click="$emit('login')">
+          Iniciar sesión
+        </button>
         <button class="btn btn-secondary" type="button" :disabled="loading" @click="$emit('register')">
           Crear cuenta
         </button>
@@ -45,16 +61,33 @@
 </template>
 
 <script setup>
+import LearningQuestionnaire from './LearningQuestionnaire.vue'
+
 defineProps({
   email: { type: String, default: '' },
   password: { type: String, default: '' },
+  childName: { type: String, default: '' },
+  childBirthdate: { type: String, default: '' },
+  selectedLearningNeeds: { type: Array, default: () => [] },
+  otherLearningNeed: { type: String, default: '' },
+  learningProfile: { type: Object, default: () => ({}) },
   loading: { type: Boolean, default: false },
   status: { type: String, default: '' },
   error: { type: String, default: '' },
   loginRequiredNotice: { type: String, default: '' }
 })
 
-defineEmits(['update:email', 'update:password', 'login', 'register'])
+defineEmits([
+  'update:email',
+  'update:password',
+  'update:childName',
+  'update:childBirthdate',
+  'update:selectedLearningNeeds',
+  'update:otherLearningNeed',
+  'update:learningProfile',
+  'login',
+  'register'
+])
 </script>
 
 <style scoped>
@@ -135,5 +168,6 @@ defineEmits(['update:email', 'update:password', 'login', 'register'])
   .auth-actions .btn {
     width: 100%;
   }
+
 }
 </style>

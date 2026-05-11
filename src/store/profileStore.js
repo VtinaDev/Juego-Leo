@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { getSupabaseConfigError, hasSupabaseConfig, supabase } from '../lib/supabaseClient'
+import { normalizeLearningProfile } from '../data/onboardingQuestionnaire'
 import { useAuthStore } from './authStore'
 
 export const useProfileStore = defineStore('profile', {
@@ -7,6 +8,9 @@ export const useProfileStore = defineStore('profile', {
     childId: '',
     childName: '',
     childBirthdate: '',
+    childLearningNeeds: [],
+    childOtherLearningNeed: '',
+    childLearningProfile: normalizeLearningProfile(),
     loading: false,
     error: ''
   }),
@@ -33,7 +37,7 @@ export const useProfileStore = defineStore('profile', {
       try {
         const { data, error } = await supabase
           .from('children')
-          .select('id, name, birthdate')
+          .select('id, name, birthdate, learning_needs, other_learning_need, learning_profile')
           .eq('user_id', auth.user.id)
           .order('created_at', { ascending: true })
           .limit(1)
@@ -44,6 +48,9 @@ export const useProfileStore = defineStore('profile', {
         this.childId = data?.id || ''
         this.childName = data?.name || ''
         this.childBirthdate = data?.birthdate || ''
+        this.childLearningNeeds = normalizeLearningNeeds(data?.learning_needs)
+        this.childOtherLearningNeed = data?.other_learning_need || ''
+        this.childLearningProfile = normalizeLearningProfile(data?.learning_profile)
 
         return true
       } catch (error) {
@@ -72,6 +79,18 @@ export const useProfileStore = defineStore('profile', {
 
       const nextName = payload.name?.trim?.() || payload.childName?.trim?.() || ''
       const nextBirthdate = payload.birthdate || payload.childBirthdate || null
+      const nextLearningNeeds = normalizeLearningNeeds(payload.learningNeeds || payload.childLearningNeeds)
+      const nextOtherLearningNeed = payload.otherLearningNeed?.trim?.() || ''
+      const nextLearningProfile = normalizeLearningProfile(
+        payload.learningProfile || payload.childLearningProfile
+      )
+      const profilePayload = {
+        name: nextName,
+        birthdate: nextBirthdate,
+        learning_needs: nextLearningNeeds,
+        other_learning_need: nextLearningNeeds.includes('other') ? nextOtherLearningNeed : '',
+        learning_profile: nextLearningProfile
+      }
 
       this.loading = true
 
@@ -82,13 +101,10 @@ export const useProfileStore = defineStore('profile', {
         if (this.childId) {
           const result = await supabase
             .from('children')
-            .update({
-              name: nextName,
-              birthdate: nextBirthdate
-            })
+            .update(profilePayload)
             .eq('id', this.childId)
             .eq('user_id', auth.user.id)
-            .select('id, name, birthdate')
+            .select('id, name, birthdate, learning_needs, other_learning_need, learning_profile')
             .single()
 
           data = result.data
@@ -98,10 +114,9 @@ export const useProfileStore = defineStore('profile', {
             .from('children')
             .insert({
               user_id: auth.user.id,
-              name: nextName,
-              birthdate: nextBirthdate
+              ...profilePayload
             })
-            .select('id, name, birthdate')
+            .select('id, name, birthdate, learning_needs, other_learning_need, learning_profile')
             .single()
 
           data = result.data
@@ -113,6 +128,9 @@ export const useProfileStore = defineStore('profile', {
         this.childId = data?.id || ''
         this.childName = data?.name || ''
         this.childBirthdate = data?.birthdate || ''
+        this.childLearningNeeds = normalizeLearningNeeds(data?.learning_needs)
+        this.childOtherLearningNeed = data?.other_learning_need || ''
+        this.childLearningProfile = normalizeLearningProfile(data?.learning_profile)
 
         return true
       } catch (error) {
@@ -127,9 +145,20 @@ export const useProfileStore = defineStore('profile', {
       this.childId = ''
       this.childName = ''
       this.childBirthdate = ''
+      this.childLearningNeeds = []
+      this.childOtherLearningNeed = ''
+      this.childLearningProfile = normalizeLearningProfile()
       this.error = ''
     }
   }
 })
+
+function normalizeLearningNeeds(value) {
+  if (!Array.isArray(value)) return []
+
+  const selected = [...new Set(value.filter(Boolean).map(String))]
+  if (selected.includes('none_identified')) return ['none_identified']
+  return selected
+}
 
 export default useProfileStore

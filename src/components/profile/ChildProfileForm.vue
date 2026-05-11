@@ -31,6 +31,15 @@
       </label>
     </div>
 
+    <LearningQuestionnaire
+      :selected-learning-needs="selectedLearningNeeds"
+      :other-learning-need="otherLearningNeed"
+      :learning-profile="learningProfile"
+      @update:selected-learning-needs="$emit('update:selectedLearningNeeds', $event)"
+      @update:other-learning-need="$emit('update:otherLearningNeed', $event)"
+      @update:learning-profile="$emit('update:learningProfile', $event)"
+    />
+
     <div class="form-actions">
       <button class="btn btn-secondary" type="button" :disabled="loading" @click="$emit('report')">
         Generar informe
@@ -43,16 +52,29 @@
 </template>
 
 <script setup>
+import LearningQuestionnaire from './LearningQuestionnaire.vue'
+
 defineProps({
   name: { type: String, default: '' },
   birthdate: { type: String, default: '' },
+  selectedLearningNeeds: { type: Array, default: () => [] },
+  otherLearningNeed: { type: String, default: '' },
+  learningProfile: { type: Object, default: () => ({}) },
   loading: { type: Boolean, default: false },
   successMessage: { type: String, default: '' },
   errorMessage: { type: String, default: '' },
   reportMessage: { type: String, default: '' }
 })
 
-defineEmits(['update:name', 'update:birthdate', 'save', 'report'])
+defineEmits([
+  'update:name',
+  'update:birthdate',
+  'update:selectedLearningNeeds',
+  'update:otherLearningNeed',
+  'update:learningProfile',
+  'save',
+  'report'
+])
 </script>
 
 <style scoped>
