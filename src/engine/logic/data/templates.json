@@ -115,8 +115,7 @@
           "image": "/images/level1/estrella.PNG",
           "options": [
             "estrella",
-            "estela",
-            "estreno"
+            "estela"
           ],
           "correct": "estrella",
           "emoji": "✨",
@@ -130,8 +129,7 @@
           "image": "/images/level1/campana.PNG",
           "options": [
             "campana",
-            "camino",
-            "camisa"
+            "camino"
           ],
           "correct": "campana",
           "emoji": "🔔",
@@ -147,8 +145,7 @@
           "image": "/images/level1/cuento.PNG",
           "options": [
             "cuento",
-            "cuadro",
-            "cuello"
+            "cuadro"
           ],
           "correct": "cuento",
           "hint": "Historias para dormir.",
@@ -161,8 +158,7 @@
           "image": "/images/level1/faro.PNG",
           "options": [
             "faro",
-            "feria",
-            "foca"
+            "feria"
           ],
           "correct": "faro",
           "hint": "Guía a los barcos de noche.",
@@ -926,8 +922,7 @@
           "question": "Encierra el nombre correcto del dibujo: sol",
           "options": [
             "sol",
-            "sal",
-            "sul"
+            "sal"
           ],
           "correct": "sol",
           "audio": "/audio/voice/exercises/l1-voc-1.mp3",
@@ -944,7 +939,6 @@
           "question": "Encierra el nombre correcto del dibujo: sapo",
           "options": [
             "sipo",
-            "supo",
             "sapo"
           ],
           "correct": "sapo",
@@ -962,8 +956,7 @@
           "question": "Encierra el nombre correcto del dibujo: sopa",
           "options": [
             "sepa",
-            "sopa",
-            "sipa"
+            "sopa"
           ],
           "correct": "sopa",
           "audio": "/audio/voice/exercises/l1-voc-3.mp3",
@@ -980,8 +973,7 @@
           "question": "Encierra el nombre correcto del dibujo: mesa",
           "options": [
             "mesa",
-            "misa",
-            "masa"
+            "misa"
           ],
           "correct": "mesa",
           "audio": "/audio/voice/exercises/l1-voc-4.mp3",
@@ -998,7 +990,6 @@
           "question": "Encierra el nombre correcto del dibujo: oso",
           "options": [
             "osu",
-            "eso",
             "oso"
           ],
           "correct": "oso",
@@ -1016,8 +1007,7 @@
           "question": "Encierra el nombre correcto del dibujo: pato",
           "options": [
             "mato",
-            "pato",
-            "gato"
+            "pato"
           ],
           "correct": "pato",
           "audio": "/audio/voice/exercises/l1-voc-6.mp3",
@@ -1034,8 +1024,7 @@
           "question": "Encierra el nombre correcto del dibujo: luna",
           "options": [
             "lupa",
-            "luna",
-            "puma"
+            "luna"
           ],
           "correct": "luna",
           "audio": "/audio/voice/exercises/l1-voc-7.mp3",
@@ -1422,8 +1411,7 @@
           "context": "El niño lee un libro.",
           "options": [
             "Está leyendo",
-            "Está corriendo",
-            "Está durmiendo"
+            "Está corriendo"
           ],
           "correct": "Está leyendo",
           "image": "/images/L3/l3-aq-1.png",
@@ -1444,8 +1432,7 @@
           "context": "La niña come una manzana.",
           "options": [
             "Está comiendo",
-            "Está cantando",
-            "Está saltando"
+            "Está cantando"
           ],
           "correct": "Está comiendo",
           "image": "/images/L3/l3-aq-2.png",
@@ -1466,8 +1453,7 @@
           "context": "El perro corre por el parque.",
           "options": [
             "Corre",
-            "Duerme",
-            "Lee"
+            "Duerme"
           ],
           "correct": "Corre",
           "image": "/images/L3/l3-aq-3.png",
@@ -1488,8 +1474,7 @@
           "context": "Mamá cocina sopa.",
           "options": [
             "Sopa",
-            "Un mapa",
-            "Una nube"
+            "Un mapa"
           ],
           "correct": "Sopa",
           "image": "/images/L3/l3-aq-1.png",
@@ -1510,8 +1495,7 @@
           "context": "Leo mira la luna.",
           "options": [
             "La luna",
-            "El zapato",
-            "La silla"
+            "El zapato"
           ],
           "correct": "La luna",
           "image": "/images/L3/l3-aq-2.png",
@@ -1532,8 +1516,7 @@
           "context": "La rana salta en el lago.",
           "options": [
             "Salta",
-            "Escribe",
-            "Cocina"
+            "Escribe"
           ],
           "correct": "Salta",
           "image": "/images/L3/l3-aq-3.png",
@@ -1554,8 +1537,7 @@
           "context": "El gato duerme en la cama.",
           "options": [
             "En la cama",
-            "En el río",
-            "En la escuela"
+            "En el río"
           ],
           "correct": "En la cama",
           "image": "/images/L3/l3-aq-1.png",
@@ -1576,8 +1558,7 @@
           "context": "La niña pinta una flor.",
           "options": [
             "Una flor",
-            "Un tren",
-            "Una taza"
+            "Un tren"
           ],
           "correct": "Una flor",
           "image": "/images/L3/l3-aq-2.png",
@@ -1598,8 +1579,7 @@
           "context": "El abuelo lee el periódico.",
           "options": [
             "Lee",
-            "Baila",
-            "Nada"
+            "Baila"
           ],
           "correct": "Lee",
           "image": "/images/L3/l3-aq-3.png",
@@ -1620,8 +1600,7 @@
           "context": "El sol ilumina la casa.",
           "options": [
             "La casa",
-            "La mochila",
-            "El pez"
+            "La mochila"
           ],
           "correct": "La casa",
           "image": "/images/L3/l3-aq-1.png",
@@ -1642,8 +1621,7 @@
           "context": "La maestra escribe en la pizarra.",
           "options": [
             "En la pizarra",
-            "En el árbol",
-            "En la sopa"
+            "En el árbol"
           ],
           "correct": "En la pizarra",
           "image": "/images/L3/l3-aq-2.png",
@@ -1664,8 +1642,7 @@
           "context": "El bebé ríe con su pelota.",
           "options": [
             "Contento",
-            "Enfadado",
-            "Dormido"
+            "Enfadado"
           ],
           "correct": "Contento",
           "image": "/images/L3/l3-aq-3.png",
@@ -1686,8 +1663,7 @@
           "context": "La familia camina por el bosque.",
           "options": [
             "Por el bosque",
-            "Por el mar",
-            "Por la cocina"
+            "Por el mar"
           ],
           "correct": "Por el bosque",
           "image": "/images/L3/l3-aq-1.png",
@@ -1708,8 +1684,7 @@
           "context": "El pájaro canta en la rama.",
           "options": [
             "Canta",
-            "Plancha",
-            "Compra"
+            "Plancha"
           ],
           "correct": "Canta",
           "image": "/images/L3/l3-aq-2.png",
@@ -1730,8 +1705,7 @@
           "context": "La niña bebe agua fresca.",
           "options": [
             "Agua",
-            "Leche roja",
-            "Arena"
+            "Leche roja"
           ],
           "correct": "Agua",
           "image": "/images/L3/l3-aq-3.png",
@@ -2017,8 +1991,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Pasado",
           "image": "/images/L5/l5-tc-1.png",
@@ -2040,8 +2013,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Presente",
           "image": "/images/L5/l5-tc-2.png",
@@ -2063,7 +2035,6 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
             "Futuro"
           ],
           "correct": "Futuro",
@@ -2086,8 +2057,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Pasado",
           "image": "/images/L5/l5-tc-1.png",
@@ -2109,8 +2079,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Presente",
           "image": "/images/L5/l5-tc-2.png",
@@ -2132,7 +2101,6 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
             "Futuro"
           ],
           "correct": "Futuro",
@@ -2155,8 +2123,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Pasado",
           "image": "/images/L5/l5-tc-1.png",
@@ -2178,8 +2145,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Presente",
           "image": "/images/L5/l5-tc-2.png",
@@ -2201,7 +2167,6 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
             "Futuro"
           ],
           "correct": "Futuro",
@@ -2224,8 +2189,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Pasado",
           "image": "/images/L5/l5-tc-1.png",
@@ -2247,8 +2211,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Presente",
           "image": "/images/L5/l5-tc-2.png",
@@ -2270,7 +2233,6 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
             "Futuro"
           ],
           "correct": "Futuro",
@@ -2293,8 +2255,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Pasado",
           "image": "/images/L5/l5-tc-1.png",
@@ -2316,8 +2277,7 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
-            "Futuro"
+            "Presente"
           ],
           "correct": "Presente",
           "image": "/images/L5/l5-tc-2.png",
@@ -2339,7 +2299,6 @@
           "context": "Pasado: ya ocurrió. Presente: ocurre ahora. Futuro: ocurrirá después.",
           "options": [
             "Pasado",
-            "Presente",
             "Futuro"
           ],
           "correct": "Futuro",
@@ -2833,9 +2792,7 @@
           "sentence": "¿Cómo te llamas __",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            "?"
           ],
           "correct": "?",
           "image": "/images/L5/l5-pg-1.png",
@@ -2855,8 +2812,6 @@
           "sentence": "¡Qué alegría verte __",
           "options": [
             ".",
-            ",",
-            "?",
             "!"
           ],
           "correct": "!",
@@ -2877,9 +2832,7 @@
           "sentence": "Hoy estudiamos __",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            ","
           ],
           "correct": ".",
           "image": "/images/L5/l5-pg-3.png",
@@ -2899,9 +2852,7 @@
           "sentence": "Traje lápiz __ cuaderno y regla.",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            ","
           ],
           "correct": ",",
           "image": "/images/L5/l5-pg-1.png",
@@ -2921,9 +2872,7 @@
           "sentence": "¿Dónde está Leo __",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            "?"
           ],
           "correct": "?",
           "image": "/images/L5/l5-pg-2.png",
@@ -2943,8 +2892,6 @@
           "sentence": "¡Bravo, lo lograste __",
           "options": [
             ".",
-            ",",
-            "?",
             "!"
           ],
           "correct": "!",
@@ -2965,9 +2912,7 @@
           "sentence": "Me gusta leer __",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            ","
           ],
           "correct": ".",
           "image": "/images/L5/l5-pg-1.png",
@@ -2987,9 +2932,7 @@
           "sentence": "Compré pan __ leche y fruta.",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            ","
           ],
           "correct": ",",
           "image": "/images/L5/l5-pg-2.png",
@@ -3009,9 +2952,7 @@
           "sentence": "¿Quieres jugar conmigo __",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            "?"
           ],
           "correct": "?",
           "image": "/images/L5/l5-pg-3.png",
@@ -3031,8 +2972,6 @@
           "sentence": "¡Qué sorpresa __",
           "options": [
             ".",
-            ",",
-            "?",
             "!"
           ],
           "correct": "!",
@@ -3053,9 +2992,7 @@
           "sentence": "El sol brilla __",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            ","
           ],
           "correct": ".",
           "image": "/images/L5/l5-pg-2.png",
@@ -3075,9 +3012,7 @@
           "sentence": "Tengo goma __ lápiz y regla.",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            ","
           ],
           "correct": ",",
           "image": "/images/L5/l5-pg-3.png",
@@ -3097,9 +3032,7 @@
           "sentence": "¿Cuándo vienes __",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            "?"
           ],
           "correct": "?",
           "image": "/images/L5/l5-pg-1.png",
@@ -3119,8 +3052,6 @@
           "sentence": "¡Cuidado __",
           "options": [
             ".",
-            ",",
-            "?",
             "!"
           ],
           "correct": "!",
@@ -3141,9 +3072,7 @@
           "sentence": "La luna sale de noche __",
           "options": [
             ".",
-            ",",
-            "?",
-            "!"
+            ","
           ],
           "correct": ".",
           "image": "/images/L5/l5-pg-3.png",
@@ -3165,7 +3094,6 @@
           "question": "¿Qué tiempo verbal usa la frase: \"Mañana cantaré con el coro\"?",
           "options": [
             "Pasado",
-            "Presente",
             "Futuro"
           ],
           "correct": "Futuro",
@@ -3181,8 +3109,7 @@
           "question": "Elige el signo que completa la frase: \"¿Vienes a la clase de magia\"",
           "options": [
             "¿",
-            "¡",
-            "."
+            "¡"
           ],
           "correct": "¿",
           "audio": "/audio/voice/exercises/l1-grammar-4.mp3",
@@ -3203,8 +3130,7 @@
           "question": "¿Dónde colocarías la tilde en la palabra 'musica'?",
           "options": [
             "música",
-            "musíca",
-            "mùsica"
+            "musíca"
           ],
           "correct": "música",
           "audio": "/audio/voice/exercises/l1-grammar-5.mp3",
@@ -3219,8 +3145,7 @@
           "question": "Completa: Yo ____ en la piscina.",
           "options": [
             "nado",
-            "nadé",
-            "nadaré"
+            "nadé"
           ],
           "correct": "nado",
           "image": "/images/L5/l5-fe-1.png",
@@ -3240,8 +3165,7 @@
           "question": "Completa: Ayer ____ en el mar.",
           "options": [
             "nado",
-            "nadé",
-            "nadaré"
+            "nadé"
           ],
           "correct": "nadé",
           "image": "/images/L5/l5-fe-2.png",
@@ -3261,7 +3185,6 @@
           "question": "Completa: Mañana ____ en el río.",
           "options": [
             "nado",
-            "nadé",
             "nadaré"
           ],
           "correct": "nadaré",
@@ -3282,8 +3205,7 @@
           "question": "Completa: Yo ____ una manzana.",
           "options": [
             "como",
-            "comí",
-            "comeré"
+            "comí"
           ],
           "correct": "como",
           "image": "/images/L5/l5-fe-1.png",
@@ -3303,8 +3225,7 @@
           "question": "Completa: Ayer ____ sopa.",
           "options": [
             "como",
-            "comí",
-            "comeré"
+            "comí"
           ],
           "correct": "comí",
           "image": "/images/L5/l5-fe-2.png",
@@ -3324,7 +3245,6 @@
           "question": "Completa: Después ____ con mi familia.",
           "options": [
             "como",
-            "comí",
             "comeré"
           ],
           "correct": "comeré",
@@ -3345,8 +3265,7 @@
           "question": "Completa: Hoy ____ en el patio.",
           "options": [
             "juego",
-            "jugué",
-            "jugaré"
+            "jugué"
           ],
           "correct": "juego",
           "image": "/images/L5/l5-fe-1.png",
@@ -3366,8 +3285,7 @@
           "question": "Completa: Ayer ____ a las escondidas.",
           "options": [
             "juego",
-            "jugué",
-            "jugaré"
+            "jugué"
           ],
           "correct": "jugué",
           "image": "/images/L5/l5-fe-2.png",
@@ -3387,7 +3305,6 @@
           "question": "Completa: Mañana ____ con mis amigos.",
           "options": [
             "juego",
-            "jugué",
             "jugaré"
           ],
           "correct": "jugaré",
@@ -3408,8 +3325,7 @@
           "question": "Completa: Yo ____ temprano.",
           "options": [
             "duermo",
-            "dormí",
-            "dormiré"
+            "dormí"
           ],
           "correct": "duermo",
           "image": "/images/L5/l5-fe-1.png",
@@ -3429,8 +3345,7 @@
           "question": "Completa: Anoche ____ muy bien.",
           "options": [
             "duermo",
-            "dormí",
-            "dormiré"
+            "dormí"
           ],
           "correct": "dormí",
           "image": "/images/L5/l5-fe-2.png",
@@ -3450,7 +3365,6 @@
           "question": "Completa: Luego ____ una siesta.",
           "options": [
             "duermo",
-            "dormí",
             "dormiré"
           ],
           "correct": "dormiré",
@@ -3471,8 +3385,7 @@
           "question": "Completa: Ahora ____ una carta.",
           "options": [
             "escribo",
-            "escribí",
-            "escribiré"
+            "escribí"
           ],
           "correct": "escribo",
           "image": "/images/L5/l5-fe-1.png",
@@ -3492,8 +3405,7 @@
           "question": "Completa: Antes ____ mi nombre.",
           "options": [
             "escribo",
-            "escribí",
-            "escribiré"
+            "escribí"
           ],
           "correct": "escribí",
           "image": "/images/L5/l5-fe-2.png",
@@ -3513,7 +3425,6 @@
           "question": "Completa: Pronto ____ un cuento.",
           "options": [
             "escribo",
-            "escribí",
             "escribiré"
           ],
           "correct": "escribiré",

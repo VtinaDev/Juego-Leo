@@ -8,8 +8,7 @@
       "question": "¿Qué mira el gato?",
       "options": [
         "El sol",
-        "La luna",
-        "La mesa"
+        "La luna"
       ],
       "correctAnswer": "La luna",
       "skillType": "reading_comprehension",
@@ -23,8 +22,7 @@
       "question": "¿Qué lleva Ana al parque?",
       "options": [
         "Una pelota roja",
-        "Un libro azul",
-        "Una mochila verde"
+        "Un libro azul"
       ],
       "correctAnswer": "Una pelota roja",
       "skillType": "reading_comprehension",
@@ -38,8 +36,7 @@
       "question": "¿Por qué no encendió la linterna?",
       "options": [
         "Porque estaba mojada",
-        "Porque no tenía pilas",
-        "Porque era de día"
+        "Porque no tenía pilas"
       ],
       "correctAnswer": "Porque no tenía pilas",
       "skillType": "reading_comprehension",
@@ -53,8 +50,7 @@
       "question": "¿Qué mira el gato?",
       "options": [
         "El sol",
-        "La luna",
-        "La mesa"
+        "La luna"
       ],
       "correctAnswer": "La luna",
       "skillType": "reading_comprehension",
@@ -68,8 +64,7 @@
       "question": "¿Qué lleva Ana al parque?",
       "options": [
         "Una pelota roja",
-        "Un libro azul",
-        "Una mochila verde"
+        "Un libro azul"
       ],
       "correctAnswer": "Una pelota roja",
       "skillType": "reading_comprehension",
