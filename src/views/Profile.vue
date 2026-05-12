@@ -23,6 +23,57 @@
     />
 
     <template v-else>
+      <section
+        v-if="showPasswordResetPanel"
+        class="card password-reset-card"
+        aria-labelledby="password-reset-title"
+      >
+        <div>
+          <p class="profile-kicker">Recuperación de cuenta</p>
+          <h2 id="password-reset-title">Crea una nueva contraseña</h2>
+          <p>Escribe una contraseña nueva para volver a entrar con seguridad.</p>
+        </div>
+
+        <form class="password-reset-form" @submit.prevent="handleResetPassword">
+          <label>
+            <span>Nueva contraseña</span>
+            <input
+              v-model.trim="newPassword"
+              type="password"
+              autocomplete="new-password"
+              class="form-input"
+              placeholder="Mínimo 6 caracteres"
+            />
+          </label>
+          <label>
+            <span>Confirmar contraseña</span>
+            <input
+              v-model.trim="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              class="form-input"
+              placeholder="Repite la contraseña"
+            />
+          </label>
+
+          <div class="password-reset-actions">
+            <button class="btn btn-primary" type="submit" :disabled="auth.loading">
+              Guardar contraseña
+            </button>
+            <button class="btn btn-ghost" type="button" :disabled="auth.loading" @click="cancelPasswordReset">
+              Ahora no
+            </button>
+          </div>
+
+          <p v-if="passwordResetStatus" class="state-message state-message--ok">
+            {{ passwordResetStatus }}
+          </p>
+          <p v-else-if="passwordResetError" class="state-message state-message--error">
+            {{ passwordResetError }}
+          </p>
+        </form>
+      </section>
+
       <header class="profile-hero">
         <div>
           <p class="profile-kicker">Panel familiar</p>
@@ -127,6 +178,10 @@ const authForm = reactive({
   email: '',
   password: ''
 })
+const newPassword = ref('')
+const confirmPassword = ref('')
+const passwordResetStatus = ref('')
+const passwordResetError = ref('')
 const reportMessage = ref('')
 const reportShown = ref(false)
 
@@ -145,6 +200,7 @@ const learningNeedLabels = {
 }
 
 const isLoggedIn = computed(() => auth.isAuthenticated)
+const showPasswordResetPanel = computed(() => isLoggedIn.value && (auth.recoveryMode || hasPasswordRecoveryMarker()))
 const timeline = computed(() => game.levelTimeline)
 const hasProgress = computed(() => Number(game.points || 0) > 0 || Number(game.stars || 0) > 0)
 const currentLevel = computed(() => timeline.value.find((item) => item.progress.percent < 1) || timeline.value[0])
@@ -311,6 +367,7 @@ watch(
 )
 
 onMounted(async () => {
+  if (hasPasswordRecoveryMarker()) auth.recoveryMode = true
   if (!child.name) child.name = profile.childName || game.child?.name || ''
   if (!child.birthdate) child.birthdate = profile.childBirthdate || game.child?.birthdate || ''
   if (!child.learningNeeds.length) child.learningNeeds = [...(profile.childLearningNeeds || [])]
@@ -442,6 +499,41 @@ async function handlePasswordReset() {
   }
   authForm.password = ''
   authStatus.value = 'Te enviamos un enlace para restablecer la contraseña.'
+}
+
+async function handleResetPassword() {
+  passwordResetStatus.value = ''
+  passwordResetError.value = ''
+  const nextPassword = newPassword.value.trim()
+  if (nextPassword.length < 6) {
+    passwordResetError.value = 'La nueva contraseña debe tener al menos 6 caracteres.'
+    return
+  }
+  if (nextPassword !== confirmPassword.value.trim()) {
+    passwordResetError.value = 'Las contraseñas no coinciden.'
+    return
+  }
+
+  const ok = await auth.resetPassword(nextPassword)
+  if (!ok) {
+    passwordResetError.value = auth.error || 'No se pudo actualizar la contraseña.'
+    return
+  }
+
+  newPassword.value = ''
+  confirmPassword.value = ''
+  passwordResetStatus.value = 'Contraseña actualizada. Ya puedes seguir usando tu cuenta.'
+  successMessage.value = passwordResetStatus.value
+  await router.replace({ name: 'Profile' }).catch(() => {})
+}
+
+async function cancelPasswordReset() {
+  auth.recoveryMode = false
+  newPassword.value = ''
+  confirmPassword.value = ''
+  passwordResetStatus.value = ''
+  passwordResetError.value = ''
+  await router.replace({ name: 'Profile' }).catch(() => {})
 }
 
 async function handleLogout() {
@@ -602,6 +694,11 @@ function clearPendingOnboardingProfile() {
     // Ignore storage cleanup failures.
   }
 }
+
+function hasPasswordRecoveryMarker() {
+  const hash = String(route.hash || '')
+  return route.query.reset === '1' || route.query.type === 'recovery' || hash.includes('type=recovery')
+}
 </script>
 
 <style scoped>
@@ -660,6 +757,65 @@ function clearPendingOnboardingProfile() {
   font-weight: 800;
 }
 
+.password-reset-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(280px, 1fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: start;
+}
+
+.password-reset-card h2 {
+  margin: 0;
+  color: #17220f;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+}
+
+.password-reset-card p {
+  margin: 0.55rem 0 0;
+  color: #475569;
+}
+
+.password-reset-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.password-reset-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.form-input {
+  width: 100%;
+  min-height: 54px;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 16px;
+  background: #fff;
+  font-size: 1rem;
+}
+
+.password-reset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.state-message {
+  margin: 0;
+  font-weight: 800;
+}
+
+.state-message--ok {
+  color: #047857;
+}
+
+.state-message--error {
+  color: #dc2626;
+}
+
 @media (max-width: 760px) {
   .profile-hero {
     grid-template-columns: 1fr;
@@ -670,6 +826,14 @@ function clearPendingOnboardingProfile() {
   }
 
   .profile-hero__actions .btn {
+    width: 100%;
+  }
+
+  .password-reset-card {
+    grid-template-columns: 1fr;
+  }
+
+  .password-reset-actions .btn {
     width: 100%;
   }
 }

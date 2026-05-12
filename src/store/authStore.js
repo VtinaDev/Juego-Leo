@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { getSupabaseConfigError, hasSupabaseConfig, supabase } from '../lib/supabaseClient'
 
+let authSubscription = null
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
@@ -8,7 +10,8 @@ export const useAuthStore = defineStore('auth', {
     userEmail: '',
     loading: false,
     initialized: false,
-    error: ''
+    error: '',
+    recoveryMode: false
   }),
 
   getters: {
@@ -24,6 +27,7 @@ export const useAuthStore = defineStore('auth', {
         return false
       }
 
+      this.listenToAuthChanges()
       this.loading = true
       this.error = ''
       try {
@@ -114,6 +118,7 @@ export const useAuthStore = defineStore('auth', {
         const { error } = await supabase.auth.signOut()
         if (error) this.error = getAuthMessage(error)
       }
+      this.recoveryMode = false
       this.clearSession()
       this.initialized = true
       return !this.error
@@ -131,7 +136,7 @@ export const useAuthStore = defineStore('auth', {
         return false
       }
 
-      const redirectTo = `${window.location.origin}/profile`
+      const redirectTo = `${window.location.origin}/profile?reset=1`
       const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, { redirectTo })
       if (error) {
         this.error = getAuthMessage(error)
@@ -157,7 +162,25 @@ export const useAuthStore = defineStore('auth', {
         return false
       }
       if (data.user) this.user = data.user
+      this.recoveryMode = false
       return true
+    },
+
+    listenToAuthChanges() {
+      if (!hasSupabaseConfig || authSubscription) return
+      const { data } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          this.recoveryMode = true
+        }
+        if (session) {
+          this.setSession(session)
+        }
+        if (event === 'SIGNED_OUT') {
+          this.recoveryMode = false
+          this.clearSession()
+        }
+      })
+      authSubscription = data?.subscription || null
     },
 
     setSession(session) {
