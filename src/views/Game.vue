@@ -3580,9 +3580,9 @@ function shuffleArray(arr) {
     width: 100vw;
     max-width: 100vw;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    height: 100dvh;
+    height: auto;
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
@@ -3595,12 +3595,12 @@ function shuffleArray(arr) {
     background: transparent;
     width: 100%;
     max-width: 100%;
-    height: 100dvh;
+    height: auto;
     min-height: 100dvh;
   }
   .smartick-card {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, auto);
     border-radius: 0;
     border-left: none;
     border-right: none;
@@ -3609,9 +3609,9 @@ function shuffleArray(arr) {
     width: 100%;
     max-width: 100%;
     padding: 0.46rem 0.52rem 0.58rem;
-    height: 100dvh;
+    height: auto;
     min-height: 100dvh;
-    overflow: hidden;
+    overflow: visible;
   }
   .options-row {
     gap: 0.42rem;
@@ -3655,10 +3655,32 @@ function shuffleArray(arr) {
   }
   .smartick-card-content {
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
     display: grid;
     align-content: start;
     gap: 0.4rem;
+  }
+  :deep(.exercise-options) {
+    gap: 0.42rem;
+  }
+  :deep(.exercise-options__button) {
+    min-width: min(46%, 158px);
+    min-height: 42px;
+    padding: 0.4rem 0.52rem;
+    border-radius: 14px;
+    font-size: clamp(0.92rem, 4vw, 1.05rem);
+    line-height: 1.16;
+    box-shadow: 0 5px 0 rgba(14, 165, 233, 0.16), 0 8px 12px rgba(15, 23, 42, 0.08);
+  }
+  .pair-board {
+    gap: 0.45rem;
+    margin-top: 0.2rem;
+  }
+  .pair-column {
+    gap: 0.42rem;
+  }
+  .pair-column .btn-option {
+    min-width: min(44vw, 150px);
   }
   .game-view.compact-mobile .smartick-card {
     padding: 0.42rem 0.48rem 0.52rem;
@@ -3716,6 +3738,12 @@ function shuffleArray(arr) {
     line-height: 1.14;
     padding: 0.5rem 0.58rem;
     border-radius: 12px;
+  }
+  .game-view.ultra-compact-mobile :deep(.exercise-options__button) {
+    min-height: 38px;
+    padding: 0.38rem 0.46rem;
+    border-radius: 12px;
+    font-size: clamp(0.86rem, 3.8vw, 0.98rem);
   }
   .game-view.ultra-compact-mobile .exercise-visual {
     max-width: min(185px, 50vw);
