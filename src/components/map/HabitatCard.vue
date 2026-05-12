@@ -176,6 +176,30 @@ defineEmits(['enter'])
   }
 }
 
+@media (max-width: 767px) {
+  .habitat-card {
+    width: 100%;
+    border-radius: 20px;
+  }
+
+  .habitat-card__media {
+    aspect-ratio: 2 / 1;
+  }
+
+  .habitat-card__stages {
+    gap: 0.42rem;
+  }
+
+  .stage-chip {
+    min-height: 52px;
+    padding: 0.48rem 0.58rem;
+  }
+
+  .stage-chip strong {
+    font-size: 0.86rem;
+  }
+}
+
 @keyframes cardIn {
   0% {
     opacity: 0;

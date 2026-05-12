@@ -345,6 +345,30 @@ onBeforeUnmount(() => {
   transition: none;
 }
 
+@media (max-width: 767px) {
+  .map-view {
+    padding-top: 5.2rem;
+  }
+
+  .map-view__rail {
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+
+  .map-view__card {
+    --habitat-card-width: auto;
+    flex: initial;
+    max-width: none;
+    scroll-snap-align: none;
+    transform: none;
+  }
+}
+
 @media (min-width: 980px) {
   .map-view__rail {
     width: min(1200px, 100%);
