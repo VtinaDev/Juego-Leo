@@ -42,6 +42,22 @@
           <small v-if="item.progress.lastStage">
             Última sesión: {{ formatDate(item.progress.lastStage.completedAt) }}
           </small>
+          <div class="level-card__stages" aria-label="Etapas del nivel">
+            <RouterLink
+              v-for="stage in stageLinks(item)"
+              :key="stage.id"
+              class="stage-pill"
+              :class="{
+                'stage-pill--current': stage.current,
+                'stage-pill--complete': stage.complete
+              }"
+              :to="stage.route"
+            >
+              <span>{{ stage.number }}</span>
+              <strong>{{ stage.title }}</strong>
+              <small>{{ stage.count }}</small>
+            </RouterLink>
+          </div>
         </div>
       </li>
     </ol>
@@ -49,6 +65,8 @@
 </template>
 
 <script setup>
+import { getLevelDefinition } from '../../engine/logic/utils/validateTemplates'
+
 defineProps({
   timeline: { type: Array, default: () => [] },
   currentLevelId: { type: Number, default: 1 },
@@ -67,6 +85,33 @@ const levelCharacters = {
 
 function characterForLevel(levelId) {
   return levelCharacters[Number(levelId)] || levelCharacters[1]
+}
+
+function stageLinks(item) {
+  const def = getLevelDefinition(String(item?.levelId || 1))
+  const subtypes = def?.subtypes || {}
+  const order = Array.isArray(def?.order) && def.order.length ? def.order : Object.keys(subtypes)
+  const completedStages = Number(item?.progress?.completedStages || 0)
+  const nextStage = Number(item?.progress?.nextStage || 1)
+
+  return order.map((subtype, index) => {
+    const number = index + 1
+    return {
+      id: `${item.levelId}-${number}`,
+      number,
+      title: def?.stageMeta?.[subtype]?.title || formatSubtypeLabel(subtype),
+      count: Array.isArray(subtypes[subtype]) ? subtypes[subtype].length : 0,
+      route: `/game/${item.levelId}/${number}`,
+      complete: completedStages >= number,
+      current: nextStage === number
+    }
+  })
+}
+
+function formatSubtypeLabel(value) {
+  return String(value || 'Ejercicios')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 </script>
 
@@ -198,6 +243,63 @@ h2 {
   color: #64748b;
 }
 
+.level-card__stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.25rem, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.stage-pill {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.45rem;
+  align-items: center;
+  min-height: 42px;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  background: #ffffff;
+  color: #1f2937;
+  text-decoration: none;
+}
+
+.stage-pill span {
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.stage-pill strong {
+  overflow: hidden;
+  color: #334155;
+  font-size: 0.82rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stage-pill small {
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.stage-pill--current {
+  border-color: rgba(47, 125, 71, 0.42);
+  background: #ecfdf5;
+}
+
+.stage-pill--complete span {
+  background: #bbf7d0;
+  color: #166534;
+}
+
 @media (max-width: 760px) {
   .section-head {
     align-items: stretch;
@@ -206,6 +308,18 @@ h2 {
 
   .btn {
     width: 100%;
+  }
+
+  .level-card {
+    grid-template-columns: 1fr;
+  }
+
+  .level-card__stages {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-pill strong {
+    white-space: normal;
   }
 }
 </style>

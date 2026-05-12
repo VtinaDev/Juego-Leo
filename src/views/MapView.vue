@@ -3,7 +3,8 @@
     <header class="map-view__header">
       <p class="map-view__eyebrow">Mapa de niveles</p>
       <h1>Elige tu próxima aventura</h1>
-      <p>Explora cada hábitat, consigue estrellas y desbloquea nuevos retos.</p>
+      <p>Explora cada hábitat, consigue estrellas y entra en todas las etapas disponibles.</p>
+      <strong class="map-view__total">{{ exerciseTotal }} ejercicios activos</strong>
     </header>
 
     <div ref="railRef" class="map-view__rail" :class="{ 'map-view__rail--reduced': prefersReducedMotion }">
@@ -106,10 +107,43 @@ const levels = computed(() => {
       description: `${entry.characterName}: ${entry.habitatDescription}.`,
       stars,
       locked,
-      route: `/game/${entry.levelId}/${progress.nextStage}`
+      route: `/game/${entry.levelId}/${progress.nextStage}`,
+      stages: getStageLinks(entry.levelId, def, progress, locked)
     }
   })
 })
+
+const exerciseTotal = computed(() => {
+  return levels.value.reduce((total, level) => {
+    return total + level.stages.reduce((acc, stage) => acc + stage.count, 0)
+  }, 0)
+})
+
+function getStageLinks(levelId, def, progress, locked) {
+  const subtypes = def?.subtypes || {}
+  const order = Array.isArray(def?.order) && def.order.length ? def.order : Object.keys(subtypes)
+
+  return order.map((subtype, index) => {
+    const stageNumber = index + 1
+    const title = def?.stageMeta?.[subtype]?.title || formatSubtypeLabel(subtype)
+    return {
+      id: `${levelId}-${stageNumber}`,
+      number: stageNumber,
+      title,
+      count: Array.isArray(subtypes[subtype]) ? subtypes[subtype].length : 0,
+      route: `/game/${levelId}/${stageNumber}`,
+      locked,
+      complete: Number(progress?.completedStages || 0) >= stageNumber,
+      current: Number(progress?.nextStage || 1) === stageNumber
+    }
+  })
+}
+
+function formatSubtypeLabel(value) {
+  return String(value || 'Ejercicios')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+}
 
 function setCardRef(el, index) {
   if (!el) {
@@ -254,6 +288,16 @@ onBeforeUnmount(() => {
   font-size: 0.98rem;
   color: #2f5f86;
   line-height: 1.4;
+}
+
+.map-view__total {
+  display: inline-flex;
+  margin-top: 0.85rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #166534;
+  box-shadow: 0 8px 18px rgba(22, 101, 52, 0.12);
 }
 
 .map-view__rail {

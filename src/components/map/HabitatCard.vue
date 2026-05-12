@@ -12,6 +12,27 @@
       :locked="level.locked"
       @enter="$emit('enter', level)"
     />
+
+    <div v-if="level.stages?.length" class="habitat-card__stages" aria-label="Etapas disponibles">
+      <component
+        :is="stage.locked ? 'button' : 'RouterLink'"
+        v-for="stage in level.stages"
+        :key="stage.id"
+        class="stage-chip"
+        :class="{
+          'stage-chip--current': stage.current,
+          'stage-chip--complete': stage.complete,
+          'stage-chip--locked': stage.locked
+        }"
+        :to="stage.locked ? undefined : stage.route"
+        :disabled="stage.locked"
+        type="button"
+      >
+        <span>Etapa {{ stage.number }}</span>
+        <strong>{{ stage.title }}</strong>
+        <small>{{ stage.count }} ejercicios</small>
+      </component>
+    </div>
   </article>
 </template>
 
@@ -86,6 +107,56 @@ defineEmits(['enter'])
 .habitat-card--locked:focus-visible {
   transform: none;
   box-shadow: none;
+}
+
+.habitat-card__stages {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.stage-chip {
+  display: grid;
+  gap: 0.12rem;
+  min-height: 58px;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  background: #fffdf3;
+  color: #1f2937;
+  text-align: left;
+  text-decoration: none;
+  box-shadow: 0 7px 14px rgba(15, 23, 42, 0.06);
+}
+
+.stage-chip span {
+  color: #2f7d47;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.stage-chip strong {
+  font-size: 0.9rem;
+  line-height: 1.15;
+}
+
+.stage-chip small {
+  color: #64748b;
+  font-weight: 800;
+}
+
+.stage-chip--current {
+  border-color: rgba(47, 125, 71, 0.45);
+  background: #ecfdf5;
+}
+
+.stage-chip--complete {
+  background: #f0fdf4;
+}
+
+.stage-chip--locked {
+  cursor: not-allowed;
+  opacity: 0.68;
 }
 
 @keyframes characterIdle {
