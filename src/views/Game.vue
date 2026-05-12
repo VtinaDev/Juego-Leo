@@ -3689,6 +3689,51 @@ function shuffleArray(arr) {
     margin-bottom: 0.28rem;
     padding-bottom: 0.14rem;
   }
+  .smartick-topbar {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    justify-items: stretch;
+    gap: 0.35rem;
+  }
+  .smartick-progress {
+    gap: 0.38rem;
+    min-width: 0;
+  }
+  .score-track {
+    gap: 0.08rem;
+    min-width: 0;
+  }
+  .score-stars {
+    gap: 0.16rem;
+  }
+  .star-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+  }
+  .score-points {
+    font-size: 0.72rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .smartick-stage {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  .stage-pill,
+  .exercise-counter-pill {
+    width: auto;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .smartick-actions {
+    justify-self: end;
+    gap: 0.28rem;
+  }
   .game-view.compact-mobile .avatar-chip {
     width: 34px;
     height: 34px;
@@ -3729,8 +3774,12 @@ function shuffleArray(arr) {
     padding-bottom: 0.18rem;
   }
   .game-view.ultra-compact-mobile .stage-pill {
-    font-size: 0.76rem;
-    padding: 0.24rem 0.52rem;
+    font-size: 0.64rem;
+    padding: 0.16rem 0.38rem;
+  }
+  .game-view.ultra-compact-mobile .exercise-counter-pill {
+    font-size: 0.6rem;
+    padding: 0.14rem 0.32rem;
   }
   .game-view.ultra-compact-mobile .btn-option {
     min-height: 38px;
@@ -3757,25 +3806,17 @@ function shuffleArray(arr) {
     height: 20px;
   }
   .game-view.ultra-compact-mobile .icon-btn {
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
     border-radius: 12px;
   }
   .game-view.ultra-compact-mobile .map-only-icon {
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
   }
   .game-view.ultra-compact-mobile .action-icon-img {
-    width: 24px;
-    height: 24px;
-  }
-  .smartick-topbar {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-  .smartick-actions {
-    justify-self: center;
-    gap: 0.7rem;
+    width: 18px;
+    height: 18px;
   }
   .map-only-icon {
     width: 34px;
