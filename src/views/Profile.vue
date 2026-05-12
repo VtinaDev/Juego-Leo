@@ -498,7 +498,7 @@ async function handlePasswordReset() {
     return
   }
   authForm.password = ''
-  authStatus.value = 'Te enviamos un enlace para restablecer la contraseña.'
+  authStatus.value = 'Ya se ha enviado a tu correo el link para restablecer la contraseña nueva.'
 }
 
 async function handleResetPassword() {

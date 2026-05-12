@@ -36,6 +36,9 @@
       >
         ¿Olvidaste la contraseña?
       </button>
+      <p v-if="status" class="state-message state-message--ok state-message--reset" role="status">
+        {{ status }}
+      </p>
 
       <LearningQuestionnaire
         show-child-fields
@@ -60,8 +63,7 @@
         </button>
       </div>
 
-      <p v-if="status" class="state-message state-message--ok">{{ status }}</p>
-      <p v-else-if="error || loginRequiredNotice" class="state-message state-message--error">
+      <p v-if="error || loginRequiredNotice" class="state-message state-message--error">
         {{ error || loginRequiredNotice }}
       </p>
     </form>
@@ -178,6 +180,13 @@ defineEmits([
 .state-message {
   margin: 0;
   font-weight: 800;
+}
+
+.state-message--reset {
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(4, 120, 87, 0.22);
+  border-radius: 16px;
+  background: #ecfdf5;
 }
 
 .state-message--ok {
