@@ -733,6 +733,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useBillingStore } from '../store/billingStore'
 import { useGameStore } from '../store/gameStore'
 import { useExerciseEngine } from '../engine/logic/ExerciseEngine'
+import { listLevels } from '../engine/logic/utils/validateTemplates'
 import exerciseWordTimings from '../engine/logic/audio/exerciseWordTimings.json'
 import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
 import { getAudioSettings, playSfx, playVoice, playVoiceCue, stopVoice, unlockAudio, stopMusic } from '../engine/audio/audioManager'
@@ -1920,6 +1921,7 @@ async function handleStageComplete(summary) {
   const finishedLastStage = summary.totalStages
     ? summary.stage >= summary.totalStages
     : false
+  const nextTarget = resolveNextStageTarget(summary)
 
   router.push({
     name: 'Congrats',
@@ -1929,9 +1931,36 @@ async function handleStageComplete(summary) {
       totalStages: summary.totalStages,
       stars: summary.stars,
       stageTitle: stageContext.value?.stageMeta?.title ?? meta.value?.title ?? '',
+      nextLevel: nextTarget?.level ?? '',
+      nextStage: nextTarget?.stage ?? '',
       completedGame: isFinalLevel && finishedLastStage ? '1' : '0'
     }
   })
+}
+
+function resolveNextStageTarget(summary) {
+  const currentLevel = Number(summary?.level || level.value || 1)
+  const currentStage = Number(summary?.stage || stage.value || 1)
+  const totalInLevel = Number(summary?.totalStages || stageContext.value?.totalStages || 0)
+
+  if (totalInLevel && currentStage < totalInLevel) {
+    return {
+      level: currentLevel,
+      stage: currentStage + 1
+    }
+  }
+
+  const nextLevel = listLevels()
+    .map((levelId) => Number(levelId))
+    .filter((levelId) => Number.isFinite(levelId) && levelId > currentLevel)
+    .sort((a, b) => a - b)[0]
+
+  if (!nextLevel) return null
+
+  return {
+    level: nextLevel,
+    stage: 1
+  }
 }
 
 function handleSimpleOption(option) {

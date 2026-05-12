@@ -59,12 +59,12 @@
               :style="{ borderColor: levelColor }"
             >
               <img src="/icons/next.PNG" alt="Siguiente" class="icon-img" />
-              <span class="action-label">{{ hasNextStage ? 'Siguiente etapa' : 'Ir al mapa' }}</span>
+              <span class="action-label">{{ hasNextTarget ? 'Siguiente etapa' : 'Ir al mapa' }}</span>
             </button>
           </div>
 
-          <p v-if="!hasNextStage" class="hint">
-            Ya completaste todas las etapas de este nivel. ¡Elige otro desafío!
+          <p v-if="!hasNextTarget" class="hint">
+            Ya completaste todas las etapas. ¡Elige otro desafío!
           </p>
         </div>
 
@@ -80,7 +80,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
-import { getLevelDefinition } from '../engine/logic/utils/validateTemplates'
+import { getLevelDefinition, listLevels } from '../engine/logic/utils/validateTemplates'
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
 import Oso from '../assets/characters/Oso.png'
@@ -102,6 +102,8 @@ const levelNumber = computed(() => parseNumber(route.query.level, 1))
 const stageNumber = computed(() => parseNumber(route.query.stage, 1))
 const totalFromQuery = computed(() => parseNumber(route.query.totalStages, 0))
 const starsFromQuery = computed(() => parseNumber(route.query.stars, 0))
+const nextLevelFromQuery = computed(() => parseNumber(route.query.nextLevel, 0))
+const nextStageFromQuery = computed(() => parseNumber(route.query.nextStage, 0))
 
 const levelMeta = computed(() =>
   (game.levelTimeline || []).find((item) => item.levelId === levelNumber.value)
@@ -124,20 +126,51 @@ const totalStages = computed(() => {
   return Math.max(storeTotal, totalFromQuery.value, definitionTotal, stageNumber.value)
 })
 
-const nextStage = computed(() => {
-  const storeNext = Number(game.getLevelProgress?.(levelNumber.value)?.nextStage ?? 0)
-  const candidate = storeNext > stageNumber.value ? storeNext : stageNumber.value + 1
-  return candidate <= totalStages.value ? candidate : null
+const orderedLevelIds = computed(() =>
+  listLevels()
+    .map((levelId) => Number(levelId))
+    .filter((levelId) => Number.isFinite(levelId) && levelId > 0)
+    .sort((a, b) => a - b)
+)
+
+const nextLevel = computed(() =>
+  orderedLevelIds.value.find((levelId) => levelId > levelNumber.value) ?? null
+)
+
+const nextTarget = computed(() => {
+  if (nextLevelFromQuery.value && nextStageFromQuery.value) {
+    return {
+      level: nextLevelFromQuery.value,
+      stage: nextStageFromQuery.value
+    }
+  }
+
+  const nextStage = stageNumber.value + 1
+  if (nextStage <= totalStages.value) {
+    return {
+      level: levelNumber.value,
+      stage: nextStage
+    }
+  }
+
+  if (nextLevel.value) {
+    return {
+      level: nextLevel.value,
+      stage: 1
+    }
+  }
+
+  return null
 })
-const hasNextStage = computed(() => nextStage.value !== null)
+const hasNextTarget = computed(() => nextTarget.value !== null)
 
 const levelLabel = computed(() => levelMeta.value?.levelName ?? `Nivel ${levelNumber.value}`)
 const levelColor = computed(() => levelMeta.value?.color ?? '#2563eb')
 const primaryLabel = computed(() =>
-  hasNextStage.value ? 'Ir a la siguiente etapa' : 'Explorar niveles'
+  hasNextTarget.value ? 'Ir a la siguiente etapa' : 'Explorar niveles'
 )
 const isGameCompleted = computed(
-  () => route.query.completedGame === '1' || (levelNumber.value === 5 && !hasNextStage.value)
+  () => route.query.completedGame === '1' || !hasNextTarget.value
 )
 const finalConfettiPieces = computed(() =>
   Array.from({ length: 60 }, (_, i) => ({
@@ -177,12 +210,18 @@ const earnedStars = computed(() => {
 })
 
 function goToNextStage() {
-  if (!hasNextStage.value) {
+  if (!nextTarget.value || isGameCompleted.value) {
     goToLevels()
     return
   }
 
-  router.push(`/game/${levelNumber.value}/${nextStage.value}`)
+  router.push({
+    name: 'game',
+    params: {
+      levelId: nextTarget.value.level,
+      stageId: nextTarget.value.stage
+    }
+  })
 }
 
 function repeatStage() {
