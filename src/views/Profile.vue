@@ -19,6 +19,7 @@
       :login-required-notice="loginRequiredNotice"
       @login="handleLogin"
       @register="handleRegister"
+      @reset-password="handlePasswordReset"
     />
 
     <template v-else>
@@ -429,6 +430,18 @@ async function handleLogin() {
     await game.loadProgressFromSupabase()
     redirectToPendingPlay()
   } else authError.value = auth.error
+}
+
+async function handlePasswordReset() {
+  authStatus.value = ''
+  authError.value = ''
+  const ok = await auth.requestReset(authForm.email)
+  if (!ok) {
+    authError.value = auth.error || 'No se pudo enviar el enlace de recuperación.'
+    return
+  }
+  authForm.password = ''
+  authStatus.value = 'Te enviamos un enlace para restablecer la contraseña.'
 }
 
 async function handleLogout() {

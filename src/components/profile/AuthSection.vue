@@ -28,6 +28,14 @@
           @input="$emit('update:password', $event.target.value)"
         />
       </label>
+      <button
+        class="forgot-password"
+        type="button"
+        :disabled="loading"
+        @click="$emit('reset-password')"
+      >
+        ¿Olvidaste la contraseña?
+      </button>
 
       <LearningQuestionnaire
         show-child-fields
@@ -86,7 +94,8 @@ defineEmits([
   'update:otherLearningNeed',
   'update:learningProfile',
   'login',
-  'register'
+  'register',
+  'reset-password'
 ])
 </script>
 
@@ -139,6 +148,25 @@ defineEmits([
   border-radius: 16px;
   background: #fff;
   font-size: 1rem;
+}
+
+.forgot-password {
+  justify-self: start;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #2f7d47;
+  font: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.forgot-password:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .auth-actions {
