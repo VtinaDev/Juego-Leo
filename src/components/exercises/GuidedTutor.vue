@@ -178,6 +178,7 @@ defineEmits(['play'])
   }
   .guided-tutor-card__bubble {
     min-height: 74px;
+    grid-template-columns: 1fr;
     margin-left: -6px;
     margin-bottom: 10px;
     padding: 0.62rem 0.66rem 0.42rem 1rem;
@@ -187,13 +188,7 @@ defineEmits(['play'])
     font-size: clamp(1.18rem, 6vw, 1.65rem);
   }
   .guided-tutor-card__audio {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-  }
-  .guided-tutor-card__audio img {
-    width: 34px;
-    height: 34px;
+    display: none;
   }
 }
 </style>

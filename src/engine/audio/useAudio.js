@@ -19,6 +19,11 @@ audioManager.onStop(() => {
 
 export function useAudio() {
   function playAudio(src, { onEnd, volume, loop } = {}) {
+    if (!src) {
+      isPlaying.value = false
+      onEnd?.()
+      return
+    }
     audioManager.play(src, {
       volume,
       loop,

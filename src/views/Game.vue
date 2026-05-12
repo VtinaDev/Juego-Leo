@@ -217,16 +217,6 @@
 
             <!-- Leer con o sin audio (L1) -->
             <section v-else-if="current.type === 'read_with_audio'" class="space-y-4">
-              <div class="audio-icon-wrapper audio-icon-wrapper--solo">
-                <button
-                  class="btn btn-ghost reading-cta icon-only"
-                  type="button"
-                  aria-label="Escuchar frase"
-                  @click="handleReadingIconClick"
-                >
-                  <img src="/icons/audio.PNG" alt="" class="audio-icon-static" />
-                </button>
-              </div>
               <p class="audio-visible-text">{{ readingText }}</p>
               <button class="btn btn-primary" type="button" @click="handleReadConfirm">
                 Ya la leí
@@ -373,16 +363,6 @@
                   @error="$event.target.style.display = 'none'"
                 />
               </div>
-              <div class="guided-word-audio">
-                <button
-                  class="guided-word-repeat"
-                  type="button"
-                  :aria-label="`Repetir: ${tutorStatementText}`"
-                  @click="playTutorStatementAudio"
-                >
-                  <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
-                </button>
-              </div>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="(option, optionIdx) in current.options"
@@ -456,16 +436,6 @@
                   class="choice-visual-img"
                   @error="$event.target.style.display = 'none'"
                 />
-              </div>
-              <div class="guided-word-audio">
-                <button
-                  class="guided-word-repeat"
-                  type="button"
-                  :aria-label="`Repetir: ${tutorStatementText}`"
-                  @click="playTutorStatementAudio"
-                >
-                  <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
-                </button>
               </div>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
@@ -770,7 +740,6 @@ import { VOICE_PRESET } from '../engine/audio/voiceProfile'
 
 import ExerciseShell from '../components/ExerciseShell.vue'
 import DragDropBoard from '../components/DragDropBoard.vue'
-import AudioButton from '../components/AudioButton.vue'
 import BaseExerciseLayout from '../components/exercises/BaseExerciseLayout.vue'
 import ExerciseImage from '../components/exercises/ExerciseImage.vue'
 import ExerciseOptions from '../components/exercises/ExerciseOptions.vue'
@@ -2248,33 +2217,6 @@ function resetReadingHighlight() {
   }
 }
 
-async function handleReadingIconClick() {
-  unlockAudio()
-  playSfx('click')
-  const audioSettings = getAudioSettings()
-  if (!audioSettings.voiceEnabled) return
-
-  if (current.value?.audio) {
-    handleAudioClick(current.value.audio)
-    return
-  }
-
-  // Solo para desarrollo: fallback temporal cuando falta audio manual.
-  if (ALLOW_DEV_TTS_FALLBACK && readingText.value) {
-    const estimate = Math.round(getEstimatedReadingDurationMs() * 1.15)
-    const effectiveEstimate = getEffectiveDurationMs(estimate, VOICE_PRESET.rate || 1)
-    startReadingPulse(effectiveEstimate)
-    startSyllableTickerForDuration(effectiveEstimate)
-    playVoice(readingText.value, {
-      lang: VOICE_PRESET.lang,
-      rate: VOICE_PRESET.rate,
-      pitch: VOICE_PRESET.pitch,
-      volume: audioSettings.voiceVolume,
-      onEnd: () => stopReadingPulse()
-    })
-  }
-}
-
 function handleReadingPlay() {
   // En ejercicios con audio real, la sílaba activa debe venir solo del progreso del audio.
   clearSyllableTicker()
@@ -2783,34 +2725,6 @@ function shuffleArray(arr) {
   transform: scale(1.04);
   filter: drop-shadow(0 12px 20px rgba(14, 165, 233, 0.2));
 }
-.guided-word-audio {
-  display: flex;
-  justify-content: center;
-  margin: 0 0 0.65rem;
-}
-.guided-word-repeat {
-  width: 62px;
-  height: 62px;
-  display: grid;
-  place-items: center;
-  border: none;
-  border-radius: 18px;
-  background: #fff7d6;
-  box-shadow: 0 10px 18px rgba(245, 158, 11, 0.2);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.guided-word-repeat:hover {
-  transform: translateY(-1px) scale(1.04);
-  box-shadow: 0 13px 22px rgba(245, 158, 11, 0.26);
-}
-.guided-word-repeat:active {
-  transform: scale(0.96);
-}
-.guided-word-repeat img {
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-}
 .guided-choice-option--spotlight {
   border-color: #38bdf8;
   background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
@@ -2961,37 +2875,6 @@ function shuffleArray(arr) {
   display: flex;
   align-items: center;
 }
-.reading-cta {
-  gap: 0.5rem;
-  min-height: 0;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-}
-.reading-cta.icon-only {
-  padding: 0;
-  min-height: unset;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  opacity: 0.78;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  margin: 0;
-}
-.reading-cta.icon-only:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-.reading-cta.icon-only:active {
-  opacity: 0.95;
-  transform: translateY(0);
-}
-.audio-icon-static {
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-  filter: drop-shadow(0 6px 14px rgba(15, 23, 42, 0.12));
-  cursor: pointer;
-}
 .reading-animated {
   background: linear-gradient(135deg, #fff7d0, #ffe8a3);
   box-shadow: 0 10px 24px rgba(251, 191, 36, 0.3);
@@ -2999,11 +2882,6 @@ function shuffleArray(arr) {
 }
 .audio-panel {
   gap: 0.5rem;
-}
-.audio-icon-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.85rem;
 }
 @keyframes syllablePulse {
   0%,
@@ -3494,7 +3372,6 @@ function shuffleArray(arr) {
 .tutor-focus-visual .exercise-visual,
 .tutor-focus-visual .choice-visual,
 .tutor-focus-visual :deep(.exercise-layout__media),
-.tutor-focus-audio .audio-icon-wrapper,
 .tutor-focus-audio .sentence-audio-btn {
   outline: 4px solid rgba(56, 189, 248, 0.34);
   outline-offset: 6px;
@@ -3711,6 +3588,7 @@ function shuffleArray(arr) {
   }
   .guided-tutor__bubble {
     min-height: 72px;
+    grid-template-columns: 1fr;
     margin-left: -6px;
     margin-bottom: 8px;
     padding: 0.62rem 0.66rem 0.42rem 1.05rem;
@@ -3720,13 +3598,7 @@ function shuffleArray(arr) {
     font-size: clamp(1.22rem, 6.2vw, 1.7rem);
   }
   .guided-tutor__audio {
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-  }
-  .guided-tutor__audio img {
-    width: 34px;
-    height: 34px;
+    display: none;
   }
   .smartick-card-head {
     margin-bottom: 0.75rem;
@@ -3836,10 +3708,6 @@ function shuffleArray(arr) {
   .action-icon-img {
     width: 30px;
     height: 30px;
-  }
-  .audio-icon-static {
-    width: 58px;
-    height: 58px;
   }
 }
 </style>

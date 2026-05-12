@@ -7,7 +7,7 @@ const SOUND_DEFS = {
   },
   error: {
     src: ['/audio/sfx/wrong.wav'],
-    volume: 0.4
+    volume: 0.18
   },
   celebration: {
     src: ['/audio/sfx/confetti.wav'],
@@ -23,7 +23,13 @@ function createHowl(name) {
   const howl = new Howl({
     preload: true,
     html5: false,
-    ...config
+    ...config,
+    onloaderror: (_id, error) => {
+      console.warn(`[SoundService] No se pudo cargar ${name}`, error)
+    },
+    onplayerror: (_id, error) => {
+      console.warn(`[SoundService] No se pudo reproducir ${name}`, error)
+    }
   })
   registry.set(name, howl)
   return howl
@@ -44,15 +50,20 @@ export const SoundService = {
   },
 
   play(name, { volume, rate } = {}) {
-    const howl = resolveHowl(name)
-    if (!howl) return
-    if (typeof volume === 'number') {
-      howl.volume(volume)
+    try {
+      const howl = resolveHowl(name)
+      if (!howl) return null
+      if (typeof volume === 'number') {
+        howl.volume(volume)
+      }
+      if (typeof rate === 'number') {
+        howl.rate(rate)
+      }
+      return howl.play()
+    } catch (error) {
+      console.warn(`[SoundService] No se pudo reproducir ${name}`, error)
+      return null
     }
-    if (typeof rate === 'number') {
-      howl.rate(rate)
-    }
-    howl.play()
   },
 
   stop(name) {

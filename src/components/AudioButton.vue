@@ -3,7 +3,7 @@
     class="audio-button"
     type="button"
     :aria-pressed="isSpeaking"
-    :aria-label="isSpeaking ? 'Detener narración' : 'Reproducir audio'"
+    :aria-label="isSpeaking ? 'Detener narración' : 'Escuchar'"
     @click="handleClick"
   >
     <span v-if="isSpeaking">⏸️</span>
