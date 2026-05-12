@@ -979,6 +979,7 @@ function playTutorStatementAudio() {
   unlockAudio()
   playVoice(text, {
     interrupt: true,
+    allowTtsFallback: true,
     rate: VOICE_PRESET.rate,
     pitch: VOICE_PRESET.pitch,
     lang: VOICE_PRESET.lang,
@@ -1613,7 +1614,7 @@ watch(
     // Safety fallback for association exercises: if cue mapping fails, use their manual MP3 directly.
     const type = String(exercise?.type || '').trim().toLowerCase()
     if (ASSOCIATION_TYPES.has(type) && exercise?.audio) {
-      playVoice(exercise.audio, { interrupt: true })
+      playVoice(exercise.audio, { interrupt: true, allowTtsFallback: true })
       return
     }
   },
@@ -2040,7 +2041,13 @@ function handleOptionPreview(option) {
   const text = resolveOptionText(option)
   if (!text) return
   unlockAudio()
-  playVoice(text, { rate: VOICE_PRESET.rate, pitch: VOICE_PRESET.pitch, lang: VOICE_PRESET.lang, volume: audioSettings.voiceVolume })
+  playVoice(text, {
+    allowTtsFallback: true,
+    rate: VOICE_PRESET.rate,
+    pitch: VOICE_PRESET.pitch,
+    lang: VOICE_PRESET.lang,
+    volume: audioSettings.voiceVolume
+  })
 }
 
 function handleSimpleOrder(ok) {

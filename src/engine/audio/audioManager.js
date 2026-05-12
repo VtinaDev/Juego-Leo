@@ -20,7 +20,9 @@ const SAFE_SFX_GAIN = 0.75
 const SFX_THROTTLE_MS = 140
 let activeVoiceAudio = null
 let pendingMusicStart = null
+let pendingVoiceStart = null
 let musicUnlockListenersAttached = false
+let voiceUnlockListenersAttached = false
 const ALLOW_DEV_TTS_FALLBACK = import.meta.env.DEV && import.meta.env.VITE_ENABLE_TTS_FALLBACK !== 'false'
 
 // Legacy-style manager used by useAudio.js
@@ -315,6 +317,32 @@ function clearPendingMusicStart() {
   musicUnlockListenersAttached = false
 }
 
+function clearPendingVoiceStart() {
+  pendingVoiceStart = null
+  if (!voiceUnlockListenersAttached || typeof window === 'undefined') return
+  window.removeEventListener('pointerdown', retryPendingVoiceStart)
+  window.removeEventListener('keydown', retryPendingVoiceStart)
+  voiceUnlockListenersAttached = false
+}
+
+function schedulePendingVoiceStart(payload) {
+  pendingVoiceStart = payload
+  if (voiceUnlockListenersAttached || typeof window === 'undefined') return
+  voiceUnlockListenersAttached = true
+  window.addEventListener('pointerdown', retryPendingVoiceStart, { passive: true })
+  window.addEventListener('keydown', retryPendingVoiceStart)
+}
+
+function retryPendingVoiceStart() {
+  if (!pendingVoiceStart) {
+    clearPendingVoiceStart()
+    return
+  }
+  const request = { ...pendingVoiceStart }
+  clearPendingVoiceStart()
+  playVoice(request.textOrSrc, request.options)
+}
+
 function schedulePendingMusicStart(payload) {
   pendingMusicStart = payload
   if (musicUnlockListenersAttached || typeof window === 'undefined') return
@@ -368,9 +396,15 @@ function normalizeVoiceSrc(value = '') {
 }
 
 export function playVoice(textOrSrc = '', options = {}) {
-  if (!settings.voiceEnabled) return
+  if (!settings.voiceEnabled) {
+    options.onEnd?.()
+    return null
+  }
   unlockAudio()
-  if (!textOrSrc) return
+  if (!textOrSrc) {
+    options.onEnd?.()
+    return null
+  }
 
   const interrupt = options.interrupt !== false
   if (interrupt) {
@@ -399,23 +433,35 @@ export function playVoice(textOrSrc = '', options = {}) {
       if (activeVoiceAudio === audio) activeVoiceAudio = null
       options.onEnd?.()
     }
-    audio.onerror = () => {
+    audio.onerror = (error) => {
       if (activeVoiceAudio === audio) activeVoiceAudio = null
+      console.warn('[audioManager] No se pudo cargar audio de voz:', normalizedSrc, error)
       options.onEnd?.()
     }
-    audio.play().catch(() => {
+    audio.play().catch((error) => {
       if (activeVoiceAudio === audio) activeVoiceAudio = null
+      console.warn('[audioManager] Reproducción de voz bloqueada o fallida:', normalizedSrc, error)
+      if (error?.name === 'NotAllowedError') {
+        schedulePendingVoiceStart({
+          textOrSrc,
+          options: { ...options, interrupt: true }
+        })
+      }
       options.onEnd?.()
     })
     return audio
   }
 
-  if (!ALLOW_DEV_TTS_FALLBACK) {
+  const allowTtsFallback = options.allowTtsFallback === true || ALLOW_DEV_TTS_FALLBACK
+  if (!allowTtsFallback) {
     options.onEnd?.()
-    return
+    return null
   }
 
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    options.onEnd?.()
+    return null
+  }
   const synth = window.speechSynthesis
   const utterance = new SpeechSynthesisUtterance(textOrSrc)
   const lang = options.lang || VOICE_PRESET.lang
@@ -488,6 +534,7 @@ export function playVoiceCue(key, options = {}) {
 }
 
 export function stopVoice() {
+  clearPendingVoiceStart()
   stopActiveVoiceAudio()
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
   window.speechSynthesis.cancel()

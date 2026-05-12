@@ -71,6 +71,7 @@ async function handleClick() {
 
     if (!hasListener) {
       playVoice(normalizedAudioSrc, {
+        allowTtsFallback: true,
         onEnd: () => {
           isSpeaking.value = false
           emit('tts-end')
@@ -92,6 +93,7 @@ async function handleClick() {
     isSpeaking.value = true
     emit('tts-start')
     playVoice(text, {
+      allowTtsFallback: true,
       lang: props.lang,
       rate: props.rate,
       pitch: props.pitch,
