@@ -878,6 +878,7 @@ const progressiveFeedbackText = computed(() => {
 const tutorStepIndex = ref(0)
 const guidedOptionIndex = ref(-1)
 const selectedOptionText = ref('')
+const tutorAutoAudioPlayedFor = ref('')
 let tutorStepTimer = null
 let tutorAutoAudioTimer = null
 let guidedOptionTimer = null
@@ -991,15 +992,19 @@ function scheduleTutorStep() {
   clearTutorTimers()
   if (!guidedTutor.value) return
 
-  tutorAutoAudioTimer = setTimeout(() => {
-    playTutorCue()
-  }, 260)
+  const exerciseId = String(current.value?.id || '')
+  if (exerciseId && tutorAutoAudioPlayedFor.value !== exerciseId) {
+    tutorAutoAudioPlayedFor.value = exerciseId
+    tutorAutoAudioTimer = setTimeout(() => {
+      playTutorCue()
+    }, 320)
+  }
 
   if (tutorStepIndex.value < tutorSteps.value.length - 1) {
     tutorStepTimer = setTimeout(() => {
       tutorStepIndex.value += 1
       scheduleTutorStep()
-    }, prefersReducedMotion.value ? 2200 : 1750)
+    }, prefersReducedMotion.value ? 3600 : 3200)
   } else if (guidedTutor.value?.key === 'choose') {
     startGuidedOptionHighlight()
   }
@@ -1011,6 +1016,8 @@ const gameViewClasses = computed(() => ({
   'tutor-focus-visual': guidedTutor.value?.focus === 'visual',
   'tutor-focus-audio': guidedTutor.value?.focus === 'audio',
   'tutor-focus-options': guidedTutor.value?.focus === 'options',
+  'compact-mobile': mobileViewport.value,
+  'ultra-compact-mobile': mobileViewport.value,
   'game-view--mono-3-3-centered': isMonoStage3of3.value || isMonoExerciseThirdOfThree.value
 }))
 
@@ -2385,6 +2392,7 @@ watch(
     // Limpieza fuerte al cambiar ejercicio para evitar timers/audio residuales fuera de fase.
     clearTutorTimers()
     tutorStepIndex.value = 0
+    tutorAutoAudioPlayedFor.value = ''
     guidedOptionIndex.value = -1
     selectedOptionText.value = ''
     resetReadingHighlight()
@@ -3572,7 +3580,7 @@ function shuffleArray(arr) {
     width: 100vw;
     max-width: 100vw;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     height: 100dvh;
     min-height: 100dvh;
@@ -3587,10 +3595,12 @@ function shuffleArray(arr) {
     background: transparent;
     width: 100%;
     max-width: 100%;
-    height: auto;
-    min-height: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
   }
   .smartick-card {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     border-radius: 0;
     border-left: none;
     border-right: none;
@@ -3598,92 +3608,99 @@ function shuffleArray(arr) {
     margin: 0;
     width: 100%;
     max-width: 100%;
-    padding: 0.95rem 0.85rem 1.1rem;
-    height: auto;
-    min-height: 0;
-    overflow: visible;
+    padding: 0.46rem 0.52rem 0.58rem;
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+  .options-row {
+    gap: 0.42rem;
   }
   .btn-option {
     width: auto;
     max-width: none;
     min-width: min(46%, 170px);
-    min-height: 52px;
-    font-size: clamp(1.08rem, 4.8vw, 1.3rem);
+    min-height: 46px;
+    font-size: clamp(0.98rem, 4.3vw, 1.15rem);
     line-height: 1.18;
-    padding: 0.58rem 0.72rem;
+    padding: 0.46rem 0.58rem;
   }
   .guided-tutor {
-    grid-template-columns: 74px minmax(0, 1fr);
+    grid-template-columns: 56px minmax(0, 1fr);
     width: 100%;
-    margin-bottom: 0.15rem;
+    margin-bottom: 0;
   }
   .guided-tutor__character,
   .guided-tutor__character img {
-    width: 80px;
-    height: 80px;
+    width: 62px;
+    height: 62px;
   }
   .guided-tutor__bubble {
-    min-height: 72px;
+    min-height: 58px;
     grid-template-columns: 1fr;
-    margin-left: -6px;
-    margin-bottom: 8px;
-    padding: 0.62rem 0.66rem 0.42rem 1.05rem;
-    border-radius: 18px;
+    margin-left: -4px;
+    margin-bottom: 5px;
+    padding: 0.5rem 0.58rem 0.36rem 0.85rem;
+    border-radius: 16px;
   }
   .guided-tutor__word {
-    font-size: clamp(1.22rem, 6.2vw, 1.7rem);
+    font-size: clamp(1.02rem, 5.4vw, 1.42rem);
   }
   .guided-tutor__audio {
     display: none;
   }
   .smartick-card-head {
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: 0.38rem;
+    padding-bottom: 0.18rem;
   }
   .smartick-card-content {
-    overflow: visible;
+    min-height: 0;
+    overflow: hidden;
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
   }
   .game-view.compact-mobile .smartick-card {
-    padding: 0.7rem 0.58rem 0.78rem;
+    padding: 0.42rem 0.48rem 0.52rem;
   }
   .game-view.compact-mobile .smartick-card-head {
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.35rem;
+    margin-bottom: 0.28rem;
+    padding-bottom: 0.14rem;
   }
   .game-view.compact-mobile .avatar-chip {
-    width: 44px;
-    height: 44px;
+    width: 34px;
+    height: 34px;
     border-radius: 12px;
   }
   .game-view.compact-mobile .avatar-chip img {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
   }
   .game-view.compact-mobile .icon-btn {
-    width: 46px;
-    height: 46px;
+    width: 34px;
+    height: 34px;
     border-radius: 13px;
   }
   .game-view.compact-mobile .stage-pill {
-    padding: 0.3rem 0.65rem;
-    font-size: 0.82rem;
+    padding: 0.18rem 0.45rem;
+    font-size: 0.68rem;
   }
   .game-view.compact-mobile .exercise-counter-pill {
-    padding: 0.22rem 0.48rem;
-    font-size: 0.72rem;
+    padding: 0.16rem 0.36rem;
+    font-size: 0.64rem;
   }
   .game-view.compact-mobile .exercise-visual {
-    max-width: 280px;
-    margin-bottom: 0.45rem;
+    max-width: min(210px, 56vw);
+    margin-bottom: 0.22rem;
   }
   .game-view.compact-mobile .btn-option {
-    min-height: 50px;
-    font-size: clamp(1.02rem, 4.5vw, 1.18rem);
+    min-height: 42px;
+    font-size: clamp(0.92rem, 4vw, 1.05rem);
     line-height: 1.16;
-    padding: 0.54rem 0.66rem;
+    padding: 0.4rem 0.5rem;
   }
   .game-view.ultra-compact-mobile .smartick-card {
-    padding: 0.5rem 0.45rem 0.55rem;
+    padding: 0.34rem 0.4rem 0.42rem;
   }
   .game-view.ultra-compact-mobile .smartick-card-head {
     margin-bottom: 0.35rem;
@@ -3694,22 +3711,22 @@ function shuffleArray(arr) {
     padding: 0.24rem 0.52rem;
   }
   .game-view.ultra-compact-mobile .btn-option {
-    min-height: 48px;
-    font-size: clamp(0.98rem, 4.3vw, 1.08rem);
+    min-height: 38px;
+    font-size: clamp(0.86rem, 3.8vw, 0.98rem);
     line-height: 1.14;
     padding: 0.5rem 0.58rem;
     border-radius: 12px;
   }
   .game-view.ultra-compact-mobile .exercise-visual {
-    max-width: 240px;
+    max-width: min(185px, 50vw);
   }
   .game-view.compact-mobile .map-only-icon {
-    width: 46px;
-    height: 46px;
+    width: 34px;
+    height: 34px;
   }
   .game-view.compact-mobile .action-icon-img {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
   }
   .game-view.ultra-compact-mobile .icon-btn {
     width: 42px;
@@ -3733,17 +3750,17 @@ function shuffleArray(arr) {
     gap: 0.7rem;
   }
   .map-only-icon {
-    width: 50px;
-    height: 50px;
+    width: 34px;
+    height: 34px;
   }
   .icon-btn {
-    width: 50px;
-    height: 50px;
+    width: 34px;
+    height: 34px;
     border-radius: 14px;
   }
   .action-icon-img {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
   }
 }
 </style>
