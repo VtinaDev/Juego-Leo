@@ -39,6 +39,15 @@
       <p v-if="status" class="state-message state-message--ok state-message--reset" role="status">
         {{ status }}
       </p>
+      <button
+        v-if="showResendConfirmation"
+        class="forgot-password"
+        type="button"
+        :disabled="loading"
+        @click="$emit('resend-confirmation')"
+      >
+        Reenviar correo de confirmación
+      </button>
 
       <LearningQuestionnaire
         show-child-fields
@@ -84,7 +93,8 @@ defineProps({
   loading: { type: Boolean, default: false },
   status: { type: String, default: '' },
   error: { type: String, default: '' },
-  loginRequiredNotice: { type: String, default: '' }
+  loginRequiredNotice: { type: String, default: '' },
+  showResendConfirmation: { type: Boolean, default: false }
 })
 
 defineEmits([
@@ -97,7 +107,8 @@ defineEmits([
   'update:learningProfile',
   'login',
   'register',
-  'reset-password'
+  'reset-password',
+  'resend-confirmation'
 ])
 </script>
 
