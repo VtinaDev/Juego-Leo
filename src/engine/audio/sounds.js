@@ -1,3 +1,5 @@
+import { AUDIO_EXPERIENCE } from './audioExperience.js'
+
 export const SFX_SOURCES = {
   click: '/audio/sfx/click.wav',
   correct: '/audio/sfx/correct.wav',
@@ -168,7 +170,7 @@ export const DEFAULT_AUDIO_SETTINGS = {
   sfxEnabled: true,
   voiceEnabled: true,
   // Volúmenes base más suaves para reducir fatiga auditiva
-  musicVolume: 0.42,
-  sfxVolume: 0.58,
-  voiceVolume: 0.88
+  musicVolume: AUDIO_EXPERIENCE.music.volume,
+  sfxVolume: AUDIO_EXPERIENCE.sfx.volume,
+  voiceVolume: AUDIO_EXPERIENCE.voice.volume
 }

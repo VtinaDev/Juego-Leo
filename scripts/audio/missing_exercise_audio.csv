@@ -1,70 +1,100 @@
 exercise_id,level,unit,game,type,text,expected_audio_filename,audio_exists
-L1-CCW-1,1,CCW,1,CHOOSE_CORRECT_WORD,Elige la palabra correcta,1-CCW-1-L1-CCW-1.mp3,false
-L1-CCW-2,1,CCW,2,CHOOSE_CORRECT_WORD,Elige la palabra correcta,1-CCW-2-L1-CCW-2.mp3,false
-L1-CS-1,1,CS,1,complete_sentence,El hada ____ la puerta secreta.,1-CS-1-L1-CS-1.mp3,false
-L1-CS-2,1,CS,2,complete_sentence,La nube ____ gotas.,1-CS-2-L1-CS-2.mp3,false
-L1-CS-3,1,CS,3,complete_sentence,El oso ____ con calma.,1-CS-3-L1-CS-3.mp3,false
-L1-CS-4,1,CS,4,complete_sentence,La hoja ____ al viento.,1-CS-4-L1-CS-4.mp3,false
-L1-CS-5,1,CS,5,complete_sentence,El río ____ un canto suave.,1-CS-5-L1-CS-5.mp3,false
-L1-CS-6,1,CS,6,complete_sentence,La luna ____ la noche.,1-CS-6-L1-CS-6.mp3,false
-L1-CS-7,1,CS,7,complete_sentence,El colibrí ____ flores mágicas.,1-CS-7-L1-CS-7.mp3,false
-L1-CS-8,1,CS,8,complete_sentence,La campana ____ el recreo.,1-CS-8-L1-CS-8.mp3,false
-L1-IWM-1,1,IWM,1,IMAGE_WORD_MATCH,Selecciona la palabra que nombra la imagen,1-IWM-1-L1-IWM-1.mp3,false
-L1-IWM-2,1,IWM,2,IMAGE_WORD_MATCH,Selecciona la palabra que nombra la imagen,1-IWM-2-L1-IWM-2.mp3,false
-L1-OS-1,1,OS,1,order_sentence,Comienza con el artículo.,1-OS-1-L1-OS-1.mp3,false
-L1-OS-2,1,OS,2,order_sentence,Coloca 'El' al inicio.,1-OS-2-L1-OS-2.mp3,false
-L1-OS-3,1,OS,3,order_sentence,"Sujeto primero, luego acción.",1-OS-3-L1-OS-3.mp3,false
-L1-OS-4,1,OS,4,order_sentence,Respeta el orden natural de sujeto y verbo.,1-OS-4-L1-OS-4.mp3,false
-L1-QS-1,1,QS,1,question_sentence,El búho duerme en el árbol.,1-QS-1-L1-QS-1.mp3,false
-L1-QS-2,1,QS,2,question_sentence,La luciérnaga ilumina la noche.,1-QS-2-L1-QS-2.mp3,false
-L1-QS-3,1,QS,3,question_sentence,El oso perezoso encuentra una flor azul.,1-QS-3-L1-QS-3.mp3,false
-L1-QS-4,1,QS,4,question_sentence,El niño abraza al perro alegre.,1-QS-4-L1-QS-4.mp3,false
-L1-RW-1,1,RW,1,read_with_audio,El faro guía a los barcos perdidos.,1-RW-1-L1-RW-1.mp3,false
-L1-RW-2,1,RW,2,read_with_audio,La campana anuncia el recreo.,1-RW-2-L1-RW-2.mp3,false
-L1-RW-3,1,RW,3,read_with_audio,Las hojas viajan con el viento.,1-RW-3-L1-RW-3.mp3,false
-L1-RW-4,1,RW,4,read_with_audio,El río canta para el bosque.,1-RW-4-L1-RW-4.mp3,false
+L1-OS-NEW-1,1,ORDER_SENTENCE,5,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-5-L1-OS-NEW-1.mp3,false
+L1-OS-NEW-2,1,ORDER_SENTENCE,6,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-6-L1-OS-NEW-2.mp3,false
+L1-OS-NEW-3,1,ORDER_SENTENCE,7,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-7-L1-OS-NEW-3.mp3,false
+L1-OS-NEW-4,1,ORDER_SENTENCE,8,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-8-L1-OS-NEW-4.mp3,false
+L1-OS-NEW-5,1,ORDER_SENTENCE,9,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-9-L1-OS-NEW-5.mp3,false
+L1-OS-NEW-6,1,ORDER_SENTENCE,10,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-10-L1-OS-NEW-6.mp3,false
+L1-OS-NEW-7,1,ORDER_SENTENCE,11,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-11-L1-OS-NEW-7.mp3,false
+L1-OS-NEW-8,1,ORDER_SENTENCE,12,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-12-L1-OS-NEW-8.mp3,false
+L1-OS-NEW-9,1,ORDER_SENTENCE,13,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-13-L1-OS-NEW-9.mp3,false
+L1-OS-NEW-10,1,ORDER_SENTENCE,14,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-14-L1-OS-NEW-10.mp3,false
+L1-OS-NEW-11,1,ORDER_SENTENCE,15,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-15-L1-OS-NEW-11.mp3,false
+L1-OS-NEW-12,1,ORDER_SENTENCE,16,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-16-L1-OS-NEW-12.mp3,false
+L1-OS-NEW-13,1,ORDER_SENTENCE,17,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-17-L1-OS-NEW-13.mp3,false
+L1-OS-NEW-14,1,ORDER_SENTENCE,18,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-18-L1-OS-NEW-14.mp3,false
+L1-OS-NEW-15,1,ORDER_SENTENCE,19,order_sentence,Toca primero quién hace la acción.,1-ORDER_SENTENCE-19-L1-OS-NEW-15.mp3,false
 L2-CW-1,2,CW,1,COMPLETE_WORD,Completa la palabra:,2-CW-1-L2-CW-1.mp3,false
 L2-CW-2,2,CW,2,COMPLETE_WORD,Completa la palabra:,2-CW-2-L2-CW-2.mp3,false
-L2-MC-1,2,MC,1,multiple_choice,Encierra el nombre correcto del dibujo: sol,2-MC-1-L2-MC-1.mp3,false
-L2-MC-2,2,MC,2,multiple_choice,Encierra el nombre correcto del dibujo: sapo,2-MC-2-L2-MC-2.mp3,false
-L2-MC-3,2,MC,3,multiple_choice,Encierra el nombre correcto del dibujo: sopa,2-MC-3-L2-MC-3.mp3,false
-L2-MC-4,2,MC,4,multiple_choice,Encierra el nombre correcto del dibujo: mesa,2-MC-4-L2-MC-4.mp3,false
-L2-MC-5,2,MC,5,multiple_choice,Encierra el nombre correcto del dibujo: oso,2-MC-5-L2-MC-5.mp3,false
-L2-MC-6,2,MC,6,multiple_choice,Encierra el nombre correcto del dibujo: pato,2-MC-6-L2-MC-6.mp3,false
-L2-MC-7,2,MC,7,multiple_choice,Encierra el nombre correcto del dibujo: luna,2-MC-7-L2-MC-7.mp3,false
-L2-PA-1,2,PA,1,pair_antonyms,Une palabras que significan lo contrario.,2-PA-1-L2-PA-1.mp3,false
-L2-PA-2,2,PA,2,pair_antonyms,Recuerda: el opuesto crea equilibrio mágico.,2-PA-2-L2-PA-2.mp3,false
-L2-PS-1,2,PS,1,pair_synonyms,Busca parejas que compartan significado.,2-PS-1-L2-PS-1.mp3,false
-L2-PS-2,2,PS,2,pair_synonyms,Observa cómo cada palabra describe lo mismo.,2-PS-2-L2-PS-2.mp3,false
-L2-PS-3,2,PS,3,pair_synonyms,Une el número con su nombre escrito.,2-PS-3-L2-PS-3.mp3,false
 L2-PZ-1,2,PZ,1,PUZZLE_ORDER,Ordena las piezas para formar la palabra,2-PZ-1-L2-PZ-1.mp3,false
 L2-PZ-2,2,PZ,2,PUZZLE_ORDER,Ordena las piezas para formar la palabra,2-PZ-2-L2-PZ-2.mp3,false
 L2-UW-1,2,UW,1,UNSCRAMBLE_WORD,Comida caliente.,2-UW-1-L2-UW-1.mp3,false
 L2-UW-2,2,UW,2,UNSCRAMBLE_WORD,Un animal doméstico.,2-UW-2-L2-UW-2.mp3,false
-L3-AQ-1,3,AQ,1,audio_question,"En el bosque mágico, un animal cruza con cuidado el puente brillante.",3-AQ-1-L3-AQ-1.mp3,false
-L3-AQ-2,3,AQ,2,audio_question,El mono come un plátano durante la aventura.,3-AQ-2-L3-AQ-2.mp3,false
-L3-AQ-3,3,AQ,3,audio_question,"Después de la aventura, los amigos se divierten.",3-AQ-3-L3-AQ-3.mp3,false
+L3-AQ-VC-1,3,AUDIO_QUESTION,4,audio_question,El niño lee un libro.,3-AUDIO_QUESTION-4-L3-AQ-VC-1.mp3,false
+L3-AQ-VC-2,3,AUDIO_QUESTION,5,audio_question,La niña come una manzana.,3-AUDIO_QUESTION-5-L3-AQ-VC-2.mp3,false
+L3-AQ-VC-3,3,AUDIO_QUESTION,6,audio_question,El perro corre por el parque.,3-AUDIO_QUESTION-6-L3-AQ-VC-3.mp3,false
+L3-AQ-VC-4,3,AUDIO_QUESTION,7,audio_question,Mamá cocina sopa.,3-AUDIO_QUESTION-7-L3-AQ-VC-4.mp3,false
+L3-AQ-VC-5,3,AUDIO_QUESTION,8,audio_question,Leo mira la luna.,3-AUDIO_QUESTION-8-L3-AQ-VC-5.mp3,false
+L3-AQ-VC-6,3,AUDIO_QUESTION,9,audio_question,La rana salta en el lago.,3-AUDIO_QUESTION-9-L3-AQ-VC-6.mp3,false
+L3-AQ-VC-7,3,AUDIO_QUESTION,10,audio_question,El gato duerme en la cama.,3-AUDIO_QUESTION-10-L3-AQ-VC-7.mp3,false
+L3-AQ-VC-8,3,AUDIO_QUESTION,11,audio_question,La niña pinta una flor.,3-AUDIO_QUESTION-11-L3-AQ-VC-8.mp3,false
+L3-AQ-VC-9,3,AUDIO_QUESTION,12,audio_question,El abuelo lee el periódico.,3-AUDIO_QUESTION-12-L3-AQ-VC-9.mp3,false
+L3-AQ-VC-10,3,AUDIO_QUESTION,13,audio_question,El sol ilumina la casa.,3-AUDIO_QUESTION-13-L3-AQ-VC-10.mp3,false
+L3-AQ-VC-11,3,AUDIO_QUESTION,14,audio_question,La maestra escribe en la pizarra.,3-AUDIO_QUESTION-14-L3-AQ-VC-11.mp3,false
+L3-AQ-VC-12,3,AUDIO_QUESTION,15,audio_question,El bebé ríe con su pelota.,3-AUDIO_QUESTION-15-L3-AQ-VC-12.mp3,false
+L3-AQ-VC-13,3,AUDIO_QUESTION,16,audio_question,La familia camina por el bosque.,3-AUDIO_QUESTION-16-L3-AQ-VC-13.mp3,false
+L3-AQ-VC-14,3,AUDIO_QUESTION,17,audio_question,El pájaro canta en la rama.,3-AUDIO_QUESTION-17-L3-AQ-VC-14.mp3,false
+L3-AQ-VC-15,3,AUDIO_QUESTION,18,audio_question,La niña bebe agua fresca.,3-AUDIO_QUESTION-18-L3-AQ-VC-15.mp3,false
 L3-SO-1,3,SO,1,SYLLABLE_ORDER,Animal que salta.,3-SO-1-L3-SO-1.mp3,false
 L3-SO-2,3,SO,2,SYLLABLE_ORDER,Brilla en la noche.,3-SO-2-L3-SO-2.mp3,false
-L3-SS-1,3,SS,1,sentence_selection,Elige la frase que describe mejor lo que ves en tu mente.,3-SS-1-L3-SS-1.mp3,false
-L3-SS-3,3,SS,3,sentence_selection,¿Cuál frase cuenta una acción realista?,3-SS-3-L3-SS-3.mp3,false
-L4-AW-1,4,AW,1,audio_write,Escribe: luciérnaga,4-AW-1-L4-AW-1.mp3,false
-L4-RA-1,4,RA,1,READ_AND_ANSWER,El oso Simón vive en una cueva y come miel dulce.,4-RA-1-L4-RA-1.mp3,false
-L4-RA-2,4,RA,2,READ_AND_ANSWER,La vaca Lola camina al río para beber agua fresca.,4-RA-2-L4-RA-2.mp3,false
-L4-TW-1,4,TW,1,text_write,Escribe una frase que incluya la palabra 'magia'.,4-TW-1-L4-TW-1.mp3,false
-L4-TW-2,4,TW,2,text_write,Escribe el nombre de la figura o símbolo: 🔺,4-TW-2-L4-TW-2.mp3,false
-L4-TW-3,4,TW,3,text_write,Ordena las letras y escribe la palabra,4-TW-3-L4-TW-3.mp3,false
-L4-TW-4,4,TW,4,COMPLETE_WORD,Completa la palabra:,4-TW-4-L4-TW-4.mp3,false
-L4-TW-5,4,TW,5,COMPLETE_WORD,Completa la palabra:,4-TW-5-L4-TW-5.mp3,false
-L5-AG-1,5,AG,1,accent_game,Recuerda: melodía lleva tilde en la sílaba fuerte.,5-AG-1-L5-AG-1.mp3,false
-L5-AG-2,5,AG,2,accent_game,Imagina dónde suena más fuerte la palabra.,5-AG-2-L5-AG-2.mp3,false
-L5-FE-1,5,FE,1,final_exam,"¿Qué tiempo verbal usa la frase: ""Mañana cantaré con el coro""?",5-FE-1-L5-FE-1.mp3,false
-L5-FE-2,5,FE,2,final_exam,"Elige el signo que completa la frase: ""¿Vienes a la clase de magia""",5-FE-2-L5-FE-2.mp3,false
-L5-FE-3,5,FE,3,final_exam,¿Dónde colocarías la tilde en la palabra 'musica'?,5-FE-3-L5-FE-3.mp3,false
-L5-PG-1,5,PG,1,punctuation_game,¡Que sorpresa verte aquí!,5-PG-1-L5-PG-1.mp3,false
-L5-PG-2,5,PG,2,punctuation_game,¿Como te llamas?,5-PG-2-L5-PG-2.mp3,false
-L5-PG-3,5,PG,3,punctuation_game,Gracias por ayudarme,5-PG-3-L5-PG-3.mp3,false
+L5-AG-3,5,AG,3,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-3-L5-AG-3.mp3,false
+L5-AG-4,5,AG,4,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-4-L5-AG-4.mp3,false
+L5-AG-5,5,AG,5,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-5-L5-AG-5.mp3,false
+L5-AG-6,5,AG,6,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-6-L5-AG-6.mp3,false
+L5-AG-7,5,AG,7,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-7-L5-AG-7.mp3,false
+L5-AG-8,5,AG,8,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-8-L5-AG-8.mp3,false
+L5-AG-9,5,AG,9,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-9-L5-AG-9.mp3,false
+L5-AG-10,5,AG,10,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-10-L5-AG-10.mp3,false
+L5-AG-11,5,AG,11,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-11-L5-AG-11.mp3,false
+L5-AG-12,5,AG,12,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-12-L5-AG-12.mp3,false
+L5-AG-13,5,AG,13,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-13-L5-AG-13.mp3,false
+L5-AG-14,5,AG,14,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-14-L5-AG-14.mp3,false
+L5-AG-15,5,AG,15,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-15-L5-AG-15.mp3,false
+L5-AG-16,5,AG,16,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-16-L5-AG-16.mp3,false
+L5-AG-17,5,AG,17,accent_game,Toca la sílaba que suena más fuerte y luego clasifica la palabra.,5-AG-17-L5-AG-17.mp3,false
+L5-FE-TCOMP-1,5,FINAL_EXAM,4,final_exam,Completa: Yo ____ en la piscina.,5-FINAL_EXAM-4-L5-FE-TCOMP-1.mp3,false
+L5-FE-TCOMP-2,5,FINAL_EXAM,5,final_exam,Completa: Ayer ____ en el mar.,5-FINAL_EXAM-5-L5-FE-TCOMP-2.mp3,false
+L5-FE-TCOMP-3,5,FINAL_EXAM,6,final_exam,Completa: Mañana ____ en el río.,5-FINAL_EXAM-6-L5-FE-TCOMP-3.mp3,false
+L5-FE-TCOMP-4,5,FINAL_EXAM,7,final_exam,Completa: Yo ____ una manzana.,5-FINAL_EXAM-7-L5-FE-TCOMP-4.mp3,false
+L5-FE-TCOMP-5,5,FINAL_EXAM,8,final_exam,Completa: Ayer ____ sopa.,5-FINAL_EXAM-8-L5-FE-TCOMP-5.mp3,false
+L5-FE-TCOMP-6,5,FINAL_EXAM,9,final_exam,Completa: Después ____ con mi familia.,5-FINAL_EXAM-9-L5-FE-TCOMP-6.mp3,false
+L5-FE-TCOMP-7,5,FINAL_EXAM,10,final_exam,Completa: Hoy ____ en el patio.,5-FINAL_EXAM-10-L5-FE-TCOMP-7.mp3,false
+L5-FE-TCOMP-8,5,FINAL_EXAM,11,final_exam,Completa: Ayer ____ a las escondidas.,5-FINAL_EXAM-11-L5-FE-TCOMP-8.mp3,false
+L5-FE-TCOMP-9,5,FINAL_EXAM,12,final_exam,Completa: Mañana ____ con mis amigos.,5-FINAL_EXAM-12-L5-FE-TCOMP-9.mp3,false
+L5-FE-TCOMP-10,5,FINAL_EXAM,13,final_exam,Completa: Yo ____ temprano.,5-FINAL_EXAM-13-L5-FE-TCOMP-10.mp3,false
+L5-FE-TCOMP-11,5,FINAL_EXAM,14,final_exam,Completa: Anoche ____ muy bien.,5-FINAL_EXAM-14-L5-FE-TCOMP-11.mp3,false
+L5-FE-TCOMP-12,5,FINAL_EXAM,15,final_exam,Completa: Luego ____ una siesta.,5-FINAL_EXAM-15-L5-FE-TCOMP-12.mp3,false
+L5-FE-TCOMP-13,5,FINAL_EXAM,16,final_exam,Completa: Ahora ____ una carta.,5-FINAL_EXAM-16-L5-FE-TCOMP-13.mp3,false
+L5-FE-TCOMP-14,5,FINAL_EXAM,17,final_exam,Completa: Antes ____ mi nombre.,5-FINAL_EXAM-17-L5-FE-TCOMP-14.mp3,false
+L5-FE-TCOMP-15,5,FINAL_EXAM,18,final_exam,Completa: Pronto ____ un cuento.,5-FINAL_EXAM-18-L5-FE-TCOMP-15.mp3,false
+L5-PG-4,5,PG,4,punctuation_game,¿Cómo te llamas __,5-PG-4-L5-PG-4.mp3,false
+L5-PG-5,5,PG,5,punctuation_game,¡Qué alegría verte __,5-PG-5-L5-PG-5.mp3,false
+L5-PG-6,5,PG,6,punctuation_game,Hoy estudiamos __,5-PG-6-L5-PG-6.mp3,false
+L5-PG-7,5,PG,7,punctuation_game,Traje lápiz __ cuaderno y regla.,5-PG-7-L5-PG-7.mp3,false
+L5-PG-8,5,PG,8,punctuation_game,¿Dónde está Leo __,5-PG-8-L5-PG-8.mp3,false
+L5-PG-9,5,PG,9,punctuation_game,"¡Bravo, lo lograste __",5-PG-9-L5-PG-9.mp3,false
+L5-PG-10,5,PG,10,punctuation_game,Me gusta leer __,5-PG-10-L5-PG-10.mp3,false
+L5-PG-11,5,PG,11,punctuation_game,Compré pan __ leche y fruta.,5-PG-11-L5-PG-11.mp3,false
+L5-PG-12,5,PG,12,punctuation_game,¿Quieres jugar conmigo __,5-PG-12-L5-PG-12.mp3,false
+L5-PG-13,5,PG,13,punctuation_game,¡Qué sorpresa __,5-PG-13-L5-PG-13.mp3,false
+L5-PG-14,5,PG,14,punctuation_game,El sol brilla __,5-PG-14-L5-PG-14.mp3,false
+L5-PG-15,5,PG,15,punctuation_game,Tengo goma __ lápiz y regla.,5-PG-15-L5-PG-15.mp3,false
+L5-PG-16,5,PG,16,punctuation_game,¿Cuándo vienes __,5-PG-16-L5-PG-16.mp3,false
+L5-PG-17,5,PG,17,punctuation_game,¡Cuidado __,5-PG-17-L5-PG-17.mp3,false
+L5-PG-18,5,PG,18,punctuation_game,La luna sale de noche __,5-PG-18-L5-PG-18.mp3,false
 L5-SP-1,5,SP,1,singular_plural,Observa cómo cambian las terminaciones al plural.,5-SP-1-L5-SP-1.mp3,false
-L5-TC-1,5,TC,1,tense_classify,Ayer dibujé una estrella brillante.,5-TC-1-L5-TC-1.mp3,false
-L5-TC-2,5,TC,2,tense_classify,Hoy comparto mi cuaderno mágico.,5-TC-2-L5-TC-2.mp3,false
-L5-TC-3,5,TC,3,tense_classify,Mañana estudiaré los hechizos nuevos.,5-TC-3-L5-TC-3.mp3,false
+L5-TC-4,5,TC,4,tense_classify,Ayer caminé hasta la biblioteca.,5-TC-4-L5-TC-4.mp3,false
+L5-TC-5,5,TC,5,tense_classify,Hoy estudio con Leo.,5-TC-5-L5-TC-5.mp3,false
+L5-TC-6,5,TC,6,tense_classify,Mañana visitaré el museo.,5-TC-6-L5-TC-6.mp3,false
+L5-TC-7,5,TC,7,tense_classify,Anoche escuché una canción suave.,5-TC-7-L5-TC-7.mp3,false
+L5-TC-8,5,TC,8,tense_classify,Ahora escribo una frase corta.,5-TC-8-L5-TC-8.mp3,false
+L5-TC-9,5,TC,9,tense_classify,Después dormiré temprano.,5-TC-9-L5-TC-9.mp3,false
+L5-TC-10,5,TC,10,tense_classify,El lunes pasado jugué en el parque.,5-TC-10-L5-TC-10.mp3,false
+L5-TC-11,5,TC,11,tense_classify,Leo come una manzana.,5-TC-11-L5-TC-11.mp3,false
+L5-TC-12,5,TC,12,tense_classify,Pronto cocinaré sopa con mamá.,5-TC-12-L5-TC-12.mp3,false
+L5-TC-13,5,TC,13,tense_classify,Antes hablé con mi abuela.,5-TC-13-L5-TC-13.mp3,false
+L5-TC-14,5,TC,14,tense_classify,Vivo cerca de la escuela.,5-TC-14-L5-TC-14.mp3,false
+L5-TC-15,5,TC,15,tense_classify,El sábado buscaré mi cuaderno.,5-TC-15-L5-TC-15.mp3,false
+L5-TC-16,5,TC,16,tense_classify,Canté en la fiesta.,5-TC-16-L5-TC-16.mp3,false
+L5-TC-17,5,TC,17,tense_classify,Juego con mis letras.,5-TC-17-L5-TC-17.mp3,false
+L5-TC-18,5,TC,18,tense_classify,Iré al río mañana.,5-TC-18-L5-TC-18.mp3,false

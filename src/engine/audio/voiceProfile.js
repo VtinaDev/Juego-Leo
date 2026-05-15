@@ -1,8 +1,10 @@
+import { AUDIO_EXPERIENCE } from './audioExperience.js'
+
 export const VOICE_PRESET = {
-  lang: 'es-ES',
+  lang: AUDIO_EXPERIENCE.voice.lang,
   // Perfil de lectura asistida para dislexia/TDAH: claro, estable y pausado.
-  rate: 0.74,
-  pitch: 1.0
+  rate: AUDIO_EXPERIENCE.voice.rate,
+  pitch: AUDIO_EXPERIENCE.voice.pitch
 }
 
 // Devuelve una voz preferida y consistente para español infantil/alegre

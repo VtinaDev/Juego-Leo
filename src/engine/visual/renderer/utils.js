@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { playVoice, stopVoice } from '../../audio/audioManager'
+import { AUDIO_COPY } from '../../audio/audioExperience.js'
 
 export function prepareStage(app) {
   if (!app?.stage) return
@@ -67,7 +68,7 @@ export function createAudioControl({
   onPlayAudio,
   label = '🔊 Escuchar',
   disabledLabel = '🔈 Escuchar',
-  fallbackText = 'Sin audio disponible, lee la frase tú mismo 🪄',
+  fallbackText = AUDIO_COPY.noAudio,
   x = 40,
   y = 60,
   width = 240,

@@ -2,6 +2,7 @@ import { ref, computed, watch, unref, isRef } from 'vue'
 import { getLevelDefinition } from './utils/validateTemplates.js'
 import { useAudio } from '../audio/useAudio'
 import { SoundService } from '../audio/SoundService'
+import { AUDIO_COPY, resolveCalmRetryMessage } from '../audio/audioExperience.js'
 import { useCelebration } from '../visual/hooks/useCelebration'
 import { useFeedback } from '../visual/hooks/useFeedback'
 import { useReinforcementVoice } from '../visual/hooks/useReinforcementVoice'
@@ -151,6 +152,59 @@ function formatSubtypeLabel(subtype) {
     .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
+function resolveLearningPhase(orderIndex) {
+  const phaseIndex = Math.min(Math.max(Number(orderIndex) || 1, 1), 5)
+  const phases = {
+    1: {
+      key: 'mini_learning',
+      label: 'Aprende',
+      prompt: 'Mira y escucha la idea principal antes de elegir.'
+    },
+    2: {
+      key: 'guided_example',
+      label: 'Ejemplo',
+      prompt: 'Fíjate en el ejemplo y busca una opción parecida.'
+    },
+    3: {
+      key: 'supported_practice',
+      label: 'Practica con ayuda',
+      prompt: 'Usa la pista, la imagen o las piezas para responder.'
+    },
+    4: {
+      key: 'independent_practice',
+      label: 'Practica',
+      prompt: 'Responde con calma, paso a paso.'
+    },
+    5: {
+      key: 'variation_repetition',
+      label: 'Repite',
+      prompt: 'Ahora repite la habilidad con una pequeña variación.'
+    }
+  }
+  return phases[phaseIndex]
+}
+
+function resolveSupportModes(exercise) {
+  const modes = []
+  if (exercise?.image || exercise?.emoji || exercise?.background) modes.push('visual')
+  if (exercise?.audio || exercise?.fallbackText || exercise?.narrationText) modes.push('auditivo')
+  if (
+    Array.isArray(exercise?.options) ||
+    Array.isArray(exercise?.words) ||
+    Array.isArray(exercise?.letters) ||
+    Array.isArray(exercise?.syllables) ||
+    Array.isArray(exercise?.segments) ||
+    Array.isArray(exercise?.pieces) ||
+    Array.isArray(exercise?.pairs)
+  ) {
+    modes.push('manipulativo')
+  }
+  if (exercise?.prompt || exercise?.question || exercise?.instruction || exercise?.text || exercise?.sentence) {
+    modes.push('textual')
+  }
+  return modes
+}
+
 function resolveStageFromTemplates(level, stage) {
   const levelConfig = getLevelDefinition(String(level))
   if (!levelConfig) {
@@ -179,6 +233,8 @@ function resolveStageFromTemplates(level, stage) {
     exercise.orderIndex = idx + 1
     exercise.levelMeta = levelMeta
     exercise.stageMeta = stageMeta
+    exercise.learningPhase = exercise.learningPhase ?? resolveLearningPhase(idx + 1)
+    exercise.supportModes = exercise.supportModes ?? resolveSupportModes(exercise)
   })
 
   const stageTitle = stageMeta.title ?? `${levelMeta.levelName ?? 'Etapa'} · ${formatSubtypeLabel(subtypeKey)}`
@@ -234,6 +290,10 @@ export function useExerciseEngine(options = {}) {
   const exerciseResults = ref([])
   const index = ref(0)
   const lastResult = ref(null)
+  const progressiveFeedback = ref({
+    level: 0,
+    message: ''
+  })
   const stageSummary = ref(null)
   const stageContext = ref({
     levelMeta: null,
@@ -271,11 +331,14 @@ export function useExerciseEngine(options = {}) {
     exerciseResults.value = Array.from({ length: exerciseCount }, () => ({
       status: 'pending',
       attempts: 0,
+      helpLevel: 0,
+      feedbackMessage: '',
       updatedAt: null
     }))
     index.value = 0
     stageSummary.value = null
     lastResult.value = null
+    progressiveFeedback.value = { level: 0, message: '' }
     canAdvance.value = false
   }
 
@@ -343,7 +406,7 @@ export function useExerciseEngine(options = {}) {
   }
 
   function triggerFeedback(meta = {}) {
-    const message = meta.message ?? 'Casi, mira otra vez'
+    const message = meta.message ?? AUDIO_COPY.retryFirst
     showFeedback({
       app: meta.app ?? null,
       target: meta.focusTarget ?? meta.target ?? null,
@@ -351,28 +414,33 @@ export function useExerciseEngine(options = {}) {
     })
   }
 
-function applyStatus(entry, meta = {}) {
-  if (!entry || entry.status === 'pending') {
-    canAdvance.value = false
-    lastResult.value = null
-    return
-  }
-
-  lastResult.value = entry.status
-
-  const isCleared = entry.status === 'ok' || entry.status === 'skipped'
-  canAdvance.value = isCleared
-
-  if (entry.status === 'ok') {
-    if (meta.triggerCelebration) {
-      triggerCelebration(meta)
+  function applyStatus(entry, meta = {}) {
+    if (!entry || entry.status === 'pending') {
+      canAdvance.value = false
+      lastResult.value = null
+      return
     }
+
+    lastResult.value = entry.status
+
+    const isCleared = entry.status === 'ok' || entry.status === 'skipped'
+    canAdvance.value = isCleared
+
+    if (entry.status === 'ok') {
+      progressiveFeedback.value = { level: 0, message: '' }
+      if (meta.triggerCelebration) {
+        triggerCelebration(meta)
+      }
       if (meta.playPositive !== false) {
         playPositive()
       }
     } else if (entry.status === 'fail' && meta.showFeedback !== false) {
-      triggerFeedback(meta)
-      if (meta.playEncouragement !== false) {
+      progressiveFeedback.value = {
+        level: entry.helpLevel ?? meta.helpLevel ?? 1,
+        message: entry.feedbackMessage || meta.message || AUDIO_COPY.retryFirst
+      }
+      triggerFeedback({ ...meta, message: progressiveFeedback.value.message })
+      if (meta.playEncouragement === true) {
         playEncouragement()
       }
     }
@@ -388,6 +456,8 @@ function applyStatus(entry, meta = {}) {
     }
 
     entry.status = status
+    entry.helpLevel = status === 'fail' ? meta.helpLevel ?? entry.helpLevel ?? 0 : 0
+    entry.feedbackMessage = status === 'fail' ? meta.feedbackMessage ?? entry.feedbackMessage ?? '' : ''
     entry.updatedAt = new Date().toISOString()
     applyStatus(entry, meta)
 
@@ -442,32 +512,24 @@ function applyStatus(entry, meta = {}) {
       }
     } else {
       const attempts = exerciseResults.value[index.value]?.attempts ?? 0
-      let message = meta.message ?? 'Casi, mira otra vez'
-      if (attempts >= 2) {
-        message = exercise.hint || 'Observa con calma, se revelará una pista.'
+      const nextAttempt = attempts + 1
+      const helpLevel = Math.min(nextAttempt, 3)
+      const message = resolveCalmRetryMessage(exercise, nextAttempt)
+      progressiveFeedback.value = {
+        level: helpLevel,
+        message
       }
+
       recordResult('fail', {
         ...meta,
         incrementAttempt: true,
         triggerCelebration: false,
         showFeedback: true,
+        playEncouragement: nextAttempt > 1,
+        helpLevel,
+        feedbackMessage: message,
         message
       })
-
-      // Pista progresiva: autocompletar primer paso si falló 3 veces
-      if (attempts >= 2 && exercise.allowRetry !== false) {
-        const payload = {}
-        if (exercise.type === 'UNSCRAMBLE_WORD' && Array.isArray(exercise.letters)) {
-          payload.suggestion = exercise.solution?.[0] ?? exercise.letters[0]
-        } else if (exercise.type === 'COMPLETE_WORD' && exercise.solution) {
-          payload.suggestion = exercise.solution.slice(0, 1)
-        } else if (exercise.type === 'SYLLABLE_ORDER' && Array.isArray(exercise.correctOrder)) {
-          payload.suggestion = exercise.correctOrder[0]
-        }
-        if (payload.suggestion) {
-          triggerFeedback({ ...meta, message: `Pista: empieza con "${payload.suggestion}"` })
-        }
-      }
     }
 
     return ok
@@ -490,6 +552,9 @@ function applyStatus(entry, meta = {}) {
     entry.status = 'pending'
     entry.updatedAt = null
     entry.attempts = 0
+    entry.helpLevel = 0
+    entry.feedbackMessage = ''
+    progressiveFeedback.value = { level: 0, message: '' }
     applyStatus(entry)
   }
 
@@ -498,6 +563,7 @@ function applyStatus(entry, meta = {}) {
     cancelPendingAutoAdvance()
     stopAllMedia()
     index.value = idx
+    progressiveFeedback.value = { level: 0, message: '' }
     const entry = exerciseResults.value[index.value]
     applyStatus(entry)
   }
@@ -569,6 +635,7 @@ function applyStatus(entry, meta = {}) {
         index: idx + 1,
         status: result?.status ?? 'pending',
         attempts: result?.attempts ?? 0,
+        helpLevel: result?.helpLevel ?? 0,
         updatedAt: result?.updatedAt ?? null
       }))
     }
@@ -629,6 +696,7 @@ function applyStatus(entry, meta = {}) {
     current,
     currentStatus,
     currentResult,
+    progressiveFeedback,
     currentImage,
     currentAudio,
     canNext: computed(() => canAdvance.value && current.value !== null),

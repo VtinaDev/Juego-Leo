@@ -1,17 +1,18 @@
 import { Howl } from 'howler'
+import { resolveSfxGain } from './audioExperience.js'
 
 const SOUND_DEFS = {
   correct: {
     src: ['/audio/sfx/correct.wav'],
-    volume: 0.7
+    volume: 0.55
   },
   error: {
     src: ['/audio/sfx/wrong.wav'],
-    volume: 0.18
+    volume: 0.14
   },
   celebration: {
     src: ['/audio/sfx/confetti.wav'],
-    volume: 0.7
+    volume: 0.52
   }
 }
 
@@ -55,6 +56,8 @@ export const SoundService = {
       if (!howl) return null
       if (typeof volume === 'number') {
         howl.volume(volume)
+      } else {
+        howl.volume((SOUND_DEFS[name]?.volume ?? 0.45) * resolveSfxGain(name))
       }
       if (typeof rate === 'number') {
         howl.rate(rate)

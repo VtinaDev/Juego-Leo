@@ -1,7 +1,6 @@
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { gsap } from 'gsap'
-import { SoundService } from '../../audio/SoundService'
-
+import { AUDIO_COPY, AUDIO_EXPERIENCE } from '../../audio/audioExperience.js'
 const FEEDBACK_COOLDOWN = 600
 
 export function useFeedback() {
@@ -12,35 +11,34 @@ export function useFeedback() {
       Haptics.impact({ style: ImpactStyle.Light })
     } catch {
       if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-        navigator.vibrate(80)
+        navigator.vibrate(AUDIO_EXPERIENCE.haptics.retryMs)
       }
     }
   }
 
-  function showFeedback({ app, message = 'Casi, mira otra vez', target = null } = {}) {
+  function showFeedback({ app, message = AUDIO_COPY.retryFirst, target = null } = {}) {
     const now = Date.now()
     if (now - lastFeedback < FEEDBACK_COOLDOWN) return
     lastFeedback = now
 
-    SoundService.play('error')
     playHaptics()
 
     if (target) {
       if (typeof Element !== 'undefined' && target instanceof Element) {
         gsap.to(target, {
-          x: '+=6',
-          duration: 0.05,
-          repeat: 3,
+          y: '+=3',
+          duration: 0.12,
+          repeat: 1,
           yoyo: true,
-          ease: 'power1.inOut'
+          ease: 'sine.inOut'
         })
       } else {
         gsap.to(target, {
-          x: (target.x ?? 0) + 6,
-          duration: 0.05,
-          repeat: 3,
+          y: (target.y ?? 0) + 3,
+          duration: 0.12,
+          repeat: 1,
           yoyo: true,
-          ease: 'power1.inOut'
+          ease: 'sine.inOut'
         })
       }
     }

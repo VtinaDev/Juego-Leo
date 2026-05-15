@@ -7,6 +7,7 @@ import {
   VOICE_CUE_FALLBACKS
 } from './sounds'
 import { VOICE_PRESET, pickPreferredVoice } from './voiceProfile'
+import { AUDIO_EXPERIENCE, resolveSfxGain } from './audioExperience.js'
 
 let settings = { ...DEFAULT_AUDIO_SETTINGS }
 let unlocked = false
@@ -17,7 +18,7 @@ const sfxLastPlayed = new Map()
 let audioCtx = null
 let cachedVoiceName = null
 const SAFE_SFX_GAIN = 0.75
-const SFX_THROTTLE_MS = 140
+const SFX_THROTTLE_MS = AUDIO_EXPERIENCE.sfx.throttleMs
 let activeVoiceAudio = null
 let pendingMusicStart = null
 let pendingVoiceStart = null
@@ -225,7 +226,7 @@ function beepFallback(kind = 'click') {
   osc.frequency.value = freq
   const now = ctx.currentTime
   const duration = kind === 'wrong' ? 0.22 : 0.12
-  const startGain = Math.min(0.18, settings.sfxVolume * 0.2)
+  const startGain = Math.min(0.16, settings.sfxVolume * resolveSfxGain(kind))
   gain.gain.setValueAtTime(startGain, now)
   gain.gain.exponentialRampToValueAtTime(0.001, now + duration)
   osc.connect(gain).connect(ctx.destination)
@@ -247,7 +248,7 @@ export function playSfx(name = 'click') {
   sfxLastPlayed.set(name, now)
   const cached = sfxCache.get(name) || new Audio(src)
   cached.currentTime = 0
-  cached.volume = Math.min(settings.sfxVolume * SAFE_SFX_GAIN, 0.85)
+  cached.volume = Math.min(settings.sfxVolume * SAFE_SFX_GAIN * resolveSfxGain(name), 0.82)
   cached.play().then(() => {
     sfxCache.set(name, cached)
   }).catch(() => {
@@ -426,8 +427,10 @@ export function playVoice(textOrSrc = '', options = {}) {
     audio.preload = 'auto'
     if (Number.isFinite(options.playbackRate) && options.playbackRate > 0) {
       audio.playbackRate = options.playbackRate
+    } else {
+      audio.playbackRate = AUDIO_EXPERIENCE.voice.playbackRate
     }
-    audio.volume = settings.voiceVolume
+    audio.volume = Math.min(options.volume ?? settings.voiceVolume, 1)
     activeVoiceAudio = audio
     audio.onended = () => {
       if (activeVoiceAudio === audio) activeVoiceAudio = null
@@ -469,7 +472,7 @@ export function playVoice(textOrSrc = '', options = {}) {
   // Voz infantil alegre: clara, animada pero sin acelerar en exceso
   utterance.rate = options.rate ?? VOICE_PRESET.rate
   utterance.pitch = options.pitch ?? VOICE_PRESET.pitch
-  utterance.volume = settings.voiceVolume
+  utterance.volume = Math.min(options.volume ?? settings.voiceVolume, 1)
 
   const voices = synth.getVoices()
   const { voice, name } = pickPreferredVoice(voices, lang, cachedVoiceName)

@@ -6,6 +6,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { AUDIO_COPY } from '../../engine/audio/audioExperience.js'
 
 const props = defineProps({
   status: {
@@ -14,11 +15,11 @@ const props = defineProps({
   },
   successText: {
     type: String,
-    default: '¡Muy bien!'
+    default: AUDIO_COPY.success
   },
   errorText: {
     type: String,
-    default: 'Inténtalo otra vez con calma.'
+    default: AUDIO_COPY.retryFirst
   }
 })
 
@@ -55,8 +56,8 @@ const feedbackClass = computed(() => {
 }
 
 .exercise-feedback--error {
-  background: #fee2e2;
-  color: #991b1b;
-  border-color: #fca5a5;
+  background: #fff8db;
+  color: #475569;
+  border-color: #f8d36d;
 }
 </style>
