@@ -60,9 +60,13 @@ export const useAuthStore = defineStore('auth', {
 
       this.loading = true
       try {
+        const emailRedirectTo = `${window.location.origin}/profile`
         const { data, error } = await supabase.auth.signUp({
           email: normalizedEmail,
-          password
+          password,
+          options: {
+            emailRedirectTo
+          }
         })
         if (error) throw error
         this.setSession(data.session)
@@ -145,10 +149,42 @@ export const useAuthStore = defineStore('auth', {
       return true
     },
 
+    async resendConfirmation(email) {
+      this.error = ''
+      const normalizedEmail = normalizeEmail(email)
+      if (!isValidEmail(normalizedEmail)) {
+        this.error = 'Ingresa un email válido'
+        return false
+      }
+      if (!hasSupabaseConfig) {
+        this.error = getSupabaseConfigError()
+        return false
+      }
+
+      this.loading = true
+      try {
+        const emailRedirectTo = `${window.location.origin}/profile`
+        const { error } = await supabase.auth.resend({
+          type: 'signup',
+          email: normalizedEmail,
+          options: {
+            emailRedirectTo
+          }
+        })
+        if (error) throw error
+        return true
+      } catch (error) {
+        this.error = getAuthMessage(error)
+        return false
+      } finally {
+        this.loading = false
+      }
+    },
+
     async resetPassword(newPassword) {
       this.error = ''
-      if (!newPassword || newPassword.length < 6) {
-        this.error = 'La nueva contraseña debe tener al menos 6 caracteres'
+      if (!newPassword || newPassword.length < 8) {
+        this.error = 'La nueva contraseña debe tener al menos 8 caracteres'
         return false
       }
       if (!hasSupabaseConfig) {
@@ -164,6 +200,27 @@ export const useAuthStore = defineStore('auth', {
       if (data.user) this.user = data.user
       this.recoveryMode = false
       return true
+    },
+
+    async exchangeRecoveryCode(code) {
+      this.error = ''
+      if (!code || !hasSupabaseConfig) return false
+
+      this.loading = true
+      try {
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+        if (error) throw error
+        this.setSession(data.session)
+        this.recoveryMode = true
+        return true
+      } catch (error) {
+        this.clearSession()
+        this.error = getAuthMessage(error)
+        return false
+      } finally {
+        this.loading = false
+        this.initialized = true
+      }
     },
 
     listenToAuthChanges() {
@@ -203,7 +260,7 @@ function normalizeEmail(email) {
 
 function validateCredentials(email, password) {
   if (!isValidEmail(email)) return 'Ingresa un email válido'
-  if (!password || password.length < 6) return 'La contraseña debe tener al menos 6 caracteres'
+  if (!password || password.length < 8) return 'La contraseña debe tener al menos 8 caracteres'
   return ''
 }
 
@@ -216,9 +273,10 @@ function getAuthMessage(error) {
   if (/invalid login credentials/i.test(message)) return 'Email o contraseña incorrectos'
   if (/email not confirmed/i.test(message)) return 'Confirma tu email antes de iniciar sesión'
   if (/user already registered|already registered/i.test(message)) return 'Ya existe una cuenta con ese email'
-  if (/password/i.test(message) && /weak|short|length/i.test(message)) {
-    return 'La contraseña debe tener al menos 6 caracteres'
+  if (/weak password|password.*weak|password.*should|password.*must|short|length/i.test(message)) {
+    return 'Usa una contraseña de al menos 8 caracteres, con letras y números.'
   }
+  if (/invalid.*token|expired|otp/i.test(message)) return 'El enlace ya venció o no es válido. Solicita uno nuevo.'
   return message || 'No se pudo completar la operación'
 }
 

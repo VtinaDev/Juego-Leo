@@ -17,9 +17,11 @@
       :status="authStatus"
       :error="authError"
       :login-required-notice="loginRequiredNotice"
+      :show-resend-confirmation="canResendConfirmation"
       @login="handleLogin"
       @register="handleRegister"
       @reset-password="handlePasswordReset"
+      @resend-confirmation="handleResendConfirmation"
     />
 
     <template v-else>
@@ -42,7 +44,7 @@
               type="password"
               autocomplete="new-password"
               class="form-input"
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 8 caracteres"
             />
           </label>
           <label>
@@ -160,7 +162,7 @@ game.load()
 
 const profile = useProfileStore()
 const auth = useAuthStore()
-auth.load()
+const authLoadPromise = auth.load()
 
 const child = reactive({
   name: '',
@@ -201,6 +203,9 @@ const learningNeedLabels = {
 
 const isLoggedIn = computed(() => auth.isAuthenticated)
 const showPasswordResetPanel = computed(() => isLoggedIn.value && (auth.recoveryMode || hasPasswordRecoveryMarker()))
+const canResendConfirmation = computed(() => {
+  return !isLoggedIn.value && authStatus.value.includes('Revisa tu correo')
+})
 const timeline = computed(() => game.levelTimeline)
 const hasProgress = computed(() => Number(game.points || 0) > 0 || Number(game.stars || 0) > 0)
 const currentLevel = computed(() => timeline.value.find((item) => item.progress.percent < 1) || timeline.value[0])
@@ -367,7 +372,11 @@ watch(
 )
 
 onMounted(async () => {
-  if (hasPasswordRecoveryMarker()) auth.recoveryMode = true
+  if (!auth.initialized) await authLoadPromise
+  if (hasPasswordRecoveryMarker()) {
+    auth.recoveryMode = true
+    await completePasswordRecoveryFromRoute()
+  }
   if (!child.name) child.name = profile.childName || game.child?.name || ''
   if (!child.birthdate) child.birthdate = profile.childBirthdate || game.child?.birthdate || ''
   if (!child.learningNeeds.length) child.learningNeeds = [...(profile.childLearningNeeds || [])]
@@ -385,7 +394,7 @@ watch(isLoggedIn, async (loggedIn) => {
 })
 
 async function hydrateAuthenticatedProfile() {
-  if (!auth.initialized) await auth.load()
+  if (!auth.initialized) await authLoadPromise
   if (!auth.isAuthenticated) return
   await profile.loadProfile()
   await game.loadProgressFromSupabase()
@@ -501,12 +510,22 @@ async function handlePasswordReset() {
   authStatus.value = 'Ya se ha enviado a tu correo el link para restablecer la contraseña nueva.'
 }
 
+async function handleResendConfirmation() {
+  authError.value = ''
+  const ok = await auth.resendConfirmation(authForm.email)
+  if (!ok) {
+    authError.value = auth.error || 'No se pudo reenviar el correo de confirmación.'
+    return
+  }
+  authStatus.value = 'Correo de confirmación reenviado. Revisa tu bandeja de entrada y spam.'
+}
+
 async function handleResetPassword() {
   passwordResetStatus.value = ''
   passwordResetError.value = ''
   const nextPassword = newPassword.value.trim()
-  if (nextPassword.length < 6) {
-    passwordResetError.value = 'La nueva contraseña debe tener al menos 6 caracteres.'
+  if (nextPassword.length < 8) {
+    passwordResetError.value = 'La nueva contraseña debe tener al menos 8 caracteres.'
     return
   }
   if (nextPassword !== confirmPassword.value.trim()) {
@@ -525,6 +544,20 @@ async function handleResetPassword() {
   passwordResetStatus.value = 'Contraseña actualizada. Ya puedes seguir usando tu cuenta.'
   successMessage.value = passwordResetStatus.value
   await router.replace({ name: 'Profile' }).catch(() => {})
+}
+
+async function completePasswordRecoveryFromRoute() {
+  const code = getRecoveryCode()
+  if (!code || auth.isAuthenticated) return
+
+  const ok = await auth.exchangeRecoveryCode(code)
+  if (!ok) {
+    passwordResetError.value = auth.error || 'El enlace de recuperación no es válido. Solicita uno nuevo.'
+    authError.value = passwordResetError.value
+    return
+  }
+
+  await router.replace({ name: 'Profile', query: { reset: '1' } }).catch(() => {})
 }
 
 async function cancelPasswordReset() {
@@ -697,7 +730,20 @@ function clearPendingOnboardingProfile() {
 
 function hasPasswordRecoveryMarker() {
   const hash = String(route.hash || '')
-  return route.query.reset === '1' || route.query.type === 'recovery' || hash.includes('type=recovery')
+  return Boolean(
+    route.query.reset === '1' ||
+    route.query.type === 'recovery' ||
+    route.query.code ||
+    hash.includes('type=recovery') ||
+    hash.includes('access_token=')
+  )
+}
+
+function getRecoveryCode() {
+  if (typeof route.query.code === 'string') return route.query.code
+  const hash = String(route.hash || '').replace(/^#/, '')
+  const params = new URLSearchParams(hash)
+  return params.get('code') || ''
 }
 </script>
 
