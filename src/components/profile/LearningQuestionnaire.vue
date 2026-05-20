@@ -224,6 +224,21 @@
             <span class="choice-button__label">{{ option.label }}</span>
           </button>
         </div>
+        <button
+          type="button"
+          class="accessibility-toggle"
+          :class="{ 'is-selected': safeLearningProfile.resaltadoPorPalabra }"
+          :aria-pressed="safeLearningProfile.resaltadoPorPalabra"
+          @click="toggleWordHighlight"
+        >
+          <span class="choice-button__mark" aria-hidden="true">
+            {{ safeLearningProfile.resaltadoPorPalabra ? '✓' : '' }}
+          </span>
+          <span>
+            <strong>Activar lectura guiada palabra por palabra</strong>
+            <small>Útil para dislexia. Si causa sobrecarga visual, puede quedarse apagado.</small>
+          </span>
+        </button>
       </div>
     </div>
 
@@ -269,7 +284,8 @@ const emit = defineEmits([
   'update:childBirthdate',
   'update:selectedLearningNeeds',
   'update:otherLearningNeed',
-  'update:learningProfile'
+  'update:learningProfile',
+  'complete'
 ])
 
 const allSteps = [
@@ -317,7 +333,12 @@ function previousStep() {
 }
 
 function nextStep() {
-  stepIndex.value = isLastStep.value ? 0 : stepIndex.value + 1
+  if (isLastStep.value) {
+    emit('complete')
+    stepIndex.value = 0
+    return
+  }
+  stepIndex.value += 1
 }
 
 function isSelected(selected, value) {
@@ -370,7 +391,23 @@ function toggleProfileArray(field, value) {
 
   emit('update:learningProfile', {
     ...safeLearningProfile.value,
-    [field]: [...selected]
+    [field]: [...selected],
+    ...(field === 'supportPreferences' && value === 'word_by_word_highlight'
+      ? { resaltadoPorPalabra: checked }
+      : {})
+  })
+}
+
+function toggleWordHighlight() {
+  const enabled = !safeLearningProfile.value.resaltadoPorPalabra
+  const selected = new Set(safeLearningProfile.value.supportPreferences || [])
+  if (enabled) selected.add('word_by_word_highlight')
+  else selected.delete('word_by_word_highlight')
+
+  emit('update:learningProfile', {
+    ...safeLearningProfile.value,
+    supportPreferences: [...selected],
+    resaltadoPorPalabra: enabled
   })
 }
 </script>
@@ -582,6 +619,36 @@ label {
 
 .survey-button--ghost {
   background: linear-gradient(145deg, #ffffff, #f8f7e8);
+}
+
+.accessibility-toggle {
+  width: 100%;
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border: 2px solid rgba(14, 165, 233, 0.22);
+  border-radius: 18px;
+  background: #f8fdff;
+  color: #0f172a;
+  text-align: left;
+  font-weight: 800;
+  box-shadow: 0 10px 18px rgba(14, 165, 233, 0.1);
+}
+
+.accessibility-toggle small {
+  display: block;
+  margin-top: 0.2rem;
+  color: #475569;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.accessibility-toggle.is-selected {
+  border-color: #38bdf8;
+  background: #e0f2fe;
 }
 
 .survey-button:disabled {

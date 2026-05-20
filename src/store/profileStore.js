@@ -54,7 +54,7 @@ export const useProfileStore = defineStore('profile', {
 
         return true
       } catch (error) {
-        this.error = error?.message || 'No se pudo cargar el perfil'
+        this.error = formatProfileSchemaError(error, 'cargar')
         return false
       } finally {
         this.loading = false
@@ -134,7 +134,7 @@ export const useProfileStore = defineStore('profile', {
 
         return true
       } catch (error) {
-        this.error = error?.message || 'No se pudo guardar el perfil'
+        this.error = formatProfileSchemaError(error, 'guardar')
         return false
       } finally {
         this.loading = false
@@ -159,6 +159,24 @@ function normalizeLearningNeeds(value) {
   const selected = [...new Set(value.filter(Boolean).map(String))]
   if (selected.includes('none_identified')) return ['none_identified']
   return selected
+}
+
+function formatProfileSchemaError(error, action = 'guardar') {
+  const message = error?.message || ''
+  const details = error?.details || ''
+  const hint = error?.hint || ''
+  const combined = `${message} ${details} ${hint}`.toLowerCase()
+
+  if (
+    combined.includes('learning_needs') ||
+    combined.includes('other_learning_need') ||
+    combined.includes('learning_profile') ||
+    combined.includes('schema cache')
+  ) {
+    return `No se pudo ${action} el perfil porque faltan columnas en Supabase. Ejecuta el SQL de actualización de la tabla children y recarga el schema cache.`
+  }
+
+  return message || `No se pudo ${action} el perfil`
 }
 
 export default useProfileStore

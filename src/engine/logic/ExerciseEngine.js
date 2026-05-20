@@ -3,6 +3,7 @@ import { getLevelDefinition } from './utils/validateTemplates.js'
 import { useAudio } from '../audio/useAudio'
 import { SoundService } from '../audio/SoundService'
 import { AUDIO_COPY, resolveCalmRetryMessage } from '../audio/audioExperience.js'
+import { resolveExerciseAudioRoute } from '../audio/exerciseVoiceRoutes.js'
 import { useCelebration } from '../visual/hooks/useCelebration'
 import { useFeedback } from '../visual/hooks/useFeedback'
 import { useReinforcementVoice } from '../visual/hooks/useReinforcementVoice'
@@ -310,7 +311,7 @@ export function useExerciseEngine(options = {}) {
   const currentResult = computed(() => exerciseResults.value[index.value] ?? null)
   const currentStatus = computed(() => currentResult.value?.status ?? 'pending')
   const currentImage = computed(() => current.value?.image ?? null)
-  const currentAudio = computed(() => current.value?.audio ?? null)
+  const currentAudio = computed(() => resolveExerciseAudioRoute(current.value) || null)
 
   const isListening = audio.isListening
   const isPlaying = audio.isPlaying

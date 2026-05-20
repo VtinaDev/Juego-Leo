@@ -52,7 +52,7 @@
             "En el lago brillante"
           ],
           "correct": "En el árbol.",
-          "audio": "/audio/voice/exercises/l1-fs-1.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-qs-1.mp3",
           "image": "/images/L1/buho.PNG",
           "hint": "Lee la frase completa y busca el lugar mencionado.",
           "onCorrect": "celebrate",
@@ -72,7 +72,7 @@
           "hint": "Piensa en lo que hace una luciérnaga.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
-          "audio": "/audio/voice/exercises/l1-fs-2.mp3"
+          "audio": "/audio/voice/exercises/L1/l1-qs-2.mp3"
         },
         {
           "id": "L1-QS-3",
@@ -88,7 +88,7 @@
           "hint": "Observa el objeto final de la frase.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
-          "audio": "/audio/voice/exercises/l1-fs-3.mp3"
+          "audio": "/audio/voice/exercises/L1/l1-qs-3.mp3"
         },
         {
           "id": "L1-QS-4",
@@ -104,7 +104,7 @@
           "hint": "Lee el sujeto del verbo 'abraza'.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
-          "audio": "/audio/voice/exercises/l1-fs-4.mp3"
+          "audio": "/audio/voice/exercises/L1/l1-qs-4.mp3"
         }
       ],
       "IMAGE_WORD_MATCH": [
@@ -120,7 +120,7 @@
           "correct": "estrella",
           "emoji": "✨",
           "hint": "Piensa en lo que brilla en el cielo.",
-          "audio": "/audio/voice/exercises/select-image-word.mp3"
+          "audio": "/audio/voice/exercises/L1/l1-iwm-1.mp3"
         },
         {
           "id": "L1-IWM-2",
@@ -134,7 +134,7 @@
           "correct": "campana",
           "emoji": "🔔",
           "hint": "Suena para avisar.",
-          "audio": "/audio/voice/exercises/select-image-word.mp3"
+          "audio": "/audio/voice/exercises/L1/l1-iwm-2.mp3"
         }
       ],
       "CHOOSE_CORRECT_WORD": [
@@ -149,7 +149,7 @@
           ],
           "correct": "cuento",
           "hint": "Historias para dormir.",
-          "audio": "/audio/voice/exercises/choose-correct-word.mp3"
+          "audio": "/audio/voice/exercises/L1/l1-ccw-1.mp3"
         },
         {
           "id": "L1-CCW-2",
@@ -162,7 +162,7 @@
           ],
           "correct": "faro",
           "hint": "Guía a los barcos de noche.",
-          "audio": "/audio/voice/exercises/choose-correct-word.mp3"
+          "audio": "/audio/voice/exercises/L1/l1-ccw-2.mp3"
         }
       ],
       "complete_sentence": [
@@ -175,7 +175,7 @@
             "baila"
           ],
           "correct": "abre",
-          "audio": "/audio/voice/exercises/l1-cs-1.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-1.mp3",
           "image": "/images/L1/hada.PNG",
           "hint": "Piensa en lo que se hace con una puerta.",
           "onCorrect": "celebrate",
@@ -190,7 +190,7 @@
             "cocina"
           ],
           "correct": "deja",
-          "audio": "/audio/voice/exercises/l1-cs-2.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-2.mp3",
           "image": "/images/L1/nube.PNG",
           "hint": "Las nubes dejan algo que cae del cielo.",
           "onCorrect": "celebrate",
@@ -205,7 +205,7 @@
             "pinta"
           ],
           "correct": "camina",
-          "audio": "/audio/voice/exercises/l1-cs-3.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-3.mp3",
           "image": "/images/L1/oso.PNG",
           "hint": "Recuerda que es un oso tranquilo.",
           "onCorrect": "celebrate",
@@ -220,7 +220,7 @@
             "canta"
           ],
           "correct": "flota",
-          "audio": "/audio/voice/exercises/l1-cs-4.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-4.mp3",
           "image": "/images/L1/hoja.PNG",
           "hint": "¿Qué hace una hoja en el aire?",
           "onCorrect": "celebrate",
@@ -235,7 +235,7 @@
             "corre"
           ],
           "correct": "susurra",
-          "audio": "/audio/voice/exercises/l1-cs-5.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-5.mp3",
           "image": "/images/L1/rio.PNG",
           "hint": "Piensa en un sonido tranquilo de agua.",
           "onCorrect": "celebrate",
@@ -250,7 +250,7 @@
             "bebe"
           ],
           "correct": "ilumina",
-          "audio": "/audio/voice/exercises/l1-cs-6.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-6.mp3",
           "image": "/images/L1/luna.PNG",
           "hint": "Busca la acción que da luz.",
           "onCorrect": "celebrate",
@@ -265,7 +265,7 @@
             "baila"
           ],
           "correct": "visita",
-          "audio": "/audio/voice/exercises/l1-cs-7.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-7.mp3",
           "image": "/images/L1/colibri.PNG",
           "hint": "¿Qué hace un colibrí con las flores?",
           "onCorrect": "celebrate",
@@ -280,7 +280,7 @@
             "rompe"
           ],
           "correct": "anuncia",
-          "audio": "/audio/voice/exercises/l1-cs-8.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-8.mp3",
           "image": "/images/L1/campana.PNG",
           "hint": "Recuerda qué hace la campana en la escuela.",
           "onCorrect": "celebrate",
@@ -301,7 +301,7 @@
             "estrella",
             "brilla"
           ],
-          "audio": "/audio/voice/exercises/start-with-article.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-os-1.mp3",
           "image": "/images/L1/estrella.PNG",
           "hint": "Comienza con el artículo.",
           "onCorrect": "celebrate",
@@ -322,7 +322,7 @@
             "termina",
             "feliz"
           ],
-          "audio": "/audio/voice/exercises/put-el-first.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-os-2.mp3",
           "image": "/images/L1/cuento.PNG",
           "hint": "Coloca 'El' al inicio.",
           "onCorrect": "celebrate",
@@ -345,7 +345,7 @@
             "el",
             "cofre"
           ],
-          "audio": "/audio/voice/exercises/subject-first-then-action.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-os-3.mp3",
           "image": "/images/L1/cofre.PNG",
           "hint": "Sujeto primero, luego acción.",
           "onCorrect": "celebrate",
@@ -366,7 +366,7 @@
             "sopla",
             "suave"
           ],
-          "audio": "/audio/voice/exercises/natural-subject-verb-order.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-os-4.mp3",
           "image": "/images/L1/viento.PNG",
           "hint": "Respeta el orden natural de sujeto y verbo.",
           "onCorrect": "celebrate",
@@ -396,7 +396,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-1.mp3"
         },
         {
           "id": "L1-OS-NEW-2",
@@ -420,7 +421,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-2.mp3"
         },
         {
           "id": "L1-OS-NEW-3",
@@ -444,7 +446,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-3.mp3"
         },
         {
           "id": "L1-OS-NEW-4",
@@ -468,7 +471,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-4.mp3"
         },
         {
           "id": "L1-OS-NEW-5",
@@ -494,7 +498,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-5.mp3"
         },
         {
           "id": "L1-OS-NEW-6",
@@ -518,7 +523,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-6.mp3"
         },
         {
           "id": "L1-OS-NEW-7",
@@ -544,7 +550,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-7.mp3"
         },
         {
           "id": "L1-OS-NEW-8",
@@ -570,7 +577,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-8.mp3"
         },
         {
           "id": "L1-OS-NEW-9",
@@ -596,7 +604,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-9.mp3"
         },
         {
           "id": "L1-OS-NEW-10",
@@ -622,7 +631,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-10.mp3"
         },
         {
           "id": "L1-OS-NEW-11",
@@ -648,7 +658,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-11.mp3"
         },
         {
           "id": "L1-OS-NEW-12",
@@ -674,7 +685,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-12.mp3"
         },
         {
           "id": "L1-OS-NEW-13",
@@ -700,7 +712,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-13.mp3"
         },
         {
           "id": "L1-OS-NEW-14",
@@ -726,7 +739,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-14.mp3"
         },
         {
           "id": "L1-OS-NEW-15",
@@ -752,7 +766,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L1/l1-os-new-15.mp3"
         }
       ],
       "read_with_audio": [
@@ -762,7 +777,7 @@
           "text": "El faro guía a los barcos perdidos.",
           "instruction": "Lee la frase con ritmo tranquilo. Si quieres, escucha el audio.",
           "correct": "done",
-          "audio": "/audio/voice/exercises/l1-rwa-1.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-rw-1.mp3",
           "image": "/images/L1/faro.PNG",
           "hint": "Respira y lee despacio cada palabra.",
           "onCorrect": "celebrate",
@@ -774,7 +789,7 @@
           "text": "La campana anuncia el recreo.",
           "instruction": "Lee en voz alta. Pulsa escuchar si prefieres.",
           "correct": "done",
-          "audio": "/audio/voice/exercises/l1-rwa-2.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-rw-2.mp3",
           "image": "/images/L1/campana.PNG",
           "hint": "Observa las sílabas: cam-pa-na.",
           "onCorrect": "celebrate",
@@ -786,7 +801,7 @@
           "text": "Las hojas viajan con el viento.",
           "instruction": "Imagina el movimiento mientras lees.",
           "correct": "done",
-          "audio": "/audio/voice/exercises/l1-rwa-3.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-rw-3.mp3",
           "image": "/images/L1/hoja.PNG",
           "hint": "Marca con el dedo cada palabra.",
           "onCorrect": "celebrate",
@@ -798,7 +813,7 @@
           "text": "El río canta para el bosque.",
           "instruction": "Lee tú mismo y disfruta del ritmo.",
           "correct": "done",
-          "audio": "/audio/voice/exercises/l1-rwa-4.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-rw-4.mp3",
           "image": "/images/L1/rio.PNG",
           "hint": "Pronuncia lentamente las sílabas.",
           "onCorrect": "celebrate",
@@ -817,7 +832,7 @@
             "corre"
           ],
           "correct": "corre",
-          "audio": "/audio/voice/exercises/l1-cs-5.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-5.mp3",
           "image": "/images/level1/rio.PNG",
           "hint": "Piensa en un sonido tranquilo de agua.",
           "onCorrect": "celebrate",
@@ -832,7 +847,7 @@
             "bebe"
           ],
           "correct": "ilumina",
-          "audio": "/audio/voice/exercises/l1-cs-6.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-6.mp3",
           "image": "/images/level1/luna.PNG",
           "hint": "Busca la acción que da luz.",
           "onCorrect": "celebrate",
@@ -847,7 +862,7 @@
             "baila"
           ],
           "correct": "visita",
-          "audio": "/audio/voice/exercises/l1-cs-7.mp3",
+          "audio": "/audio/voice/exercises/L1/l1-cs-7.mp3",
           "image": "/images/level1/colibri.PNG",
           "hint": "¿Qué hace un colibrí con las flores?",
           "onCorrect": "celebrate",
@@ -925,7 +940,7 @@
             "sal"
           ],
           "correct": "sol",
-          "audio": "/audio/voice/exercises/l1-voc-1.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-mc-1.mp3",
           "image": "/images/L2/sol.PNG",
           "imageAlt": "Sol",
           "emoji": "",
@@ -942,7 +957,7 @@
             "sapo"
           ],
           "correct": "sapo",
-          "audio": "/audio/voice/exercises/l1-voc-2.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-mc-2.mp3",
           "image": "/images/L2/sapo.PNG",
           "imageAlt": "Sapo",
           "emoji": "",
@@ -959,7 +974,7 @@
             "sopa"
           ],
           "correct": "sopa",
-          "audio": "/audio/voice/exercises/l1-voc-3.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-mc-3.mp3",
           "image": "/images/L2/sopa.PNG",
           "imageAlt": "Sopa",
           "emoji": "",
@@ -976,7 +991,7 @@
             "misa"
           ],
           "correct": "mesa",
-          "audio": "/audio/voice/exercises/l1-voc-4.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-mc-4.mp3",
           "image": "/images/L2/mesa.PNG",
           "imageAlt": "Mesa",
           "emoji": "",
@@ -993,7 +1008,7 @@
             "oso"
           ],
           "correct": "oso",
-          "audio": "/audio/voice/exercises/l1-voc-5.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-mc-5.mp3",
           "image": "/images/L2/oso.PNG",
           "imageAlt": "Oso",
           "emoji": "",
@@ -1010,7 +1025,7 @@
             "pato"
           ],
           "correct": "pato",
-          "audio": "/audio/voice/exercises/l1-voc-6.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-mc-6.mp3",
           "image": "/images/L2/pato.png",
           "imageAlt": "Pato",
           "emoji": "🦆",
@@ -1027,7 +1042,7 @@
             "luna"
           ],
           "correct": "luna",
-          "audio": "/audio/voice/exercises/l1-voc-7.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-mc-7.mp3",
           "image": "/images/L2/luna.png",
           "imageAlt": "Luna",
           "emoji": "🌙",
@@ -1047,7 +1062,8 @@
             "A"
           ],
           "solution": "SOPA",
-          "hint": "Comida caliente."
+          "hint": "Comida caliente.",
+          "audio": "/audio/voice/exercises/L2/l2-uw-1.mp3"
         },
         {
           "id": "L2-UW-2",
@@ -1059,7 +1075,8 @@
             "O"
           ],
           "solution": "GATO",
-          "hint": "Un animal doméstico."
+          "hint": "Un animal doméstico.",
+          "audio": "/audio/voice/exercises/L2/l2-uw-2.mp3"
         }
       ],
       "PUZZLE_ORDER": [
@@ -1099,7 +1116,8 @@
           "prompt": "Completa la palabra:",
           "pattern": "s_p_",
           "solution": "sopa",
-          "hint": "Salta y vive en el agua."
+          "hint": "Salta y vive en el agua.",
+          "audio": "/audio/voice/exercises/L2/l2-cw-1.mp3"
         },
         {
           "id": "L2-CW-2",
@@ -1107,7 +1125,8 @@
           "prompt": "Completa la palabra:",
           "pattern": "l_n_",
           "solution": "luna",
-          "hint": "Brilla de noche."
+          "hint": "Brilla de noche.",
+          "audio": "/audio/voice/exercises/L2/l2-cw-2.mp3"
         }
       ],
       "pair_synonyms": [
@@ -1128,7 +1147,7 @@
               "match": "veloz ⚡️"
             }
           ],
-          "audio": "/audio/voice/exercises/l1-assoc-3.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-ps-1.mp3",
           "image": "/images/L2/l2-ps-1.png",
           "hint": "Busca parejas que compartan significado.",
           "onCorrect": "celebrate",
@@ -1151,7 +1170,7 @@
               "match": "robusto 🛡️"
             }
           ],
-          "audio": "/audio/voice/exercises/l1-assoc-4.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-ps-2.mp3",
           "image": "/images/L2/l2-ps-2.png",
           "hint": "Observa cómo cada palabra describe lo mismo.",
           "onCorrect": "celebrate",
@@ -1178,7 +1197,7 @@
               "match": "cuatro"
             }
           ],
-          "audio": "/audio/voice/exercises/l1-assoc-5.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-ps-3.mp3",
           "image": "/images/L2/sol.PNG",
           "hint": "Une el número con su nombre escrito.",
           "onCorrect": "celebrate",
@@ -1203,7 +1222,7 @@
               "match": "débil 🪶"
             }
           ],
-          "audio": "/audio/voice/exercises/l1-assoc-1.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-pa-1.mp3",
           "image": "/images/L2/l2-pa-1.png",
           "hint": "Une palabras que significan lo contrario.",
           "onCorrect": "celebrate",
@@ -1226,7 +1245,7 @@
               "match": "lento 🐢"
             }
           ],
-          "audio": "/audio/voice/exercises/l1-assoc-2.mp3",
+          "audio": "/audio/voice/exercises/L2/l2-pa-2.mp3",
           "image": "/images/L2/l2-pa-2.png",
           "hint": "Recuerda: el opuesto crea equilibrio mágico.",
           "onCorrect": "celebrate",
@@ -1275,7 +1294,7 @@
             "El mapa lee un mono"
           ],
           "correct": "El mono lee un mapa",
-          "audio": "/audio/voice/exercises/l3-ss-1-prompt.mp3",
+          "audio": "/audio/voice/exercises/L3/l3-ss-1.mp3",
           "image": "/images/L3/l3-ss-1.png",
           "hint": "Busca la frase con orden lógico sujeto-verbo-objeto.",
           "onCorrect": "celebrate",
@@ -1290,7 +1309,7 @@
             "poco llueve"
           ],
           "correct": "llueve poco",
-          "audio": "/audio/voice/exercises/l3-ss-2-prompt.mp3",
+          "audio": "/audio/voice/exercises/L3/l3-ss-2.mp3",
           "image": "/images/L3/l3-ss-2.png",
           "hint": "Piensa en cómo dirías la frase a un amigo.",
           "onCorrect": "celebrate",
@@ -1305,7 +1324,7 @@
             "La niña abre la ventana"
           ],
           "correct": "La niña abre la ventana",
-          "audio": "/audio/voice/exercises/l3-ss-3-prompt.mp3",
+          "audio": "/audio/voice/exercises/L3/l3-ss-3.mp3",
           "image": "/images/L3/l3-ss-3.png",
           "hint": "Elige la frase con personajes que pueden realizar la acción.",
           "onCorrect": "celebrate",
@@ -1324,7 +1343,8 @@
             "sa",
             "po"
           ],
-          "hint": "Animal que salta."
+          "hint": "Animal que salta.",
+          "audio": "/audio/voice/exercises/L3/l3-so-1.mp3"
         },
         {
           "id": "L3-SO-2",
@@ -1337,7 +1357,8 @@
             "lu",
             "na"
           ],
-          "hint": "Brilla en la noche."
+          "hint": "Brilla en la noche.",
+          "audio": "/audio/voice/exercises/L3/l3-so-2.mp3"
         }
       ],
       "audio_question": [
@@ -1351,7 +1372,7 @@
             "Un zapato"
           ],
           "correct": "Un conejo",
-          "audio": "/audio/voice/exercises/l1-long-1.mp3",
+          "audio": "/audio/voice/exercises/L3/l3-aq-1.mp3",
           "image": "/images/L3/l3-aq-1.png",
           "hint": "Lee el contexto si no hay audio disponible.",
           "onCorrect": "celebrate",
@@ -1372,7 +1393,7 @@
             "un zapato"
           ],
           "correct": "un plátano",
-          "audio": "/audio/voice/exercises/l1-long-2.mp3",
+          "audio": "/audio/voice/exercises/L3/l3-aq-2.mp3",
           "image": "/images/L3/l3-aq-2.png",
           "hint": "Si no escuchas audio, lee el texto 'context'.",
           "onCorrect": "celebrate",
@@ -1393,7 +1414,7 @@
             "Se divierten"
           ],
           "correct": "Se divierten",
-          "audio": "/audio/voice/exercises/l1-long-3.mp3",
+          "audio": "/audio/voice/exercises/L3/l3-aq-3.mp3",
           "image": "/images/L3/l3-aq-3.png",
           "hint": "Busca pistas en la última parte del texto.",
           "onCorrect": "celebrate",
@@ -1423,7 +1444,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-1.mp3"
         },
         {
           "id": "L3-AQ-VC-2",
@@ -1444,7 +1466,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-2.mp3"
         },
         {
           "id": "L3-AQ-VC-3",
@@ -1465,7 +1488,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-3.mp3"
         },
         {
           "id": "L3-AQ-VC-4",
@@ -1486,7 +1510,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-4.mp3"
         },
         {
           "id": "L3-AQ-VC-5",
@@ -1507,7 +1532,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-5.mp3"
         },
         {
           "id": "L3-AQ-VC-6",
@@ -1528,7 +1554,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-6.mp3"
         },
         {
           "id": "L3-AQ-VC-7",
@@ -1549,7 +1576,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-7.mp3"
         },
         {
           "id": "L3-AQ-VC-8",
@@ -1570,7 +1598,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-8.mp3"
         },
         {
           "id": "L3-AQ-VC-9",
@@ -1591,7 +1620,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-9.mp3"
         },
         {
           "id": "L3-AQ-VC-10",
@@ -1612,7 +1642,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-10.mp3"
         },
         {
           "id": "L3-AQ-VC-11",
@@ -1633,7 +1664,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-11.mp3"
         },
         {
           "id": "L3-AQ-VC-12",
@@ -1654,7 +1686,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-12.mp3"
         },
         {
           "id": "L3-AQ-VC-13",
@@ -1675,7 +1708,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-13.mp3"
         },
         {
           "id": "L3-AQ-VC-14",
@@ -1696,7 +1730,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-14.mp3"
         },
         {
           "id": "L3-AQ-VC-15",
@@ -1717,7 +1752,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L3/l3-aq-vc-15.mp3"
         }
       ]
     }
@@ -1760,7 +1796,7 @@
           "narrationText": "luciérnaga",
           "fallbackText": "Escribe: luciérnaga",
           "answer": "luciérnaga",
-          "audio": "/audio/voice/exercises/l1-write-1.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-aw-1.mp3",
           "image": "/images/L4/l4-aw-1.png",
           "hint": "Recuerda colocar la tilde correcta.",
           "onCorrect": "celebrate",
@@ -1772,7 +1808,7 @@
           "instruction": "Escribe: El dragón lanza fuego",
           "fallbackText": "Escribe: El dragón lanza fuego",
           "answer": "El dragón lanza fuego",
-          "audio": "/audio/voice/exercises/l4-aw-2-instruction.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-aw-2.mp3",
           "image": "/images/L4/l4-aw-2.png",
           "hint": "Empieza con mayúscula y termina con punto.",
           "onCorrect": "celebrate",
@@ -1790,7 +1826,7 @@
             "En un árbol"
           ],
           "correct": "En una cueva",
-          "audio": "/audio/voice/exercises/l4-ra-1-question.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-ra-1.mp3",
           "hint": "Busca dónde vive."
         },
         {
@@ -1803,7 +1839,7 @@
             "Dormir en la casa"
           ],
           "correct": "Beber agua",
-          "audio": "/audio/voice/exercises/l4-ra-2-question.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-ra-2.mp3",
           "hint": "¿Qué hace en el río?"
         }
       ],
@@ -1814,7 +1850,7 @@
           "instruction": "Escribe una frase que incluya la palabra 'magia'.",
           "placeholder": "Tu frase con magia...",
           "answerPattern": "magia",
-          "audio": "/audio/voice/exercises/l1-write-2.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-tw-1.mp3",
           "image": "/images/L4/l4-tw-1.png",
           "hint": "Asegúrate de usar la palabra mágica.",
           "onCorrect": "celebrate",
@@ -1826,7 +1862,7 @@
           "instruction": "Escribe el nombre de la figura o símbolo: 🔺",
           "placeholder": "Ej: triángulo rojo",
           "answer": "triángulo rojo",
-          "audio": "/audio/voice/exercises/l1-write-3.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-tw-2.mp3",
           "image": "/images/L4/l4-tw-2.png",
           "hint": "Piensa en la forma geométrica del símbolo.",
           "onCorrect": "celebrate",
@@ -1846,7 +1882,7 @@
           ],
           "placeholder": "Ej: selva",
           "answer": "selva",
-          "audio": "/audio/voice/exercises/l1-write-4.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-tw-3.mp3",
           "image": "/images/L4/l4-tw-3.png",
           "hint": "Piensa en un lugar lleno de árboles.",
           "onCorrect": "celebrate",
@@ -1858,7 +1894,7 @@
           "prompt": "Completa la palabra:",
           "pattern": "g_o_o",
           "solution": "globo",
-          "audio": "/audio/voice/exercises/l1-write-5.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-tw-4.mp3",
           "image": "/images/L4/l4-tw-4.png",
           "hint": "Se infla para flotar en el aire.",
           "onCorrect": "celebrate",
@@ -1870,7 +1906,7 @@
           "prompt": "Completa la palabra:",
           "pattern": "l_n_s",
           "solution": "lunes",
-          "audio": "/audio/voice/exercises/l1-write-5.mp3",
+          "audio": "/audio/voice/exercises/L4/l4-tw-5.mp3",
           "image": "/images/L4/l4-tw-5.png",
           "hint": "Empieza la semana.",
           "onCorrect": "celebrate",
@@ -1930,7 +1966,7 @@
             "Presente"
           ],
           "correct": "Pasado",
-          "audio": "/audio/voice/exercises/l5-tc-1-sentence.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-tc-1.mp3",
           "image": "/images/L5/l5-tc-1.png",
           "hint": "Observa la palabra 'ayer'.",
           "onCorrect": "celebrate",
@@ -1951,7 +1987,7 @@
             "Pasado"
           ],
           "correct": "Presente",
-          "audio": "/audio/voice/exercises/l5-tc-2-sentence.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-tc-2.mp3",
           "image": "/images/L5/l5-tc-2.png",
           "hint": "La acción ocurre en este momento.",
           "onCorrect": "celebrate",
@@ -1972,7 +2008,7 @@
             "Pasado"
           ],
           "correct": "Futuro",
-          "audio": "/audio/voice/exercises/l5-tc-3-sentence.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-tc-3.mp3",
           "image": "/images/L5/l5-tc-3.png",
           "hint": "Si dice 'mañana', piensa en el futuro.",
           "onCorrect": "celebrate",
@@ -2003,7 +2039,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-4.mp3"
         },
         {
           "id": "L5-TC-5",
@@ -2025,7 +2062,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-5.mp3"
         },
         {
           "id": "L5-TC-6",
@@ -2047,7 +2085,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-6.mp3"
         },
         {
           "id": "L5-TC-7",
@@ -2069,7 +2108,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-7.mp3"
         },
         {
           "id": "L5-TC-8",
@@ -2091,7 +2131,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-8.mp3"
         },
         {
           "id": "L5-TC-9",
@@ -2113,7 +2154,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-9.mp3"
         },
         {
           "id": "L5-TC-10",
@@ -2135,7 +2177,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-10.mp3"
         },
         {
           "id": "L5-TC-11",
@@ -2157,7 +2200,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-11.mp3"
         },
         {
           "id": "L5-TC-12",
@@ -2179,7 +2223,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-12.mp3"
         },
         {
           "id": "L5-TC-13",
@@ -2201,7 +2246,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-13.mp3"
         },
         {
           "id": "L5-TC-14",
@@ -2223,7 +2269,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-14.mp3"
         },
         {
           "id": "L5-TC-15",
@@ -2245,7 +2292,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-15.mp3"
         },
         {
           "id": "L5-TC-16",
@@ -2267,7 +2315,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-16.mp3"
         },
         {
           "id": "L5-TC-17",
@@ -2289,7 +2338,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-17.mp3"
         },
         {
           "id": "L5-TC-18",
@@ -2311,7 +2361,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-tc-18.mp3"
         }
       ],
       "singular_plural": [
@@ -2340,7 +2391,7 @@
               "plural": "peces 🐠"
             }
           ],
-          "audio": null,
+          "audio": "/audio/voice/exercises/L5/l5-sp-1.mp3",
           "image": "/images/L5/l5-sp-1.png",
           "hint": "Observa cómo cambian las terminaciones al plural.",
           "onCorrect": "celebrate",
@@ -2360,7 +2411,7 @@
           ],
           "correctSyllable": "di",
           "accentType": "Aguda",
-          "audio": "/audio/voice/exercises/l1-grammar-1.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-ag-1.mp3",
           "image": "/images/L5/l5-ag-1.png",
           "hint": "Recuerda: melodía lleva tilde en la sílaba fuerte.",
           "onCorrect": "celebrate",
@@ -2378,7 +2429,7 @@
           ],
           "correctSyllable": "si",
           "accentType": "Aguda",
-          "audio": "/audio/voice/exercises/l1-grammar-2.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-ag-2.mp3",
           "image": "/images/L5/l5-ag-2.png",
           "hint": "Imagina dónde suena más fuerte la palabra.",
           "onCorrect": "celebrate",
@@ -2404,7 +2455,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-3.mp3"
         },
         {
           "id": "L5-AG-4",
@@ -2427,7 +2479,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-4.mp3"
         },
         {
           "id": "L5-AG-5",
@@ -2449,7 +2502,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-5.mp3"
         },
         {
           "id": "L5-AG-6",
@@ -2471,7 +2525,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-6.mp3"
         },
         {
           "id": "L5-AG-7",
@@ -2493,7 +2548,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-7.mp3"
         },
         {
           "id": "L5-AG-8",
@@ -2515,7 +2571,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-8.mp3"
         },
         {
           "id": "L5-AG-9",
@@ -2537,7 +2594,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-9.mp3"
         },
         {
           "id": "L5-AG-10",
@@ -2559,7 +2617,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-10.mp3"
         },
         {
           "id": "L5-AG-11",
@@ -2582,7 +2641,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-11.mp3"
         },
         {
           "id": "L5-AG-12",
@@ -2605,7 +2665,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-12.mp3"
         },
         {
           "id": "L5-AG-13",
@@ -2629,7 +2690,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-13.mp3"
         },
         {
           "id": "L5-AG-14",
@@ -2652,7 +2714,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-14.mp3"
         },
         {
           "id": "L5-AG-15",
@@ -2675,7 +2738,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-15.mp3"
         },
         {
           "id": "L5-AG-16",
@@ -2697,7 +2761,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-16.mp3"
         },
         {
           "id": "L5-AG-17",
@@ -2719,7 +2784,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-ag-17.mp3"
         }
       ],
       "punctuation_game": [
@@ -2732,7 +2798,7 @@
             "¿"
           ],
           "correct": "¡",
-          "audio": "/audio/voice/exercises/l5-pg-1-sentence.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-pg-1.mp3",
           "image": "/images/L5/l5-pg-1.png",
           "hint": "La frase expresa sorpresa.",
           "onCorrect": "celebrate",
@@ -2753,7 +2819,7 @@
             "¡"
           ],
           "correct": "¿",
-          "audio": "/audio/voice/exercises/l5-pg-2-sentence.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-pg-2.mp3",
           "image": "/images/L5/l5-pg-2.png",
           "hint": "Es una pregunta, necesita signos interrogativos.",
           "onCorrect": "celebrate",
@@ -2774,7 +2840,7 @@
             "¡"
           ],
           "correct": ".",
-          "audio": "/audio/voice/exercises/l5-pg-3-sentence.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-pg-3.mp3",
           "image": "/images/L5/l5-pg-3.png",
           "hint": "Una afirmación termina con punto.",
           "onCorrect": "celebrate",
@@ -2804,7 +2870,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-4.mp3"
         },
         {
           "id": "L5-PG-5",
@@ -2824,7 +2891,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-5.mp3"
         },
         {
           "id": "L5-PG-6",
@@ -2844,7 +2912,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-6.mp3"
         },
         {
           "id": "L5-PG-7",
@@ -2864,7 +2933,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-7.mp3"
         },
         {
           "id": "L5-PG-8",
@@ -2884,7 +2954,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-8.mp3"
         },
         {
           "id": "L5-PG-9",
@@ -2904,7 +2975,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-9.mp3"
         },
         {
           "id": "L5-PG-10",
@@ -2924,7 +2996,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-10.mp3"
         },
         {
           "id": "L5-PG-11",
@@ -2944,7 +3017,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-11.mp3"
         },
         {
           "id": "L5-PG-12",
@@ -2964,7 +3038,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-12.mp3"
         },
         {
           "id": "L5-PG-13",
@@ -2984,7 +3059,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-13.mp3"
         },
         {
           "id": "L5-PG-14",
@@ -3004,7 +3080,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-14.mp3"
         },
         {
           "id": "L5-PG-15",
@@ -3024,7 +3101,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-15.mp3"
         },
         {
           "id": "L5-PG-16",
@@ -3044,7 +3122,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-16.mp3"
         },
         {
           "id": "L5-PG-17",
@@ -3064,7 +3143,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-17.mp3"
         },
         {
           "id": "L5-PG-18",
@@ -3084,7 +3164,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-pg-18.mp3"
         }
       ],
       "final_exam": [
@@ -3097,7 +3178,7 @@
             "Futuro"
           ],
           "correct": "Futuro",
-          "audio": "/audio/voice/exercises/l1-grammar-3.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-fe-1.mp3",
           "image": "/images/L5/l5-fe-1.png",
           "hint": "Busca palabras que indiquen futuro.",
           "onCorrect": "celebrate",
@@ -3112,7 +3193,7 @@
             "¡"
           ],
           "correct": "¿",
-          "audio": "/audio/voice/exercises/l1-grammar-4.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-fe-2.mp3",
           "image": "/images/L5/l5-fe-2.png",
           "hint": "Coloca el signo inicial correcto para una pregunta.",
           "onCorrect": "celebrate",
@@ -3133,7 +3214,7 @@
             "musíca"
           ],
           "correct": "música",
-          "audio": "/audio/voice/exercises/l1-grammar-5.mp3",
+          "audio": "/audio/voice/exercises/L5/l5-fe-3.mp3",
           "image": "/images/L5/l5-fe-3.png",
           "hint": "Piensa en cómo suena la sílaba fuerte.",
           "onCorrect": "celebrate",
@@ -3157,7 +3238,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-1.mp3"
         },
         {
           "id": "L5-FE-TCOMP-2",
@@ -3177,7 +3259,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-2.mp3"
         },
         {
           "id": "L5-FE-TCOMP-3",
@@ -3197,7 +3280,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-3.mp3"
         },
         {
           "id": "L5-FE-TCOMP-4",
@@ -3217,7 +3301,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-4.mp3"
         },
         {
           "id": "L5-FE-TCOMP-5",
@@ -3237,7 +3322,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-5.mp3"
         },
         {
           "id": "L5-FE-TCOMP-6",
@@ -3257,7 +3343,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-6.mp3"
         },
         {
           "id": "L5-FE-TCOMP-7",
@@ -3277,7 +3364,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-7.mp3"
         },
         {
           "id": "L5-FE-TCOMP-8",
@@ -3297,7 +3385,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-8.mp3"
         },
         {
           "id": "L5-FE-TCOMP-9",
@@ -3317,7 +3406,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-9.mp3"
         },
         {
           "id": "L5-FE-TCOMP-10",
@@ -3337,7 +3427,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-10.mp3"
         },
         {
           "id": "L5-FE-TCOMP-11",
@@ -3357,7 +3448,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-11.mp3"
         },
         {
           "id": "L5-FE-TCOMP-12",
@@ -3377,7 +3469,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-12.mp3"
         },
         {
           "id": "L5-FE-TCOMP-13",
@@ -3397,7 +3490,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-13.mp3"
         },
         {
           "id": "L5-FE-TCOMP-14",
@@ -3417,7 +3511,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-14.mp3"
         },
         {
           "id": "L5-FE-TCOMP-15",
@@ -3437,7 +3532,8 @@
           "progressiveHints": true,
           "calmFeedback": true,
           "structuredLearning": true,
-          "teachBeforeAssess": true
+          "teachBeforeAssess": true,
+          "audio": "/audio/voice/exercises/L5/l5-fe-tcomp-15.mp3"
         }
       ]
     }

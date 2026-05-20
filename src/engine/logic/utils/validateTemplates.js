@@ -2,15 +2,9 @@
 //  VALIDATE TEMPLATES — versión compatible con Vite + Node
 // -------------------------------------------------------------
 
-let manifest = {}
+import templatesManifest from '../data/templates.json'
 
-try {
-  const loaded = await import('../data/templates.json')
-  manifest = loaded?.default ?? loaded ?? {}
-} catch (error) {
-  console.error('❌ No se pudo cargar templates.json:', error)
-  manifest = {}
-}
+let manifest = templatesManifest ?? {}
 
 // -------------------------------------------------------------
 //  LÓGICA DEL VALIDADOR (idéntica a tu versión funcional)
@@ -78,6 +72,7 @@ const DEFAULT_HOOKS = Object.freeze({
 })
 
 const MAX_EXERCISES_PER_SUBTYPE = 4
+const MIN_EXERCISES_PER_LEVEL = 8
 const globalIdRegistry = new Set()
 
 function isPlainObject(value) {
@@ -119,6 +114,10 @@ function harmonizeExercise(exercise, subtype) {
   if (!('allowRetry' in exercise)) exercise.allowRetry = true
   if (!('maxAttempts' in exercise)) exercise.maxAttempts = Infinity
   if (!('feedbackStyle' in exercise)) exercise.feedbackStyle = 'calm'
+  if (!('progressiveHints' in exercise)) exercise.progressiveHints = true
+  if (!('calmFeedback' in exercise)) exercise.calmFeedback = true
+  if (!('structuredLearning' in exercise)) exercise.structuredLearning = true
+  if (!('teachBeforeAssess' in exercise)) exercise.teachBeforeAssess = true
 
   if (Array.isArray(exercise.pairs)) {
     exercise.pairs = exercise.pairs.map((pair, idx) => {
@@ -133,6 +132,24 @@ function requirementSatisfied(exercise, requirement) {
     return requirement.some(field => hasValue(exercise[field]))
   }
   return hasValue(exercise[requirement])
+}
+
+function getSupportModes(exercise) {
+  const modes = new Set()
+  if (exercise.image || exercise.emoji || exercise.background) modes.add('visual')
+  if (exercise.audio || exercise.fallbackText || exercise.narrationText) modes.add('auditivo')
+  if (
+    Array.isArray(exercise.options) ||
+    Array.isArray(exercise.words) ||
+    Array.isArray(exercise.letters) ||
+    Array.isArray(exercise.syllables) ||
+    Array.isArray(exercise.segments) ||
+    Array.isArray(exercise.pieces) ||
+    Array.isArray(exercise.pairs)
+  ) {
+    modes.add('manipulativo')
+  }
+  return [...modes]
 }
 
 // -------------------------------------------------------------
@@ -167,6 +184,24 @@ export function validateTemplates({ verbose = true } = {}) {
     const order = Array.isArray(levelConfig.order)
       ? levelConfig.order
       : Object.keys(subtypes)
+
+    const levelExerciseTotal = order.reduce((acc, subtypeKey) => {
+      const list = subtypes[subtypeKey]
+      return acc + (Array.isArray(list) ? list.length : 0)
+    }, 0)
+
+    if (levelExerciseTotal < MIN_EXERCISES_PER_LEVEL) {
+      summaries.push({
+        level: levelKey,
+        stage: 0,
+        subtype: '__level_content__',
+        count: levelExerciseTotal,
+        warnings: [
+          `Nivel ${levelKey} tiene ${levelExerciseTotal} ejercicios. Objetivo pedagógico mínimo: ${MIN_EXERCISES_PER_LEVEL}.`
+        ],
+        errors: []
+      })
+    }
 
     order.forEach((subtypeKey, stageIndex) => {
       const exercises = subtypes[subtypeKey]
@@ -212,6 +247,29 @@ export function validateTemplates({ verbose = true } = {}) {
 
         harmonizeExercise(exercise, subtypeKey)
         ensureHooks(exercise)
+
+        if (exercise.progressiveHints !== true) {
+          subtypeSummary.warnings.push(`${exercise.id}: progressiveHints debería ser true`)
+        }
+
+        if (exercise.calmFeedback !== true) {
+          subtypeSummary.warnings.push(`${exercise.id}: calmFeedback debería ser true`)
+        }
+
+        if (exercise.structuredLearning !== true) {
+          subtypeSummary.warnings.push(`${exercise.id}: structuredLearning debería ser true`)
+        }
+
+        if (exercise.teachBeforeAssess !== true) {
+          subtypeSummary.warnings.push(`${exercise.id}: teachBeforeAssess debería ser true`)
+        }
+
+        const supportModes = getSupportModes(exercise)
+        if (supportModes.length < 2) {
+          subtypeSummary.warnings.push(
+            `${exercise.id}: requiere al menos dos apoyos entre visual, auditivo y manipulativo. Actual: ${supportModes.join(', ') || 'ninguno'}`
+          )
+        }
 
         const requirements = REQUIRED_FIELDS_BY_TYPE[exercise.type] ?? []
         requirements.forEach(req => {

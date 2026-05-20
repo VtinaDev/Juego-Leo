@@ -38,6 +38,7 @@
       @update:selected-learning-needs="$emit('update:selectedLearningNeeds', $event)"
       @update:other-learning-need="$emit('update:otherLearningNeed', $event)"
       @update:learning-profile="$emit('update:learningProfile', $event)"
+      @complete="$emit('save')"
     />
 
     <div class="form-actions">

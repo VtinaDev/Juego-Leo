@@ -6,7 +6,6 @@ import {
   VOICE_SOURCES,
   VOICE_CUE_FALLBACKS
 } from './sounds'
-import { VOICE_PRESET, pickPreferredVoice } from './voiceProfile'
 import { AUDIO_EXPERIENCE, resolveSfxGain } from './audioExperience.js'
 
 let settings = { ...DEFAULT_AUDIO_SETTINGS }
@@ -16,15 +15,15 @@ let musicSourceKey = null
 const sfxCache = new Map()
 const sfxLastPlayed = new Map()
 let audioCtx = null
-let cachedVoiceName = null
 const SAFE_SFX_GAIN = 0.75
 const SFX_THROTTLE_MS = AUDIO_EXPERIENCE.sfx.throttleMs
 let activeVoiceAudio = null
+let activeVoiceObjectUrl = null
+let voiceRequestId = 0
 let pendingMusicStart = null
 let pendingVoiceStart = null
 let musicUnlockListenersAttached = false
 let voiceUnlockListenersAttached = false
-const ALLOW_DEV_TTS_FALLBACK = import.meta.env.DEV && import.meta.env.VITE_ENABLE_TTS_FALLBACK !== 'false'
 
 // Legacy-style manager used by useAudio.js
 export class AudioManager {
@@ -362,29 +361,16 @@ function retryPendingMusicStart() {
   playMusic(request.keyOrSrc, { loop: request.loop, fadeMs: request.fadeMs })
 }
 
-function pickVoice(voices = [], lang = 'es-ES') {
-  const normalizedLang = (lang || '').toLowerCase()
-  const base = normalizedLang.split('-')[0]
-  const candidates = voices.filter((v) => (v.lang || '').toLowerCase().startsWith(base))
-  const childHints = ['child', 'kids', 'kid', 'niñ', 'young', 'little', 'peque', 'girl', 'chica', 'nena']
-  const femaleHints = ['female', 'woman', 'mujer', 'feminine', 'femenina']
-
-  const score = (v) => {
-    const name = (v.name || '').toLowerCase()
-    let s = 0
-    if (childHints.some((h) => name.includes(h))) s += 4
-    if (femaleHints.some((h) => name.includes(h))) s += 2
-    return s
-  }
-  if (candidates.length === 0) return null
-  return [...candidates].sort((a, b) => score(b) - score(a))[0] || candidates[0]
-}
-
 function stopActiveVoiceAudio() {
+  voiceRequestId += 1
   if (!activeVoiceAudio) return
   activeVoiceAudio.pause()
   activeVoiceAudio.currentTime = 0
   activeVoiceAudio = null
+  if (activeVoiceObjectUrl) {
+    URL.revokeObjectURL(activeVoiceObjectUrl)
+    activeVoiceObjectUrl = null
+  }
 }
 
 function normalizeVoiceSrc(value = '') {
@@ -397,11 +383,17 @@ function normalizeVoiceSrc(value = '') {
 }
 
 export function playVoice(textOrSrc = '', options = {}) {
+  unlockAudio()
+  if (options.forceVoiceEnabled === true && (!settings.voiceEnabled || settings.voiceVolume < 0.05)) {
+    updateAudioSettings({
+      voiceEnabled: true,
+      voiceVolume: Math.max(settings.voiceVolume, DEFAULT_AUDIO_SETTINGS.voiceVolume)
+    })
+  }
   if (!settings.voiceEnabled) {
     options.onEnd?.()
     return null
   }
-  unlockAudio()
   if (!textOrSrc) {
     options.onEnd?.()
     return null
@@ -410,9 +402,6 @@ export function playVoice(textOrSrc = '', options = {}) {
   const interrupt = options.interrupt !== false
   if (interrupt) {
     stopActiveVoiceAudio()
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
-    }
   }
 
   const normalizedSrc = normalizeVoiceSrc(textOrSrc)
@@ -455,42 +444,72 @@ export function playVoice(textOrSrc = '', options = {}) {
     return audio
   }
 
-  const allowTtsFallback = options.allowTtsFallback === true || ALLOW_DEV_TTS_FALLBACK
-  if (!allowTtsFallback) {
+  if (typeof window === 'undefined' || typeof fetch === 'undefined') {
     options.onEnd?.()
     return null
   }
 
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-    options.onEnd?.()
-    return null
-  }
-  const synth = window.speechSynthesis
-  const utterance = new SpeechSynthesisUtterance(textOrSrc)
-  const lang = options.lang || VOICE_PRESET.lang
-  utterance.lang = lang
-  // Voz infantil alegre: clara, animada pero sin acelerar en exceso
-  utterance.rate = options.rate ?? VOICE_PRESET.rate
-  utterance.pitch = options.pitch ?? VOICE_PRESET.pitch
-  utterance.volume = Math.min(options.volume ?? settings.voiceVolume, 1)
+  const requestId = ++voiceRequestId
+  fetch('/api/generar-audio', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ texto: textOrSrc })
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(`ElevenLabs TTS fallo: ${response.status}`)
+      return response.blob()
+    })
+    .then((blob) => {
+      if (requestId !== voiceRequestId || !settings.voiceEnabled) return
+      const audioUrl = URL.createObjectURL(blob)
+      const audio = new Audio(audioUrl)
+      audio.preload = 'auto'
+      audio.volume = Math.min(options.volume ?? settings.voiceVolume, 1)
+      activeVoiceAudio = audio
+      activeVoiceObjectUrl = audioUrl
+      audio.onended = () => {
+        if (activeVoiceAudio === audio) activeVoiceAudio = null
+        if (activeVoiceObjectUrl === audioUrl) {
+          URL.revokeObjectURL(audioUrl)
+          activeVoiceObjectUrl = null
+        }
+        options.onEnd?.()
+      }
+      audio.onerror = (error) => {
+        if (activeVoiceAudio === audio) activeVoiceAudio = null
+        if (activeVoiceObjectUrl === audioUrl) {
+          URL.revokeObjectURL(audioUrl)
+          activeVoiceObjectUrl = null
+        }
+        console.warn('[audioManager] No se pudo reproducir la voz de ElevenLabs:', error)
+        options.onEnd?.()
+      }
+      audio.play().catch((error) => {
+        if (activeVoiceAudio === audio) activeVoiceAudio = null
+        if (activeVoiceObjectUrl === audioUrl) {
+          URL.revokeObjectURL(audioUrl)
+          activeVoiceObjectUrl = null
+        }
+        console.warn('[audioManager] Reproduccion de ElevenLabs bloqueada o fallida:', error)
+        if (error?.name === 'NotAllowedError') {
+          schedulePendingVoiceStart({
+            textOrSrc,
+            options: { ...options, interrupt: true }
+          })
+        }
+        options.onEnd?.()
+      })
+    })
+    .catch((error) => {
+      if (requestId === voiceRequestId) {
+        console.warn('[audioManager] No se pudo generar voz con ElevenLabs:', error)
+        options.onEnd?.()
+      }
+    })
 
-  const voices = synth.getVoices()
-  const { voice, name } = pickPreferredVoice(voices, lang, cachedVoiceName)
-  if (voice) {
-    utterance.voice = voice
-    cachedVoiceName = name
-  }
-
-  utterance.onend = () => {
-    options.onEnd?.()
-  }
-  utterance.onerror = () => {
-    options.onEnd?.()
-  }
-
-  if (interrupt) synth.cancel()
-  synth.speak(utterance)
-  return utterance
+  return null
 }
 
 function escapeRegExp(value = '') {
@@ -502,16 +521,21 @@ function resolveVoiceCueSrc(key = '') {
   if (!normalized) return null
 
   const exact = VOICE_SOURCES[normalized]
-  if (exact) return exact
+  if (exact && !isLegacyExerciseCueSrc(exact)) return exact
 
   const pattern = new RegExp(`^${escapeRegExp(normalized)}(?:[_-]?\\d+)$`)
   const variants = Object.entries(VOICE_SOURCES)
     .filter(([name]) => pattern.test(name))
     .map(([, src]) => src)
+    .filter((src) => !isLegacyExerciseCueSrc(src))
 
   if (!variants.length) return null
   const index = Math.floor(Math.random() * variants.length)
   return variants[index]
+}
+
+function isLegacyExerciseCueSrc(src = '') {
+  return String(src).includes('/audio/voice/exercises/') && !/\/audio\/voice\/exercises\/L\d+\//.test(src)
 }
 
 export function playVoiceCue(key, options = {}) {
@@ -539,8 +563,6 @@ export function playVoiceCue(key, options = {}) {
 export function stopVoice() {
   clearPendingVoiceStart()
   stopActiveVoiceAudio()
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
-  window.speechSynthesis.cancel()
 }
 
 initAudioSettings()

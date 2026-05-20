@@ -52,9 +52,9 @@ Script detecta texto nuevo en templates.json
         ↓
 Genera ID unico del audio desde exercise.id
         ↓
-Crea MP3 automaticamente con OpenAI TTS
+Crea MP3 automaticamente con ElevenLabs
         ↓
-Guarda archivo en public/audio/voice/exercises/generated
+Guarda archivo en public/audio/voice/exercises/L{nivel}
         ↓
 Actualiza manifest JSON/CSV
         ↓
@@ -64,14 +64,13 @@ La app reproduce el audio desde exercise.audio
 ```
 
 Provider behavior:
-- `audio:generate` uses OpenAI TTS by default. Requires `OPENAI_API_KEY`.
-- `audio:generate:elevenlabs` uses ElevenLabs when `ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID` are set.
+- `audio:generate` uses ElevenLabs by default with model `eleven_flash_v2_5` and voice `IvWkxlWQtJVT34p1Pt9D`.
+- `audio:generate:elevenlabs` uses the same ElevenLabs batch generator. Requires `ELEVENLABS_API_KEY`.
 - `audio:manifest` never writes MP3s or templates; it only previews the plan.
 - `templates.json` is updated only after the selected MP3 files are generated successfully.
 
 Useful flags:
 - `-- --provider=elevenlabs`
-- `-- --provider=openai`
 - `-- --limit=5`
 - `-- --no-write-templates`
 - `-- --dry`

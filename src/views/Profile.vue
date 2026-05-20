@@ -86,7 +86,9 @@
           </p>
         </div>
         <div class="profile-hero__actions">
-          <RouterLink class="btn btn-primary" :to="continueLearningRoute">Continuar aprendizaje</RouterLink>
+          <button class="btn btn-primary" type="button" :disabled="profile.loading" @click="handleContinueLearning">
+            Continuar aprendizaje
+          </button>
           <button class="btn btn-ghost" type="button" :disabled="auth.loading" @click="handleLogout">
             Cerrar sesión
           </button>
@@ -113,6 +115,7 @@
         :current-level="currentLevel"
         :has-progress="hasProgress"
         :continue-route="continueLearningRoute"
+        @continue="handleContinueLearning"
       />
 
       <LearningReport
@@ -133,6 +136,7 @@
         :has-progress="hasProgress"
         :continue-route="continueLearningRoute"
         :format-date="formatDate"
+        @continue="handleContinueLearning"
       />
     </template>
   </section>
@@ -411,23 +415,23 @@ async function save() {
   successMessage.value = ''
   if (!auth.isAuthenticated) {
     errorMessage.value = 'Inicia sesión o regístrate para guardar el perfil.'
-    return
+    return false
   }
   const name = child.name?.trim?.() || ''
   const birthdate = child.birthdate || ''
   if (name.length < 2) {
     errorMessage.value = 'El nombre debe tener al menos 2 caracteres.'
-    return
+    return false
   }
   if (birthdate && new Date(birthdate) > new Date()) {
     errorMessage.value = 'La fecha no puede ser futura.'
-    return
+    return false
   }
   const learningNeeds = normalizeLearningNeeds(child.learningNeeds)
   const otherLearningNeed = child.otherLearningNeed?.trim?.() || ''
   if (learningNeeds.includes(OTHER_LEARNING_NEED) && otherLearningNeed.length < 2) {
     errorMessage.value = 'Especifica la otra necesidad de apoyo o desmarca "Otra".'
-    return
+    return false
   }
 
   const learningProfile = normalizeLearningProfile(child.learningProfile)
@@ -440,13 +444,20 @@ async function save() {
   })
   if (!ok) {
     errorMessage.value = profile.error || 'No se pudo guardar el perfil.'
-    return
+    return false
   }
   child.learningNeeds = [...learningNeeds]
   child.learningProfile = learningProfile
   if (!learningNeeds.includes(OTHER_LEARNING_NEED)) child.otherLearningNeed = ''
   game.setChild({ name, birthdate })
   successMessage.value = 'Perfil guardado 🎉'
+  return true
+}
+
+async function handleContinueLearning() {
+  const saved = await save()
+  if (!saved) return
+  await router.push(continueLearningRoute.value)
 }
 
 async function handleRegister() {

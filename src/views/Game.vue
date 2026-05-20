@@ -166,8 +166,9 @@
                   :options="current.options || []"
                   :status="currentStatus"
                   :correct-answers="currentCorrectAnswers"
+                  :word-highlight-enabled="wordByWordHighlightEnabled"
+                  :active-word-token="activeKaraokeToken"
                   aria-label="Opciones de respuesta para la frase"
-                  @preview="handleOptionPreview"
                   @select="handleSimpleOption"
                 />
 
@@ -192,8 +193,9 @@
                   :options="current.options || []"
                   :status="currentStatus"
                   :correct-answers="currentCorrectAnswers"
+                  :word-highlight-enabled="wordByWordHighlightEnabled"
+                  :active-word-token="activeKaraokeToken"
                   aria-label="Opciones para completar la frase"
-                  @preview="handleOptionPreview"
                   @select="handleSimpleOption"
                 />
 
@@ -217,7 +219,14 @@
 
             <!-- Leer con o sin audio (L1) -->
             <section v-else-if="current.type === 'read_with_audio'" class="space-y-4">
-              <p class="audio-visible-text">{{ readingText }}</p>
+              <p class="audio-visible-text">
+                <KaraokeText
+                  :text="readingText"
+                  :enabled="wordByWordHighlightEnabled"
+                  granularity="syllable"
+                  :active-index="activeSyllable"
+                />
+              </p>
               <button class="btn btn-primary" type="button" @click="handleReadConfirm">
                 Ya la leí
               </button>
@@ -243,8 +252,9 @@
                   :options="current.options || []"
                   :status="currentStatus"
                   :correct-answers="currentCorrectAnswers"
+                  :word-highlight-enabled="wordByWordHighlightEnabled"
+                  :active-word-token="activeKaraokeToken"
                   aria-label="Opciones de respuesta"
-                  @preview="handleOptionPreview"
                   @select="handleSimpleOption"
                 />
 
@@ -267,7 +277,11 @@
                     type="button"
                     @click="selectLeft(word)"
                   >
-                    {{ word }}
+                    <KaraokeText
+                      :text="word"
+                      :enabled="wordByWordHighlightEnabled"
+                      :active-token="activeKaraokeToken"
+                    />
                   </button>
                 </div>
                 <div class="pair-column">
@@ -279,7 +293,11 @@
                     @click="handlePairMatch(option)"
                     :disabled="!selectedLeft"
                   >
-                    {{ option }}
+                    <KaraokeText
+                      :text="option"
+                      :enabled="wordByWordHighlightEnabled"
+                      :active-token="activeKaraokeToken"
+                    />
                   </button>
                 </div>
               </div>
@@ -297,7 +315,11 @@
                     type="button"
                     @click="selectLeft(word)"
                   >
-                    {{ word }}
+                    <KaraokeText
+                      :text="word"
+                      :enabled="wordByWordHighlightEnabled"
+                      :active-token="activeKaraokeToken"
+                    />
                   </button>
                 </div>
                 <div class="pair-column">
@@ -309,7 +331,11 @@
                     @click="handlePairMatch(option)"
                     :disabled="!selectedLeft"
                   >
-                    {{ option }}
+                    <KaraokeText
+                      :text="option"
+                      :enabled="wordByWordHighlightEnabled"
+                      :active-token="activeKaraokeToken"
+                    />
                   </button>
                 </div>
               </div>
@@ -370,10 +396,12 @@
                   :class="guidedChoiceOptionClass(option, optionIdx)"
                   type="button"
                   @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
                 >
-                  {{ option }}
+                  <KaraokeText
+                    :text="option"
+                    :enabled="wordByWordHighlightEnabled"
+                    :active-token="activeKaraokeToken"
+                  />
                 </button>
               </div>
             </section>
@@ -386,8 +414,6 @@
                   class="btn-option"
                   type="button"
                   @click="handleSyllableSelect(syllable)"
-                  @mouseenter="handleOptionPreview(syllable)"
-                  @focus="handleOptionPreview(syllable)"
                 >
                   {{ syllable }}
                 </button>
@@ -444,17 +470,23 @@
                   :class="guidedChoiceOptionClass(option, optionIdx)"
                   type="button"
                   @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
                 >
-                  {{ option }}
+                  <KaraokeText
+                    :text="option"
+                    :enabled="wordByWordHighlightEnabled"
+                    :active-token="activeKaraokeToken"
+                  />
                 </button>
               </div>
             </section>
 
             <section v-else-if="current.type === 'READ_AND_ANSWER'">
               <p v-if="current.text || current.context || current.reading" class="audio-visible-text reading-paragraph">
-                {{ current.text || current.context || current.reading }}
+                <KaraokeText
+                  :text="current.text || current.context || current.reading"
+                  :enabled="wordByWordHighlightEnabled"
+                  :active-token="activeKaraokeToken"
+                />
               </p>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
@@ -463,10 +495,12 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
                 >
-                  {{ option }}
+                  <KaraokeText
+                    :text="option"
+                    :enabled="wordByWordHighlightEnabled"
+                    :active-token="activeKaraokeToken"
+                  />
                 </button>
               </div>
             </section>
@@ -487,8 +521,9 @@
                   :options="current.options || []"
                   :status="currentStatus"
                   :correct-answers="currentCorrectAnswers"
+                  :word-highlight-enabled="wordByWordHighlightEnabled"
+                  :active-word-token="activeKaraokeToken"
                   aria-label="Opciones de frase"
-                  @preview="handleOptionPreview"
                   @select="handleSimpleOption"
                 />
 
@@ -516,10 +551,12 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
                 >
-                  {{ option }}
+                  <KaraokeText
+                    :text="option"
+                    :enabled="wordByWordHighlightEnabled"
+                    :active-token="activeKaraokeToken"
+                  />
                 </button>
               </div>
             </section>
@@ -603,7 +640,13 @@
 
             <!-- Clasificar tiempos verbales -->
             <section v-else-if="current.type === 'tense_classify'">
-              <p v-if="current.sentence" class="audio-visible-text">{{ current.sentence }}</p>
+              <p v-if="current.sentence" class="audio-visible-text">
+                <KaraokeText
+                  :text="current.sentence"
+                  :enabled="wordByWordHighlightEnabled"
+                  :active-token="activeKaraokeToken"
+                />
+              </p>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -611,10 +654,12 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
                 >
-                  {{ option }}
+                  <KaraokeText
+                    :text="option"
+                    :enabled="wordByWordHighlightEnabled"
+                    :active-token="activeKaraokeToken"
+                  />
                 </button>
               </div>
             </section>
@@ -631,7 +676,11 @@
                     type="button"
                     @click="selectLeft(word)"
                   >
-                    {{ word }}
+                    <KaraokeText
+                      :text="word"
+                      :enabled="wordByWordHighlightEnabled"
+                      :active-token="activeKaraokeToken"
+                    />
                   </button>
                 </div>
                 <div class="pair-column">
@@ -643,7 +692,11 @@
                     @click="handlePairMatch(option)"
                     :disabled="!selectedLeft"
                   >
-                    {{ option }}
+                    <KaraokeText
+                      :text="option"
+                      :enabled="wordByWordHighlightEnabled"
+                      :active-token="activeKaraokeToken"
+                    />
                   </button>
                 </div>
               </div>
@@ -658,8 +711,6 @@
                   class="btn-option"
                   type="button"
                   @click="handleAccentClick(syllable)"
-                  @mouseenter="handleOptionPreview(syllable)"
-                  @focus="handleOptionPreview(syllable)"
                 >
                   {{ syllable }}
                 </button>
@@ -668,7 +719,13 @@
 
             <!-- Signos de puntuación -->
             <section v-else-if="current.type === 'punctuation_game'">
-              <p v-if="current.sentence" class="audio-visible-text">{{ current.sentence }}</p>
+              <p v-if="current.sentence" class="audio-visible-text">
+                <KaraokeText
+                  :text="current.sentence"
+                  :enabled="wordByWordHighlightEnabled"
+                  :active-token="activeKaraokeToken"
+                />
+              </p>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -676,10 +733,12 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
                 >
-                  {{ option }}
+                  <KaraokeText
+                    :text="option"
+                    :enabled="wordByWordHighlightEnabled"
+                    :active-token="activeKaraokeToken"
+                  />
                 </button>
               </div>
             </section>
@@ -693,10 +752,12 @@
                   class="btn-option"
                   type="button"
                   @click="handleSimpleOption(option)"
-                  @mouseenter="handleOptionPreview(option)"
-                  @focus="handleOptionPreview(option)"
                 >
-                  {{ option }}
+                  <KaraokeText
+                    :text="option"
+                    :enabled="wordByWordHighlightEnabled"
+                    :active-token="activeKaraokeToken"
+                  />
                 </button>
               </div>
             </section>
@@ -732,11 +793,13 @@ import { ref, computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useBillingStore } from '../store/billingStore'
 import { useGameStore } from '../store/gameStore'
+import { useProfileStore } from '../store/profileStore'
 import { useExerciseEngine } from '../engine/logic/ExerciseEngine'
 import { listLevels } from '../engine/logic/utils/validateTemplates'
 import exerciseWordTimings from '../engine/logic/audio/exerciseWordTimings.json'
 import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
 import { getAudioSettings, playSfx, playVoice, playVoiceCue, stopVoice, unlockAudio, stopMusic } from '../engine/audio/audioManager'
+import { resolveExerciseAudioRoute } from '../engine/audio/exerciseVoiceRoutes'
 import { VOICE_PRESET } from '../engine/audio/voiceProfile'
 
 import ExerciseShell from '../components/ExerciseShell.vue'
@@ -748,6 +811,7 @@ import ExerciseFeedback from '../components/exercises/ExerciseFeedback.vue'
 import GuidedTutor from '../components/exercises/GuidedTutor.vue'
 import CompleteWordVisual from '../components/exercises/CompleteWordVisual.vue'
 import CelebrationCard from '../components/exercises/CelebrationCard.vue'
+import KaraokeText from '../components/accessibility/KaraokeText.vue'
 
 import Perezoso from '../assets/characters/Perezoso.png'
 import Zorro from '../assets/characters/Zorro.png'
@@ -759,6 +823,7 @@ const route = useRoute()
 const router = useRouter()
 const billing = useBillingStore()
 const game = useGameStore()
+const profile = useProfileStore()
 const confettiPieces = Array.from({ length: 100 }, (_, i) => ({
   id: i,
   left: Math.random() * 100,
@@ -770,18 +835,19 @@ const celebrateAvatar = ref(false)
 let confettiTimer = null
 let avatarCelebrateTimer = null
 const readingHighlight = ref(false)
+const activeKaraokeWordIndex = ref(-1)
 let readingTimer = null
 let syllableTimer = null
 let syllableStepTimeouts = []
 let activeAudioEl = null
 let audioTimeUpdateHandler = null
+let audioPlayingHandler = null
+let audioLoadedMetadataHandler = null
 let audioProgressRaf = null
 let lastReadingProgress = 0
 let lastTimelineIndex = -1
-const READING_AUDIO_PACE = 0.76
-const ALLOW_DEV_TTS_FALLBACK = import.meta.env.DEV && import.meta.env.VITE_ENABLE_TTS_FALLBACK !== 'false'
+const READING_AUDIO_PACE = 1
 const prefersReducedMotion = ref(false)
-let lastOptionPreviewAt = 0
 let previousBodyOverflow = ''
 let previousHtmlOverflow = ''
 let previousBodyOverscroll = ''
@@ -826,6 +892,7 @@ onMounted(() => {
   // Silencia la música global al entrar al modo ejercicios
   stopMusic(260)
   lockExerciseScrollOnMobile()
+  profile.loadProfile?.()
 })
 
 // Permite leer /game/:level/:stage o /game/:levelId/:stageId
@@ -970,11 +1037,12 @@ function playTutorCue() {
 
 function playTutorStatementAudio() {
   const audioSettings = getAudioSettings()
-  if (!audioSettings.voiceEnabled) return
-  if (current.value?.audio) {
-    playSimpleAudio(current.value.audio)
+  const exerciseAudio = resolveExerciseAudioRoute(current.value)
+  if (exerciseAudio) {
+    playSimpleAudio(exerciseAudio)
     return
   }
+  if (!audioSettings.voiceEnabled) return
   const text = tutorStatementText.value || exerciseNarrationText.value || guidedTutor.value?.cue
   if (!text) return
   unlockAudio()
@@ -1108,6 +1176,17 @@ function getTutorStatementText(exercise) {
   ]
   const text = values.find((value) => typeof value === 'string' && value.trim())
   return String(text || '').replace(/\s+/g, ' ').trim()
+}
+
+function getReadableExerciseText(exercise) {
+  if (!exercise) return ''
+  const mainText = getExerciseNarrationText(exercise) || getTutorStatementText(exercise)
+  if (!mainText) return ''
+  const answer = resolveOptionText(exercise.solution ?? exercise.correct ?? exercise.answer ?? exercise.expectedAnswer)
+  if (answer) {
+    return normalizeReadingText(String(mainText).replace(blankRegex, answer))
+  }
+  return normalizeReadingText(mainText)
 }
 
 function getEstimatedReadingDurationMs() {
@@ -1258,7 +1337,77 @@ const readingText = computed(() => {
   return normalizeReadingText(current.value?.text || current.value?.sentence || current.value?.prompt || '')
 })
 
-const readingAudioSrc = computed(() => resolveAsset(current.value?.audio))
+const wordByWordHighlightEnabled = computed(() => {
+  const learningProfile = profile.childLearningProfile || {}
+  const supportPreferences = Array.isArray(learningProfile.supportPreferences)
+    ? learningProfile.supportPreferences
+    : []
+  const learningNeeds = Array.isArray(profile.childLearningNeeds)
+    ? profile.childLearningNeeds
+    : []
+
+  return Boolean(
+    learningProfile.resaltadoPorPalabra ||
+    learningProfile.wordByWordHighlight ||
+    learningProfile.perfilDislexia ||
+    supportPreferences.includes('word_by_word_highlight') ||
+    learningNeeds.includes('dyslexia')
+  )
+})
+
+const exerciseKaraokeText = computed(() => {
+  const exercise = current.value
+  if (!exercise) return ''
+
+  const mainText = getReadableExerciseText(exercise)
+  const options = Array.isArray(exercise.options)
+    ? exercise.options.map(resolveOptionText).filter(Boolean)
+    : []
+  const pairs = Array.isArray(exercise.pairs)
+    ? exercise.pairs.flatMap((pair) => [
+      pair.word || pair.singular || pair.statement,
+      pair.match || pair.synonym || pair.antonym || pair.plural || pair.response
+    ]).filter(Boolean)
+    : []
+
+  return normalizeReadingText([mainText, ...options, ...pairs].filter(Boolean).join(' '))
+})
+
+const spokenWordSegmentsForHighlight = computed(() =>
+  segmentTextIntoWords(exerciseKaraokeText.value)
+    .map((segment, idx) => ({ ...segment, idx }))
+    .filter((segment) => !segment.isGap && normalizeWordToken(segment.text))
+)
+
+const spokenWordTimeline = computed(() => {
+  const spoken = spokenWordSegmentsForHighlight.value
+  if (!spoken.length) return []
+
+  const weights = spoken.map((segment) => {
+    const base = Math.max(1, String(segment.text || '').length)
+    const punctuationBoost = /[.,;:!?]/.test(String(segment.text || '')) ? 1.2 : 0
+    return base + punctuationBoost
+  })
+  const totalWeight = weights.reduce((acc, value) => acc + value, 0)
+  if (totalWeight <= 0) return []
+
+  let cumulative = 0
+  return spoken.map((segment, i) => {
+    cumulative += weights[i]
+    return {
+      idx: i,
+      token: normalizeWordToken(segment.text),
+      endProgress: cumulative / totalWeight
+    }
+  })
+})
+
+const activeKaraokeToken = computed(() => {
+  if (!wordByWordHighlightEnabled.value) return ''
+  return spokenWordTimeline.value[activeKaraokeWordIndex.value]?.token || ''
+})
+
+const currentExerciseAudioSrc = computed(() => resolveExerciseAudioRoute(current.value))
 
 const syllableSegments = computed(() => {
   return segmentTextIntoSyllables(readingText.value)
@@ -1368,18 +1517,22 @@ const spokenSyllableTimeline = computed(() => {
   if (!spoken.length) return []
 
   const weights = spoken.map((segment) => {
-    // Base por longitud de sílaba + micro pausa por espacios/puntuación cercanos.
+    // Base por sílaba + pausa natural al final de palabra para seguir mejor la voz.
     const base = Math.max(1, String(segment.text || '').length)
     const nextFull = full[segment.idx + 1]
-    const gapBoost = nextFull?.isGap ? Math.min(2, String(nextFull.text || '').length * 0.35) : 0
-    const punctuationBoost = /[.,;:!?]/.test(String(segment.text || '')) ? 0.8 : 0
+    const nextText = String(nextFull?.text || '')
+    const isWordEnd = Boolean(nextFull?.isGap)
+    const gapBoost = isWordEnd ? Math.min(3.4, 1.55 + nextText.length * 0.45) : 0
+    const punctuationBoost = /[.,;:!?]/.test(String(segment.text || '') + nextText) ? 1.6 : 0
     return base + gapBoost + punctuationBoost
   })
 
-  const totalWeight = weights.reduce((acc, value) => acc + value, 0)
+  const introPauseWeight = 1.4
+  const endingHoldWeight = 1.1
+  const totalWeight = weights.reduce((acc, value) => acc + value, introPauseWeight + endingHoldWeight)
   if (totalWeight <= 0) return []
 
-  let cumulative = 0
+  let cumulative = introPauseWeight
   return spoken.map((segment, i) => {
     cumulative += weights[i]
     return {
@@ -1501,48 +1654,6 @@ const EXERCISE_VOICE_CUE_BY_TEXT = {
   'une el numero con su nombre escrito': 'l2-ps-3'
 }
 
-const OPTION_VOICE_CUE_BY_TEXT = {
-  'un conejo': 'opt-un-conejo',
-  'un zapato': 'opt-un-zapato',
-  'un platano': 'opt-un-platano',
-  'se enfadan': 'opt-se-enfadan',
-  'se divierten': 'opt-se-divierten',
-  'el mono lee un mapa': 'l3-ss-1-opt-1',
-  'el mapa lee un mono': 'l3-ss-1-opt-2',
-  'llueve poco': 'l3-ss-2-opt-1',
-  'poco llueve': 'l3-ss-2-opt-2',
-  'el libro abre la ventana': 'l3-ss-3-opt-1',
-  'la nina abre la ventana': 'l3-ss-3-opt-2',
-  'en una cueva': 'l4-ra-1-opt-1',
-  'en un arbol': 'l4-ra-1-opt-2',
-  'beber agua': 'l4-ra-2-opt-1',
-  'dormir en la casa': 'l4-ra-2-opt-2',
-  sa: 'syll-sa',
-  po: 'syll-po',
-  lu: 'syll-lu',
-  na: 'syll-na',
-  me: 'syll-me',
-  lo: 'syll-lo',
-  di: 'syll-di',
-  a: 'syll-a',
-  fan: 'syll-fan',
-  ta: 'syll-ta',
-  si: 'syll-si',
-  pregunta: 'categoria-pregunta',
-  afirmacion: 'categoria-afirmacion',
-  pasado: 'tense-pasado',
-  presente: 'tense-presente',
-  futuro: 'tense-futuro'
-}
-
-const OPTION_VOICE_CUE_BY_EXACT_TEXT = {
-  '¡': 'signo-exclamacion',
-  '¿': 'signo-interrogacion',
-  '.': 'signo-punto-final',
-  música: 'musica-opcion-correcta',
-  'musíca': 'musica-opcion-error-1',
-  'mùsica': 'musica-opcion-error-2'
-}
 const ASSOCIATION_TYPES = new Set(['pair_synonyms', 'pair_antonyms'])
 
 function normalizeExerciseText(text) {
@@ -1573,16 +1684,6 @@ function cueForExercise(exercise) {
   return EXERCISE_VOICE_CUE_BY_TYPE[type] || null
 }
 
-function cueForOption(option) {
-  const exactKey = String(resolveOptionText(option) || '').trim().toLowerCase()
-  if (exactKey && OPTION_VOICE_CUE_BY_EXACT_TEXT[exactKey]) {
-    return OPTION_VOICE_CUE_BY_EXACT_TEXT[exactKey]
-  }
-  const textKey = normalizeExerciseText(resolveOptionText(option))
-  if (!textKey) return null
-  return OPTION_VOICE_CUE_BY_TEXT[textKey] || null
-}
-
 const isFuerzaTranquilaStage4of6 = computed(() => isFuerzaTranquilaStage4of6Now())
 const isFuerzaTranquilaStage2of6 = computed(() => isFuerzaTranquilaStage2of6Now())
 const isStage1of4 = computed(() => {
@@ -1609,7 +1710,8 @@ watch(
     const audioSettings = getAudioSettings()
     if (!audioSettings.voiceEnabled) return
     unlockAudio()
-    if (tutorStatementText.value || exercise?.audio) {
+    const exerciseAudio = resolveExerciseAudioRoute(exercise)
+    if (tutorStatementText.value || exerciseAudio) {
       playTutorStatementAudio()
       return
     }
@@ -1620,8 +1722,8 @@ watch(
     }
     // Safety fallback for association exercises: if cue mapping fails, use their manual MP3 directly.
     const type = String(exercise?.type || '').trim().toLowerCase()
-    if (ASSOCIATION_TYPES.has(type) && exercise?.audio) {
-      playVoice(exercise.audio, { interrupt: true, allowTtsFallback: true })
+    if (ASSOCIATION_TYPES.has(type) && exerciseAudio) {
+      playVoice(exerciseAudio, { interrupt: true, allowTtsFallback: true, forceVoiceEnabled: true })
       return
     }
   },
@@ -2032,31 +2134,6 @@ function normalizeStringLoose(value) {
   return String(value ?? '').trim().toLowerCase()
 }
 
-function handleOptionPreview(option) {
-  const now = Date.now()
-  if (now - lastOptionPreviewAt < 420) return
-  lastOptionPreviewAt = now
-  const audioSettings = getAudioSettings()
-  if (!audioSettings.voiceEnabled) return
-  const optionCue = cueForOption(option)
-  if (optionCue) {
-    unlockAudio()
-    playVoiceCue(optionCue, { interrupt: true })
-    return
-  }
-  if (!ALLOW_DEV_TTS_FALLBACK) return
-  const text = resolveOptionText(option)
-  if (!text) return
-  unlockAudio()
-  playVoice(text, {
-    allowTtsFallback: true,
-    rate: VOICE_PRESET.rate,
-    pitch: VOICE_PRESET.pitch,
-    lang: VOICE_PRESET.lang,
-    volume: audioSettings.voiceVolume
-  })
-}
-
 function handleSimpleOrder(ok) {
   if (ok) {
     const expected = current.value?.correctOrder ?? current.value?.correct ?? []
@@ -2159,66 +2236,82 @@ function playSimpleAudio(src, onEnd) {
     onEnd?.()
     return
   }
-  const audioSettings = getAudioSettings()
-  if (!audioSettings.voiceEnabled) {
-    onEnd?.()
-    return
-  }
   unlockAudio()
+  clearAudioListeners()
   stopAllMedia()
+  resetReadingHighlight()
   const audio = playVoice(src, {
     interrupt: true,
+    forceVoiceEnabled: true,
     playbackRate: READING_AUDIO_PACE,
     onEnd: () => {
+      clearAudioListeners()
       activeAudioEl = null
+      resetReadingHighlight()
       onEnd?.()
     }
   })
   activeAudioEl = audio || null
+  if (audio) {
+    bindReadingProgressToAudio(audio)
+  }
   return audio
 }
 
-function handleAudioClick(audio) {
-  const audioSettings = getAudioSettings()
-  if (!audioSettings.voiceEnabled) return
-  unlockAudio()
-  playSfx('click')
+function bindReadingProgressToAudio(audioEl) {
+  if (!audioEl) return
   clearAudioListeners()
   const estimate = getEstimatedReadingDurationMs()
   const effectiveEstimate = getEffectiveDurationMs(estimate, READING_AUDIO_PACE)
-  startReadingPulse(effectiveEstimate)
+  let pulseStarted = false
 
-  const audioEl = playSimpleAudio(audio, () => {
-    stopReadingPulse()
-  })
-
-  if (audioEl) {
-    const updateFromAudio = () => {
-      const durationSec =
-        isFinite(audioEl.duration) && audioEl.duration > 0
-          ? audioEl.duration
-          : effectiveEstimate / 1000
-      if (durationSec > 0) {
-        const progress = Math.min(1, Math.max(0, audioEl.currentTime / durationSec))
-        syncActiveSyllableByProgress(progress)
-      }
+  const updateFromAudio = () => {
+    if (!pulseStarted && audioEl.currentTime > 0) {
+      startPulseFromCurrentAudioTime()
     }
-    const runProgressLoop = () => {
-      updateFromAudio()
-      if (!audioEl.paused && !audioEl.ended && readingHighlight.value) {
-        audioProgressRaf = requestAnimationFrame(runProgressLoop)
-      } else {
-        audioProgressRaf = null
-      }
+    if (!pulseStarted) return
+    const durationSec =
+      isFinite(audioEl.duration) && audioEl.duration > 0
+        ? audioEl.duration
+        : effectiveEstimate / 1000
+    if (durationSec > 0) {
+      const progress = Math.min(1, Math.max(0, audioEl.currentTime / durationSec))
+      syncActiveSyllableByProgress(progress)
     }
-    audioTimeUpdateHandler = updateFromAudio
-    audioEl.addEventListener('timeupdate', updateFromAudio)
-    audioEl.addEventListener('loadedmetadata', () => {
-      const durationMs = isFinite(audioEl.duration) ? audioEl.duration * 1000 : estimate
-      const effectiveDuration = getEffectiveDurationMs(durationMs, READING_AUDIO_PACE)
-      startReadingPulse(effectiveDuration)
-      updateFromAudio()
-    })
+  }
+  const startPulseFromCurrentAudioTime = () => {
+    if (pulseStarted) return
+    const durationMs = isFinite(audioEl.duration) && audioEl.duration > 0
+      ? audioEl.duration * 1000
+      : estimate
+    const effectiveDuration = getEffectiveDurationMs(durationMs, READING_AUDIO_PACE)
+    startReadingPulse(effectiveDuration)
+    pulseStarted = true
+    updateFromAudio()
+  }
+  const runProgressLoop = () => {
+    updateFromAudio()
+    if (!audioEl.paused && !audioEl.ended && readingHighlight.value) {
+      audioProgressRaf = requestAnimationFrame(runProgressLoop)
+    } else {
+      audioProgressRaf = null
+    }
+  }
+  audioTimeUpdateHandler = updateFromAudio
+  audioPlayingHandler = () => {
+    startPulseFromCurrentAudioTime()
+    runProgressLoop()
+  }
+  audioLoadedMetadataHandler = () => {
+    if (audioEl.currentTime > 0 || !audioEl.paused) {
+      startPulseFromCurrentAudioTime()
+    }
+  }
+  audioEl.addEventListener('timeupdate', updateFromAudio)
+  audioEl.addEventListener('playing', audioPlayingHandler)
+  audioEl.addEventListener('loadedmetadata', audioLoadedMetadataHandler)
+  if (!audioEl.paused && !audioEl.ended) {
+    startPulseFromCurrentAudioTime()
     runProgressLoop()
   }
 }
@@ -2226,7 +2319,9 @@ function handleAudioClick(audio) {
 function startReadingPulse(autoStopMs) {
   if (readingTimer) clearTimeout(readingTimer)
   const firstIdx = syllableSegments.value.findIndex((segment) => !segment.isGap)
+  lastReadingProgress = 0
   activeSyllable.value = firstIdx
+  activeKaraokeWordIndex.value = wordByWordHighlightEnabled.value && spokenWordTimeline.value.length ? 0 : -1
   const firstTimelinePos = spokenSyllableTimeline.value.findIndex((entry) => entry.idx === firstIdx)
   lastTimelineIndex = firstTimelinePos >= 0 ? firstTimelinePos : -1
   readingHighlight.value = true
@@ -2251,6 +2346,7 @@ function stopReadingPulse() {
 function resetReadingHighlight() {
   readingHighlight.value = false
   activeSyllable.value = -1
+  activeKaraokeWordIndex.value = -1
   lastReadingProgress = 0
   lastTimelineIndex = -1
   clearSyllableTicker()
@@ -2303,6 +2399,14 @@ function clearAudioListeners() {
   if (activeAudioEl && audioTimeUpdateHandler) {
     activeAudioEl.removeEventListener('timeupdate', audioTimeUpdateHandler)
     audioTimeUpdateHandler = null
+  }
+  if (activeAudioEl && audioPlayingHandler) {
+    activeAudioEl.removeEventListener('playing', audioPlayingHandler)
+    audioPlayingHandler = null
+  }
+  if (activeAudioEl && audioLoadedMetadataHandler) {
+    activeAudioEl.removeEventListener('loadedmetadata', audioLoadedMetadataHandler)
+    audioLoadedMetadataHandler = null
   }
   if (audioProgressRaf) {
     cancelAnimationFrame(audioProgressRaf)
@@ -2370,6 +2474,7 @@ function startFaroSyllableSchedule(durationMs) {
 }
 
 function syncActiveSyllableByProgress(progress) {
+  syncActiveWordByProgress(progress)
   const timeline = spokenSyllableTimeline.value
   if (!timeline.length) return
   const clamped = Math.min(1, Math.max(0, progress))
@@ -2386,6 +2491,21 @@ function syncActiveSyllableByProgress(progress) {
   activeSyllable.value = timeline[safePos].idx
 }
 
+function syncActiveWordByProgress(progress) {
+  if (!wordByWordHighlightEnabled.value) {
+    activeKaraokeWordIndex.value = -1
+    return
+  }
+  const timeline = spokenWordTimeline.value
+  if (!timeline.length) {
+    activeKaraokeWordIndex.value = -1
+    return
+  }
+  const clamped = Math.min(1, Math.max(0, Number(progress) || 0))
+  const target = timeline.findIndex((entry) => clamped <= entry.endProgress)
+  activeKaraokeWordIndex.value = target >= 0 ? target : timeline.length - 1
+}
+
 watch(
   () => current.value?.id,
   () => {
@@ -2400,6 +2520,7 @@ watch(
     clearAudioListeners()
     lastReadingProgress = 0
     activeSyllable.value = -1
+    activeKaraokeWordIndex.value = -1
     resetCompleteWordInputs()
     resetLetterBuild()
     setTimeout(() => {

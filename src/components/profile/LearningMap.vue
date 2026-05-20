@@ -5,7 +5,9 @@
         <p class="section-kicker">Mapa personalizado</p>
         <h2 id="learning-map-title">Ruta de aprendizaje</h2>
       </div>
-      <RouterLink class="btn btn-primary" :to="continueRoute">Continuar aprendizaje</RouterLink>
+      <button class="btn btn-primary" type="button" @click="$emit('continue')">
+        Continuar aprendizaje
+      </button>
     </div>
 
     <p v-if="!hasProgress" class="map-empty">
@@ -74,6 +76,8 @@ defineProps({
   continueRoute: { type: String, default: '/mapview' },
   formatDate: { type: Function, default: (value) => value || 'Sin sesiones todavía' }
 })
+
+defineEmits(['continue'])
 
 const levelCharacters = {
   1: { src: '/images/characters/sloth.png', alt: 'Oso perezoso del nivel 1' },

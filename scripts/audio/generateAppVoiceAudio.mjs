@@ -7,14 +7,26 @@ import { AUDIO_COPY, AUDIO_EXPERIENCE } from '../../src/engine/audio/audioExperi
 const ROOT = process.cwd()
 const TEMPLATES_PATH = path.join(ROOT, 'src/engine/logic/data/templates.json')
 const PUBLIC_DIR = path.join(ROOT, 'public')
-const OUT_DIR = path.join(PUBLIC_DIR, 'audio/voice/exercises/generated')
 const OUT_MANIFEST_JSON = path.join(ROOT, 'scripts/audio/app_voice_audio_manifest.json')
 const OUT_MANIFEST_CSV = path.join(ROOT, 'scripts/audio/app_voice_audio_manifest.csv')
 
-const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini-tts'
-const DEFAULT_OPENAI_VOICE = 'coral'
-const DEFAULT_ELEVENLABS_MODEL = 'eleven_multilingual_v2'
+const DEFAULT_ELEVENLABS_VOICE_ID = 'IvWkxlWQtJVT34p1Pt9D'
+const DEFAULT_ELEVENLABS_MODEL = 'eleven_flash_v2_5'
 const DEFAULT_ELEVENLABS_FORMAT = 'mp3_44100_128'
+const DEFAULT_EXERCISE_VOICE_SETTINGS = {
+  stability: 0.58,
+  similarityBoost: 0.8,
+  style: 0.38,
+  speakerBoost: false,
+  speed: 1.08
+}
+const DEFAULT_REWARD_VOICE_SETTINGS = {
+  stability: 0.58,
+  similarityBoost: 0.8,
+  style: 0.38,
+  speakerBoost: false,
+  speed: 1.08
+}
 
 const args = parseArgs(process.argv.slice(2))
 const dryRun = args.dry || args['dry-run']
@@ -22,8 +34,11 @@ const scope = args.scope || (args.all ? 'all' : 'missing')
 const writeTemplates = args['write-templates'] !== false
 const overwrite = Boolean(args.overwrite || scope === 'all')
 const includeGlobalCues = args['include-global-cues'] !== false
+const syncRoutesOnly = Boolean(args['sync-routes-only'])
 const limit = Number.isFinite(Number(args.limit)) ? Number(args.limit) : Infinity
 const delayMs = Number.isFinite(Number(args.delay)) ? Number(args.delay) : 250
+const selectedIds = parseIdSet(args.ids || args.id)
+const startAfterId = args['start-after'] && args['start-after'] !== true ? String(args['start-after']).trim() : ''
 
 function parseArgs(argv) {
   const parsed = {}
@@ -38,6 +53,15 @@ function parseArgs(argv) {
     parsed[key] = rest.length ? rest.join('=') : true
   }
   return parsed
+}
+
+function parseIdSet(value) {
+  if (!value || value === true) return null
+  const ids = String(value)
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+  return ids.length ? new Set(ids) : null
 }
 
 function normalizeText(value = '') {
@@ -69,37 +93,185 @@ function fileExistsForRoute(route = '') {
   return fs.existsSync(publicRouteToFile(route))
 }
 
-function getExerciseText(exercise = {}) {
-  const type = String(exercise.type || exercise.subtype || '').toUpperCase()
-  if (type === 'COMPLETE_WORD') {
-    const solution = normalizeText(exercise.solution ?? exercise.correct ?? exercise.answer)
-    if (solution) return `Completa la palabra: ${solution}.`
+function blankReplacementText() {
+  return normalizeText(process.env.AUDIO_BLANK_REPLACEMENT || 'espacio para completar')
+}
+
+function choicesConnectorText() {
+  return normalizeText(process.env.AUDIO_CHOICES_CONNECTOR ?? '')
+}
+
+function symbolToSpeech(value = '') {
+  const text = normalizeText(value)
+  const symbolMap = {
+    '.': 'punto final',
+    ',': 'coma',
+    ';': 'punto y coma',
+    ':': 'dos puntos',
+    '?': 'signo de pregunta',
+    '¿': 'signo de apertura de pregunta',
+    '!': 'signo de exclamacion',
+    '¡': 'signo de apertura de exclamacion'
   }
 
-  const fields = ['instruction', 'prompt', 'question', 'sentence', 'text', 'reading', 'context', 'fallbackText', 'title', 'hint']
+  if (symbolMap[text]) return symbolMap[text]
+  if (/^[.,;:¿?¡!]+$/.test(text)) {
+    return Array.from(text).map((symbol) => symbolMap[symbol]).filter(Boolean).join(', ')
+  }
+  return ''
+}
+
+function cleanSpeechSegment(value = '') {
+  return normalizeText(value)
+    .replace(/\s*_{2,}\s*/g, `, ${blankReplacementText()}, `)
+    .replace(/\s+:/g, ':')
+    .replace(/:\s*([.!?])/g, '$1')
+    .replace(/,\s*([.!?])/g, '$1')
+    .replace(/\s+([.,;:!?])/g, '$1')
+    .replace(/([.,;:!?]){2,}/g, '$1')
+    .replace(/:$/g, '')
+    .trim()
+}
+
+function getAnswerText(exercise = {}) {
+  const answer = exercise.correct ?? exercise.answer ?? exercise.solution ?? exercise.expectedAnswer
+  if (Array.isArray(answer)) return answer.map(textFromOption).filter(Boolean).join(' ')
+  return textFromOption(answer)
+}
+
+function speechTextForField(exercise = {}, field = '') {
+  const value = exercise[field]
+  const raw = normalizeText(value)
+  if (!raw) return ''
+  if (!raw.includes('__')) return raw
+
+  const answer = getAnswerText(exercise)
+  if (!answer) return raw
+
+  return raw.replace(/_{2,}/g, answer)
+}
+
+function stripFinalPunctuation(value = '') {
+  const text = cleanSpeechSegment(value)
+  return text.replace(/[.,;:!?]+$/g, '').trim() || text
+}
+
+function joinSpeechSegments(segments = []) {
+  return segments
+    .map(cleanSpeechSegment)
+    .filter(Boolean)
+    .map((segment) => segment.replace(/[,;:]+$/g, '').trim())
+    .map((segment) => (/[.!?]$/.test(segment) ? segment : `${segment}.`))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function pushUniqueText(target, value) {
+  const text = cleanSpeechSegment(value)
+  if (!text) return
+  if (!target.some((item) => item.toLowerCase() === text.toLowerCase())) {
+    target.push(text)
+  }
+}
+
+function textFromOption(option) {
+  if (option == null) return ''
+  if (typeof option === 'string' || typeof option === 'number') {
+    return cleanSpeechSegment(symbolToSpeech(option) || option)
+  }
+  if (typeof option !== 'object') return ''
+
+  const fields = ['text', 'label', 'value', 'word', 'match', 'letter', 'syllable', 'title', 'answer', 'name']
   for (const field of fields) {
-    const text = normalizeText(exercise[field])
+    const text = cleanSpeechSegment(symbolToSpeech(option[field]) || option[field])
     if (text) return text
-  }
-
-  if (Array.isArray(exercise.correctOrder) && exercise.correctOrder.length) {
-    return `Ordena las piezas: ${exercise.correctOrder.join(' ')}.`
-  }
-
-  if (Array.isArray(exercise.syllables) && exercise.syllables.length) {
-    return `Ordena las silabas: ${exercise.syllables.join(', ')}.`
   }
 
   return ''
 }
 
+function collectOptionTexts(exercise = {}) {
+  const options = []
+  const optionFields = ['options', 'choices', 'answers', 'items', 'fragments', 'pieces', 'segments', 'words', 'letters']
+
+  optionFields.forEach((field) => {
+    const value = exercise[field]
+    if (!Array.isArray(value)) return
+    value.forEach((option) => pushUniqueText(options, textFromOption(option)))
+  })
+
+  if (Array.isArray(exercise.correctOrder)) {
+    exercise.correctOrder.forEach((option) => pushUniqueText(options, option))
+  }
+
+  if (Array.isArray(exercise.syllables)) {
+    exercise.syllables.forEach((option) => pushUniqueText(options, option))
+  }
+
+  if (Array.isArray(exercise.pairs)) {
+    exercise.pairs.forEach((pair) => {
+      pushUniqueText(options, textFromOption(pair?.left ?? pair?.a ?? pair?.first ?? pair?.word))
+      pushUniqueText(options, textFromOption(pair?.right ?? pair?.b ?? pair?.second ?? pair?.match))
+    })
+  }
+
+  return options
+}
+
+function getExerciseText(exercise = {}, context = {}) {
+  const type = String(exercise.type || exercise.subtype || '').toUpperCase()
+  if (type === 'READ_WITH_AUDIO') {
+    return joinSpeechSegments([speechTextForField(exercise, 'text')])
+  }
+
+  const leadParts = []
+  const level = Number(context.level ?? 0)
+  const subtype = String(context.subtype || '').toLowerCase()
+  const omitAnswerSentence = level === 1 && subtype === 'question_sentence'
+
+  const fields = ['instruction', 'prompt', 'question', 'sentence', 'text', 'reading', 'context', 'fallbackText', 'title']
+  fields.forEach((field) => {
+    if (omitAnswerSentence && field === 'sentence') return
+    pushUniqueText(leadParts, speechTextForField(exercise, field))
+  })
+
+  if (type === 'ORDER_SENTENCE' && leadParts.length === 0) {
+    pushUniqueText(leadParts, 'Ordena las palabras para formar una frase')
+  }
+
+  if (type === 'UNSCRAMBLE_WORD' && leadParts.length === 0) {
+    pushUniqueText(leadParts, 'Ordena las piezas para formar la palabra')
+  }
+
+  if (type === 'COMPLETE_WORD' && exercise.pattern) {
+    pushUniqueText(leadParts, `Patron: ${String(exercise.pattern).replace(/_/g, ' espacio ')}`)
+  }
+
+  const options = collectOptionTexts(exercise)
+  const parts = [...leadParts]
+
+  if (options.length) {
+    const choicesText = options.map(stripFinalPunctuation).join('; ')
+    const connector = choicesConnectorText()
+    parts.push(connector ? `${connector}: ${choicesText}` : choicesText)
+  }
+
+  if (!parts.length) {
+    pushUniqueText(parts, exercise.hint)
+  }
+
+  return joinSpeechSegments(parts)
+}
+
 function getStyleInstructions() {
   return [
-    'Voz en espanol para una app infantil de lectura.',
+    'Voz en espanol latino neutral para una app infantil de lectura.',
     `Tono: ${AUDIO_EXPERIENCE.tone.intent}.`,
     'Habla como una guia cercana: clara, paciente, segura y amable.',
     'Ritmo pausado, diccion muy nitida, energia moderada y sonrisa suave.',
     'Evita dramatizar, reganar, sonar urgente o usar tono de error.',
+    'No uses modismos de Espana; prefiere pronunciacion y cadencia latinoamericana natural.',
     'Frases cortas, una idea por vez, con pausas naturales para ninos neurodivergentes de 4 a 10 anos.'
   ].join(' ')
 }
@@ -134,19 +306,19 @@ function collectGlobalCues() {
       id: 'global-positive-1',
       kind: 'global',
       route: '/audio/voice/positive1.mp3',
-      text: 'Muy bien. Sigue asi, con calma.'
+      text: '¡Muy bien!'
     },
     {
       id: 'global-positive-2',
       kind: 'global',
       route: '/audio/voice/positive2.mp3',
-      text: 'Excelente esfuerzo. Lo estas haciendo muy bien.'
+      text: '¡Sigue asi!'
     },
     {
       id: 'global-positive-3',
       kind: 'global',
       route: '/audio/voice/positive3.mp3',
-      text: 'Buen trabajo. Respira y continuamos.'
+      text: '¡Muy bien!'
     }
   ]
 }
@@ -161,8 +333,8 @@ function collectExerciseItems(templates) {
       list.forEach((exercise, index) => {
         const id = exercise.id || `L${levelKey}-${slugify(subtype)}-${index + 1}`
         const filename = `${slugify(id)}.mp3`
-        const route = `/audio/voice/exercises/generated/${filename}`
-        const text = getExerciseText(exercise)
+        const route = `/audio/voice/exercises/L${levelKey}/${filename}`
+        const text = getExerciseText(exercise, { level: Number(levelKey), subtype })
         if (!text) return
 
         items.push({
@@ -186,24 +358,45 @@ function collectExerciseItems(templates) {
 }
 
 function chooseProvider() {
-  const requested = String(args.provider || 'auto').toLowerCase()
-  if (requested !== 'auto') return requested
-  if (process.env.ELEVENLABS_API_KEY && (process.env.ELEVENLABS_VOICE_ID || process.env.ELEVENLABS_VOICE)) {
-    return 'elevenlabs'
+  const requested = String(args.provider || 'elevenlabs').toLowerCase()
+  if (requested !== 'elevenlabs') {
+    throw new Error('Este generador por lotes esta configurado solo para ElevenLabs. Usa --provider=elevenlabs.')
   }
-  if (process.env.OPENAI_API_KEY) return 'openai'
-  return 'none'
+  return 'elevenlabs'
+}
+
+function envNumber(name, fallback) {
+  const value = Number(process.env[name])
+  return Number.isFinite(value) ? value : fallback
+}
+
+function envBool(name, fallback) {
+  const value = process.env[name]
+  if (value == null) return fallback
+  return String(value).toLowerCase() === 'true'
+}
+
+function getVoiceSettingsForItem(item = {}) {
+  const prefix = item.kind === 'exercise' ? 'ELEVENLABS_EXERCISE' : 'ELEVENLABS_REWARD'
+  const defaults = item.kind === 'exercise' ? DEFAULT_EXERCISE_VOICE_SETTINGS : DEFAULT_REWARD_VOICE_SETTINGS
+
+  return {
+    stability: envNumber(`${prefix}_STABILITY`, defaults.stability),
+    similarityBoost: envNumber(`${prefix}_SIMILARITY_BOOST`, defaults.similarityBoost),
+    style: envNumber(`${prefix}_STYLE`, defaults.style),
+    speakerBoost: envBool(`${prefix}_SPEAKER_BOOST`, defaults.speakerBoost),
+    speed: envNumber(`${prefix}_SPEED`, defaults.speed)
+  }
 }
 
 async function generateWithElevenLabs(item, outputFile) {
   const apiKey = process.env.ELEVENLABS_API_KEY
-  const voiceId = process.env.ELEVENLABS_VOICE_ID || process.env.ELEVENLABS_VOICE
-  if (!apiKey || !voiceId) {
-    throw new Error('Faltan ELEVENLABS_API_KEY y ELEVENLABS_VOICE_ID para generar con ElevenLabs.')
-  }
+  const voiceId = process.env.ELEVENLABS_VOICE_ID || process.env.ELEVENLABS_VOICE || DEFAULT_ELEVENLABS_VOICE_ID
+  if (!apiKey) throw new Error('Falta ELEVENLABS_API_KEY para generar con ElevenLabs.')
 
   const url = new URL(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`)
   url.searchParams.set('output_format', process.env.ELEVENLABS_OUTPUT_FORMAT || DEFAULT_ELEVENLABS_FORMAT)
+  const voiceSettings = getVoiceSettingsForItem(item)
 
   const response = await fetch(url, {
     method: 'POST',
@@ -216,44 +409,24 @@ async function generateWithElevenLabs(item, outputFile) {
       text: item.text,
       model_id: process.env.ELEVENLABS_MODEL_ID || DEFAULT_ELEVENLABS_MODEL,
       voice_settings: {
-        stability: Number(process.env.ELEVENLABS_STABILITY ?? 0.72),
-        similarity_boost: Number(process.env.ELEVENLABS_SIMILARITY_BOOST ?? 0.82),
-        style: Number(process.env.ELEVENLABS_STYLE ?? 0.18),
-        use_speaker_boost: process.env.ELEVENLABS_SPEAKER_BOOST !== 'false',
-        speed: Number(process.env.ELEVENLABS_SPEED ?? 0.92)
+        stability: voiceSettings.stability,
+        similarity_boost: voiceSettings.similarityBoost,
+        style: voiceSettings.style,
+        use_speaker_boost: voiceSettings.speakerBoost,
+        speed: voiceSettings.speed
       }
     })
   })
 
   if (!response.ok) {
-    throw new Error(`ElevenLabs ${response.status}: ${await response.text()}`)
-  }
-
-  await writeBinaryResponse(response, outputFile)
-}
-
-async function generateWithOpenAI(item, outputFile) {
-  const apiKey = process.env.OPENAI_API_KEY
-  if (!apiKey) throw new Error('Falta OPENAI_API_KEY para generar con OpenAI TTS.')
-
-  const response = await fetch('https://api.openai.com/v1/audio/speech', {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${apiKey}`,
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({
-      model: process.env.OPENAI_TTS_MODEL || DEFAULT_OPENAI_MODEL,
-      voice: process.env.OPENAI_TTS_VOICE || DEFAULT_OPENAI_VOICE,
-      input: item.text,
-      instructions: getStyleInstructions(),
-      response_format: 'mp3',
-      speed: Number(process.env.OPENAI_TTS_SPEED ?? 0.88)
-    })
-  })
-
-  if (!response.ok) {
-    throw new Error(`OpenAI TTS ${response.status}: ${await response.text()}`)
+    const detail = await response.text()
+    if (response.status === 401 && detail.includes('missing_permissions')) {
+      throw new Error(
+        'ElevenLabs 401: la API key existe, pero no tiene permiso text_to_speech. ' +
+        'Crea o edita una API key en ElevenLabs con permiso Text to Speech y vuelve a ejecutar npm run generar-voz.'
+      )
+    }
+    throw new Error(`ElevenLabs ${response.status}: ${detail}`)
   }
 
   await writeBinaryResponse(response, outputFile)
@@ -269,6 +442,13 @@ function writeManifests(items, selectedItems, provider) {
   const payload = {
     generatedAt: new Date().toISOString(),
     provider,
+    elevenLabsModel: process.env.ELEVENLABS_MODEL_ID || DEFAULT_ELEVENLABS_MODEL,
+    elevenLabsVoiceId: process.env.ELEVENLABS_VOICE_ID || process.env.ELEVENLABS_VOICE || DEFAULT_ELEVENLABS_VOICE_ID,
+    elevenLabsOutputFormat: process.env.ELEVENLABS_OUTPUT_FORMAT || DEFAULT_ELEVENLABS_FORMAT,
+    elevenLabsVoiceSettings: {
+      exercise: getVoiceSettingsForItem({ kind: 'exercise' }),
+      reward: getVoiceSettingsForItem({ kind: 'global' })
+    },
     scope,
     overwrite,
     dryRun,
@@ -312,7 +492,10 @@ async function main() {
   const globalItems = includeGlobalCues ? collectGlobalCues() : []
   const exerciseItems = collectExerciseItems(templates)
   const allItems = [...globalItems, ...exerciseItems]
-  const selected = allItems
+  const startIndex = startAfterId ? allItems.findIndex((item) => item.id === startAfterId) : -1
+  const candidateItems = startIndex >= 0 ? allItems.slice(startIndex + 1) : allItems
+  const selected = candidateItems
+    .filter((item) => !selectedIds || selectedIds.has(item.id))
     .filter((item) => {
       if (scope === 'all') return true
       if (item.kind === 'global') return !fileExistsForRoute(item.route)
@@ -323,12 +506,25 @@ async function main() {
   const provider = chooseProvider()
   writeManifests(allItems, selected, provider)
 
+  if (syncRoutesOnly) {
+    applyTemplateRoutes(templates, exerciseItems)
+    console.log(JSON.stringify({
+      syncRoutesOnly: true,
+      provider,
+      exerciseRoutesUpdated: exerciseItems.length,
+      templatesUpdated: true,
+      manifest: path.relative(ROOT, OUT_MANIFEST_JSON)
+    }, null, 2))
+    return
+  }
+
   if (dryRun) {
     console.log(JSON.stringify({
       dryRun: true,
       provider,
       scope,
       overwrite,
+      startAfterId: startAfterId || null,
       manifest: path.relative(ROOT, OUT_MANIFEST_JSON),
       csv: path.relative(ROOT, OUT_MANIFEST_CSV),
       totalItems: allItems.length,
@@ -338,9 +534,7 @@ async function main() {
     return
   }
 
-  if (provider === 'none') {
-    throw new Error('No hay proveedor configurado. Define ELEVENLABS_API_KEY + ELEVENLABS_VOICE_ID, o OPENAI_API_KEY.')
-  }
+  if (!process.env.ELEVENLABS_API_KEY) throw new Error('No hay proveedor configurado. Define ELEVENLABS_API_KEY.')
 
   let generated = 0
   let skipped = 0
@@ -352,9 +546,7 @@ async function main() {
       continue
     }
 
-    if (provider === 'elevenlabs') await generateWithElevenLabs(item, outputFile)
-    else if (provider === 'openai') await generateWithOpenAI(item, outputFile)
-    else throw new Error(`Proveedor no soportado: ${provider}`)
+    await generateWithElevenLabs(item, outputFile)
 
     generated += 1
     console.log(`[audio] ${generated}/${selected.length} ${item.route}`)
@@ -369,6 +561,7 @@ async function main() {
     provider,
     scope,
     overwrite,
+    startAfterId: startAfterId || null,
     generated,
     skipped,
     selectedItems: selected.length,

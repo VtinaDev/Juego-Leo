@@ -14,7 +14,9 @@
           Empieza el primer ejercicio para descubrir las fortalezas del niño ✨
         </template>
       </p>
-      <RouterLink class="btn btn-primary" :to="continueRoute">Continuar aprendizaje</RouterLink>
+      <button class="btn btn-primary" type="button" @click="$emit('continue')">
+        Continuar aprendizaje
+      </button>
     </article>
 
     <article class="summary-card">
@@ -44,6 +46,8 @@ defineProps({
   hasProgress: { type: Boolean, default: false },
   continueRoute: { type: String, default: '/mapview' }
 })
+
+defineEmits(['continue'])
 </script>
 
 <style scoped>

@@ -16,26 +16,31 @@
       @pointerup="pressedOptionKey = null"
       @pointercancel="pressedOptionKey = null"
       @mouseleave="pressedOptionKey = null"
-      @mouseenter="$emit('preview', option)"
-      @focus="$emit('preview', option)"
       @click="handleSelect(option)"
     >
-      {{ optionLabel(option) }}
+      <KaraokeText
+        :text="optionLabel(option)"
+        :enabled="wordHighlightEnabled"
+        :active-token="activeWordToken"
+      />
     </button>
   </div>
 </template>
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import KaraokeText from '../accessibility/KaraokeText.vue'
 
 const props = defineProps({
   options: { type: Array, default: () => [] },
   ariaLabel: { type: String, default: 'Exercise options' },
   status: { type: String, default: 'pending' },
-  correctAnswers: { type: Array, default: () => [] }
+  correctAnswers: { type: Array, default: () => [] },
+  wordHighlightEnabled: { type: Boolean, default: false },
+  activeWordToken: { type: String, default: '' }
 })
 
-const emit = defineEmits(['select', 'preview'])
+const emit = defineEmits(['select'])
 const pressedOptionKey = ref(null)
 const selectedOptionKey = ref(null)
 

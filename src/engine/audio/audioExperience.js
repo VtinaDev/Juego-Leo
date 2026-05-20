@@ -37,7 +37,7 @@ export const AUDIO_COPY = Object.freeze({
   retryFirst: 'Casi. Respira y prueba otra vez.',
   retrySecond: 'Vamos paso a paso.',
   retryNext: 'Estoy contigo. Mira una pista y seguimos.',
-  success: 'Muy bien. Lo lograste con calma.',
+  success: '¡Muy bien!',
   noAudio: 'Lee con calma. El audio de esta actividad no está listo.'
 })
 

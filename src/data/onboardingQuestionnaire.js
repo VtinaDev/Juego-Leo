@@ -76,6 +76,7 @@ export const interestOptions = [
 export const supportPreferenceOptions = [
   { value: 'audio_first', label: 'Más audio e instrucciones habladas' },
   { value: 'visual_clues', label: 'Más apoyo visual' },
+  { value: 'word_by_word_highlight', label: 'Resaltado palabra por palabra' },
   { value: 'short_tasks', label: 'Ejercicios cortos' },
   { value: 'extra_repetition', label: 'Más repetición' },
   { value: 'calm_feedback', label: 'Feedback tranquilo' },
@@ -91,7 +92,8 @@ export function createEmptyLearningProfile() {
     behaviorTraits: [],
     habits: [],
     interests: [],
-    supportPreferences: []
+    supportPreferences: [],
+    resaltadoPorPalabra: false
   }
 }
 
@@ -99,13 +101,22 @@ export function normalizeLearningProfile(value = {}) {
   const base = createEmptyLearningProfile()
   const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {}
 
+  const supportPreferences = normalizeArray(source.supportPreferences)
+  const wordHighlightEnabled = Boolean(
+    source.resaltadoPorPalabra ||
+    source.wordByWordHighlight ||
+    source.perfilDislexia ||
+    supportPreferences.includes('word_by_word_highlight')
+  )
+
   return {
     ...base,
     ...source,
     behaviorTraits: normalizeArray(source.behaviorTraits),
     habits: normalizeArray(source.habits),
     interests: normalizeArray(source.interests),
-    supportPreferences: normalizeArray(source.supportPreferences)
+    supportPreferences,
+    resaltadoPorPalabra: wordHighlightEnabled
   }
 }
 
