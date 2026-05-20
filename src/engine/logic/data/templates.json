@@ -934,13 +934,13 @@
         {
           "id": "L2-MC-1",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo: sol",
+          "question": "Encierra el nombre correcto del dibujo.",
           "options": [
             "sol",
             "sal"
           ],
           "correct": "sol",
-          "audio": "/audio/voice/exercises/L2/l2-mc-1.mp3",
+          "audio": "/audio/voice/exercises/select-image-word.mp3",
           "image": "/images/L2/sol.PNG",
           "imageAlt": "Sol",
           "emoji": "",
@@ -951,13 +951,13 @@
         {
           "id": "L2-MC-2",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo: sapo",
+          "question": "Encierra el nombre correcto del dibujo.",
           "options": [
             "sipo",
             "sapo"
           ],
           "correct": "sapo",
-          "audio": "/audio/voice/exercises/L2/l2-mc-2.mp3",
+          "audio": "/audio/voice/exercises/select-image-word.mp3",
           "image": "/images/L2/sapo.PNG",
           "imageAlt": "Sapo",
           "emoji": "",
@@ -968,13 +968,13 @@
         {
           "id": "L2-MC-3",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo: sopa",
+          "question": "Encierra el nombre correcto del dibujo.",
           "options": [
             "sepa",
             "sopa"
           ],
           "correct": "sopa",
-          "audio": "/audio/voice/exercises/L2/l2-mc-3.mp3",
+          "audio": "/audio/voice/exercises/select-image-word.mp3",
           "image": "/images/L2/sopa.PNG",
           "imageAlt": "Sopa",
           "emoji": "",
@@ -985,13 +985,13 @@
         {
           "id": "L2-MC-4",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo: mesa",
+          "question": "Encierra el nombre correcto del dibujo.",
           "options": [
             "mesa",
             "misa"
           ],
           "correct": "mesa",
-          "audio": "/audio/voice/exercises/L2/l2-mc-4.mp3",
+          "audio": "/audio/voice/exercises/select-image-word.mp3",
           "image": "/images/L2/mesa.PNG",
           "imageAlt": "Mesa",
           "emoji": "",
@@ -1002,13 +1002,13 @@
         {
           "id": "L2-MC-5",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo: oso",
+          "question": "Encierra el nombre correcto del dibujo.",
           "options": [
             "osu",
             "oso"
           ],
           "correct": "oso",
-          "audio": "/audio/voice/exercises/L2/l2-mc-5.mp3",
+          "audio": "/audio/voice/exercises/select-image-word.mp3",
           "image": "/images/L2/oso.PNG",
           "imageAlt": "Oso",
           "emoji": "",
@@ -1019,13 +1019,13 @@
         {
           "id": "L2-MC-6",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo: pato",
+          "question": "Encierra el nombre correcto del dibujo.",
           "options": [
             "mato",
             "pato"
           ],
           "correct": "pato",
-          "audio": "/audio/voice/exercises/L2/l2-mc-6.mp3",
+          "audio": "/audio/voice/exercises/select-image-word.mp3",
           "image": "/images/L2/pato.png",
           "imageAlt": "Pato",
           "emoji": "🦆",
@@ -1036,13 +1036,13 @@
         {
           "id": "L2-MC-7",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo: luna",
+          "question": "Encierra el nombre correcto del dibujo.",
           "options": [
             "lupa",
             "luna"
           ],
           "correct": "luna",
-          "audio": "/audio/voice/exercises/L2/l2-mc-7.mp3",
+          "audio": "/audio/voice/exercises/select-image-word.mp3",
           "image": "/images/L2/luna.png",
           "imageAlt": "Luna",
           "emoji": "🌙",
