@@ -30,11 +30,25 @@ const router = createRouter({
   },
 })
 
+function loadAuthWithTimeout(auth, timeoutMs = 4500) {
+  return Promise.race([
+    auth.load(),
+    new Promise((resolve) => {
+      window.setTimeout(() => resolve(false), timeoutMs)
+    })
+  ]).catch((error) => {
+    console.error('[router] No se pudo comprobar la sesión:', error)
+    return false
+  })
+}
+
 router.beforeEach(async (to) => {
   if (!to.meta?.requiresAuth) return true
 
   const auth = useAuthStore()
-  await auth.load()
+  if (!auth.initialized) {
+    await loadAuthWithTimeout(auth)
+  }
 
   if (auth.isAuthenticated) return true
 

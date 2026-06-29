@@ -1,87 +1,1274 @@
-{
-  "generatedAt": "2026-05-20T13:14:24.305Z",
-  "provider": "elevenlabs",
-  "elevenLabsModel": "eleven_flash_v2_5",
-  "elevenLabsVoiceId": "IvWkxlWQtJVT34p1Pt9D",
-  "elevenLabsOutputFormat": "mp3_44100_128",
-  "elevenLabsVoiceSettings": {
-    "exercise": {
-      "stability": 0.58,
-      "similarityBoost": 0.8,
-      "style": 0.38,
-      "speakerBoost": false,
-      "speed": 1.08
-    },
-    "reward": {
-      "stability": 0.58,
-      "similarityBoost": 0.8,
-      "style": 0.38,
-      "speakerBoost": false,
-      "speed": 1.08
-    }
+[
+  {
+    "id": "welcome_intro",
+    "text": "Hola, soy Leo. Vamos a aprender jugando.",
+    "filename": "welcome_intro.mp3",
+    "category": "intro"
   },
-  "scope": "all",
-  "overwrite": true,
-  "style": {
-    "intent": "motivador, optimista, infantil y calmado",
-    "sentenceMaxWords": 12,
-    "avoid": [
-      "culpa",
-      "prisa",
-      "castigo",
-      "error fuerte"
-    ]
+  {
+    "id": "home-welcome",
+    "text": "Hola. Bienvenido a Juego Leo. Vamos a leer con calma y alegria.",
+    "filename": "home-welcome.mp3",
+    "category": "intro"
   },
-  "totalItems": 166,
-  "selectedItems": 4,
-  "items": [
-    {
-      "id": "L1-RW-1",
-      "kind": "exercise",
-      "level": 1,
-      "stage": 4,
-      "subtype": "read_with_audio",
-      "type": "read_with_audio",
-      "route": "/audio/voice/exercises/L1/l1-rw-1.mp3",
-      "text": "El faro guía a los barcos perdidos.",
-      "existingRoute": "/audio/voice/exercises/L1/l1-rw-1.mp3",
-      "hasExistingAudio": true
-    },
-    {
-      "id": "L1-RW-2",
-      "kind": "exercise",
-      "level": 1,
-      "stage": 4,
-      "subtype": "read_with_audio",
-      "type": "read_with_audio",
-      "route": "/audio/voice/exercises/L1/l1-rw-2.mp3",
-      "text": "La campana anuncia el recreo.",
-      "existingRoute": "/audio/voice/exercises/L1/l1-rw-2.mp3",
-      "hasExistingAudio": true
-    },
-    {
-      "id": "L1-RW-3",
-      "kind": "exercise",
-      "level": 1,
-      "stage": 4,
-      "subtype": "read_with_audio",
-      "type": "read_with_audio",
-      "route": "/audio/voice/exercises/L1/l1-rw-3.mp3",
-      "text": "Las hojas viajan con el viento.",
-      "existingRoute": "/audio/voice/exercises/L1/l1-rw-3.mp3",
-      "hasExistingAudio": true
-    },
-    {
-      "id": "L1-RW-4",
-      "kind": "exercise",
-      "level": 1,
-      "stage": 4,
-      "subtype": "read_with_audio",
-      "type": "read_with_audio",
-      "route": "/audio/voice/exercises/L1/l1-rw-4.mp3",
-      "text": "El río canta para el bosque.",
-      "existingRoute": "/audio/voice/exercises/L1/l1-rw-4.mp3",
-      "hasExistingAudio": true
-    }
-  ]
-}
+  {
+    "id": "home-start",
+    "text": "Cuando estes listo, empezamos paso a paso.",
+    "filename": "home-start.mp3",
+    "category": "intro"
+  },
+  {
+    "id": "exercise-success",
+    "text": "Lo hiciste muy bien. Seguimos aprendiendo juntos.",
+    "filename": "exercise-succes.mp3",
+    "category": "reward"
+  },
+  {
+    "id": "exercise-try-again",
+    "text": "Respira. Vamos a intentarlo otra vez con calma.",
+    "filename": "exercise-try-again.mp3",
+    "category": "support"
+  },
+  {
+    "id": "positive1",
+    "text": "Muy bien.",
+    "filename": "positive1.mp3",
+    "category": "reward"
+  },
+  {
+    "id": "positive2",
+    "text": "Sigue asi.",
+    "filename": "positive2.mp3",
+    "category": "reward"
+  },
+  {
+    "id": "positive3",
+    "text": "Muy bien.",
+    "filename": "positive3.mp3",
+    "category": "reward"
+  },
+  {
+    "id": "L1-QS-1",
+    "text": "El búho duerme en el árbol.",
+    "filename": "l1-qs-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-QS-2",
+    "text": "La luciérnaga ilumina la noche.",
+    "filename": "l1-qs-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-QS-3",
+    "text": "El oso perezoso encuentra una flor azul.",
+    "filename": "l1-qs-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-QS-4",
+    "text": "El niño abraza al perro alegre.",
+    "filename": "l1-qs-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-IWM-1",
+    "text": "Selecciona la palabra que nombra la imagen",
+    "filename": "l1-iwm-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-IWM-2",
+    "text": "Selecciona la palabra que nombra la imagen",
+    "filename": "l1-iwm-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CCW-1",
+    "text": "Elige la palabra correcta",
+    "filename": "l1-ccw-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CCW-2",
+    "text": "Elige la palabra correcta",
+    "filename": "l1-ccw-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-1",
+    "text": "El hada abre la puerta secreta.",
+    "filename": "l1-cs-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-2",
+    "text": "La nube deja gotas.",
+    "filename": "l1-cs-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-3",
+    "text": "El oso camina con calma.",
+    "filename": "l1-cs-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-4",
+    "text": "La hoja flota al viento.",
+    "filename": "l1-cs-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-5",
+    "text": "El río susurra un canto suave.",
+    "filename": "l1-cs-5.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-6",
+    "text": "La luna ilumina la noche.",
+    "filename": "l1-cs-6.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-7",
+    "text": "El colibrí visita flores mágicas.",
+    "filename": "l1-cs-7.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-8",
+    "text": "La campana anuncia el recreo.",
+    "filename": "l1-cs-8.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-1",
+    "text": "Empieza con La.",
+    "filename": "l1-os-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-2",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-3",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-4",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-1",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-2",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-3",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-4",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-5",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-5.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-6",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-6.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-7",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-7.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-8",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-8.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-9",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-9.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-10",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-10.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-11",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-11.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-12",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-12.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-13",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-13.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-14",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-14.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-NEW-15",
+    "text": "Pon las palabras en orden.",
+    "filename": "l1-os-new-15.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-RW-1",
+    "text": "El faro guía a los barcos perdidos.",
+    "filename": "l1-rw-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-RW-2",
+    "text": "La campana anuncia el recreo.",
+    "filename": "l1-rw-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-RW-3",
+    "text": "Las hojas viajan con el viento.",
+    "filename": "l1-rw-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-RW-4",
+    "text": "El río canta para el bosque.",
+    "filename": "l1-rw-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L2-MC-1",
+    "text": "Encierra el nombre correcto del dibujo.",
+    "filename": "select-image-word.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-1",
+    "text": "Ordena las letras para descubrir la palabra de la imagen. Brilla en el cielo. ¿Qué es?",
+    "filename": "l2-uw-1.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-1-SUCCESS",
+    "text": "¡Bravo! Es un sol.",
+    "filename": "l2-uw-1-success.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-2",
+    "text": "Es comida caliente. ¿Qué comida es?",
+    "filename": "l2-uw-2.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-2-SUCCESS",
+    "text": "¡Bravo! Es sopa.",
+    "filename": "l2-uw-2-success.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-3",
+    "text": "Es un animal que salta. ¿Qué animal es?",
+    "filename": "l2-uw-3.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-3-SUCCESS",
+    "text": "¡Bravo! Es un sapo.",
+    "filename": "l2-uw-3-success.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-4",
+    "text": "Sirve para comer o escribir. ¿Qué es?",
+    "filename": "l2-uw-4.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-4-SUCCESS",
+    "text": "¡Bravo! Es una mesa.",
+    "filename": "l2-uw-4-success.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-5",
+    "text": "Brilla de noche. ¿Qué es?",
+    "filename": "l2-uw-5.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-5-SUCCESS",
+    "text": "¡Bravo! Es la luna.",
+    "filename": "l2-uw-5-success.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-PZ-1",
+    "text": "Ordena las piezas para formar la palabra",
+    "filename": "l2-pz-1.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-PZ-2",
+    "text": "Ordena las piezas para formar la palabra",
+    "filename": "l2-pz-2.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-CW-1",
+    "text": "sopa",
+    "filename": "l2-cw-1.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-CW-2",
+    "text": "luna",
+    "filename": "l2-cw-2.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-PS-1",
+    "text": "Busca parejas que compartan significado.",
+    "filename": "l2-ps-1.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-PS-2",
+    "text": "Observa cómo cada palabra describe lo mismo.",
+    "filename": "l2-ps-2.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-PS-3",
+    "text": "Une el número con su nombre escrito.",
+    "filename": "l2-ps-3.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-PA-1",
+    "text": "Une palabras que significan lo contrario.",
+    "filename": "l2-pa-1.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-PA-2",
+    "text": "Recuerda: el opuesto crea equilibrio mágico.",
+    "filename": "l2-pa-2.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L3-SS-1",
+    "text": "Elige la frase que describe mejor lo que ves en tu mente.",
+    "filename": "l3-ss-1.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SS-2",
+    "text": "Escoge la frase que te suena natural.",
+    "filename": "l3-ss-2.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SS-3",
+    "text": "¿Cuál frase puede pasar de verdad?",
+    "filename": "l3-ss-3.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SO-1",
+    "text": "Animal que salta.",
+    "filename": "l3-so-1.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SO-2",
+    "text": "Brilla en la noche.",
+    "filename": "l3-so-2.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-1",
+    "text": "En el bosque mágico, un animal cruza con cuidado el puente brillante.",
+    "filename": "l3-aq-1.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-2",
+    "text": "El mono come un plátano durante la aventura.",
+    "filename": "l3-aq-2.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-3",
+    "text": "Después de la aventura, los amigos se divierten.",
+    "filename": "l3-aq-3.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-1",
+    "text": "El niño lee un libro.",
+    "filename": "l3-aq-vc-1.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-2",
+    "text": "La niña come una manzana.",
+    "filename": "l3-aq-vc-2.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-3",
+    "text": "El perro corre por el parque.",
+    "filename": "l3-aq-vc-3.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-4",
+    "text": "Mamá cocina sopa.",
+    "filename": "l3-aq-vc-4.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-5",
+    "text": "Leo mira la luna.",
+    "filename": "l3-aq-vc-5.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-6",
+    "text": "La rana salta en el lago.",
+    "filename": "l3-aq-vc-6.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-7",
+    "text": "El gato duerme en la cama.",
+    "filename": "l3-aq-vc-7.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-8",
+    "text": "La niña pinta una flor.",
+    "filename": "l3-aq-vc-8.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-9",
+    "text": "El abuelo lee el periódico.",
+    "filename": "l3-aq-vc-9.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-10",
+    "text": "El sol ilumina la casa.",
+    "filename": "l3-aq-vc-10.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-11",
+    "text": "La maestra escribe en la pizarra.",
+    "filename": "l3-aq-vc-11.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-12",
+    "text": "El bebé ríe con su pelota.",
+    "filename": "l3-aq-vc-12.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-13",
+    "text": "La familia camina por el bosque.",
+    "filename": "l3-aq-vc-13.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-14",
+    "text": "El pájaro canta en la rama.",
+    "filename": "l3-aq-vc-14.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-AQ-VC-15",
+    "text": "La niña bebe agua fresca.",
+    "filename": "l3-aq-vc-15.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L4-AW-1",
+    "text": "luciérnaga",
+    "filename": "l4-aw-1.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-AW-2",
+    "text": "Escribe: El dragón lanza fuego",
+    "filename": "l4-aw-2.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-RA-1",
+    "text": "El oso Simón vive en una cueva y come miel dulce.",
+    "filename": "l4-ra-1.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-RA-2",
+    "text": "La vaca Lola camina al río para beber agua fresca.",
+    "filename": "l4-ra-2.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-TW-1",
+    "text": "Escribe una frase que incluya la palabra 'magia'.",
+    "filename": "l4-tw-1.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-TW-2",
+    "text": "Escribe el nombre de la figura o símbolo: 🔺",
+    "filename": "l4-tw-2.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-TW-3",
+    "text": "Selva.",
+    "filename": "l4-tw-3.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-TW-4",
+    "text": "globo",
+    "filename": "l4-tw-4.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-TW-5",
+    "text": "lunes",
+    "filename": "l4-tw-5.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L5-TC-1",
+    "text": "Ayer dibujé una estrella brillante.",
+    "filename": "l5-tc-1.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-2",
+    "text": "Hoy comparto mi cuaderno mágico.",
+    "filename": "l5-tc-2.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-3",
+    "text": "Mañana estudiaré los hechizos nuevos.",
+    "filename": "l5-tc-3.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-4",
+    "text": "Ayer caminé hasta la biblioteca.",
+    "filename": "l5-tc-4.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-5",
+    "text": "Hoy estudio con Leo.",
+    "filename": "l5-tc-5.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-6",
+    "text": "Mañana visitaré el museo.",
+    "filename": "l5-tc-6.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-7",
+    "text": "Anoche escuché una canción suave.",
+    "filename": "l5-tc-7.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-8",
+    "text": "Ahora escribo una frase corta.",
+    "filename": "l5-tc-8.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-9",
+    "text": "Después dormiré temprano.",
+    "filename": "l5-tc-9.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-10",
+    "text": "El lunes pasado jugué en el parque.",
+    "filename": "l5-tc-10.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-11",
+    "text": "Leo come una manzana.",
+    "filename": "l5-tc-11.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-12",
+    "text": "Pronto cocinaré sopa con mamá.",
+    "filename": "l5-tc-12.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-13",
+    "text": "Antes hablé con mi abuela.",
+    "filename": "l5-tc-13.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-14",
+    "text": "Vivo cerca de la escuela.",
+    "filename": "l5-tc-14.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-15",
+    "text": "El sábado buscaré mi cuaderno.",
+    "filename": "l5-tc-15.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-16",
+    "text": "Canté en la fiesta.",
+    "filename": "l5-tc-16.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-17",
+    "text": "Juego con mis letras.",
+    "filename": "l5-tc-17.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-TC-18",
+    "text": "Iré al río mañana.",
+    "filename": "l5-tc-18.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-SP-1",
+    "text": "Observa cómo cambian las terminaciones al plural.",
+    "filename": "l5-sp-1.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-1",
+    "text": "Recuerda: melodía lleva tilde en la sílaba fuerte.",
+    "filename": "l5-ag-1.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-2",
+    "text": "Imagina dónde suena más fuerte la palabra.",
+    "filename": "l5-ag-2.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-3",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-3.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-4",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-4.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-5",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-5.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-6",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-6.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-7",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-7.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-8",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-8.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-9",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-9.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-10",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-10.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-11",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-11.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-12",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-12.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-13",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-13.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-14",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-14.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-15",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-15.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-16",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-16.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-AG-17",
+    "text": "Toca la sílaba que suena más fuerte y luego clasifica la palabra.",
+    "filename": "l5-ag-17.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-1",
+    "text": "¡Qué sorpresa verte aquí!",
+    "filename": "l5-pg-1.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-2",
+    "text": "¿Cómo te llamas?",
+    "filename": "l5-pg-2.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-3",
+    "text": "Gracias por ayudarme.",
+    "filename": "l5-pg-3.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-4",
+    "text": "¿Cómo te llamas?",
+    "filename": "l5-pg-4.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-5",
+    "text": "¡Qué alegría verte!",
+    "filename": "l5-pg-5.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-6",
+    "text": "Hoy estudiamos.",
+    "filename": "l5-pg-6.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-7",
+    "text": "Traje lápiz, cuaderno y regla.",
+    "filename": "l5-pg-7.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-8",
+    "text": "¿Dónde está Leo?",
+    "filename": "l5-pg-8.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-9",
+    "text": "¡Bravo, lo lograste!",
+    "filename": "l5-pg-9.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-10",
+    "text": "Me gusta leer.",
+    "filename": "l5-pg-10.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-11",
+    "text": "Compré pan, leche y fruta.",
+    "filename": "l5-pg-11.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-12",
+    "text": "¿Quieres jugar conmigo?",
+    "filename": "l5-pg-12.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-13",
+    "text": "¡Qué sorpresa!",
+    "filename": "l5-pg-13.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-14",
+    "text": "El sol brilla.",
+    "filename": "l5-pg-14.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-15",
+    "text": "Tengo goma, lápiz y regla.",
+    "filename": "l5-pg-15.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-16",
+    "text": "¿Cuándo vienes?",
+    "filename": "l5-pg-16.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-17",
+    "text": "¡Cuidado!",
+    "filename": "l5-pg-17.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-PG-18",
+    "text": "La luna sale de noche.",
+    "filename": "l5-pg-18.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-1",
+    "text": "¿Qué tiempo verbal usa la frase: \"Mañana cantaré con el coro\"?",
+    "filename": "l5-fe-1.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-2",
+    "text": "¿Vienes a la clase de magia?",
+    "filename": "l5-fe-2.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-3",
+    "text": "¿Dónde colocarías la tilde en la palabra 'musica'?",
+    "filename": "l5-fe-3.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-1",
+    "text": "Ahora nado en la piscina.",
+    "filename": "l5-fe-tcomp-1.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-2",
+    "text": "Ayer nadé en el mar.",
+    "filename": "l5-fe-tcomp-2.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-3",
+    "text": "Mañana nadaré en el río.",
+    "filename": "l5-fe-tcomp-3.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-4",
+    "text": "Ahora como una manzana.",
+    "filename": "l5-fe-tcomp-4.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-5",
+    "text": "Ayer comí sopa.",
+    "filename": "l5-fe-tcomp-5.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-6",
+    "text": "Después comeré con mi familia.",
+    "filename": "l5-fe-tcomp-6.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-7",
+    "text": "Hoy juego en el patio.",
+    "filename": "l5-fe-tcomp-7.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-8",
+    "text": "Ayer jugué a las escondidas.",
+    "filename": "l5-fe-tcomp-8.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-9",
+    "text": "Mañana jugaré con mis amigos.",
+    "filename": "l5-fe-tcomp-9.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-10",
+    "text": "Cada noche duermo temprano.",
+    "filename": "l5-fe-tcomp-10.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-11",
+    "text": "Anoche dormí muy bien.",
+    "filename": "l5-fe-tcomp-11.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-12",
+    "text": "Luego dormiré una siesta.",
+    "filename": "l5-fe-tcomp-12.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-13",
+    "text": "Ahora escribo una carta.",
+    "filename": "l5-fe-tcomp-13.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-14",
+    "text": "Antes escribí mi nombre.",
+    "filename": "l5-fe-tcomp-14.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-FE-TCOMP-15",
+    "text": "Pronto escribiré un cuento.",
+    "filename": "l5-fe-tcomp-15.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L1-IWM-REF-1",
+    "text": "Selecciona la palabra que nombra la imagen",
+    "filename": "l1-iwm-ref-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-IWM-REF-2",
+    "text": "Selecciona la palabra que nombra la imagen",
+    "filename": "l1-iwm-ref-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-IWM-REF-3",
+    "text": "Selecciona la palabra que nombra la imagen",
+    "filename": "l1-iwm-ref-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-IWM-REF-4",
+    "text": "Selecciona la palabra que nombra la imagen",
+    "filename": "l1-iwm-ref-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CCW-REF-1",
+    "text": "Elige la palabra correcta",
+    "filename": "l1-ccw-ref-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CCW-REF-2",
+    "text": "Elige la palabra correcta",
+    "filename": "l1-ccw-ref-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CCW-REF-3",
+    "text": "Elige la palabra correcta",
+    "filename": "l1-ccw-ref-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CCW-REF-4",
+    "text": "Elige la palabra correcta",
+    "filename": "l1-ccw-ref-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-REF-1",
+    "text": "La luna brilla de noche.",
+    "filename": "l1-cs-ref-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-REF-2",
+    "text": "El sapo salta cerca del río.",
+    "filename": "l1-cs-ref-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-REF-3",
+    "text": "El niño lee un cuento.",
+    "filename": "l1-cs-ref-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-CS-REF-4",
+    "text": "La flor crece en el jardín.",
+    "filename": "l1-cs-ref-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-REF-1",
+    "text": "La luna brilla.",
+    "filename": "l1-os-ref-1.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-REF-2",
+    "text": "El sapo salta.",
+    "filename": "l1-os-ref-2.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-REF-3",
+    "text": "El niño lee.",
+    "filename": "l1-os-ref-3.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L1-OS-REF-4",
+    "text": "La hoja flota.",
+    "filename": "l1-os-ref-4.mp3",
+    "category": "level-1"
+  },
+  {
+    "id": "L2-UW-REF-1",
+    "text": "Ordena las letras para formar la palabra sapo.",
+    "filename": "l2-uw-ref-1.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-REF-2",
+    "text": "Ordena las letras para formar la palabra mesa.",
+    "filename": "l2-uw-ref-2.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-UW-REF-3",
+    "text": "Ordena las letras para formar la palabra luna.",
+    "filename": "l2-uw-ref-3.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-CW-REF-1",
+    "text": "Completa la palabra gato.",
+    "filename": "l2-cw-ref-1.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-CW-REF-2",
+    "text": "Completa la palabra pato.",
+    "filename": "l2-cw-ref-2.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-CW-REF-3",
+    "text": "Completa la palabra faro.",
+    "filename": "l2-cw-ref-3.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-CW-REF-4",
+    "text": "Completa la palabra nube.",
+    "filename": "l2-cw-ref-4.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-CW-REF-5",
+    "text": "Completa la palabra cofre.",
+    "filename": "l2-cw-ref-5.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L2-CW-REF-6",
+    "text": "Completa la palabra campana.",
+    "filename": "l2-cw-ref-6.mp3",
+    "category": "level-2"
+  },
+  {
+    "id": "L3-SS-REF-1",
+    "text": "Elige la frase que tiene sentido.",
+    "filename": "l3-ss-ref-1.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SS-REF-2",
+    "text": "Elige la frase que tiene sentido.",
+    "filename": "l3-ss-ref-2.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SS-REF-3",
+    "text": "Elige la frase que tiene sentido.",
+    "filename": "l3-ss-ref-3.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SS-REF-4",
+    "text": "Elige la frase que tiene sentido.",
+    "filename": "l3-ss-ref-4.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SO-REF-1",
+    "text": "Ordena las sílabas para formar la palabra campana.",
+    "filename": "l3-so-ref-1.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SO-REF-2",
+    "text": "Ordena las sílabas para formar la palabra colibrí.",
+    "filename": "l3-so-ref-2.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SO-REF-3",
+    "text": "Ordena las sílabas para formar la palabra luciérnaga.",
+    "filename": "l3-so-ref-3.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L3-SO-REF-4",
+    "text": "Ordena las sílabas para formar la palabra cuento.",
+    "filename": "l3-so-ref-4.mp3",
+    "category": "level-3"
+  },
+  {
+    "id": "L4-RA-REF-1",
+    "text": "Sofía dibuja una flor azul con calma.",
+    "filename": "l4-ra-ref-1.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-RA-REF-2",
+    "text": "Cada tarde, Leo lee un cuento corto.",
+    "filename": "l4-ra-ref-2.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-RA-REF-3",
+    "text": "Luna lleva a su perro al veterinario porque le duele una pata.",
+    "filename": "l4-ra-ref-3.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-RA-REF-4",
+    "text": "Ana desayuna leche con cereales antes de ir a clase.",
+    "filename": "l4-ra-ref-4.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-TW-REF-1",
+    "text": "Escribe la frase: La luna brilla.",
+    "filename": "l4-tw-ref-1.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L4-TW-REF-2",
+    "text": "Escribe la frase: El sapo salta.",
+    "filename": "l4-tw-ref-2.mp3",
+    "category": "level-4"
+  },
+  {
+    "id": "L5-SP-REF-1",
+    "text": "Une cada palabra con su plural.",
+    "filename": "l5-sp-ref-1.mp3",
+    "category": "level-5"
+  },
+  {
+    "id": "L5-SP-REF-2",
+    "text": "Une cada palabra con su plural.",
+    "filename": "l5-sp-ref-2.mp3",
+    "category": "level-5"
+  }
+]

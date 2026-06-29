@@ -27,20 +27,32 @@ function truncate(text: string): string {
   return `${text.slice(0, 200)}…`
 }
 
+function answerText(exercise: Record<string, unknown>): string | null {
+  const raw = exercise.solution ?? exercise.correct ?? exercise.answer ?? exercise.expectedAnswer
+  if (Array.isArray(raw)) return cleanText(raw[0])
+  return cleanText(raw)
+}
+
+function fillBlankWithAnswer(text: string, exercise: Record<string, unknown>): string {
+  if (!/_{2,}/.test(text)) return text
+  const answer = answerText(exercise)
+  return answer ? text.replace(/_{2,}/g, answer) : text
+}
+
 export function getExerciseNarrationText(exercise: MaybeExercise): string | null {
   if (!exercise) return null
 
   const typedExercise = exercise as Record<string, unknown>
   const type = String(typedExercise.type || '').toUpperCase()
   if (type === 'COMPLETE_WORD') {
-    const solution = cleanText(typedExercise.solution ?? typedExercise.correct ?? typedExercise.answer)
+    const solution = answerText(typedExercise)
     if (solution) return truncate(solution)
   }
 
   for (const field of FIELDS_PRIORITY) {
     const value = cleanText(typedExercise[field])
     if (value) {
-      return truncate(value)
+      return truncate(fillBlankWithAnswer(value, typedExercise))
     }
   }
 

@@ -1,10 +1,10 @@
 const CACHE_KEY = 'jl_illustrations_cache_v1'
 const FALLBACK_IMAGES = [
-  '/images/habitats/Fondo.PNG',
   '/images/habitats/escuela.PNG',
-  'https://placehold.co/680x360/93c5fd/0f172a?text=Juego+%26+Leo',
-  'https://placehold.co/680x360/fcd34d/0f172a?text=Ilustración',
-  'https://placehold.co/680x360/6ee7b7/14532d?text=Aprendemos'
+  '/images/habitats/isla_lianas.PNG',
+  '/images/habitats/arbol.PNG',
+  '/images/habitats/santuario.PNG',
+  '/images/habitats/elephant-school.png'
 ]
 
 export class IllustrationManager {

@@ -9,6 +9,7 @@ const publicDir = path.join(rootDir, 'public')
 const srcDir = path.join(rootDir, 'src')
 const templatesPath = path.join(rootDir, 'src', 'engine', 'logic', 'data', 'templates.json')
 const soundsPath = path.join(rootDir, 'src', 'engine', 'audio', 'sounds.js')
+const appVoiceManifestPath = path.join(rootDir, 'scripts', 'audio', 'app_voice_audio_manifest.json')
 
 function normalizeRoute(route) {
   const raw = String(route || '').trim()
@@ -26,6 +27,11 @@ function existsInPublic(route) {
   return fs.existsSync(filePath)
 }
 
+function isLegacyVoiceRoute(route) {
+  const normalized = normalizeRoute(route)
+  return normalized.startsWith('audio/voice/')
+}
+
 function collectTemplateAudioRoutes() {
   const results = []
   const raw = fs.readFileSync(templatesPath, 'utf8')
@@ -41,7 +47,19 @@ function collectTemplateAudioRoutes() {
         if (typeof exercise?.audio === 'string' && exercise.audio.trim()) {
           results.push({
             route: exercise.audio,
-            source: `templates:${exercise.id || 'unknown'}`
+            source: `templates:${exercise.id || 'unknown'}`,
+            pending: exercise.pendingAudio === true
+          })
+        }
+        if (Array.isArray(exercise?.audioSequence)) {
+          exercise.audioSequence.forEach((route, index) => {
+            if (typeof route === 'string' && route.trim()) {
+              results.push({
+                route,
+                source: `templates:${exercise.id || 'unknown'}:audioSequence[${index}]`,
+                pending: exercise.pendingAudio === true
+              })
+            }
           })
         }
       }
@@ -49,6 +67,32 @@ function collectTemplateAudioRoutes() {
   }
 
   return results
+}
+
+function collectAppVoiceManifestRoutes() {
+  if (!fs.existsSync(appVoiceManifestPath)) return new Set()
+
+  const raw = fs.readFileSync(appVoiceManifestPath, 'utf8')
+  const manifest = JSON.parse(raw)
+  const entries = Array.isArray(manifest)
+    ? manifest
+    : Array.isArray(manifest?.entries)
+      ? manifest.entries
+      : []
+  const routes = new Set()
+
+  for (const entry of entries) {
+    if (typeof entry?.filename !== 'string' || !entry.filename.trim()) continue
+    routes.add(normalizeRoute(`/audio/app-voice/${entry.filename}`))
+  }
+
+  return routes
+}
+
+function isDeclaredPendingAudio(item, manifestRoutes) {
+  if (item?.pending !== true) return false
+  const normalized = normalizeRoute(item.route)
+  return manifestRoutes.has(normalized)
 }
 
 async function collectSoundsMapRoutes() {
@@ -89,6 +133,7 @@ function collectLiteralAudioRoutes() {
   const literalPattern = /['"`](\/audio\/[^'"`\s]+)['"`]/g
 
   for (const filePath of files) {
+    if (path.resolve(filePath) === templatesPath) continue
     const raw = fs.readFileSync(filePath, 'utf8')
     let match = literalPattern.exec(raw)
     while (match) {
@@ -119,11 +164,28 @@ function reportMissing(missing) {
   console.error(`\nTotal inválidas: ${missing.length}`)
 }
 
+function reportPendingAudio(pending) {
+  console.warn('\n[validate:audio] Audios pendientes declarados en el manifiesto:\n')
+  for (const item of pending) {
+    console.warn(`- ${item.route} (${item.source})`)
+  }
+  console.warn(`\nTotal pendientes: ${pending.length}`)
+}
+
+function reportLegacyVoiceRoutes(routes) {
+  console.error('\n[validate:audio] La voz de la app debe usar /audio/app-voice:\n')
+  for (const item of routes) {
+    console.error(`- ${item.route} (${item.source})`)
+  }
+  console.error(`\nTotal con ruta de voz antigua: ${routes.length}`)
+}
+
 async function main() {
-  const [templateRoutes, soundsRoutes, literalRoutes] = await Promise.all([
+  const [templateRoutes, soundsRoutes, literalRoutes, manifestRoutes] = await Promise.all([
     Promise.resolve(collectTemplateAudioRoutes()),
     collectSoundsMapRoutes(),
-    Promise.resolve(collectLiteralAudioRoutes())
+    Promise.resolve(collectLiteralAudioRoutes()),
+    Promise.resolve(collectAppVoiceManifestRoutes())
   ])
 
   const allRoutes = dedupe([...templateRoutes, ...soundsRoutes, ...literalRoutes])
@@ -132,11 +194,24 @@ async function main() {
     return normalized.startsWith('audio/')
   })
 
-  const missing = audioRoutes.filter(({ route }) => !existsInPublic(route))
+  const legacyVoiceRoutes = audioRoutes.filter(({ route }) => isLegacyVoiceRoute(route))
+  if (legacyVoiceRoutes.length) {
+    reportLegacyVoiceRoutes(legacyVoiceRoutes)
+    process.exitCode = 1
+    return
+  }
+
+  const missingExistingRoutes = audioRoutes.filter(({ route }) => !existsInPublic(route))
+  const pendingAudio = missingExistingRoutes.filter((item) => isDeclaredPendingAudio(item, manifestRoutes))
+  const missing = missingExistingRoutes.filter((item) => !isDeclaredPendingAudio(item, manifestRoutes))
   if (missing.length) {
     reportMissing(missing)
     process.exitCode = 1
     return
+  }
+
+  if (pendingAudio.length) {
+    reportPendingAudio(pendingAudio)
   }
 
   console.log(`[validate:audio] OK - ${audioRoutes.length} rutas de audio verificadas.`)

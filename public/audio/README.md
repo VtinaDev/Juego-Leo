@@ -1,80 +1,77 @@
-# Audio Assets
+# Audio de Juego & Leo
 
-This app loads audio directly from `public/audio`.
+La app no llama a ElevenLabs en runtime. ElevenLabs se usa solo offline desde `scripts/audio/` para generar archivos MP3 por lotes.
 
-Current runtime paths:
-- `public/audio/sfx/*.wav`
-- `public/audio/music/*.mp3`
-- `public/audio/voice/*.mp3`
-- `public/audio/voice/exercises/*.mp3`
+## Flujo
 
-## Global Audio System
+1. Añade o edita textos en `scripts/audio/app_voice_audio_manifest.json`.
+2. Configura la voz en `scripts/audio/voiceConfig.json`.
+3. Define `ELEVENLABS_API_KEY` y `ELEVENLABS_VOICE_ID` en `.env`.
+4. Ejecuta `npm run audio:manifest` para validar y ver pendientes.
+5. Ejecuta `npm run audio:generate` para generar MP3 faltantes.
+6. Los MP3 se guardan en `public/audio/app-voice/`.
+7. La app reproduce esos archivos locales con `playAppVoiceAudio(filename)`.
 
-The runtime audio contract is centralized in `src/engine/audio`:
+## Manifest
 
-- `audioExperience.js`: tone, copy, volume profile and calm retry policy for children ages 4-10 with neurodivergent learning needs.
-- `sounds.js`: canonical SFX, music and ElevenLabs voice route registry.
-- `audioManager.js`: browser audio playback, TTS fallback in dev, voice/music/SFX settings and autoplay retry.
-- `SoundService.js`: Howler-backed SFX used by Pixi/GSAP celebration flows.
-- `voiceProfile.js`: slow, stable Spanish voice profile for generated fallback speech.
+Cada item debe tener esta forma:
 
-Tone rules:
-- Short phrases, one instruction at a time.
-- Motivating and optimistic without pressure.
-- Error states use calm guidance, not alarm language or harsh sound.
-- MP3 voice has priority; browser TTS is only a development fallback unless explicitly enabled.
+```json
+{
+  "id": "welcome_intro",
+  "text": "Hola, soy Leo. Vamos a aprender jugando.",
+  "filename": "welcome_intro.mp3",
+  "category": "intro"
+}
+```
 
-Latest audit:
-- `npm run validate:audio` verified 370 audio routes.
-- Exercise audio coverage from `templates.json`: L1 24/39, L2 12/18, L3 6/23, L4 9/9, L5 11/72.
-- `npm run audio:missing-checklist` exports the current missing production voice list to `scripts/audio/missing_exercise_audio.csv`.
+`filename` debe ser unico y terminar en `.mp3`. El generador omite archivos existentes para no duplicar coste. Usa `--force` solo si necesitas regenerar.
 
-## Automated Generation
-
-Use the global audio policy from `src/engine/audio/audioExperience.js` to create exercise voice MP3s:
+## Generacion
 
 ```bash
 npm run audio:manifest
 npm run audio:generate
-npm run audio:generate:all
+npm run audio:generate:exercises
+node scripts/audio/generateAppVoiceAudio.mjs --force
 ```
 
-- `audio:manifest`: dry run, exports `scripts/audio/app_voice_audio_manifest.json` and `.csv`.
-- `audio:generate`: generates only missing canonical files and writes their routes into `templates.json`.
-- `audio:generate:all`: regenerates every global cue and exercise guide audio, overwriting canonical files.
+Si falla la generacion, revisa:
 
-Default pipeline:
+- que `.env` tenga `ELEVENLABS_API_KEY`;
+- que `voiceConfig.json` tenga `voiceId` o `.env` tenga `ELEVENLABS_VOICE_ID`;
+- que la cuenta de ElevenLabs tenga permisos y cuota;
+- el log del item fallido. El proceso continua con los demas audios.
 
-```text
-Nuevo ejercicio/texto/guia
-        ↓
-Script detecta texto nuevo en templates.json
-        ↓
-Genera ID unico del audio desde exercise.id
-        ↓
-Crea MP3 automaticamente con ElevenLabs
-        ↓
-Guarda archivo en public/audio/voice/exercises/L{nivel}
-        ↓
-Actualiza manifest JSON/CSV
-        ↓
-Actualiza templates.json con la ruta del MP3 generado
-        ↓
-La app reproduce el audio desde exercise.audio
+Si las frases motivadoras suenan bien pero los ejercicios no, regenera solo ejercicios para no tocar esos audios:
+
+```bash
+npm run audio:generate:exercises
 ```
 
-Provider behavior:
-- `audio:generate` uses ElevenLabs by default with model `eleven_flash_v2_5` and voice `IvWkxlWQtJVT34p1Pt9D`.
-- `audio:generate:elevenlabs` uses the same ElevenLabs batch generator. Requires `ELEVENLABS_API_KEY`.
-- `audio:manifest` never writes MP3s or templates; it only previews the plan.
-- `templates.json` is updated only after the selected MP3 files are generated successfully.
+## Runtime
 
-Useful flags:
-- `-- --provider=elevenlabs`
-- `-- --limit=5`
-- `-- --no-write-templates`
-- `-- --dry`
+La UI solo debe reproducir rutas locales bajo:
 
-For AI Studio batch generation and naming contract, use:
-- `scripts/audio/voice_batch_ai_studio.csv`
-- `scripts/audio/VOICE_PRODUCTION_GUIDE.md`
+```txt
+/audio/app-voice/{filename}
+```
+
+Desde `src/`, usa:
+
+```js
+import { playAppVoiceAudio } from '../utils/audioPlayer.js'
+
+await playAppVoiceAudio('welcome_intro.mp3')
+```
+
+Si falta un MP3, el helper escribe un warning en consola, devuelve `false` y no rompe la interfaz.
+
+## Validacion
+
+```bash
+rg "elevenlabs" src
+rg "api.elevenlabs.io" src
+npm run audio:manifest
+find public/audio/app-voice -name '*.mp3'
+```

@@ -18,6 +18,14 @@
   --color-sky: #ace8fb;
   --color-button-text: #0f172a;
   --font-readable: 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
+  --surface-soft: #f8fafc;
+  --surface-warm: #fffaf0;
+  --shadow-soft: 0 12px 28px rgba(15, 23, 42, 0.1);
+  --shadow-lifted: 0 18px 36px rgba(15, 23, 42, 0.16);
+  --motion-fast: 120ms;
+  --motion-standard: 180ms;
+  --motion-slow: 320ms;
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   --pad-sm: 0.75rem;
   --pad-md: 1.2rem;
@@ -25,6 +33,22 @@
   --radius-sm: 14px;
   --radius-md: 22px;
   --radius-lg: 28px;
+  --square-image-radius: 25px;
+}
+
+img[src^="/images/"]:not([src*="/characters/"]) {
+  border-radius: var(--square-image-radius);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
 }
 
 html,
@@ -66,7 +90,7 @@ a {
   border: none;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  transition: transform var(--motion-standard) var(--ease-soft), box-shadow var(--motion-standard) var(--ease-soft), filter var(--motion-standard) var(--ease-soft);
 }
 .btn:hover {
   transform: translateY(-1px);
@@ -177,7 +201,7 @@ a {
   border-radius: 0;
   background: transparent !important;
   box-shadow: none !important;
-  transition: transform 0.16s ease, filter 0.16s ease !important;
+  transition: transform var(--motion-fast) var(--ease-soft), filter var(--motion-fast) var(--ease-soft) !important;
 }
 .header-transparent .btn:hover,
 .header-transparent .btn-icon:hover {

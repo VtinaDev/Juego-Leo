@@ -1,23 +1,29 @@
 <template>
   <div class="level-station" :class="{ 'is-locked': locked }">
     <div class="level-station__head">
-      <h3>{{ title }}</h3>
-      <span v-if="locked" class="level-station__lock" aria-label="Nivel bloqueado">🔒 Bloqueado</span>
+      <div>
+        <span class="level-station__number">Nivel {{ levelNumber }}</span>
+        <h3>{{ title }}</h3>
+      </div>
+      <span v-if="locked" class="level-station__lock" aria-label="Nivel bloqueado">Bloqueado</span>
       <span v-else class="level-station__status">Disponible</span>
     </div>
 
     <p class="level-station__description">{{ description }}</p>
 
-    <div class="level-station__stars" :aria-label="`Progreso de ${stars} de 3 estrellas`">
-      <span
-        v-for="idx in 3"
-        :key="idx"
-        class="star"
-        :class="{ 'star--filled': idx <= stars }"
-        aria-hidden="true"
-      >
-        ★
-      </span>
+    <div class="level-station__meta">
+      <div class="level-station__stars" :aria-label="`Progreso de ${stars} de 3 estrellas`">
+        <span
+          v-for="idx in 3"
+          :key="idx"
+          class="star"
+          :class="{ 'star--filled': idx <= stars }"
+          aria-hidden="true"
+        >
+          ★
+        </span>
+      </div>
+      <span>{{ progressLabel }}</span>
     </div>
 
     <button class="level-station__btn" :disabled="locked" type="button" @click="$emit('enter')">
@@ -31,7 +37,10 @@ defineProps({
   title: { type: String, required: true },
   description: { type: String, required: true },
   stars: { type: Number, default: 0 },
-  locked: { type: Boolean, default: false }
+  locked: { type: Boolean, default: false },
+  levelNumber: { type: Number, default: 1 },
+  progressLabel: { type: String, default: '0/1 etapas' },
+  stageCount: { type: Number, default: 1 }
 })
 
 defineEmits(['enter'])
@@ -48,6 +57,15 @@ defineEmits(['enter'])
   justify-content: space-between;
   gap: 0.6rem;
   align-items: flex-start;
+}
+
+.level-station__number {
+  display: inline-flex;
+  margin-bottom: 0.2rem;
+  color: #2f7d47;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .level-station__head h3 {
@@ -78,6 +96,10 @@ defineEmits(['enter'])
 }
 
 .level-station__description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   margin: 0;
   color: #2b587d;
   font-size: 0.92rem;
@@ -87,6 +109,16 @@ defineEmits(['enter'])
 .level-station__stars {
   display: flex;
   gap: 0.25rem;
+}
+
+.level-station__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 900;
 }
 
 .star {

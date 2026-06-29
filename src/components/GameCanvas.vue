@@ -14,8 +14,7 @@ import { playVoice, stopVoice } from '@/engine/audio/audioManager'
 import Perezoso from '@/assets/characters/Perezoso.png'
 import Zorro from '@/assets/characters/Zorro.png'
 import Mono from '@/assets/characters/Mono.png'
-import Elefante from '@/assets/characters/Elefante.png'
-import ElefanteGraduado from '@/assets/characters/Elefante-graduado.png'
+import ElefanteGraduado from '@/assets/characters/Elefante_graduado.png'
 
 const props = defineProps({
   exercise: { type: Object, default: null },

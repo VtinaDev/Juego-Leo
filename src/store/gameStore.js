@@ -239,7 +239,14 @@ export const useGameStore = defineStore('game', {
       this.updateStars()
       this.save()
 
-      await this.saveStageProgressToSupabase(level, stage, this.stages[level][stage])
+      try {
+        await this.saveStageProgressToSupabase(level, stage, this.stages[level][stage])
+      } catch (error) {
+        console.error('Error guardando progreso remoto:', error)
+        return false
+      }
+
+      return true
     },
 
     async saveStageProgressToSupabase(level, stage, result) {

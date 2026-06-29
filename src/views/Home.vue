@@ -188,7 +188,7 @@ onBeforeUnmount(() => {
   position: relative;
   min-height: 108vh;
   overflow: hidden;
-  background-image: url('/backgroun_home.png');
+  background-image: url('/background_home.png');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -416,7 +416,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-art {
-    background-image: url('/backgroun_home.png');
+    background-image: url('/background_home.png');
     background-size: cover;
     background-position: center top;
     background-color: #d6ebff;

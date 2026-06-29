@@ -1,4 +1,4 @@
-import { AUDIO_EXPERIENCE } from './audioExperience.js'
+import { AUDIO_COPY, AUDIO_EXPERIENCE } from './audioExperience.js'
 
 export const SFX_SOURCES = {
   click: '/audio/sfx/click.wav',
@@ -17,141 +17,6 @@ export const MUSIC_SOURCES = {
   nature: '/audio/music/intro-music.mp3'
 }
 
-export const VOICE_SOURCES = {
-  // Legacy keys kept for compatibility with the current game flow.
-  intro: '/audio/voice/home-welcome.mp3',
-  start: '/audio/voice/home-start.mp3',
-  breath: '/audio/voice/exercise-try-again.mp3',
-  retry: '/audio/voice/exercise-try-again.mp3',
-  success: '/audio/voice/exercise-succes.mp3',
-  positive1: '/audio/voice/positive1.mp3',
-  positive2: '/audio/voice/positive2.mp3',
-  positive3: '/audio/voice/positive3.mp3',
-
-  // Hyphenated semantic keys used in VOICE_PRODUCTION_GUIDE / production docs.
-  'home-welcome': '/audio/voice/home-welcome.mp3',
-  'home-start': '/audio/voice/home-start.mp3',
-  'exercise-success': '/audio/voice/exercise-succes.mp3',
-  'exercise-try-again': '/audio/voice/exercise-try-again.mp3',
-  'select-image-word': '/audio/voice/exercises/select-image-word.mp3',
-  'choose-correct-word': '/audio/voice/exercises/choose-correct-word.mp3',
-  'start-with-article': '/audio/voice/exercises/start-with-article.mp3',
-  'put-el-first': '/audio/voice/exercises/put-el-first.mp3',
-  'subject-first-then-action': '/audio/voice/exercises/subject-first-then-action.mp3',
-  'natural-subject-verb-order': '/audio/voice/exercises/natural-subject-verb-order.mp3',
-  'l1-cs-1': '/audio/voice/exercises/l1-cs-1.mp3',
-  'l1-cs-2': '/audio/voice/exercises/l1-cs-2.mp3',
-  'l1-cs-3': '/audio/voice/exercises/l1-cs-3.mp3',
-  'l1-cs-4': '/audio/voice/exercises/l1-cs-4.mp3',
-  'l1-cs-5': '/audio/voice/exercises/l1-cs-5.mp3',
-  'l1-cs-6': '/audio/voice/exercises/l1-cs-6.mp3',
-  'l1-cs-7': '/audio/voice/exercises/l1-cs-7.mp3',
-  'l1-cs-8': '/audio/voice/exercises/l1-cs-8.mp3',
-  'l1-fs-1': '/audio/voice/exercises/l1-fs-1.mp3',
-  'l1-fs-2': '/audio/voice/exercises/l1-fs-2.mp3',
-  'l1-fs-3': '/audio/voice/exercises/l1-fs-3.mp3',
-  'l1-fs-4': '/audio/voice/exercises/l1-fs-4.mp3',
-  'l1-rwa-1': '/audio/voice/exercises/l1-rwa-1.mp3',
-  'l1-rwa-2': '/audio/voice/exercises/l1-rwa-2.mp3',
-  'l1-rwa-3': '/audio/voice/exercises/l1-rwa-3.mp3',
-  'l1-rwa-4': '/audio/voice/exercises/l1-rwa-4.mp3',
-  'l1-voc-1': '/audio/voice/exercises/l1-voc-1.mp3',
-  'l1-voc-2': '/audio/voice/exercises/l1-voc-2.mp3',
-  'l1-voc-3': '/audio/voice/exercises/l1-voc-3.mp3',
-  'l1-voc-4': '/audio/voice/exercises/l1-voc-4.mp3',
-  'l1-voc-5': '/audio/voice/exercises/l1-voc-5.mp3',
-  'l1-voc-6': '/audio/voice/exercises/l1-voc-6.mp3',
-  'l1-voc-7': '/audio/voice/exercises/l1-voc-7.mp3',
-  'l1-assoc-1': '/audio/voice/exercises/l1-assoc-1.mp3',
-  'l1-assoc-2': '/audio/voice/exercises/l1-assoc-2.mp3',
-  'l1-assoc-3': '/audio/voice/exercises/l1-assoc-3.mp3',
-  'l1-assoc-4': '/audio/voice/exercises/l1-assoc-4.mp3',
-  'l1-assoc-5': '/audio/voice/exercises/l1-assoc-5.mp3',
-  // Canonical stable cues for Block 6 association exercises (L2 pair_*).
-  'l2-pa-1': '/audio/voice/exercises/l1-assoc-1.mp3',
-  'l2-pa-2': '/audio/voice/exercises/l1-assoc-2.mp3',
-  'l2-ps-1': '/audio/voice/exercises/l1-assoc-3.mp3',
-  'l2-ps-2': '/audio/voice/exercises/l1-assoc-4.mp3',
-  'l2-ps-3': '/audio/voice/exercises/l1-assoc-5.mp3',
-  // Block 7 long narrative manual audio cues.
-  'l1-long-1': '/audio/voice/exercises/l1-long-1.mp3',
-  'l1-long-2': '/audio/voice/exercises/l1-long-2.mp3',
-  'l1-long-3': '/audio/voice/exercises/l1-long-3.mp3',
-  // Canonical stable cues for L3 audio_question narratives.
-  'l3-aq-1': '/audio/voice/exercises/l1-long-1.mp3',
-  'l3-aq-2': '/audio/voice/exercises/l1-long-2.mp3',
-  'l3-aq-3': '/audio/voice/exercises/l1-long-3.mp3',
-  // Block 8 manual write cues.
-  'l1-write-1': '/audio/voice/exercises/l1-write-1.mp3',
-  'l1-write-2': '/audio/voice/exercises/l1-write-2.mp3',
-  'l1-write-3': '/audio/voice/exercises/l1-write-3.mp3',
-  'l1-write-4': '/audio/voice/exercises/l1-write-4.mp3',
-  'l1-write-5': '/audio/voice/exercises/l1-write-5.mp3',
-  // Block 9 manual grammar cues.
-  'l1-grammar-1': '/audio/voice/exercises/l1-grammar-1.mp3',
-  'l1-grammar-2': '/audio/voice/exercises/l1-grammar-2.mp3',
-  'l1-grammar-3': '/audio/voice/exercises/l1-grammar-3.mp3',
-  'l1-grammar-4': '/audio/voice/exercises/l1-grammar-4.mp3',
-  'l1-grammar-5': '/audio/voice/exercises/l1-grammar-5.mp3',
-  // Additional manual cues uploaded for L3/L4/L5.
-  'l3-ss-1-prompt': '/audio/voice/exercises/l3-ss-1-prompt.mp3',
-  'l3-ss-1-opt-1': '/audio/voice/exercises/l3-ss-1-opt-1.mp3',
-  'l3-ss-1-opt-2': '/audio/voice/exercises/l3-ss-1-opt-2.mp3',
-  'l3-ss-2-prompt': '/audio/voice/exercises/l3-ss-2-prompt.mp3',
-  'l3-ss-2-opt-1': '/audio/voice/exercises/l3-ss-2-opt-1.mp3',
-  'l3-ss-2-opt-2': '/audio/voice/exercises/l3-ss-2-opt-2.mp3',
-  'l3-ss-3-prompt': '/audio/voice/exercises/l3-ss-3-prompt.mp3',
-  'l3-ss-3-opt-1': '/audio/voice/exercises/l3-ss-3-opt-1.mp3',
-  'l3-ss-3-opt-2': '/audio/voice/exercises/l3-ss-3-opt-2.mp3',
-  'l4-aw-2-instruction': '/audio/voice/exercises/l4-aw-2-instruction.mp3',
-  'l4-ra-1-question': '/audio/voice/exercises/l4-ra-1-question.mp3',
-  'l4-ra-1-opt-1': '/audio/voice/exercises/l4-ra-1-opt-1.mp3',
-  'l4-ra-1-opt-2': '/audio/voice/exercises/l4-ra-1-opt-2.mp3',
-  'l4-ra-2-question': '/audio/voice/exercises/l4-ra-2-question.mp3',
-  'l4-ra-2-opt-1': '/audio/voice/exercises/l4-ra-2-opt-1.mp3',
-  'l4-ra-2-opt-2': '/audio/voice/exercises/l4-ra-2-opt-2.mp3',
-  'l5-tc-1-sentence': '/audio/voice/exercises/l5-tc-1-sentence.mp3',
-  'l5-tc-2-sentence': '/audio/voice/exercises/l5-tc-2-sentence.mp3',
-  'l5-tc-3-sentence': '/audio/voice/exercises/l5-tc-3-sentence.mp3',
-  'l5-pg-1-sentence': '/audio/voice/exercises/l5-pg-1-sentence.mp3',
-  'l5-pg-2-sentence': '/audio/voice/exercises/l5-pg-2-sentence.mp3',
-  'l5-pg-3-sentence': '/audio/voice/exercises/l5-pg-3-sentence.mp3',
-  // Shared manual option cues (L3/L5 and reused labels).
-  'opt-un-conejo': '/audio/voice/exercises/opt-un-conejo.mp3',
-  'opt-un-zapato': '/audio/voice/exercises/opt-un-zapato.mp3',
-  'opt-un-platano': '/audio/voice/exercises/opt-un-platano.mp3',
-  'opt-se-enfadan': '/audio/voice/exercises/opt-se-enfadan.mp3',
-  'opt-se-divierten': '/audio/voice/exercises/opt-se-divierten.mp3',
-  'prompt-ordena-las-palabras': '/audio/voice/exercises/prompt-ordena-las-palabras.mp3',
-  'syll-sa': '/audio/voice/exercises/syll-sa.mp3',
-  'syll-po': '/audio/voice/exercises/syll-po.mp3',
-  'syll-lu': '/audio/voice/exercises/syll-lu.mp3',
-  'syll-na': '/audio/voice/exercises/syll-na.mp3',
-  'syll-me': '/audio/voice/exercises/syll-me.mp3',
-  'syll-lo': '/audio/voice/exercises/syll-lo.mp3',
-  'syll-di': '/audio/voice/exercises/syll-di.mp3',
-  'syll-a': '/audio/voice/exercises/syll-a.mp3',
-  'syll-fan': '/audio/voice/exercises/syll-fan.mp3',
-  'syll-ta': '/audio/voice/exercises/syll-ta.mp3',
-  'syll-si': '/audio/voice/exercises/syll-si.mp3',
-  'signo-exclamacion': '/audio/voice/exercises/signo-exclamacion.mp3',
-  'signo-interrogacion': '/audio/voice/exercises/signo-interrogacion.mp3',
-  'signo-punto-final': '/audio/voice/exercises/signo-punto-final.mp3',
-  'categoria-pregunta': '/audio/voice/exercises/categoria-pregunta.mp3',
-  'categoria-afirmacion': '/audio/voice/exercises/categoria-afirmacion.mp3',
-  'musica-opcion-correcta': '/audio/voice/exercises/musica-opcion-correcta.mp3',
-  'musica-opcion-error-1': '/audio/voice/exercises/musica-opcion-error-1.mp3',
-  'musica-opcion-error-2': '/audio/voice/exercises/musica-opcion-error-2.mp3',
-  // Shared manual options for tense labels.
-  'tense-pasado': '/audio/voice/exercises/tense-pasado.mp3',
-  'tense-presente': '/audio/voice/exercises/tense-presente.mp3',
-  'tense-futuro': '/audio/voice/exercises/tense-futuro.mp3',
-  'positive-1': '/audio/voice/positive1.mp3',
-  'positive-2': '/audio/voice/positive2.mp3',
-  'positive-3': '/audio/voice/positive3.mp3',
-  'calm-breath': '/audio/voice/exercise-try-again.mp3'
-}
-
 export const VOICE_CUE_FALLBACKS = {
   start: 'intro',
   retry: 'breath',
@@ -161,6 +26,24 @@ export const VOICE_CUE_FALLBACKS = {
   'exercise-success': 'success',
   'exercise-try-again': 'retry',
   'calm-breath': 'retry'
+}
+
+export const VOICE_SOURCES = {
+  intro: '/audio/app-voice/home-welcome.mp3',
+  start: '/audio/app-voice/home-start.mp3',
+  breath: '/audio/app-voice/exercise-try-again.mp3',
+  retry: '/audio/app-voice/exercise-try-again.mp3',
+  success: '/audio/app-voice/exercise-succes.mp3',
+  positive: '/audio/app-voice/exercise-succes.mp3',
+  positive1: '/audio/app-voice/positive1.mp3',
+  positive2: '/audio/app-voice/positive2.mp3',
+  positive3: '/audio/app-voice/positive3.mp3',
+  'home-welcome': '/audio/app-voice/home-welcome.mp3',
+  'home-start': '/audio/app-voice/home-start.mp3',
+  'exercise-success': '/audio/app-voice/exercise-succes.mp3',
+  'exercise-try-again': '/audio/app-voice/exercise-try-again.mp3',
+  'calm-breath': '/audio/app-voice/exercise-try-again.mp3',
+  'l2-ps-2': '/audio/app-voice/l2-ps-2.mp3'
 }
 
 export const STORAGE_KEY = 'juegoLeo_audioSettings'

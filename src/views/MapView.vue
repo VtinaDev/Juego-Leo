@@ -4,24 +4,32 @@
       <p class="map-view__eyebrow">Mapa de niveles</p>
       <h1>Elige tu próxima aventura</h1>
       <p>Explora cada hábitat, consigue estrellas y entra en todas las etapas disponibles.</p>
-      <strong class="map-view__total">{{ exerciseTotal }} ejercicios activos</strong>
+      <div class="map-view__summary" aria-label="Resumen de progreso">
+        <strong>{{ exerciseTotal }} ejercicios activos</strong>
+        <span>{{ completedStagesTotal }} de {{ stageTotal }} etapas completadas</span>
+        <span>{{ unlockedTotal }} niveles desbloqueados</span>
+      </div>
     </header>
 
-    <div ref="railRef" class="map-view__rail" :class="{ 'map-view__rail--reduced': prefersReducedMotion }">
-      <HabitatCard
-        v-for="(level, index) in levels"
-        :key="level.id"
-        :ref="(el) => setCardRef(el, index)"
-        :level="level"
-        class="map-view__card"
-        @enter="handleEnter"
-      />
+    <div class="map-view__carousel" :class="{ 'map-view__carousel--reduced': prefersReducedMotion }">
+      <div class="map-view__track">
+        <HabitatCard
+          v-for="(level, index) in carouselLevels"
+          :key="`${level.id}-${index}`"
+          :level="level"
+          class="map-view__card"
+          :style="{ '--card-index': index }"
+          :aria-hidden="index >= levels.length ? 'true' : undefined"
+          :inert="index >= levels.length ? '' : undefined"
+          @enter="handleEnter"
+        />
+      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import HabitatCard from '../components/map/HabitatCard.vue'
 import { useGameStore } from '../store/gameStore'
@@ -34,10 +42,7 @@ const billing = useBillingStore()
 game.load?.()
 billing.load?.()
 const prefersReducedMotion = ref(false)
-const railRef = ref(null)
-const cardRefs = ref([])
 let motionQueryList = null
-let rafId = 0
 
 const levelBlueprint = [
   {
@@ -45,8 +50,8 @@ const levelBlueprint = [
     levelId: 1,
     characterName: 'Oso perezoso',
     habitatDescription: 'El árbol',
-    habitat: '/images/habitats/sloth-tree.png',
-    character: '/images/characters/sloth.png',
+    habitat: '/images-optimized/habitats/sloth-tree.webp',
+    character: '/images-optimized/characters/sloth.webp',
     fallbackTitle: 'Árbol de la Calma'
   },
   {
@@ -54,8 +59,8 @@ const levelBlueprint = [
     levelId: 2,
     characterName: 'Zorro',
     habitatDescription: 'La Madriguera',
-    habitat: '/images/habitats/fox-burrow.png',
-    character: '/images/characters/fox.png',
+    habitat: '/images-optimized/habitats/fox-burrow.webp',
+    character: '/images-optimized/characters/fox.webp',
     fallbackTitle: 'Madriguera de Palabras'
   },
   {
@@ -63,8 +68,8 @@ const levelBlueprint = [
     levelId: 3,
     characterName: 'Oso',
     habitatDescription: 'El bosque de Miel',
-    habitat: '/images/habitats/bear-honey.png',
-    character: '/images/characters/bear.png',
+    habitat: '/images-optimized/habitats/bear-honey.webp',
+    character: '/images-optimized/characters/bear.webp',
     fallbackTitle: 'Bosque de la Miel'
   },
   {
@@ -72,8 +77,8 @@ const levelBlueprint = [
     levelId: 4,
     characterName: 'Mono',
     habitatDescription: 'Mundo lianas',
-    habitat: '/images/habitats/monkey-jungle.png',
-    character: '/images/characters/monkey.png',
+    habitat: '/images-optimized/habitats/monkey-jungle.webp',
+    character: '/images-optimized/characters/monkey.webp',
     fallbackTitle: 'Jungla de las Letras'
   },
   {
@@ -81,8 +86,8 @@ const levelBlueprint = [
     levelId: 5,
     characterName: 'Elefante',
     habitatDescription: 'La escuela mágica',
-    habitat: '/images/habitats/elephant-school.png',
-    character: '/images/characters/elephant.png',
+    habitat: '/images-optimized/habitats/elephant-school.webp',
+    character: '/images-optimized/characters/elephant.webp',
     fallbackTitle: 'Escuela del Elefante Sabio'
   }
 ]
@@ -100,13 +105,25 @@ const levels = computed(() => {
     const locked = !planUnlock || !previousComplete
     const stageTitle = def?.meta?.levelName || entry.fallbackTitle
     const stars = Math.min(3, Number(progress?.completedStages || 0))
+    const totalStages = Number(progress?.totalStages || 0)
+    const completedStages = Number(progress?.completedStages || 0)
+    const percent = totalStages ? Math.round((completedStages / totalStages) * 100) : 0
+    const complete = totalStages > 0 && completedStages >= totalStages
+    const current = !locked && !complete
 
     return {
       ...entry,
       title: stageTitle,
-      description: `${entry.characterName}: ${entry.habitatDescription}.`,
+      description: def?.meta?.description || `${entry.characterName}: ${entry.habitatDescription}.`,
       stars,
       locked,
+      complete,
+      current,
+      progressPercent: percent,
+      completedStages,
+      stageTotal: totalStages,
+      statusLabel: locked ? 'Bloqueado' : complete ? 'Completado' : 'Disponible',
+      progressLabel: `${completedStages}/${totalStages || 1} etapas`,
       route: `/game/${entry.levelId}/${progress.nextStage}`,
       stages: getStageLinks(entry.levelId, def, progress, locked)
     }
@@ -118,6 +135,8 @@ const exerciseTotal = computed(() => {
     return total + level.stages.reduce((acc, stage) => acc + stage.count, 0)
   }, 0)
 })
+
+const carouselLevels = computed(() => [...levels.value, ...levels.value])
 
 function getStageLinks(levelId, def, progress, locked) {
   const subtypes = def?.subtypes || {}
@@ -145,69 +164,8 @@ function formatSubtypeLabel(value) {
     .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
-function setCardRef(el, index) {
-  if (!el) {
-    cardRefs.value[index] = null
-    return
-  }
-  cardRefs.value[index] = el
-}
-
-function resetCardScale() {
-  cardRefs.value.forEach((card) => {
-    if (!card) return
-    card.style.setProperty('--card-scale', '1')
-    card.style.setProperty('--card-lift', '0px')
-  })
-}
-
-function updateCardScaleByCenter() {
-  const rail = railRef.value
-  if (!rail || prefersReducedMotion.value) {
-    resetCardScale()
-    return
-  }
-
-  const hasHorizontalCarousel = rail.scrollWidth > rail.clientWidth + 4
-  if (!hasHorizontalCarousel) {
-    resetCardScale()
-    return
-  }
-
-  const railRect = rail.getBoundingClientRect()
-  const railCenter = railRect.left + railRect.width / 2
-  const maxDistance = Math.max(railRect.width / 2, 1)
-
-  cardRefs.value.forEach((card) => {
-    if (!card) return
-    const cardRect = card.getBoundingClientRect()
-    const cardCenter = cardRect.left + cardRect.width / 2
-    const normalizedDistance = Math.min(Math.abs(cardCenter - railCenter) / maxDistance, 1)
-    const proximity = 1 - normalizedDistance
-
-    const scale = 0.98 + proximity * 0.16
-    const lift = -proximity * 10
-
-    card.style.setProperty('--card-scale', scale.toFixed(3))
-    card.style.setProperty('--card-lift', `${lift.toFixed(1)}px`)
-  })
-}
-
-function queueScaleUpdate() {
-  if (rafId) return
-  rafId = window.requestAnimationFrame(() => {
-    rafId = 0
-    updateCardScaleByCenter()
-  })
-}
-
 function onMotionChange(event) {
   prefersReducedMotion.value = Boolean(event.matches)
-  if (prefersReducedMotion.value) {
-    resetCardScale()
-    return
-  }
-  queueScaleUpdate()
 }
 
 function handleEnter(level) {
@@ -215,14 +173,9 @@ function handleEnter(level) {
   router.push(level.route).catch(() => {})
 }
 
-watch(
-  () => levels.value.length,
-  () => {
-    nextTick(() => {
-      queueScaleUpdate()
-    })
-  }
-)
+const stageTotal = computed(() => levels.value.reduce((total, level) => total + level.stageTotal, 0))
+const completedStagesTotal = computed(() => levels.value.reduce((total, level) => total + level.completedStages, 0))
+const unlockedTotal = computed(() => levels.value.filter((level) => !level.locked).length)
 
 onMounted(() => {
   if (typeof window === 'undefined' || !window.matchMedia) return
@@ -230,22 +183,10 @@ onMounted(() => {
   motionQueryList = window.matchMedia('(prefers-reduced-motion: reduce)')
   prefersReducedMotion.value = motionQueryList.matches
   motionQueryList.addEventListener?.('change', onMotionChange)
-
-  railRef.value?.addEventListener('scroll', queueScaleUpdate, { passive: true })
-  window.addEventListener('resize', queueScaleUpdate, { passive: true })
-
-  nextTick(() => {
-    queueScaleUpdate()
-  })
 })
 
 onBeforeUnmount(() => {
   motionQueryList?.removeEventListener?.('change', onMotionChange)
-  railRef.value?.removeEventListener('scroll', queueScaleUpdate)
-  window.removeEventListener('resize', queueScaleUpdate)
-  if (rafId) {
-    window.cancelAnimationFrame(rafId)
-  }
 })
 </script>
 
@@ -290,59 +231,72 @@ onBeforeUnmount(() => {
   line-height: 1.4;
 }
 
-.map-view__total {
-  display: inline-flex;
+.map-view__summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
   margin-top: 0.85rem;
+}
+
+.map-view__summary > * {
+  display: inline-flex;
   padding: 0.45rem 0.8rem;
   border-radius: 999px;
   background: #ffffff;
   color: #166534;
   box-shadow: 0 8px 18px rgba(22, 101, 52, 0.12);
+  font-size: 0.86rem;
+  font-weight: 900;
 }
 
-.map-view__rail {
+.map-view__summary span {
+  color: #1e5a86;
+}
+
+.map-view__carousel {
+  --card-w: clamp(280px, 72vw, 390px);
+  --track-gap: clamp(1rem, 3vw, 1.45rem);
   width: 100vw;
   margin: 0 calc(50% - 50vw);
+  overflow: hidden;
+  padding: 1rem 0 1.45rem;
+}
+
+.map-view__track {
   display: flex;
-  gap: clamp(0.7rem, 3.2vw, 1.2rem);
+  align-items: stretch;
+  gap: var(--track-gap);
+  width: max-content;
+  padding-inline: max(1.2rem, calc((100vw - var(--card-w)) / 2));
+  animation: mapCardsLoop 34s linear infinite;
+}
+
+.map-view__card {
+  --habitat-card-width: var(--card-w);
+  flex: 0 0 var(--habitat-card-width);
+  max-width: var(--habitat-card-width);
+  transform-origin: center center;
+  transition: transform 0.25s ease, filter 0.24s ease;
+  will-change: transform;
+}
+
+.map-view__carousel:hover .map-view__track,
+.map-view__carousel:focus-within .map-view__track {
+  animation-play-state: paused;
+}
+
+.map-view__carousel--reduced {
   overflow-x: auto;
-  padding: 0.6rem clamp(0.8rem, 4vw, 1.1rem) 1rem;
-  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
   -webkit-overflow-scrolling: touch;
   scrollbar-color: rgba(37, 99, 235, 0.7) rgba(148, 163, 184, 0.22);
   scrollbar-width: auto;
 }
 
-.map-view__rail::-webkit-scrollbar {
-  height: 14px;
-}
-
-.map-view__rail::-webkit-scrollbar-track {
-  background: rgba(148, 163, 184, 0.22);
-  border-radius: 999px;
-}
-
-.map-view__rail::-webkit-scrollbar-thumb {
-  background: rgba(37, 99, 235, 0.78);
-  border: 3px solid rgba(148, 163, 184, 0.15);
-  border-radius: 999px;
-  background-clip: padding-box;
-}
-
-.map-view__card {
-  --habitat-card-width: calc(100vw - clamp(1.6rem, 8vw, 2.6rem));
-  flex: 0 0 var(--habitat-card-width);
-  max-width: var(--habitat-card-width);
-  scroll-snap-align: center;
-  transform: translateY(var(--card-lift, 0px)) scale(var(--card-scale, 1));
-  transform-origin: center center;
-  transition: transform 0.2s ease;
-  will-change: transform;
-}
-
-.map-view__rail--reduced .map-view__card {
-  transform: none !important;
-  transition: none;
+.map-view__carousel--reduced .map-view__track {
+  width: max-content;
+  animation: none;
 }
 
 @media (max-width: 767px) {
@@ -350,47 +304,44 @@ onBeforeUnmount(() => {
     padding-top: 5.2rem;
   }
 
-  .map-view__rail {
-    width: 100%;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    overflow: visible;
-    padding: 0;
-    scroll-snap-type: none;
+  .map-view__header {
+    text-align: left;
   }
 
-  .map-view__card {
-    --habitat-card-width: auto;
-    flex: initial;
-    max-width: none;
-    scroll-snap-align: none;
-    transform: none;
+  .map-view__summary {
+    justify-content: flex-start;
+  }
+
+  .map-view__carousel {
+    --card-w: min(335px, 84vw);
+    padding-block: 0.75rem 1.1rem;
   }
 }
 
 @media (min-width: 980px) {
-  .map-view__rail {
-    width: min(1200px, 100%);
-    margin: 0 auto;
-    overflow: visible;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(280px, 1fr));
-    align-items: stretch;
+  .map-view__carousel {
+    --card-w: clamp(330px, 30vw, 390px);
+    --track-gap: 1.45rem;
   }
+}
 
-  .map-view__card {
-    --habitat-card-width: auto;
-    flex: initial;
-    max-width: none;
-    transform: none;
+@keyframes mapCardsLoop {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - (var(--track-gap) / 2)));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .map-view,
-  .map-view__rail {
+  .map-view__carousel {
+    overflow-x: auto;
     scroll-behavior: auto;
+  }
+
+  .map-view__track {
+    animation: none;
   }
 }
 </style>

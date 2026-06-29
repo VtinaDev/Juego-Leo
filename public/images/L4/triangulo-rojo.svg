@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Triángulo rojo</title>
+  <desc id="desc">Un triángulo rojo grande sobre fondo claro.</desc>
+  <path d="M256 82 438 398H74L256 82Z" fill="#ef4444" stroke="#b91c1c" stroke-width="18" stroke-linejoin="round"/>
+  <path d="M256 128 390 360H122L256 128Z" fill="#f87171" opacity=".45"/>
+</svg>

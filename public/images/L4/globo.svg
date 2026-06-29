@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Globo</title>
+  <desc id="desc">Un globo rojo con cuerda sobre fondo claro.</desc>
+  <ellipse cx="256" cy="184" rx="108" ry="126" fill="#ef4444" stroke="#b91c1c" stroke-width="14"/>
+  <path d="M222 92c-34 22-54 58-54 100 0 43 18 80 48 103" fill="none" stroke="#fca5a5" stroke-width="16" stroke-linecap="round" opacity=".8"/>
+  <path d="M238 306h36l-18 34-18-34Z" fill="#b91c1c"/>
+  <path d="M256 340c-18 38 32 55 0 94-18 22-10 43 18 56" fill="none" stroke="#475569" stroke-width="10" stroke-linecap="round"/>
+</svg>

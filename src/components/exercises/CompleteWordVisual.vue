@@ -1,5 +1,9 @@
 <template>
-  <section class="complete-word-visual" aria-label="Completar palabra">
+  <section
+    class="complete-word-visual"
+    :class="{ 'complete-word-visual--speech-bubble': letterStyle === 'speech-bubble' }"
+    aria-label="Completar palabra"
+  >
     <div v-if="imageSrc" class="complete-word-visual__image-wrap">
       <img
         :src="imageSrc"
@@ -30,6 +34,7 @@
         v-for="(letter, idx) in letters"
         :key="`letter-${idx}-${letter}`"
         class="complete-word-visual__letter"
+        :class="{ 'complete-word-visual__letter--square-yellow': letterStyle === 'square-yellow' }"
         type="button"
         @click="$emit('select-letter', letter)"
       >
@@ -38,10 +43,10 @@
     </div>
 
     <div class="complete-word-visual__actions">
-      <button class="complete-word-visual__confirm" type="button" @click="$emit('submit')">
+      <button class="btn btn-primary" type="button" @click="$emit('submit')">
         Confirmar
       </button>
-      <button class="complete-word-visual__reset" type="button" aria-label="Reiniciar letras" @click="$emit('reset')">
+      <button class="btn btn-secondary" type="button" aria-label="Reiniciar letras" @click="$emit('reset')">
         Reiniciar
       </button>
     </div>
@@ -55,7 +60,8 @@ defineProps({
   targetWord: { type: String, default: '' },
   slots: { type: Array, default: () => [] },
   values: { type: Array, default: () => [] },
-  letters: { type: Array, default: () => [] }
+  letters: { type: Array, default: () => [] },
+  letterStyle: { type: String, default: 'default' }
 })
 
 defineEmits(['select-letter', 'submit', 'reset'])
@@ -67,18 +73,20 @@ defineEmits(['select-letter', 'submit', 'reset'])
   margin: 0 auto;
   display: grid;
   justify-items: center;
-  gap: 0.85rem;
+  gap: 0.7rem;
 }
 .complete-word-visual__image-wrap {
-  width: min(100%, 300px);
+  width: min(100%, 230px);
+  max-height: min(165px, 24vh);
   display: grid;
   place-items: center;
+  overflow: hidden;
 }
 .complete-word-visual__image {
   width: 100%;
-  max-height: 230px;
+  max-height: min(165px, 24vh);
   object-fit: contain;
-  border-radius: 22px;
+  border-radius: var(--square-image-radius, 25px);
   animation: wordImageFloat 2.4s ease-in-out infinite;
 }
 .complete-word-visual__slots {
@@ -146,31 +154,47 @@ defineEmits(['select-letter', 'submit', 'reset'])
   transform: translateY(4px) scale(0.98);
   box-shadow: 0 4px 0 #be5a95, 0 8px 14px rgba(190, 90, 149, 0.22);
 }
-.complete-word-visual__actions {
-  width: min(100%, 520px);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.65rem;
-  align-items: center;
-}
-.complete-word-visual__confirm {
-  min-height: 64px;
-  border: none;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #a7f03f 0%, #70d215 100%);
-  color: #163300;
-  font-size: clamp(1.2rem, 4.4vw, 1.5rem);
-  font-weight: 900;
-  box-shadow: 0 9px 0 #53a90c, 0 14px 20px rgba(83, 169, 12, 0.2);
-}
-.complete-word-visual__reset {
-  min-height: 56px;
-  padding: 0 0.9rem;
-  border: 2px solid #cbd5e1;
+.complete-word-visual__letter--square-yellow {
+  width: 74px;
+  height: 74px;
+  min-width: 74px;
+  min-height: 74px;
+  padding: 0;
+  border-color: rgba(14, 165, 233, 0.22);
   border-radius: 16px;
   background: #ffffff;
-  color: #334155;
-  font-weight: 800;
+  color: #0f172a;
+  box-shadow: 0 10px 0 rgba(14, 165, 233, 0.14), 0 16px 26px rgba(15, 23, 42, 0.1);
+}
+.complete-word-visual__letter--square-yellow:active {
+  box-shadow: 0 5px 0 rgba(14, 165, 233, 0.14), 0 10px 18px rgba(15, 23, 42, 0.1);
+}
+.complete-word-visual--speech-bubble .complete-word-visual__slot,
+.complete-word-visual--speech-bubble .complete-word-visual__letter {
+  border: 2px solid rgba(14, 165, 233, 0.22);
+  border-radius: 24px;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 10px 0 rgba(14, 165, 233, 0.14), 0 16px 26px rgba(15, 23, 42, 0.1);
+}
+.complete-word-visual--speech-bubble .complete-word-visual__slot--blank {
+  background: #ffffff;
+}
+.complete-word-visual--speech-bubble .complete-word-visual__slot--filled {
+  background: #fff7d6;
+  border-color: rgba(245, 158, 11, 0.42);
+}
+.complete-word-visual--speech-bubble .complete-word-visual__letter:active {
+  transform: translateY(4px) scale(0.98);
+  box-shadow: 0 5px 0 rgba(14, 165, 233, 0.14), 0 10px 18px rgba(15, 23, 42, 0.1);
+}
+.complete-word-visual__actions {
+  width: min(100%, 560px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+  align-items: center;
 }
 @keyframes wordImageFloat {
   0%,
@@ -178,7 +202,7 @@ defineEmits(['select-letter', 'submit', 'reset'])
     transform: scale(1);
   }
   50% {
-    transform: translateY(-4px) scale(1.035);
+    transform: translateY(-3px) scale(1.02);
   }
 }
 @keyframes letterPop {
@@ -203,7 +227,11 @@ defineEmits(['select-letter', 'submit', 'reset'])
     gap: 0.65rem;
   }
   .complete-word-visual__image-wrap {
-    width: min(100%, 240px);
+    width: min(100%, 190px);
+    max-height: min(135px, 20vh);
+  }
+  .complete-word-visual__image {
+    max-height: min(135px, 20vh);
   }
   .complete-word-visual__letter {
     min-width: 62px;

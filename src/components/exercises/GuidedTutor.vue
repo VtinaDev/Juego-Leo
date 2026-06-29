@@ -1,5 +1,5 @@
 <template>
-  <section v-if="step" class="guided-tutor-card" :class="`guided-tutor-card--${step.key}`">
+  <section v-if="step" class="guided-tutor-card" :class="stepClass">
     <div class="guided-tutor-card__character" aria-hidden="true">
       <img :src="characterImg" alt="" />
     </div>
@@ -7,12 +7,12 @@
       <button
         class="guided-tutor-card__audio"
         type="button"
-        :aria-label="`Repetir: ${step.label}`"
+        :aria-label="`Repetir: ${message}`"
         @click="$emit('play')"
       >
         <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
       </button>
-      <span class="guided-tutor-card__word">{{ step.label }}</span>
+      <span class="guided-tutor-card__message">{{ message }}</span>
       <div class="guided-tutor-card__dots" aria-hidden="true">
         <span
           v-for="(_, stepIdx) in steps"
@@ -25,7 +25,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   characterImg: { type: String, required: true },
   step: { type: Object, default: null },
   steps: { type: Array, default: () => [] },
@@ -33,6 +35,12 @@ defineProps({
 })
 
 defineEmits(['play'])
+
+const message = computed(() => props.step?.message || props.step?.label || '')
+const stepClass = computed(() => {
+  const key = String(props.step?.key || 'default').replace(/[^a-z0-9_-]/gi, '')
+  return `guided-tutor-card--${key || 'default'}`
+})
 </script>
 
 <style scoped>
@@ -105,7 +113,9 @@ defineEmits(['play'])
   height: 40px;
   object-fit: contain;
 }
-.guided-tutor-card__word {
+.guided-tutor-card__message {
+  white-space: pre-line;
+  min-width: 0;
   position: relative;
   z-index: 1;
   color: #0f172a;
@@ -113,6 +123,12 @@ defineEmits(['play'])
   font-weight: 900;
   line-height: 1.08;
   text-wrap: balance;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.guided-tutor-card--act .guided-tutor-card__message {
+  font-size: clamp(1.2rem, 4.4vw, 1.72rem);
+  line-height: 1.16;
 }
 .guided-tutor-card__dots {
   grid-column: 1 / -1;
@@ -185,8 +201,14 @@ defineEmits(['play'])
     padding: 0.62rem 0.66rem 0.42rem 1rem;
     border-radius: 18px;
   }
-  .guided-tutor-card__word {
+  .guided-tutor-card__message {
+    min-width: 0;
     font-size: clamp(1.18rem, 6vw, 1.65rem);
+    overflow-wrap: anywhere;
+  }
+  .guided-tutor-card--act .guided-tutor-card__message {
+    font-size: clamp(1.02rem, 5vw, 1.35rem);
+    line-height: 1.18;
   }
   .guided-tutor-card__audio {
     width: 38px;

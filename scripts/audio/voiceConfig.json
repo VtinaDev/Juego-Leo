@@ -1,0 +1,10 @@
+{
+  "voiceId": "IvWkxlWQtJVT34p1Pt9D",
+  "modelId": "eleven_flash_v2_5",
+  "stability": 0.58,
+  "similarityBoost": 0.8,
+  "style": 0.38,
+  "useSpeakerBoost": false,
+  "speed": 1.08,
+  "outputFormat": "mp3_44100_128"
+}

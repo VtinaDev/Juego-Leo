@@ -1,5 +1,5 @@
 kind,level,stage,exercise_id,subtype,route,text,has_existing_audio
-exercise,1,4,L1-RW-1,read_with_audio,/audio/voice/exercises/L1/l1-rw-1.mp3,El faro guía a los barcos perdidos.,true
-exercise,1,4,L1-RW-2,read_with_audio,/audio/voice/exercises/L1/l1-rw-2.mp3,La campana anuncia el recreo.,true
-exercise,1,4,L1-RW-3,read_with_audio,/audio/voice/exercises/L1/l1-rw-3.mp3,Las hojas viajan con el viento.,true
-exercise,1,4,L1-RW-4,read_with_audio,/audio/voice/exercises/L1/l1-rw-4.mp3,El río canta para el bosque.,true
+exercise,1,4,L1-RW-1,read_with_audio,/audio/app-voice/l1-rw-1.mp3,El faro guía a los barcos perdidos.,true
+exercise,1,4,L1-RW-2,read_with_audio,/audio/app-voice/l1-rw-2.mp3,La campana anuncia el recreo.,true
+exercise,1,4,L1-RW-3,read_with_audio,/audio/app-voice/l1-rw-3.mp3,Las hojas viajan con el viento.,true
+exercise,1,4,L1-RW-4,read_with_audio,/audio/app-voice/l1-rw-4.mp3,El río canta para el bosque.,true

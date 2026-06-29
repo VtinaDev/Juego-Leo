@@ -3,32 +3,29 @@ import {
   MUSIC_SOURCES,
   SFX_SOURCES,
   STORAGE_KEY,
-  VOICE_SOURCES,
-  VOICE_CUE_FALLBACKS
+  VOICE_CUE_FALLBACKS,
+  VOICE_SOURCES
 } from './sounds'
 import { AUDIO_EXPERIENCE, resolveSfxGain } from './audioExperience.js'
+import { playAppVoiceAudio, stopAppVoiceAudio } from '../../utils/audioPlayer.js'
 
 let settings = { ...DEFAULT_AUDIO_SETTINGS }
 let unlocked = false
 let musicAudio = null
-let musicSourceKey = null
 const sfxCache = new Map()
 const sfxLastPlayed = new Map()
 let audioCtx = null
-const SAFE_SFX_GAIN = 0.75
-const SFX_THROTTLE_MS = AUDIO_EXPERIENCE.sfx.throttleMs
-let activeVoiceAudio = null
-let activeVoiceObjectUrl = null
-let voiceRequestId = 0
+let activeVoiceToken = 0
 let pendingMusicStart = null
 let pendingVoiceStart = null
 let musicUnlockListenersAttached = false
 let voiceUnlockListenersAttached = false
 
-// Legacy-style manager used by useAudio.js
+const SAFE_SFX_GAIN = 0.75
+const SFX_THROTTLE_MS = AUDIO_EXPERIENCE.sfx.throttleMs
+
 export class AudioManager {
   constructor() {
-    this.audio = null
     this.playListeners = []
     this.stopListeners = []
     this.errorListeners = []
@@ -37,53 +34,27 @@ export class AudioManager {
   onPlay(cb) {
     if (cb) this.playListeners.push(cb)
   }
+
   onStop(cb) {
     if (cb) this.stopListeners.push(cb)
   }
+
   onError(cb) {
     if (cb) this.errorListeners.push(cb)
   }
 
-  play(src, { volume = 1, loop = false, onEnd } = {}) {
-    if (!src) return
-    unlockAudio()
-    try {
-      if (this.audio) {
-        this.audio.pause()
-        this.audio = null
-      }
-      const audio = new Audio(src)
-      audio.loop = loop
-      audio.volume = volume
-      audio.onended = () => {
-        this.stopListeners.forEach((fn) => fn())
-        onEnd?.()
-      }
-      audio.onerror = (err) => {
-        this.errorListeners.forEach((fn) => fn(err))
-        onEnd?.(err)
-      }
-      this.audio = audio
-      audio.play().then(() => {
-        this.playListeners.forEach((fn) => fn())
-      }).catch((err) => {
-        this.errorListeners.forEach((fn) => fn(err))
-        onEnd?.(err)
-      })
-    } catch (err) {
-      this.errorListeners.forEach((fn) => fn(err))
-      onEnd?.(err)
-    }
+  play(src, { volume = 1, onEnd } = {}) {
+    return playVoice(src, { volume, onEnd })
   }
 
   stop() {
-    if (this.audio) {
-      this.audio.pause()
-      this.audio.currentTime = 0
-    }
-    this.audio = null
+    stopVoice()
     this.stopListeners.forEach((fn) => fn())
   }
+}
+
+function clamp(v, min, max, fallback) {
+  return Number.isFinite(v) && v >= min && v <= max ? v : fallback
 }
 
 function loadFromStorage() {
@@ -91,11 +62,7 @@ function loadFromStorage() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (!saved) return { ...DEFAULT_AUDIO_SETTINGS }
-    const parsed = JSON.parse(saved)
-    const merged = { ...DEFAULT_AUDIO_SETTINGS, ...parsed }
-    // Sanear valores corruptos
-    const clamp = (v, min, max, fallback) =>
-      Number.isFinite(v) && v >= min && v <= max ? v : fallback
+    const merged = { ...DEFAULT_AUDIO_SETTINGS, ...JSON.parse(saved) }
     merged.musicVolume = clamp(merged.musicVolume, 0, 1, DEFAULT_AUDIO_SETTINGS.musicVolume)
     merged.sfxVolume = clamp(merged.sfxVolume, 0, 1, DEFAULT_AUDIO_SETTINGS.sfxVolume)
     merged.voiceVolume = clamp(merged.voiceVolume, 0, 1, DEFAULT_AUDIO_SETTINGS.voiceVolume)
@@ -109,17 +76,6 @@ function loadFromStorage() {
   }
 }
 
-function ensureNotMuted(current) {
-  const hasVolumes =
-    current.musicVolume > 0.05 || current.sfxVolume > 0.05 || current.voiceVolume > 0.05
-  const hasAnyEnabled = current.musicEnabled || current.sfxEnabled || current.voiceEnabled
-  if (hasVolumes && hasAnyEnabled) return current
-  // Si todo estaba en cero/deshabilitado, restablecer a defaults
-  const reset = { ...DEFAULT_AUDIO_SETTINGS }
-  persist(reset)
-  return reset
-}
-
 function persist(next) {
   if (typeof window === 'undefined') return
   try {
@@ -127,6 +83,16 @@ function persist(next) {
   } catch (err) {
     console.warn('No se pudieron guardar los ajustes de audio', err)
   }
+}
+
+function ensureNotMuted(current) {
+  const hasVolumes =
+    current.musicVolume > 0.05 || current.sfxVolume > 0.05 || current.voiceVolume > 0.05
+  const hasAnyEnabled = current.musicEnabled || current.sfxEnabled || current.voiceEnabled
+  if (hasVolumes && hasAnyEnabled) return current
+  const reset = { ...DEFAULT_AUDIO_SETTINGS }
+  persist(reset)
+  return reset
 }
 
 export function getAudioSettings() {
@@ -143,19 +109,16 @@ export function updateAudioSettings(partial = {}) {
 }
 
 export function setVolumes({ musicVolume, sfxVolume, voiceVolume } = {}) {
-  const next = {
+  updateAudioSettings({
     musicVolume: musicVolume ?? settings.musicVolume,
     sfxVolume: sfxVolume ?? settings.sfxVolume,
     voiceVolume: voiceVolume ?? settings.voiceVolume
-  }
-  updateAudioSettings(next)
+  })
 }
 
 export function setAudioEnabled(type, enabled) {
   if (!['music', 'sfx', 'voice'].includes(type)) return
-  updateAudioSettings({
-    [`${type}Enabled`]: enabled
-  })
+  updateAudioSettings({ [`${type}Enabled`]: enabled })
 }
 
 export function initAudioSettings() {
@@ -173,7 +136,6 @@ function ensureAudioContext() {
 }
 
 function forceAudibleSettings() {
-  // Si todo está deshabilitado o volúmenes a 0, recupera defaults
   const allDisabled = !settings.musicEnabled && !settings.sfxEnabled && !settings.voiceEnabled
   const tooQuiet =
     settings.musicVolume < 0.05 && settings.sfxVolume < 0.05 && settings.voiceVolume < 0.05
@@ -196,6 +158,7 @@ export function unlockAudio() {
 }
 
 export function preloadSfx(map = SFX_SOURCES) {
+  if (typeof Audio === 'undefined') return
   Object.entries(map).forEach(([name, src]) => {
     const audio = new Audio(src)
     audio.preload = 'auto'
@@ -215,26 +178,19 @@ function beepFallback(kind = 'click') {
   if (!ctx) return
   const osc = ctx.createOscillator()
   const gain = ctx.createGain()
-  const tones = {
-    click: 760,
-    correct: 980,
-    wrong: 240,
-    unlock: 520
-  }
-  const freq = tones[kind] || 620
-  osc.frequency.value = freq
+  const tones = { click: 760, correct: 980, wrong: 240, unlock: 520 }
   const now = ctx.currentTime
   const duration = kind === 'wrong' ? 0.22 : 0.12
-  const startGain = Math.min(0.16, settings.sfxVolume * resolveSfxGain(kind))
-  gain.gain.setValueAtTime(startGain, now)
+  gain.gain.setValueAtTime(Math.min(0.16, settings.sfxVolume * resolveSfxGain(kind)), now)
   gain.gain.exponentialRampToValueAtTime(0.001, now + duration)
+  osc.frequency.value = tones[kind] || 620
   osc.connect(gain).connect(ctx.destination)
   osc.start(now)
   osc.stop(now + duration)
 }
 
 export function playSfx(name = 'click') {
-  if (!settings.sfxEnabled) return
+  if (!settings.sfxEnabled || typeof Audio === 'undefined') return
   unlockAudio()
   const src = SFX_SOURCES[name] || SFX_SOURCES.click
   if (!src) {
@@ -248,15 +204,11 @@ export function playSfx(name = 'click') {
   const cached = sfxCache.get(name) || new Audio(src)
   cached.currentTime = 0
   cached.volume = Math.min(settings.sfxVolume * SAFE_SFX_GAIN * resolveSfxGain(name), 0.82)
-  cached.play().then(() => {
-    sfxCache.set(name, cached)
-  }).catch(() => {
-    beepFallback(name)
-  })
+  cached.play().then(() => sfxCache.set(name, cached)).catch(() => beepFallback(name))
 }
 
 export function playMusic(keyOrSrc = 'intro', { loop = true, fadeMs = 280 } = {}) {
-  if (!settings.musicEnabled) return
+  if (!settings.musicEnabled || typeof Audio === 'undefined') return
   unlockAudio()
   stopMusic(0)
   const src = resolveMusicSrc(keyOrSrc)
@@ -267,22 +219,19 @@ export function playMusic(keyOrSrc = 'intro', { loop = true, fadeMs = 280 } = {}
   audio.volume = fadeMs > 0 ? 0 : targetVolume
   audio.play().then(() => {
     clearPendingMusicStart()
-    if (fadeMs > 0) {
-      const steps = 10
-      const stepTime = Math.max(12, Math.round(fadeMs / steps))
-      let current = 0
-      const interval = setInterval(() => {
-        current += 1
-        audio.volume = Math.min(targetVolume, (targetVolume * current) / steps)
-        if (current >= steps) clearInterval(interval)
-      }, stepTime)
-    }
+    if (fadeMs <= 0) return
+    const steps = 10
+    const stepTime = Math.max(12, Math.round(fadeMs / steps))
+    let current = 0
+    const interval = setInterval(() => {
+      current += 1
+      audio.volume = Math.min(targetVolume, (targetVolume * current) / steps)
+      if (current >= steps) clearInterval(interval)
+    }, stepTime)
   }).catch(() => {
-    // Algunos navegadores bloquean autoplay: reintenta tras la próxima interacción del usuario.
     schedulePendingMusicStart({ keyOrSrc, loop, fadeMs })
   })
   musicAudio = audio
-  musicSourceKey = keyOrSrc
 }
 
 export function stopMusic(fadeMs = 180) {
@@ -295,12 +244,11 @@ export function stopMusic(fadeMs = 180) {
   }
   const steps = 8
   const stepTime = Math.max(10, Math.round(fadeMs / steps))
-  let currentStep = 0
   const startVolume = audio.volume
+  let currentStep = 0
   const interval = setInterval(() => {
     currentStep += 1
-    const nextVolume = startVolume * (1 - currentStep / steps)
-    audio.volume = Math.max(0, nextVolume)
+    audio.volume = Math.max(0, startVolume * (1 - currentStep / steps))
     if (currentStep >= steps) {
       clearInterval(interval)
       audio.pause()
@@ -325,30 +273,20 @@ function clearPendingVoiceStart() {
   voiceUnlockListenersAttached = false
 }
 
-function schedulePendingVoiceStart(payload) {
-  pendingVoiceStart = payload
-  if (voiceUnlockListenersAttached || typeof window === 'undefined') return
-  voiceUnlockListenersAttached = true
-  window.addEventListener('pointerdown', retryPendingVoiceStart, { passive: true })
-  window.addEventListener('keydown', retryPendingVoiceStart)
-}
-
-function retryPendingVoiceStart() {
-  if (!pendingVoiceStart) {
-    clearPendingVoiceStart()
-    return
-  }
-  const request = { ...pendingVoiceStart }
-  clearPendingVoiceStart()
-  playVoice(request.textOrSrc, request.options)
-}
-
 function schedulePendingMusicStart(payload) {
   pendingMusicStart = payload
   if (musicUnlockListenersAttached || typeof window === 'undefined') return
   musicUnlockListenersAttached = true
   window.addEventListener('pointerdown', retryPendingMusicStart, { passive: true })
   window.addEventListener('keydown', retryPendingMusicStart)
+}
+
+function schedulePendingVoiceStart(payload) {
+  pendingVoiceStart = payload
+  if (voiceUnlockListenersAttached || typeof window === 'undefined') return
+  voiceUnlockListenersAttached = true
+  window.addEventListener('pointerdown', retryPendingVoiceStart, { passive: true })
+  window.addEventListener('keydown', retryPendingVoiceStart)
 }
 
 function retryPendingMusicStart() {
@@ -361,208 +299,118 @@ function retryPendingMusicStart() {
   playMusic(request.keyOrSrc, { loop: request.loop, fadeMs: request.fadeMs })
 }
 
-function stopActiveVoiceAudio() {
-  voiceRequestId += 1
-  if (!activeVoiceAudio) return
-  activeVoiceAudio.pause()
-  activeVoiceAudio.currentTime = 0
-  activeVoiceAudio = null
-  if (activeVoiceObjectUrl) {
-    URL.revokeObjectURL(activeVoiceObjectUrl)
-    activeVoiceObjectUrl = null
+function retryPendingVoiceStart() {
+  if (!pendingVoiceStart) {
+    clearPendingVoiceStart()
+    return
+  }
+  const request = { ...pendingVoiceStart }
+  clearPendingVoiceStart()
+  playVoice(request.filenameOrKey, request.options)
+}
+
+function slugifyVoiceKey(value = '') {
+  return String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+function filenameFromValue(value = '') {
+  const raw = String(value || '').trim()
+  if (!raw) return ''
+  if (/\.mp3(\?.*)?$/i.test(raw)) {
+    return raw.split('?')[0].split('#')[0].replace(/\\/g, '/').split('/').pop()
+  }
+  const mapped = VOICE_SOURCES[raw] || VOICE_SOURCES[raw.toLowerCase()]
+  if (mapped) return filenameFromValue(mapped)
+  const slug = slugifyVoiceKey(raw)
+  return slug ? `${slug}.mp3` : ''
+}
+
+export function resolveVoiceFilename(value = '') {
+  return filenameFromValue(value)
+}
+
+function cancelBrowserSpeechSynthesis() {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return
+  try {
+    window.speechSynthesis.cancel()
+  } catch (err) {
+    console.warn('[audioManager] No se pudo cancelar la síntesis de voz del navegador:', err)
   }
 }
 
-function normalizeVoiceSrc(value = '') {
-  const raw = String(value || '').trim()
-  if (!raw) return ''
-  if (/^(https?:|data:)/i.test(raw)) return raw
-  if (raw.startsWith('/')) return raw
-  // Admite rutas relativas de assets de audio.
-  return `/${raw.replace(/^\/+/, '')}`
-}
-
-export function playVoice(textOrSrc = '', options = {}) {
+export function playVoice(filenameOrKey = '', options = {}) {
   unlockAudio()
+  cancelBrowserSpeechSynthesis()
   if (options.forceVoiceEnabled === true && (!settings.voiceEnabled || settings.voiceVolume < 0.05)) {
     updateAudioSettings({
       voiceEnabled: true,
       voiceVolume: Math.max(settings.voiceVolume, DEFAULT_AUDIO_SETTINGS.voiceVolume)
     })
   }
-  if (!settings.voiceEnabled) {
-    options.onEnd?.()
-    return null
-  }
-  if (!textOrSrc) {
+  if (!settings.voiceEnabled || !filenameOrKey) {
     options.onEnd?.()
     return null
   }
 
-  const interrupt = options.interrupt !== false
-  if (interrupt) {
-    stopActiveVoiceAudio()
-  }
+  if (options.interrupt !== false) stopVoice()
 
-  const normalizedSrc = normalizeVoiceSrc(textOrSrc)
-  const isAudioSrc =
-    typeof normalizedSrc === 'string' &&
-    (/^(https?:|data:)/i.test(normalizedSrc) ||
-      normalizedSrc.startsWith('/')) &&
-    /\.(mp3|wav|ogg|m4a|aac|webm)(\?.*)?$/i.test(normalizedSrc)
-
-  if (isAudioSrc) {
-    const audio = new Audio(normalizedSrc)
-    audio.preload = 'auto'
-    if (Number.isFinite(options.playbackRate) && options.playbackRate > 0) {
-      audio.playbackRate = options.playbackRate
-    } else {
-      audio.playbackRate = AUDIO_EXPERIENCE.voice.playbackRate
-    }
-    audio.volume = Math.min(options.volume ?? settings.voiceVolume, 1)
-    activeVoiceAudio = audio
-    audio.onended = () => {
-      if (activeVoiceAudio === audio) activeVoiceAudio = null
-      options.onEnd?.()
-    }
-    audio.onerror = (error) => {
-      if (activeVoiceAudio === audio) activeVoiceAudio = null
-      console.warn('[audioManager] No se pudo cargar audio de voz:', normalizedSrc, error)
-      options.onEnd?.()
-    }
-    audio.play().catch((error) => {
-      if (activeVoiceAudio === audio) activeVoiceAudio = null
-      console.warn('[audioManager] Reproducción de voz bloqueada o fallida:', normalizedSrc, error)
-      if (error?.name === 'NotAllowedError') {
-        schedulePendingVoiceStart({
-          textOrSrc,
-          options: { ...options, interrupt: true }
-        })
-      }
-      options.onEnd?.()
-    })
-    return audio
-  }
-
-  if (typeof window === 'undefined' || typeof fetch === 'undefined') {
+  const filename = filenameFromValue(filenameOrKey)
+  if (!filename) {
+    console.warn('[audioManager] No hay archivo de voz local para:', filenameOrKey)
     options.onEnd?.()
     return null
   }
 
-  const requestId = ++voiceRequestId
-  fetch('/api/generar-audio', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ texto: textOrSrc })
-  })
-    .then((response) => {
-      if (!response.ok) throw new Error(`ElevenLabs TTS fallo: ${response.status}`)
-      return response.blob()
-    })
-    .then((blob) => {
-      if (requestId !== voiceRequestId || !settings.voiceEnabled) return
-      const audioUrl = URL.createObjectURL(blob)
-      const audio = new Audio(audioUrl)
-      audio.preload = 'auto'
-      audio.volume = Math.min(options.volume ?? settings.voiceVolume, 1)
-      activeVoiceAudio = audio
-      activeVoiceObjectUrl = audioUrl
-      audio.onended = () => {
-        if (activeVoiceAudio === audio) activeVoiceAudio = null
-        if (activeVoiceObjectUrl === audioUrl) {
-          URL.revokeObjectURL(audioUrl)
-          activeVoiceObjectUrl = null
-        }
-        options.onEnd?.()
-      }
-      audio.onerror = (error) => {
-        if (activeVoiceAudio === audio) activeVoiceAudio = null
-        if (activeVoiceObjectUrl === audioUrl) {
-          URL.revokeObjectURL(audioUrl)
-          activeVoiceObjectUrl = null
-        }
-        console.warn('[audioManager] No se pudo reproducir la voz de ElevenLabs:', error)
-        options.onEnd?.()
-      }
-      audio.play().catch((error) => {
-        if (activeVoiceAudio === audio) activeVoiceAudio = null
-        if (activeVoiceObjectUrl === audioUrl) {
-          URL.revokeObjectURL(audioUrl)
-          activeVoiceObjectUrl = null
-        }
-        console.warn('[audioManager] Reproduccion de ElevenLabs bloqueada o fallida:', error)
-        if (error?.name === 'NotAllowedError') {
-          schedulePendingVoiceStart({
-            textOrSrc,
-            options: { ...options, interrupt: true }
-          })
-        }
-        options.onEnd?.()
+  const token = ++activeVoiceToken
+  playAppVoiceAudio(filename, {
+    ...options,
+    interrupt: false,
+    volume: options.volume ?? settings.voiceVolume,
+    onEnd: () => {
+      if (token === activeVoiceToken) clearPendingVoiceStart()
+      options.onEnd?.()
+    }
+  }).then((played) => {
+    if (!played && token === activeVoiceToken && options.retryOnUnlock !== false) {
+      schedulePendingVoiceStart({
+        filenameOrKey,
+        options: { ...options, retryOnUnlock: false }
       })
-    })
-    .catch((error) => {
-      if (requestId === voiceRequestId) {
-        console.warn('[audioManager] No se pudo generar voz con ElevenLabs:', error)
-        options.onEnd?.()
-      }
-    })
+    }
+  })
 
   return null
 }
 
-function escapeRegExp(value = '') {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-function resolveVoiceCueSrc(key = '') {
-  const normalized = String(key || '').trim().toLowerCase()
-  if (!normalized) return null
-
-  const exact = VOICE_SOURCES[normalized]
-  if (exact && !isLegacyExerciseCueSrc(exact)) return exact
-
-  const pattern = new RegExp(`^${escapeRegExp(normalized)}(?:[_-]?\\d+)$`)
-  const variants = Object.entries(VOICE_SOURCES)
-    .filter(([name]) => pattern.test(name))
-    .map(([, src]) => src)
-    .filter((src) => !isLegacyExerciseCueSrc(src))
-
-  if (!variants.length) return null
-  const index = Math.floor(Math.random() * variants.length)
-  return variants[index]
-}
-
-function isLegacyExerciseCueSrc(src = '') {
-  return String(src).includes('/audio/voice/exercises/') && !/\/audio\/voice\/exercises\/L\d+\//.test(src)
-}
-
 export function playVoiceCue(key, options = {}) {
   const normalized = String(key || '').trim().toLowerCase()
-  if (!normalized) return
-
-  const primarySrc = resolveVoiceCueSrc(normalized)
-  if (primarySrc) {
-    playVoice(primarySrc, { ...options, interrupt: true })
+  if (!normalized) {
+    options.onEnd?.()
     return
   }
 
   const fallbackKey = VOICE_CUE_FALLBACKS[normalized]
-  const fallbackSrc = fallbackKey ? resolveVoiceCueSrc(fallbackKey) : null
-  if (fallbackSrc) {
-    playVoice(fallbackSrc, { ...options, interrupt: true })
+  const filename = VOICE_SOURCES[normalized] || (fallbackKey ? VOICE_SOURCES[fallbackKey] : '') || options.filenameFallback
+  if (!filename) {
+    console.warn('[audioManager] Cue de voz sin MP3 local:', normalized)
+    options.onEnd?.()
     return
   }
-
-  if (options.textFallback) {
-    playVoice(options.textFallback, { ...options, interrupt: true })
-  }
+  playVoice(filename, { ...options, interrupt: true })
 }
 
 export function stopVoice() {
+  activeVoiceToken += 1
   clearPendingVoiceStart()
-  stopActiveVoiceAudio()
+  cancelBrowserSpeechSynthesis()
+  stopAppVoiceAudio()
 }
 
 initAudioSettings()

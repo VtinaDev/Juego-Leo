@@ -20,13 +20,24 @@
       </label>
       <label>
         <span>Contraseña</span>
-        <input
-          :value="password"
-          type="password"
-          autocomplete="current-password"
-          class="form-input"
-          @input="$emit('update:password', $event.target.value)"
-        />
+        <span class="password-field">
+          <input
+            :value="password"
+            :type="showPassword ? 'text' : 'password'"
+            autocomplete="current-password"
+            class="form-input password-field__input"
+            @input="$emit('update:password', $event.target.value)"
+          />
+          <button
+            class="password-field__toggle"
+            type="button"
+            :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            :aria-pressed="showPassword"
+            @click="showPassword = !showPassword"
+          >
+            <span aria-hidden="true">{{ showPassword ? '🙈' : '👁️' }}</span>
+          </button>
+        </span>
       </label>
       <button
         class="forgot-password"
@@ -80,7 +91,10 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import LearningQuestionnaire from './LearningQuestionnaire.vue'
+
+const showPassword = ref(false)
 
 defineProps({
   email: { type: String, default: '' },
@@ -161,6 +175,41 @@ defineEmits([
   border-radius: 16px;
   background: #fff;
   font-size: 1rem;
+}
+
+.password-field {
+  position: relative;
+  display: block;
+}
+
+.password-field__input {
+  padding-right: 3.4rem;
+}
+
+.password-field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.55rem;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 14px;
+  background: #e0f2fe;
+  color: #0ea5e9;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.password-field__toggle:focus-visible {
+  outline: 3px solid rgba(14, 165, 233, 0.35);
+  outline-offset: 2px;
+}
+
+.password-field__toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .forgot-password {

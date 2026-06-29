@@ -100,7 +100,7 @@
             <CelebrationCard
               v-if="currentStatus === 'ok'"
               :character-img="characterImage"
-              message="¡Muy bien!"
+              :message="currentSuccessMessage"
             />
             <div v-else-if="progressiveFeedbackText" class="status-banner fail-banner" role="status" aria-live="polite">
               <span class="status-soft-dot" aria-hidden="true"></span>
@@ -122,21 +122,33 @@
               >
                 <span aria-hidden="true">{{ item.icon }}</span>
                 <strong>{{ item.label }}</strong>
+                <small v-if="item.note">{{ item.note }}</small>
               </span>
             </div>
             <!-- ========= VISUAL COMÚN (todos los niveles) ========= -->
             <div
               v-if="
                 hasVisual &&
-                !hideLevelVisuals &&
-                !isLevelFour &&
+                !['L4-TW-1', 'L4-TW-2', 'L4-TW-3'].includes(current.id) &&
+                (!isVerbTenseExercise(current) || current.image) &&
+                (current.id !== 'L5-FE-2' || current.image) &&
                 !(mobileViewport && isHabitatVisualMobile) &&
                 current.type !== 'CHOOSE_CORRECT_WORD' &&
                 current.type !== 'IMAGE_WORD_MATCH' &&
                 current.type !== 'COMPLETE_WORD' &&
+                current.type !== 'audio_question' &&
+                current.type !== 'sentence_selection' &&
+                !(current.type === 'text_write' && current.image) &&
+                !(current.type === 'order_sentence' && current.image) &&
+                !(current.type === 'audio_write' && current.image) &&
+                !(current.type === 'SYLLABLE_ORDER' && current.image) &&
+                (current.type !== 'pair_synonyms' || current.image) &&
+                (current.type !== 'pair_antonyms' || current.image) &&
+                (current.type !== 'singular_plural' || current.image) &&
+                (current.type !== 'accent_game' || current.image) &&
+                (current.type !== 'punctuation_game' || current.image) &&
                 !(current.type === 'complete_sentence' && current.image) &&
-                !(current.type === 'multiple_choice' && (current.image || current.emoji)) &&
-                !(current.type === 'sentence_selection' && current.image)
+                !(current.type === 'multiple_choice' && (current.image || current.emoji))
               "
               class="exercise-visual"
             >
@@ -166,8 +178,8 @@
                   :options="current.options || []"
                   :status="currentStatus"
                   :correct-answers="currentCorrectAnswers"
-                  :word-highlight-enabled="wordByWordHighlightEnabled"
-                  :active-word-token="activeKaraokeToken"
+                  :word-highlight-enabled="choiceTextHighlightEnabled"
+                  :active-word-token="choiceActiveKaraokeToken"
                   aria-label="Opciones de respuesta para la frase"
                   @select="handleSimpleOption"
                 />
@@ -193,8 +205,8 @@
                   :options="current.options || []"
                   :status="currentStatus"
                   :correct-answers="currentCorrectAnswers"
-                  :word-highlight-enabled="wordByWordHighlightEnabled"
-                  :active-word-token="activeKaraokeToken"
+                  :word-highlight-enabled="choiceTextHighlightEnabled"
+                  :active-word-token="choiceActiveKaraokeToken"
                   aria-label="Opciones para completar la frase"
                   @select="handleSimpleOption"
                 />
@@ -208,6 +220,14 @@
 
             <!-- Ordenar frase (L1) -->
             <section v-else-if="current.type === 'order_sentence'">
+              <div v-if="current.image" class="choice-visual">
+                <img
+                  :src="resolveAsset(current.image)"
+                  :alt="current.imageAlt || current.sentence || current.hint || 'Ilustración del ejercicio'"
+                  class="choice-visual-img"
+                  @error="$event.target.style.display = 'none'"
+                />
+              </div>
               <DragDropBoard
                 prompt=""
                 :words="current.words"
@@ -219,10 +239,10 @@
 
             <!-- Leer con o sin audio (L1) -->
             <section v-else-if="current.type === 'read_with_audio'" class="space-y-4">
-              <p class="audio-visible-text">
+              <p v-if="!readWithAudioTextInTutor" class="audio-visible-text">
                 <KaraokeText
                   :text="readingText"
-                  :enabled="wordByWordHighlightEnabled"
+                  :enabled="audioSyllableHighlightEnabled"
                   granularity="syllable"
                   :active-index="activeSyllable"
                 />
@@ -238,11 +258,13 @@
             <section v-else-if="current.type === 'multiple_choice'">
               <BaseExerciseLayout aria-label="Ejercicio de opción múltiple">
                 <template #media v-if="current.image || current.emoji">
-                  <div class="choice-visual">
-                    <ExerciseImage
+                  <div class="choice-visual guided-word-visual">
+                    <img
                       v-if="current.image"
                       :src="resolveAsset(current.image)"
                       :alt="current.imageAlt || current.question || 'Ilustración del ejercicio'"
+                      class="choice-visual-img"
+                      @error="$event.target.style.display = 'none'"
                     />
                     <div v-else class="choice-emoji" aria-hidden="true">{{ current.emoji }}</div>
                   </div>
@@ -252,8 +274,8 @@
                   :options="current.options || []"
                   :status="currentStatus"
                   :correct-answers="currentCorrectAnswers"
-                  :word-highlight-enabled="wordByWordHighlightEnabled"
-                  :active-word-token="activeKaraokeToken"
+                  :word-highlight-enabled="choiceTextHighlightEnabled"
+                  :active-word-token="choiceActiveKaraokeToken"
                   aria-label="Opciones de respuesta"
                   @select="handleSimpleOption"
                 />
@@ -279,8 +301,8 @@
                   >
                     <KaraokeText
                       :text="word"
-                      :enabled="wordByWordHighlightEnabled"
-                      :active-token="activeKaraokeToken"
+                      :enabled="choiceTextHighlightEnabled"
+                      :active-token="choiceActiveKaraokeToken"
                     />
                   </button>
                 </div>
@@ -295,8 +317,8 @@
                   >
                     <KaraokeText
                       :text="option"
-                      :enabled="wordByWordHighlightEnabled"
-                      :active-token="activeKaraokeToken"
+                      :enabled="choiceTextHighlightEnabled"
+                      :active-token="choiceActiveKaraokeToken"
                     />
                   </button>
                 </div>
@@ -317,8 +339,8 @@
                   >
                     <KaraokeText
                       :text="word"
-                      :enabled="wordByWordHighlightEnabled"
-                      :active-token="activeKaraokeToken"
+                      :enabled="choiceTextHighlightEnabled"
+                      :active-token="choiceActiveKaraokeToken"
                     />
                   </button>
                 </div>
@@ -333,8 +355,8 @@
                   >
                     <KaraokeText
                       :text="option"
-                      :enabled="wordByWordHighlightEnabled"
-                      :active-token="activeKaraokeToken"
+                      :enabled="choiceTextHighlightEnabled"
+                      :active-token="choiceActiveKaraokeToken"
                     />
                   </button>
                 </div>
@@ -374,6 +396,7 @@
                 :slots="completeWordSlots"
                 :values="completeWordInputs"
                 :letters="completeWordLetterChoices"
+                :letter-style="completeWordLetterStyle"
                 @select-letter="fillNextCompleteWordBlank"
                 @submit="handleTextSubmit"
                 @reset="resetCompleteWordInputs"
@@ -399,14 +422,22 @@
                 >
                   <KaraokeText
                     :text="option"
-                    :enabled="wordByWordHighlightEnabled"
-                    :active-token="activeKaraokeToken"
+                    :enabled="choiceTextHighlightEnabled"
+                    :active-token="choiceActiveKaraokeToken"
                   />
                 </button>
               </div>
             </section>
 
             <section v-else-if="current.type === 'SYLLABLE_ORDER'">
+              <div v-if="current.image" class="choice-visual syllable-order-visual">
+                <img
+                  :src="resolveAsset(current.image)"
+                  :alt="current.imageAlt || current.hint || 'Ilustración del ejercicio'"
+                  class="choice-visual-img"
+                  @error="$event.target.style.display = 'none'"
+                />
+              </div>
               <div class="options-row syllable-order-source" :class="optionLayout(current.syllables)">
                 <button
                   v-for="syllable in current.syllables"
@@ -473,19 +504,20 @@
                 >
                   <KaraokeText
                     :text="option"
-                    :enabled="wordByWordHighlightEnabled"
-                    :active-token="activeKaraokeToken"
+                    :enabled="choiceTextHighlightEnabled"
+                    :active-token="choiceActiveKaraokeToken"
                   />
                 </button>
               </div>
             </section>
 
             <section v-else-if="current.type === 'READ_AND_ANSWER'">
-              <p v-if="current.text || current.context || current.reading" class="audio-visible-text reading-paragraph">
+              <p v-if="readAndAnswerText && !readAndAnswerTextInTutor" class="audio-visible-text reading-paragraph">
                 <KaraokeText
-                  :text="current.text || current.context || current.reading"
-                  :enabled="wordByWordHighlightEnabled"
-                  :active-token="activeKaraokeToken"
+                  :text="readAndAnswerText"
+                  :enabled="audioSyllableHighlightEnabled"
+                  granularity="syllable"
+                  :active-index="activeAudioTextSyllable"
                 />
               </p>
               <div class="options-row" :class="optionLayout(current.options)">
@@ -498,8 +530,8 @@
                 >
                   <KaraokeText
                     :text="option"
-                    :enabled="wordByWordHighlightEnabled"
-                    :active-token="activeKaraokeToken"
+                    :enabled="choiceTextHighlightEnabled"
+                    :active-token="choiceActiveKaraokeToken"
                   />
                 </button>
               </div>
@@ -510,19 +542,23 @@
             <!-- Seleccionar frase que tiene sentido -->
             <section v-else-if="current.type === 'sentence_selection'">
               <BaseExerciseLayout aria-label="Seleccionar frase con sentido">
-                <template #media v-if="current.image && !isLevelThreeStageOne">
-                  <ExerciseImage
-                    :src="resolveAsset(current.image)"
-                    :alt="current.imageAlt || current.prompt || 'Ilustración del ejercicio'"
-                  />
+                <template #media v-if="current.image">
+                  <div class="choice-visual guided-word-visual">
+                    <img
+                      :src="resolveAsset(current.image)"
+                      :alt="current.imageAlt || current.prompt || 'Ilustración del ejercicio'"
+                      class="choice-visual-img"
+                      @error="$event.target.style.display = 'none'"
+                    />
+                  </div>
                 </template>
 
                 <ExerciseOptions
                   :options="current.options || []"
                   :status="currentStatus"
                   :correct-answers="currentCorrectAnswers"
-                  :word-highlight-enabled="wordByWordHighlightEnabled"
-                  :active-word-token="activeKaraokeToken"
+                  :word-highlight-enabled="choiceTextHighlightEnabled"
+                  :active-word-token="choiceActiveKaraokeToken"
                   aria-label="Opciones de frase"
                   @select="handleSimpleOption"
                 />
@@ -554,8 +590,8 @@
                 >
                   <KaraokeText
                     :text="option"
-                    :enabled="wordByWordHighlightEnabled"
-                    :active-token="activeKaraokeToken"
+                    :enabled="choiceTextHighlightEnabled"
+                    :active-token="choiceActiveKaraokeToken"
                   />
                 </button>
               </div>
@@ -577,7 +613,7 @@
                 v-model="textAnswer"
                 rows="2"
                 class="w-full border rounded-xl p-2 text-xl font-bold"
-                placeholder="Escribe aquí..."
+                :placeholder="current.placeholder || 'Escribe aquí...'"
               />
               <div class="mt-3 flex justify-end">
                 <button class="btn btn-primary" type="button" @click="handleTextSubmit">
@@ -640,13 +676,6 @@
 
             <!-- Clasificar tiempos verbales -->
             <section v-else-if="current.type === 'tense_classify'">
-              <p v-if="current.sentence" class="audio-visible-text">
-                <KaraokeText
-                  :text="current.sentence"
-                  :enabled="wordByWordHighlightEnabled"
-                  :active-token="activeKaraokeToken"
-                />
-              </p>
               <div class="options-row" :class="optionLayout(current.options)">
                 <button
                   v-for="option in current.options"
@@ -657,8 +686,8 @@
                 >
                   <KaraokeText
                     :text="option"
-                    :enabled="wordByWordHighlightEnabled"
-                    :active-token="activeKaraokeToken"
+                    :enabled="choiceTextHighlightEnabled"
+                    :active-token="choiceActiveKaraokeToken"
                   />
                 </button>
               </div>
@@ -678,8 +707,8 @@
                   >
                     <KaraokeText
                       :text="word"
-                      :enabled="wordByWordHighlightEnabled"
-                      :active-token="activeKaraokeToken"
+                      :enabled="choiceTextHighlightEnabled"
+                      :active-token="choiceActiveKaraokeToken"
                     />
                   </button>
                 </div>
@@ -694,8 +723,8 @@
                   >
                     <KaraokeText
                       :text="option"
-                      :enabled="wordByWordHighlightEnabled"
-                      :active-token="activeKaraokeToken"
+                      :enabled="choiceTextHighlightEnabled"
+                      :active-token="choiceActiveKaraokeToken"
                     />
                   </button>
                 </div>
@@ -719,11 +748,36 @@
 
             <!-- Signos de puntuación -->
             <section v-else-if="current.type === 'punctuation_game'">
-              <p v-if="current.sentence" class="audio-visible-text">
+              <div class="options-row" :class="optionLayout(current.options)">
+                <button
+                  v-for="option in current.options"
+                  :key="option"
+                  class="btn-option"
+                  type="button"
+                  @click="handleSimpleOption(option)"
+                >
+                  <span class="punctuation-option">
+                    <span class="punctuation-option__face" aria-hidden="true">
+                      {{ punctuationOptionMeta(option).face }}
+                    </span>
+                    <span class="punctuation-option__sign">{{ option }}</span>
+                    <span class="sr-only">{{ punctuationOptionMeta(option).label }}</span>
+                  </span>
+                </button>
+              </div>
+            </section>
+
+            <!-- Examen final (opción múltiple) -->
+            <section v-else-if="current.type === 'final_exam'">
+              <p
+                v-if="finalExamDisplayText"
+                class="audio-visible-text"
+              >
                 <KaraokeText
-                  :text="current.sentence"
-                  :enabled="wordByWordHighlightEnabled"
-                  :active-token="activeKaraokeToken"
+                  :text="finalExamDisplayText"
+                  :enabled="audioSyllableHighlightEnabled"
+                  granularity="syllable"
+                  :active-index="activeAudioTextSyllable"
                 />
               </p>
               <div class="options-row" :class="optionLayout(current.options)">
@@ -734,29 +788,18 @@
                   type="button"
                   @click="handleSimpleOption(option)"
                 >
+                  <span v-if="current.id === 'L5-FE-2'" class="punctuation-option">
+                    <span class="punctuation-option__face" aria-hidden="true">
+                      {{ punctuationOptionMeta(option).face }}
+                    </span>
+                    <span class="punctuation-option__sign">{{ option }}</span>
+                    <span class="sr-only">{{ punctuationOptionMeta(option).label }}</span>
+                  </span>
                   <KaraokeText
+                    v-else
                     :text="option"
-                    :enabled="wordByWordHighlightEnabled"
-                    :active-token="activeKaraokeToken"
-                  />
-                </button>
-              </div>
-            </section>
-
-            <!-- Examen final (opción múltiple) -->
-            <section v-else-if="current.type === 'final_exam'">
-              <div class="options-row" :class="optionLayout(current.options)">
-                <button
-                  v-for="option in current.options"
-                  :key="option"
-                  class="btn-option"
-                  type="button"
-                  @click="handleSimpleOption(option)"
-                >
-                  <KaraokeText
-                    :text="option"
-                    :enabled="wordByWordHighlightEnabled"
-                    :active-token="activeKaraokeToken"
+                    :enabled="choiceTextHighlightEnabled"
+                    :active-token="choiceActiveKaraokeToken"
                   />
                 </button>
               </div>
@@ -796,11 +839,9 @@ import { useGameStore } from '../store/gameStore'
 import { useProfileStore } from '../store/profileStore'
 import { useExerciseEngine } from '../engine/logic/ExerciseEngine'
 import { listLevels } from '../engine/logic/utils/validateTemplates'
-import exerciseWordTimings from '../engine/logic/audio/exerciseWordTimings.json'
 import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
 import { getAudioSettings, playSfx, playVoice, playVoiceCue, stopVoice, unlockAudio, stopMusic } from '../engine/audio/audioManager'
 import { resolveExerciseAudioRoute } from '../engine/audio/exerciseVoiceRoutes'
-import { VOICE_PRESET } from '../engine/audio/voiceProfile'
 
 import ExerciseShell from '../components/ExerciseShell.vue'
 import DragDropBoard from '../components/DragDropBoard.vue'
@@ -846,7 +887,7 @@ let audioLoadedMetadataHandler = null
 let audioProgressRaf = null
 let lastReadingProgress = 0
 let lastTimelineIndex = -1
-const READING_AUDIO_PACE = 1
+const READING_AUDIO_PACE = 0.82
 const prefersReducedMotion = ref(false)
 let previousBodyOverflow = ''
 let previousHtmlOverflow = ''
@@ -942,6 +983,20 @@ const progressiveFeedbackText = computed(() => {
   return progressiveFeedback.value?.message || '¡Casi! Vamos juntos 💪'
 })
 
+const currentSuccessMessage = computed(() => {
+  return current.value?.successMessage || '¡Muy bien!'
+})
+const readAndAnswerText = computed(() => {
+  if (current.value?.type !== 'READ_AND_ANSWER') return ''
+  return normalizeReadingText(current.value?.text || current.value?.context || current.value?.reading || '')
+})
+const readAndAnswerTextInTutor = computed(() => {
+  return current.value?.type === 'READ_AND_ANSWER' && guidedTutor.value?.message === readAndAnswerText.value
+})
+const readWithAudioTextInTutor = computed(() => {
+  return current.value?.type === 'read_with_audio' && guidedTutor.value?.message === readingText.value
+})
+
 const tutorStepIndex = ref(0)
 const guidedOptionIndex = ref(-1)
 const selectedOptionText = ref('')
@@ -949,10 +1004,15 @@ const tutorAutoAudioPlayedFor = ref('')
 let tutorStepTimer = null
 let tutorAutoAudioTimer = null
 let guidedOptionTimer = null
+let tutorScheduleTimer = null
 
 const guidedChoiceTypes = new Set(['CHOOSE_CORRECT_WORD', 'IMAGE_WORD_MATCH'])
 const isGuidedWordChoice = computed(() => guidedChoiceTypes.has(String(current.value?.type || '')))
 const isCompleteWordExercise = computed(() => current.value?.type === 'COMPLETE_WORD')
+const completeWordLetterStyle = computed(() => {
+  if (['L4-TW-4', 'L4-TW-5'].includes(current.value?.id)) return 'speech-bubble'
+  return Number(level.value) === 2 && Number(stage.value) === 5 ? 'square-yellow' : 'default'
+})
 const guidedTargetWord = computed(() => {
   const exercise = current.value
   if (!exercise) return ''
@@ -960,32 +1020,143 @@ const guidedTargetWord = computed(() => {
     exercise.solution ?? exercise.correct ?? exercise.answer ?? exercise.word ?? exercise.options?.[0]
   )
 })
-const tutorStatementText = computed(() => getTutorStatementText(current.value))
+const TUTOR_ACTION_COPY_BY_TYPE = {
+  question_sentence: 'Elige la respuesta.',
+  complete_sentence: 'Completa la frase.',
+  order_sentence: 'Pon las palabras en orden.',
+  read_with_audio: 'Lee con calma.',
+  multiple_choice: 'Elige una opción.',
+  pair_synonyms: 'Une las parejas.',
+  pair_antonyms: 'Une los opuestos.',
+  UNSCRAMBLE_WORD: 'Forma la palabra.',
+  COMPLETE_WORD: 'Completa la palabra.',
+  CHOOSE_CORRECT_WORD: 'Elige el nombre.',
+  SYLLABLE_ORDER: 'Ordena las sílabas.',
+  PUZZLE_ORDER: 'Ordena las piezas.',
+  IMAGE_WORD_MATCH: 'Elige el nombre.',
+  READ_AND_ANSWER: 'Lee y responde.',
+  sentence_selection: 'Elige la frase.',
+  audio_question: 'Escucha y responde.',
+  audio_write: 'Escucha y escribe.',
+  text_write: 'Escribe tu respuesta.',
+  tense_classify: '¿Cuándo pasa?',
+  singular_plural: 'Une las parejas.',
+  accent_game: 'Escucha la parte fuerte.',
+  punctuation_game: 'Elige el signo que va.',
+  final_exam: 'Elige la respuesta.'
+}
+
+const TUTOR_LISTEN_TYPES = new Set([
+  'audio_question',
+  'audio_write',
+  'read_with_audio',
+  'READ_AND_ANSWER'
+])
+
+const blankSymbol = '_____'
+const blankRegex = /_{2,}/g
+
+function isVerbTenseExercise(exercise) {
+  const id = String(exercise?.id || '')
+  return exercise?.type === 'tense_classify' || id === 'L5-FE-1' || id.startsWith('L5-FE-TCOMP-')
+}
+
+function isPunctuationExercise(exercise) {
+  return exercise?.type === 'punctuation_game' || exercise?.id === 'L5-FE-2'
+}
+
+function hasExerciseVisual(exercise) {
+  if ((isVerbTenseExercise(exercise) || exercise?.id === 'L5-FE-2') && !exercise?.image) return false
+  return Boolean(exercise?.image || exercise?.emoji)
+}
+
+function hasExerciseAudioCue(exercise) {
+  if (!exercise) return false
+  return Boolean(exercise.audio || cueForExercise(exercise) || TUTOR_LISTEN_TYPES.has(String(exercise.type || '')))
+}
+
+function getTutorActionCopy(exercise) {
+  if (!exercise) return 'Haz el ejercicio.'
+  return TUTOR_ACTION_COPY_BY_TYPE[exercise.type] || 'Haz el ejercicio.'
+}
+
+function getTutorInstructionSteps(exercise) {
+  if (!exercise || currentStatus.value === 'skipped') return []
+  if (currentStatus.value === 'ok' && !isPunctuationExercise(exercise)) return []
+
+  const steps = []
+  const cue = cueForExercise(exercise) || exercise.audio || null
+  if (exercise.type === 'READ_AND_ANSWER') {
+    return [{
+      key: 'act',
+      message: normalizeReadingText(exercise.text || exercise.context || exercise.reading || getReadableExerciseText(exercise)),
+      cue,
+      focus: 'options'
+    }]
+  }
+  if (isVerbTenseExercise(exercise)) {
+    return [{
+      key: 'act',
+      message: getReadableExerciseText(exercise) || getTutorActionCopy(exercise),
+      cue,
+      focus: 'options'
+    }]
+  }
+  if (isPunctuationExercise(exercise)) {
+    return [{
+      key: 'act',
+      message: punctuationDisplayText(exercise),
+      cue,
+      focus: 'options'
+    }]
+  }
+  if (exercise.id === 'L5-FE-3') {
+    return [{
+      key: 'act',
+      message: exercise.question,
+      cue,
+      focus: 'options'
+    }]
+  }
+  if (exercise.type === 'read_with_audio') {
+    return [{
+      key: 'act',
+      message: getReadableExerciseText(exercise) || getTutorActionCopy(exercise),
+      cue,
+      focus: 'audio'
+    }]
+  }
+
+  if (hasExerciseVisual(exercise)) {
+    steps.push({
+      key: 'look',
+      message: 'Mira la imagen.',
+      cue,
+      focus: 'visual'
+    })
+  }
+
+  if (hasExerciseAudioCue(exercise)) {
+    steps.push({
+      key: 'listen',
+      message: 'Escucha con calma.',
+      cue,
+      focus: 'audio'
+    })
+  }
+
+  steps.push({
+    key: 'act',
+    message: getTutorActionCopy(exercise),
+    cue,
+    focus: 'options'
+  })
+
+  return steps.slice(-3)
+}
 
 const tutorSteps = computed(() => {
-  if (!current.value || currentStatus.value === 'ok' || currentStatus.value === 'skipped') return []
-  const label = tutorStatementText.value || exerciseNarrationText.value || 'Vamos juntos'
-
-  return [
-    {
-      key: 'look',
-      label,
-      cue: label,
-      focus: 'visual'
-    },
-    {
-      key: 'listen',
-      label,
-      cue: label,
-      focus: 'audio'
-    },
-    {
-      key: 'choose',
-      label,
-      cue: label,
-      focus: 'options'
-    }
-  ]
+  return getTutorInstructionSteps(current.value)
 })
 
 const guidedTutor = computed(() => tutorSteps.value[tutorStepIndex.value] ?? null)
@@ -994,29 +1165,33 @@ const conceptMiniLesson = computed(() => {
   if (!current.value || currentStatus.value === 'ok' || Number(level.value) !== 5) return null
   if (current.value.type === 'tense_classify') {
     return [
-      { icon: '🌙', label: 'Ayer' },
-      { icon: '☀️', label: 'Hoy' },
-      { icon: '🌱', label: 'Mañana' }
+      { icon: 'Ayer', label: 'Pasado', note: 'Ya ocurrió' },
+      { icon: 'Hoy', label: 'Presente', note: 'Pasa ahora' },
+      { icon: 'Mañana', label: 'Futuro', note: 'Pasará después' }
     ]
   }
-  if (current.value.type === 'accent_game') {
+  if (current.value.type === 'accent_game' || current.value.id === 'L5-FE-3') {
     return [
       { icon: '👏', label: 'Sílaba' },
       { icon: '🔊', label: 'Fuerte' },
       { icon: '´', label: 'Tilde' }
     ]
   }
-  if (current.value.type === 'punctuation_game' || current.value.type === 'final_exam') {
+  if (current.value.type === 'punctuation_game' || current.value.id === 'L5-FE-2') {
     return [
-      { icon: '❓', label: 'Pregunta' },
-      { icon: '🎉', label: 'Emoción' },
-      { icon: '•', label: 'Punto' }
+      { icon: '🤔 ¿?', label: 'Pregunta' },
+      { icon: '😮 ¡!', label: 'Emoción' },
+      { icon: '😌 .', label: 'Punto' }
     ]
   }
   return null
 })
 
 function clearTutorTimers() {
+  if (tutorScheduleTimer) {
+    clearTimeout(tutorScheduleTimer)
+    tutorScheduleTimer = null
+  }
   if (tutorStepTimer) {
     clearTimeout(tutorStepTimer)
     tutorStepTimer = null
@@ -1037,23 +1212,56 @@ function playTutorCue() {
 
 function playTutorStatementAudio() {
   const audioSettings = getAudioSettings()
-  const exerciseAudio = resolveExerciseAudioRoute(current.value)
-  if (exerciseAudio) {
-    playSimpleAudio(exerciseAudio)
+  const exercise = current.value
+  const audioSequence = Array.isArray(exercise?.audioSequence)
+    ? exercise.audioSequence.filter((src) => String(src || '').trim())
+    : []
+  if (audioSequence.length) {
+    unlockAudio()
+    playVoiceSequence(audioSequence, {
+      forceVoiceEnabled: true,
+      volume: audioSettings.voiceVolume
+    })
     return
   }
-  if (!audioSettings.voiceEnabled) return
-  const text = tutorStatementText.value || exerciseNarrationText.value || guidedTutor.value?.cue
-  if (!text) return
-  unlockAudio()
-  playVoice(text, {
-    interrupt: true,
-    allowTtsFallback: true,
-    rate: VOICE_PRESET.rate,
-    pitch: VOICE_PRESET.pitch,
-    lang: VOICE_PRESET.lang,
-    volume: audioSettings.voiceVolume
-  })
+  const exerciseAudio = exercise?.audio ? resolveExerciseAudioRoute(exercise) : ''
+  const voiceKey = exerciseAudio || guidedTutor.value?.cue || cueForExercise(exercise) || ''
+  if (voiceKey) {
+    unlockAudio()
+    const cue = cueForExercise(exercise)
+    if (exerciseAudio) {
+      playVoice(exerciseAudio, {
+        interrupt: true,
+        forceVoiceEnabled: true,
+        volume: audioSettings.voiceVolume
+      })
+    } else if (audioSettings.voiceEnabled && cue && voiceKey === cue) {
+      playVoiceCue(cue, {
+        filenameFallback: exercise?.id,
+        volume: audioSettings.voiceVolume
+      })
+    } else if (audioSettings.voiceEnabled) {
+      playVoice(voiceKey, {
+        interrupt: true,
+        volume: audioSettings.voiceVolume
+      })
+    }
+    return
+  }
+}
+
+function playVoiceSequence(sources = [], options = {}) {
+  const queue = Array.isArray(sources) ? sources.filter((src) => String(src || '').trim()) : []
+  const playNext = (index = 0) => {
+    const source = queue[index]
+    if (!source) return
+    playVoice(source, {
+      ...options,
+      interrupt: index === 0,
+      onEnd: () => playNext(index + 1)
+    })
+  }
+  playNext()
 }
 
 function scheduleTutorStep() {
@@ -1073,9 +1281,17 @@ function scheduleTutorStep() {
       tutorStepIndex.value += 1
       scheduleTutorStep()
     }, prefersReducedMotion.value ? 3600 : 3200)
-  } else if (guidedTutor.value?.key === 'choose') {
+  } else if (guidedTutor.value?.key === 'act') {
     startGuidedOptionHighlight()
   }
+}
+
+function scheduleTutorSoon(delay = 180) {
+  if (tutorScheduleTimer) clearTimeout(tutorScheduleTimer)
+  tutorScheduleTimer = setTimeout(() => {
+    tutorScheduleTimer = null
+    scheduleTutorStep()
+  }, delay)
 }
 
 const gameViewClasses = computed(() => ({
@@ -1150,6 +1366,42 @@ const currentCorrectAnswers = computed(() => {
   const raw = exercise.correct ?? exercise.answer ?? exercise.expectedAnswer ?? exercise.solution
   const values = Array.isArray(raw) ? raw : [raw]
   return values.map((entry) => resolveOptionText(entry)).filter(Boolean)
+})
+const PUNCTUATION_OPTION_META = {
+  '¿': { face: '🤔', label: 'Duda, signo de interrogación inicial' },
+  '?': { face: '🤔', label: 'Duda, signo de interrogación final' },
+  '¡': { face: '😮', label: 'Sorpresa, signo de exclamación inicial' },
+  '!': { face: '😮', label: 'Sorpresa, signo de exclamación final' },
+  '.': { face: '😌', label: 'Final de la frase, punto' },
+  ',': { face: '🙂', label: 'Pausa breve, coma' }
+}
+function punctuationOptionMeta(option) {
+  return PUNCTUATION_OPTION_META[resolveOptionText(option)] || {
+    face: '🙂',
+    label: `Signo ${resolveOptionText(option)}`
+  }
+}
+function punctuationDisplayText(exercise) {
+  const text = exercise?.sentence || exercise?.question || ''
+  const replacement = selectedOptionText.value
+  if (replacement) {
+    return text
+      .replace(blankRegex, replacement)
+      .replace(/\s+([.,!?])/g, '$1')
+      .replace(/([¿¡])\s+/g, '$1')
+  }
+  return text
+}
+const finalExamDisplayText = computed(() => {
+  const exercise = current.value
+  if (!exercise) return ''
+  if (exercise.type === 'final_exam' && isVerbTenseExercise(exercise)) return ''
+  if (isPunctuationExercise(exercise)) {
+    return [exercise.question, punctuationDisplayText(exercise)]
+      .filter(Boolean)
+      .join(': ')
+  }
+  return exercise.question || exercise.sentence || exercise.prompt || ''
 })
 function optionLayout(list) {
   const count = Array.isArray(list) ? list.length : 0
@@ -1334,26 +1586,17 @@ function isFuerzaTranquilaStage2of6Now() {
 }
 
 const readingText = computed(() => {
-  return normalizeReadingText(current.value?.text || current.value?.sentence || current.value?.prompt || '')
+  return getReadableExerciseText(current.value)
 })
 
-const wordByWordHighlightEnabled = computed(() => {
-  const learningProfile = profile.childLearningProfile || {}
-  const supportPreferences = Array.isArray(learningProfile.supportPreferences)
-    ? learningProfile.supportPreferences
-    : []
-  const learningNeeds = Array.isArray(profile.childLearningNeeds)
-    ? profile.childLearningNeeds
-    : []
-
-  return Boolean(
-    learningProfile.resaltadoPorPalabra ||
-    learningProfile.wordByWordHighlight ||
-    learningProfile.perfilDislexia ||
-    supportPreferences.includes('word_by_word_highlight') ||
-    learningNeeds.includes('dyslexia')
-  )
-})
+const AUDIO_TEXT_HIGHLIGHT_ENABLED = false
+const audioSyllableHighlightEnabled = computed(() => false)
+const wordByWordHighlightEnabled = audioSyllableHighlightEnabled
+const choiceTextHighlightEnabled = computed(() => false)
+const choiceActiveKaraokeToken = computed(() => '')
+const activeAudioTextSyllable = computed(() =>
+  audioSyllableHighlightEnabled.value ? activeSyllable.value : -1
+)
 
 const exerciseKaraokeText = computed(() => {
   const exercise = current.value
@@ -1402,13 +1645,6 @@ const spokenWordTimeline = computed(() => {
   })
 })
 
-const activeKaraokeToken = computed(() => {
-  if (!wordByWordHighlightEnabled.value) return ''
-  return spokenWordTimeline.value[activeKaraokeWordIndex.value]?.token || ''
-})
-
-const currentExerciseAudioSrc = computed(() => resolveExerciseAudioRoute(current.value))
-
 const syllableSegments = computed(() => {
   return segmentTextIntoSyllables(readingText.value)
 })
@@ -1423,93 +1659,6 @@ function normalizeWordToken(value = '') {
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, '')
 }
-
-function normalizeSentenceForLookup(text = '') {
-  return String(text || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s]+/gu, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
-const resolvedWordTimingEntry = computed(() => {
-  const timings = exerciseWordTimings || {}
-  const lineIdCandidates = [
-    current.value?.lineId,
-    current.value?.line_id,
-    current.value?.rowId,
-    current.value?.row_id
-  ]
-    .map((value) => String(value ?? '').trim())
-    .filter(Boolean)
-
-  for (const lineId of lineIdCandidates) {
-    if (timings[lineId]) return timings[lineId]
-  }
-
-  const currentNormalizedText = normalizeSentenceForLookup(readingText.value)
-  if (!currentNormalizedText) return null
-
-  const entries = Object.values(timings)
-  const byText = entries.find(
-    (entry) => normalizeSentenceForLookup(entry?.text || '') === currentNormalizedText
-  )
-  return byText || null
-})
-
-const resolvedWordTimingMap = computed(() => {
-  const entry = resolvedWordTimingEntry.value
-  const timingWords = Array.isArray(entry?.wordTimings) ? entry.wordTimings : []
-  if (!timingWords.length) return []
-
-  const segments = spokenSegments.value
-  if (!segments.length) return []
-
-  const mapped = []
-  let segCursor = 0
-  let fallbackCursor = 0
-
-  for (const timing of timingWords) {
-    const target = normalizeWordToken(timing?.word || '')
-    if (!target) continue
-
-    let matchIdx = -1
-    for (let i = segCursor; i < segments.length; i += 1) {
-      if (normalizeWordToken(segments[i].text) === target) {
-        matchIdx = i
-        break
-      }
-    }
-
-    if (matchIdx === -1) {
-      matchIdx = Math.min(fallbackCursor, segments.length - 1)
-    }
-
-    const segment = segments[matchIdx]
-    if (!segment) continue
-
-    mapped.push({
-      idx: segment.idx,
-      start: Number(timing.start),
-      end: Number(timing.end)
-    })
-
-    segCursor = Math.max(segCursor, matchIdx + 1)
-    fallbackCursor = Math.max(fallbackCursor, matchIdx + 1)
-  }
-
-  return mapped.filter((item) => Number.isFinite(item.start) && Number.isFinite(item.end))
-})
-
-const isFaroReadingExercise = computed(() => {
-  const exerciseId = String(current.value?.id || '').trim().toUpperCase()
-  const normalizedText = normalizeReadingText(current.value?.text || '')
-    .toLowerCase()
-    .replace(/\.$/, '')
-  return exerciseId === 'L1-RW-1' || normalizedText === 'el faro guía a los barcos perdidos'
-})
 
 const spokenSyllableTimeline = computed(() => {
   const full = syllableSegments.value
@@ -1556,6 +1705,13 @@ watch(
     if (status === 'ok') {
       unlockAudio()
       playSfx('correct')
+      if (current.value?.successAudio) {
+        const audioSettings = getAudioSettings()
+        playVoice(current.value.successAudio, {
+          interrupt: false,
+          volume: audioSettings.voiceVolume
+        })
+      }
       showConfetti.value = true
       celebrateAvatar.value = true
       if (confettiTimer) clearTimeout(confettiTimer)
@@ -1573,15 +1729,14 @@ watch(
 )
 
 const EXERCISE_VOICE_CUE_BY_TYPE = {
-  IMAGE_WORD_MATCH: 'select-image-word',
-  CHOOSE_CORRECT_WORD: 'choose-correct-word'
+  IMAGE_WORD_MATCH: 'select-image-word'
 }
 
 const EXERCISE_VOICE_CUE_BY_ID = {
-  'L1-OS-1': 'start-with-article',
-  'L1-OS-2': 'put-el-first',
-  'L1-OS-3': 'subject-first-then-action',
-  'L1-OS-4': 'natural-subject-verb-order',
+  'L1-OS-1': 'l1-os-1',
+  'L1-OS-2': 'l1-os-2',
+  'L1-OS-3': 'l1-os-3',
+  'L1-OS-4': 'l1-os-4',
   'L1-CS-1': 'l1-cs-1',
   'L1-CS-2': 'l1-cs-2',
   'L1-CS-3': 'l1-cs-3',
@@ -1618,11 +1773,6 @@ const EXERCISE_VOICE_CUE_BY_ID = {
   'L4-AW-2': 'l4-aw-2-instruction',
   'L4-RA-1': 'l4-ra-1-question',
   'L4-RA-2': 'l4-ra-2-question',
-  'L4-TW-1': 'l1-write-2',
-  'L4-TW-2': 'l1-write-3',
-  'L4-TW-3': 'l1-write-4',
-  'L4-TW-4': 'l1-write-5',
-  'L4-TW-5': 'l1-write-5',
   'L5-TC-1': 'l5-tc-1-sentence',
   'L5-TC-2': 'l5-tc-2-sentence',
   'L5-TC-3': 'l5-tc-3-sentence',
@@ -1653,8 +1803,6 @@ const EXERCISE_VOICE_CUE_BY_TEXT = {
   'observa como cada palabra describe lo mismo': 'l2-ps-2',
   'une el numero con su nombre escrito': 'l2-ps-3'
 }
-
-const ASSOCIATION_TYPES = new Set(['pair_synonyms', 'pair_antonyms'])
 
 function normalizeExerciseText(text) {
   return String(text || '')
@@ -1710,20 +1858,12 @@ watch(
     const audioSettings = getAudioSettings()
     if (!audioSettings.voiceEnabled) return
     unlockAudio()
-    const exerciseAudio = resolveExerciseAudioRoute(exercise)
-    if (tutorStatementText.value || exerciseAudio) {
-      playTutorStatementAudio()
-      return
-    }
+    if (tutorSteps.value.length) return
     const cue = cueForExercise(exercise)
     if (cue) {
-      playVoiceCue(cue)
-      return
-    }
-    // Safety fallback for association exercises: if cue mapping fails, use their manual MP3 directly.
-    const type = String(exercise?.type || '').trim().toLowerCase()
-    if (ASSOCIATION_TYPES.has(type) && exerciseAudio) {
-      playVoice(exerciseAudio, { interrupt: true, allowTtsFallback: true, forceVoiceEnabled: true })
+      playVoiceCue(cue, {
+        filenameFallback: exercise?.audio || exercise?.id
+      })
       return
     }
   },
@@ -1768,8 +1908,6 @@ const exerciseCounterLabel = computed(() => {
   return `Ejercicio ${Number(index.value || 0) + 1}/${count}`
 })
 
-const blankSymbol = '_____'
-const blankRegex = /_{3,}/g
 const textAnswer = ref('')
 const completeWordInputs = ref([])
 const completeWordInputRefs = ref([])
@@ -1934,10 +2072,6 @@ function resetLetterBuild() {
   textAnswer.value = ''
 }
 
-const isLevelThreeStageOne = computed(() => level.value === 3 && stage.value === 1)
-const isLevelFourStageOne = computed(() => level.value === 4 && stage.value === 1)
-const hideLevelVisuals = computed(() => [2, 3, 4, 5].includes(level.value))
-const isLevelFour = computed(() => level.value === 4)
 const fallbackIcon = computed(() => stageContext.value?.levelMeta?.icon || '🪄')
 const fallbackLabel = computed(() => stageContext.value?.levelMeta?.animal || 'Animal sabio')
 const currentImageSrc = computed(() => resolveAsset(current.value?.image))
@@ -1971,7 +2105,12 @@ function submitUnscramble() {
   if (!current.value) return
   unlockAudio()
   playSfx('click')
-  checkAnswer(unscrambleAttempt.value, { autoAdvance: true })
+  checkAnswer(unscrambleAttempt.value, {
+    autoAdvance: true,
+    playPositive: false,
+    awaitPositiveCue: false,
+    advanceDelay: current.value?.successAudio ? 1800 : 450
+  })
   unscrambleAttempt.value = ''
   lastUnscrambleLetterIndex.value = null
 }
@@ -2020,10 +2159,14 @@ function submitPuzzleOrder() {
 }
 
 async function handleStageComplete(summary) {
-  await game.setStageResult?.(summary.level, summary.stage, {
-    ...summary,
-    done: true
-  })
+  try {
+    await game.setStageResult?.(summary.level, summary.stage, {
+      ...summary,
+      done: true
+    })
+  } catch (err) {
+    console.error('[Game] No se pudo guardar el progreso de la etapa antes de navegar:', err)
+  }
   unlockAudio()
   playSfx('unlock')
 
@@ -2045,6 +2188,9 @@ async function handleStageComplete(summary) {
       nextStage: nextTarget?.stage ?? '',
       completedGame: isFinalLevel && finishedLastStage ? '1' : '0'
     }
+  }).catch((err) => {
+    console.error('[Game] No se pudo abrir la pantalla de felicitación:', err)
+    router.push('/mapview').catch(() => {})
   })
 }
 
@@ -2077,7 +2223,10 @@ function handleSimpleOption(option) {
   unlockAudio()
   playSfx('click')
   selectedOptionText.value = resolveOptionText(option)
-  checkAnswer(option, { autoAdvance: true })
+  checkAnswer(option, {
+    autoAdvance: true,
+    advanceDelay: isPunctuationExercise(current.value) ? 1300 : 450
+  })
 }
 
 function startGuidedOptionHighlight() {
@@ -2107,7 +2256,7 @@ function guidedChoiceOptionClass(option, optionIdx) {
     'btn-option',
     'guided-choice-option',
     {
-      'guided-choice-option--spotlight': guidedTutor.value?.key === 'choose' && optionIdx === guidedOptionIndex.value,
+      'guided-choice-option--spotlight': guidedTutor.value?.key === 'act' && optionIdx === guidedOptionIndex.value,
       'guided-choice-option--selected': selected,
       'guided-choice-option--correct': currentStatus.value === 'ok' && isCorrect,
       'guided-choice-option--incorrect': currentStatus.value === 'fail' && selected && !isCorrect
@@ -2240,10 +2389,12 @@ function playSimpleAudio(src, onEnd) {
   clearAudioListeners()
   stopAllMedia()
   resetReadingHighlight()
+  const shouldSyncHighlight = AUDIO_TEXT_HIGHLIGHT_ENABLED && audioSyllableHighlightEnabled.value && Boolean(readingText.value)
+  const playbackRate = shouldSyncHighlight ? READING_AUDIO_PACE : 1
   const audio = playVoice(src, {
     interrupt: true,
     forceVoiceEnabled: true,
-    playbackRate: READING_AUDIO_PACE,
+    playbackRate,
     onEnd: () => {
       clearAudioListeners()
       activeAudioEl = null
@@ -2252,17 +2403,17 @@ function playSimpleAudio(src, onEnd) {
     }
   })
   activeAudioEl = audio || null
-  if (audio) {
-    bindReadingProgressToAudio(audio)
+  if (audio && shouldSyncHighlight) {
+    bindReadingProgressToAudio(audio, playbackRate)
   }
   return audio
 }
 
-function bindReadingProgressToAudio(audioEl) {
-  if (!audioEl) return
+function bindReadingProgressToAudio(audioEl, playbackRate = 1) {
+  if (!audioEl || !AUDIO_TEXT_HIGHLIGHT_ENABLED || !audioSyllableHighlightEnabled.value) return
   clearAudioListeners()
   const estimate = getEstimatedReadingDurationMs()
-  const effectiveEstimate = getEffectiveDurationMs(estimate, READING_AUDIO_PACE)
+  const effectiveEstimate = getEffectiveDurationMs(estimate, playbackRate)
   let pulseStarted = false
 
   const updateFromAudio = () => {
@@ -2284,7 +2435,7 @@ function bindReadingProgressToAudio(audioEl) {
     const durationMs = isFinite(audioEl.duration) && audioEl.duration > 0
       ? audioEl.duration * 1000
       : estimate
-    const effectiveDuration = getEffectiveDurationMs(durationMs, READING_AUDIO_PACE)
+    const effectiveDuration = getEffectiveDurationMs(durationMs, playbackRate)
     startReadingPulse(effectiveDuration)
     pulseStarted = true
     updateFromAudio()
@@ -2357,6 +2508,7 @@ function resetReadingHighlight() {
 }
 
 function handleReadingPlay() {
+  if (!AUDIO_TEXT_HIGHLIGHT_ENABLED || !audioSyllableHighlightEnabled.value) return
   // En ejercicios con audio real, la sílaba activa debe venir solo del progreso del audio.
   clearSyllableTicker()
   const estimate = getEstimatedReadingDurationMs()
@@ -2366,6 +2518,7 @@ function handleReadingPlay() {
 }
 
 function handleReadingProgress(payload = {}) {
+  if (!AUDIO_TEXT_HIGHLIGHT_ENABLED || !audioSyllableHighlightEnabled.value) return
   if (!readingHighlight.value) return
   // Evita que un ticker residual (de otros modos) compita con la sincronía real del audio.
   if (syllableTimer) clearSyllableTicker()
@@ -2411,65 +2564,6 @@ function clearAudioListeners() {
   if (audioProgressRaf) {
     cancelAnimationFrame(audioProgressRaf)
     audioProgressRaf = null
-  }
-}
-
-function startSyllableTickerForDuration(durationMs) {
-  clearSyllableTicker()
-  const segments = spokenSegments.value
-  if (!segments.length || !durationMs) return
-  let cursor = 0
-  activeSyllable.value = segments[cursor].idx
-  const interval = Math.max(160, durationMs / segments.length)
-  syllableTimer = window.setInterval(() => {
-    cursor += 1
-    if (cursor >= segments.length) {
-      clearSyllableTicker()
-      return
-    }
-    activeSyllable.value = segments[cursor].idx
-  }, interval)
-}
-
-function normalizeSyllableToken(token = '') {
-  return String(token)
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zñü]/gi, '')
-    .toLowerCase()
-}
-
-function faroSyllableWeight(token = '') {
-  const normalized = normalizeSyllableToken(token)
-  const weights = {
-    el: 1.0,
-    faro: 1.35,
-    guia: 1.4,
-    a: 0.85,
-    los: 0.95,
-    barcos: 1.45,
-    perdidos: 1.65
-  }
-  return weights[normalized] ?? Math.max(0.95, normalized.length * 0.2)
-}
-
-function startFaroSyllableSchedule(durationMs) {
-  clearSyllableTicker()
-  const segments = spokenSegments.value
-  if (!segments.length || !durationMs) return
-
-  const weights = segments.map((segment) => faroSyllableWeight(segment.text))
-  const totalWeight = weights.reduce((acc, value) => acc + value, 0)
-  if (totalWeight <= 0) return
-
-  activeSyllable.value = segments[0].idx
-  let elapsed = 0
-  for (let i = 1; i < segments.length; i += 1) {
-    elapsed += (weights[i - 1] / totalWeight) * durationMs
-    const timeoutId = window.setTimeout(() => {
-      activeSyllable.value = segments[i].idx
-    }, Math.round(elapsed))
-    syllableStepTimeouts.push(timeoutId)
   }
 }
 
@@ -2523,9 +2617,7 @@ watch(
     activeKaraokeWordIndex.value = -1
     resetCompleteWordInputs()
     resetLetterBuild()
-    setTimeout(() => {
-      scheduleTutorStep()
-    }, 180)
+    scheduleTutorSoon(180)
   }
 )
 
@@ -2535,9 +2627,7 @@ watch(
     clearTutorTimers()
     if (status === 'pending' || status === 'fail') {
       if (status === 'pending') tutorStepIndex.value = 0
-      setTimeout(() => {
-        scheduleTutorStep()
-      }, status === 'fail' ? 420 : 180)
+      scheduleTutorSoon(status === 'fail' ? 420 : 180)
     }
   },
   { immediate: true }
@@ -2646,7 +2736,7 @@ function shuffleArray(arr) {
 .game-view {
   padding: 1.5rem;
   font-family: var(--font-readable, 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif);
-  --exercise-image-radius: 22px;
+  --exercise-image-radius: var(--square-image-radius, 25px);
 }
 .btn-option {
   display: inline-flex;
@@ -2748,6 +2838,21 @@ function shuffleArray(arr) {
   line-height: 1.35;
   font-weight: 850;
   text-align: center;
+}
+.punctuation-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+}
+.punctuation-option__face {
+  font-size: 1.65em;
+  line-height: 1;
+}
+.punctuation-option__sign {
+  font-size: 1.5em;
+  line-height: 1;
+  font-weight: 900;
 }
 .missing-letter-pieces {
   display: flex;
@@ -2860,25 +2965,31 @@ function shuffleArray(arr) {
 .choice-visual {
   display: grid;
   place-items: center;
-  margin: 0 auto 1rem;
-  width: auto;
-  max-width: 280px;
+  margin: 0 auto 0.45rem;
+  width: min(100%, 250px);
+  max-width: 100%;
+  min-height: clamp(115px, 20vh, 170px);
   padding: 0;
   background: transparent;
   box-shadow: none;
   border-radius: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 .choice-visual-img {
-  width: 100%;
-  max-height: 220px;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(170px, 26vh);
   object-fit: contain;
+  object-position: center;
+  display: block;
   background: transparent;
   box-shadow: none;
   border-radius: var(--exercise-image-radius);
 }
 .guided-word-visual {
-  max-width: 310px;
+  width: min(100%, 250px);
+  max-width: 100%;
   margin-bottom: 0.45rem;
 }
 .guided-word-visual .choice-visual-img {
@@ -2889,6 +3000,14 @@ function shuffleArray(arr) {
 .guided-word-visual .choice-visual-img:hover {
   transform: scale(1.04);
   filter: drop-shadow(0 12px 20px rgba(14, 165, 233, 0.2));
+}
+.syllable-order-visual {
+  width: min(100%, 300px);
+  min-height: clamp(115px, 18vh, 165px);
+  margin-bottom: 0.6rem;
+}
+.syllable-order-visual .choice-visual-img {
+  max-height: min(165px, 24vh);
 }
 .guided-choice-option--spotlight {
   border-color: #38bdf8;
@@ -2915,21 +3034,25 @@ function shuffleArray(arr) {
   line-height: 1;
 }
 .exercise-visual {
-  width: 100%;
-  max-width: 280px;
-  margin: 0 auto 1rem;
+  width: min(100%, 250px);
+  max-width: 100%;
+  margin: 0 auto 0.45rem;
   border-radius: var(--exercise-image-radius);
   box-shadow: none;
   background: transparent;
-  display: block;
+  display: grid;
+  place-items: center;
   padding: 0;
   aspect-ratio: auto;
-  overflow: hidden;
+  overflow: visible;
 }
 .exercise-visual img {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  max-height: min(175px, 26vh);
   height: auto;
   object-fit: contain;
+  object-position: center;
   display: block;
   border-radius: var(--exercise-image-radius);
 }
@@ -3182,34 +3305,6 @@ function shuffleArray(arr) {
     opacity: 0;
   }
 }
-@keyframes tutorFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes tutorIdle {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-@keyframes tutorAudioPulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.07);
-  }
-}
 @keyframes tutorHighlight {
   0%,
   100% {
@@ -3412,131 +3507,61 @@ function shuffleArray(arr) {
 .smartick-card-content {
   position: relative;
 }
-.guided-tutor {
-  width: min(100%, 760px);
-  margin: 0 auto 0.25rem;
-  display: grid;
-  grid-template-columns: 86px minmax(0, 1fr);
-  align-items: end;
-  gap: 0;
-  animation: tutorFadeIn 0.28s ease both;
+.smartick-card-content.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.45rem;
 }
-.guided-tutor__character {
-  width: 92px;
-  height: 92px;
-  display: grid;
-  place-items: center;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  animation: tutorIdle 2.8s ease-in-out infinite;
-  z-index: 2;
-}
-.guided-tutor__character img {
-  width: 92px;
-  height: 92px;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 16px rgba(15, 23, 42, 0.16));
-}
-.guided-tutor__bubble {
-  position: relative;
-  min-height: 82px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 0.55rem;
-  margin-left: -8px;
-  margin-bottom: 12px;
-  padding: 0.75rem 0.85rem 0.5rem 1.45rem;
-  border-radius: 22px;
-  background: #ffffff;
-  border: 2px solid rgba(14, 165, 233, 0.2);
-  box-shadow: 0 10px 0 rgba(14, 165, 233, 0.14), 0 14px 24px rgba(15, 23, 42, 0.1);
-}
-.guided-tutor__bubble::before {
-  content: '';
-  position: absolute;
-  left: -11px;
-  top: 30px;
-  width: 20px;
-  height: 20px;
-  background: #ffffff;
-  border-left: 2px solid rgba(14, 165, 233, 0.2);
-  border-bottom: 2px solid rgba(14, 165, 233, 0.2);
-  transform: rotate(45deg);
-}
-.guided-tutor__word {
-  position: relative;
-  z-index: 1;
-  font-size: clamp(1.45rem, 5.6vw, 2.15rem);
-  line-height: 1.08;
-  font-weight: 900;
-  color: #0f172a;
-  text-wrap: balance;
-}
-.guided-tutor__audio {
-  position: relative;
-  z-index: 1;
-  width: 54px;
-  height: 54px;
-  display: grid;
-  place-items: center;
-  border: none;
-  border-radius: 16px;
-  background: #fff7d6;
-  box-shadow: 0 10px 18px rgba(245, 158, 11, 0.2);
-  animation: tutorAudioPulse 1.9s ease-in-out infinite;
-}
-.guided-tutor__audio img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-.guided-tutor__dots {
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 0.4rem;
-  align-items: center;
-}
-.guided-tutor__dots span {
-  width: 9px;
-  height: 9px;
-  border-radius: 999px;
-  background: #cbd5e1;
-}
-.guided-tutor__dots span.active {
-  width: 24px;
-  background: #38bdf8;
+.smartick-card-content.space-y-4 > :deep(.guided-tutor-card) + section {
+  margin-top: 0.1rem;
 }
 .concept-mini-lesson {
   width: min(100%, 760px);
   margin: 0 auto 0.55rem;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.55rem;
+  grid-template-columns: repeat(3, minmax(84px, 96px));
+  justify-content: center;
+  gap: 0.5rem;
 }
 .concept-mini-lesson__item {
-  min-height: 76px;
+  width: 100%;
+  aspect-ratio: 1;
   display: grid;
   place-items: center;
-  gap: 0.2rem;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
-  border: 2px solid rgba(34, 197, 94, 0.18);
-  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.07);
-  color: #0f172a;
+  align-content: center;
+  gap: 0.15rem;
+  padding: 0.35rem;
+  border-radius: 18px;
+  background: #e0f2fe;
+  border: 1px solid rgba(14, 165, 233, 0.22);
+  box-shadow: none;
+  color: #0ea5e9;
+  min-width: 0;
+  overflow: hidden;
 }
 .concept-mini-lesson__item span {
-  font-size: 2rem;
-  line-height: 1;
+  max-width: 100%;
+  font-size: clamp(0.78rem, 2.6vw, 1.08rem);
+  line-height: 1.05;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 .concept-mini-lesson__item strong {
-  font-size: clamp(1rem, 4vw, 1.28rem);
-  line-height: 1;
+  max-width: 100%;
+  font-size: clamp(0.62rem, 2.1vw, 0.72rem);
+  line-height: 1.05;
+  text-align: center;
+  color: #0ea5e9;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
-.tutor-focus-visual .exercise-visual,
-.tutor-focus-visual .choice-visual,
-.tutor-focus-visual :deep(.exercise-layout__media),
+.concept-mini-lesson__item small {
+  max-width: 100%;
+  font-size: clamp(0.45rem, 1.65vw, 0.54rem);
+  line-height: 1.08;
+  text-align: center;
+  color: #0369a1;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
 .tutor-focus-audio .sentence-audio-btn {
   outline: 4px solid rgba(56, 189, 248, 0.34);
   outline-offset: 6px;
@@ -3551,6 +3576,7 @@ function shuffleArray(arr) {
   width: 100%;
   margin: 0;
   padding: 0;
+  gap: 0.55rem;
   border: none;
   border-radius: 0;
   background: transparent;
@@ -3568,10 +3594,13 @@ function shuffleArray(arr) {
   width: 100%;
 }
 :deep(.exercise-image) {
+  width: min(100%, 250px);
+  margin: 0 auto;
   border: none;
   border-radius: var(--exercise-image-radius);
   background: transparent;
-  min-height: 0;
+  min-height: clamp(115px, 20vh, 170px);
+  max-height: min(180px, 28vh);
 }
 :deep(.exercise-image__img) {
   padding: 0;
@@ -3599,7 +3628,7 @@ function shuffleArray(arr) {
   box-shadow: 0 8px 0 rgba(245, 158, 11, 0.18), 0 14px 22px rgba(245, 158, 11, 0.12);
 }
 .smartick-card .exercise-visual {
-  max-width: 320px;
+  max-width: 250px;
 }
 .smartick-card .options-row {
   margin-top: 0.5rem;
@@ -3695,6 +3724,14 @@ function shuffleArray(arr) {
   }
 }
 @media (max-width: 768px) {
+  .concept-mini-lesson {
+    grid-template-columns: repeat(3, minmax(72px, 1fr));
+    gap: 0.35rem;
+  }
+  .concept-mini-lesson__item {
+    padding: 0.25rem;
+    border-radius: 15px;
+  }
   .game-view {
     padding: 0;
     margin: 0;
@@ -3745,30 +3782,6 @@ function shuffleArray(arr) {
     font-size: clamp(0.98rem, 4.3vw, 1.15rem);
     line-height: 1.18;
     padding: 0.46rem 0.58rem;
-  }
-  .guided-tutor {
-    grid-template-columns: 56px minmax(0, 1fr);
-    width: 100%;
-    margin-bottom: 0;
-  }
-  .guided-tutor__character,
-  .guided-tutor__character img {
-    width: 62px;
-    height: 62px;
-  }
-  .guided-tutor__bubble {
-    min-height: 58px;
-    grid-template-columns: 1fr;
-    margin-left: -4px;
-    margin-bottom: 5px;
-    padding: 0.5rem 0.58rem 0.36rem 0.85rem;
-    border-radius: 16px;
-  }
-  .guided-tutor__word {
-    font-size: clamp(1.02rem, 5.4vw, 1.42rem);
-  }
-  .guided-tutor__audio {
-    display: none;
   }
   .smartick-card-head {
     margin-bottom: 0.38rem;
@@ -3878,8 +3891,25 @@ function shuffleArray(arr) {
     font-size: 0.64rem;
   }
   .game-view.compact-mobile .exercise-visual {
-    max-width: min(210px, 56vw);
+    width: min(100%, 170px);
+    max-width: min(170px, 48vw);
     margin-bottom: 0.22rem;
+  }
+  .game-view.compact-mobile .exercise-visual img {
+    max-height: min(130px, 22vh);
+  }
+  .game-view.compact-mobile .choice-visual {
+    width: min(100%, 180px);
+    min-height: clamp(95px, 17vh, 130px);
+    margin-bottom: 0.35rem;
+  }
+  .game-view.compact-mobile .choice-visual-img {
+    max-height: min(130px, 22vh);
+  }
+  .game-view.compact-mobile :deep(.exercise-image) {
+    width: min(100%, 180px);
+    min-height: clamp(95px, 17vh, 130px);
+    max-height: min(136px, 22vh);
   }
   .game-view.compact-mobile .btn-option {
     min-height: 42px;
@@ -3916,7 +3946,23 @@ function shuffleArray(arr) {
     font-size: clamp(0.86rem, 3.8vw, 0.98rem);
   }
   .game-view.ultra-compact-mobile .exercise-visual {
-    max-width: min(185px, 50vw);
+    width: min(100%, 150px);
+    max-width: min(150px, 44vw);
+  }
+  .game-view.ultra-compact-mobile .exercise-visual img {
+    max-height: min(112px, 19vh);
+  }
+  .game-view.ultra-compact-mobile .choice-visual {
+    width: min(100%, 150px);
+    min-height: clamp(82px, 15vh, 112px);
+  }
+  .game-view.ultra-compact-mobile .choice-visual-img {
+    max-height: min(112px, 19vh);
+  }
+  .game-view.ultra-compact-mobile :deep(.exercise-image) {
+    width: min(100%, 150px);
+    min-height: clamp(82px, 15vh, 112px);
+    max-height: min(118px, 19vh);
   }
   .game-view.compact-mobile .map-only-icon {
     width: 34px;
