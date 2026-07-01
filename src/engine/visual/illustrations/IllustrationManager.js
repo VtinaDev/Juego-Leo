@@ -1,10 +1,10 @@
 const CACHE_KEY = 'jl_illustrations_cache_v1'
 const FALLBACK_IMAGES = [
-  '/images/habitats/escuela.PNG',
+  '/images-optimized/habitats/escuela.webp',
   '/images/habitats/isla_lianas.PNG',
-  '/images/habitats/arbol.PNG',
-  '/images/habitats/santuario.PNG',
-  '/images/habitats/elephant-school.png'
+  '/images-optimized/habitats/arbol.webp',
+  '/images-optimized/habitats/santuario.webp',
+  '/images-optimized/habitats/elephant-school.webp'
 ]
 
 export class IllustrationManager {

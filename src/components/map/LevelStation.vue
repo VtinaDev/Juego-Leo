@@ -6,28 +6,12 @@
         <h3>{{ title }}</h3>
       </div>
       <span v-if="locked" class="level-station__lock" aria-label="Nivel bloqueado">Bloqueado</span>
-      <span v-else class="level-station__status">Disponible</span>
     </div>
 
     <p class="level-station__description">{{ description }}</p>
 
-    <div class="level-station__meta">
-      <div class="level-station__stars" :aria-label="`Progreso de ${stars} de 3 estrellas`">
-        <span
-          v-for="idx in 3"
-          :key="idx"
-          class="star"
-          :class="{ 'star--filled': idx <= stars }"
-          aria-hidden="true"
-        >
-          ★
-        </span>
-      </div>
-      <span>{{ progressLabel }}</span>
-    </div>
-
     <button class="level-station__btn" :disabled="locked" type="button" @click="$emit('enter')">
-      {{ locked ? 'Bloqueado' : 'Entrar' }}
+      {{ locked ? 'Bloqueado' : '¡Vamos!' }}
     </button>
   </div>
 </template>
@@ -49,7 +33,7 @@ defineEmits(['enter'])
 <style scoped>
 .level-station {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.36rem;
 }
 
 .level-station__head {
@@ -61,28 +45,18 @@ defineEmits(['enter'])
 
 .level-station__number {
   display: inline-flex;
-  margin-bottom: 0.2rem;
-  color: #2f7d47;
-  font-size: 0.72rem;
+  margin-bottom: 0.12rem;
+  color: #166534;
+  font-size: 0.66rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 
 .level-station__head h3 {
   margin: 0;
-  font-size: clamp(1rem, 2.3vw, 1.2rem);
-  color: #163d66;
+  font-size: clamp(0.92rem, 2.1vw, 1.08rem);
+  color: #123524;
   line-height: 1.18;
-}
-
-.level-station__status {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #0f766e;
-  background: #ccfbf1;
-  border-radius: 999px;
-  padding: 0.25rem 0.55rem;
-  white-space: nowrap;
 }
 
 .level-station__lock {
@@ -101,46 +75,21 @@ defineEmits(['enter'])
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   margin: 0;
-  color: #2b587d;
-  font-size: 0.92rem;
-  line-height: 1.35;
-}
-
-.level-station__stars {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.level-station__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  color: #475569;
+  color: #3f5f4a;
   font-size: 0.82rem;
-  font-weight: 900;
-}
-
-.star {
-  font-size: 1rem;
-  color: #cbd5e1;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
-}
-
-.star--filled {
-  color: #f59e0b;
+  line-height: 1.28;
 }
 
 .level-station__btn {
-  margin-top: 0.2rem;
+  margin-top: 0.12rem;
   border: none;
-  border-radius: 12px;
-  min-height: 40px;
+  border-radius: 10px;
+  min-height: 36px;
   font-weight: 800;
-  font-size: 0.94rem;
-  color: #fff;
-  background: linear-gradient(160deg, #bcef86 0%, #74c522 52%, #15803d 100%);
-  box-shadow: 0 8px 14px rgba(132, 197, 34, 0.32);
+  font-size: 0.88rem;
+  color: #1f3d0d;
+  background: #92c237;
+  box-shadow: 0 8px 14px rgba(132, 204, 22, 0.24);
   transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
 }
@@ -148,8 +97,8 @@ defineEmits(['enter'])
 .level-station__btn:hover:enabled,
 .level-station__btn:focus-visible:enabled {
   transform: translateY(-2px);
-  filter: brightness(1.04);
-  box-shadow: 0 12px 18px rgba(126, 197, 34, 0.4);
+  filter: brightness(1.03);
+  box-shadow: 0 12px 18px rgba(132, 204, 22, 0.32);
 }
 
 .level-station__btn:disabled {

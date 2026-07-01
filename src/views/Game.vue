@@ -854,11 +854,11 @@ import CompleteWordVisual from '../components/exercises/CompleteWordVisual.vue'
 import CelebrationCard from '../components/exercises/CelebrationCard.vue'
 import KaraokeText from '../components/accessibility/KaraokeText.vue'
 
-import Perezoso from '../assets/characters/Perezoso.png'
-import Zorro from '../assets/characters/Zorro.png'
-import Oso from '../assets/characters/Oso.png'
+import Perezoso from '../assets/characters/Sloth.png'
+import Zorro from '../assets/characters/Fox.png'
+import Oso from '../assets/characters/Bear.png'
 import Mono from '../assets/characters/Mono.png'
-import Elefante_graduado from '../assets/characters/Elefante_graduado.png'
+import Elefante_graduado from '../assets/characters/elephant.png'
 
 const route = useRoute()
 const router = useRouter()

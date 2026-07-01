@@ -13,8 +13,8 @@ export const SFX_SOURCES = {
 }
 
 export const MUSIC_SOURCES = {
-  intro: '/audio/music/intro-music.mp3',
-  nature: '/audio/music/intro-music.mp3'
+  intro: '',
+  nature: ''
 }
 
 export const VOICE_CUE_FALLBACKS = {

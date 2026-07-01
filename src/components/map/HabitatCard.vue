@@ -13,6 +13,26 @@
     <img class="habitat-card__background" :src="level.habitat" :alt="`Hábitat ${level.title}`" loading="lazy" />
     <span class="habitat-card__overlay" aria-hidden="true"></span>
     <div class="habitat-card__media">
+      <div v-if="level.rewards?.length" class="habitat-card__rewards" aria-label="Recompensas obtenidas">
+        <span
+          v-for="reward in level.rewards"
+          :key="reward.id"
+          class="habitat-card__reward"
+          :aria-label="reward.label"
+          :title="reward.label"
+        >
+          <template v-if="reward.stars?.length">
+            <img
+              v-for="star in reward.stars"
+              :key="star"
+              src="/icons/star.PNG"
+              alt=""
+              aria-hidden="true"
+            />
+          </template>
+          <span v-else>{{ reward.text || reward.icon }}</span>
+        </span>
+      </div>
       <span class="habitat-card__glow" aria-hidden="true"></span>
       <img
         class="habitat-card__character"
@@ -20,8 +40,6 @@
         :alt="`Personaje ${level.characterName}`"
         loading="lazy"
       />
-      <span class="habitat-card__level">Nivel {{ level.levelId }}</span>
-      <span class="habitat-card__badge">{{ level.statusLabel }}</span>
     </div>
 
     <LevelStation
@@ -34,10 +52,6 @@
       :stage-count="level.stageTotal"
       @enter="$emit('enter', level)"
     />
-
-    <div class="habitat-card__progress" aria-hidden="true">
-      <span :style="{ width: `${level.progressPercent}%` }"></span>
-    </div>
 
     <details v-if="level.stages?.length" class="habitat-card__stages">
       <summary class="habitat-card__stages-toggle">
@@ -90,21 +104,17 @@ defineEmits(['enter'])
   position: relative;
   isolation: isolate;
   width: var(--habitat-card-width, clamp(220px, 72vw, 280px));
-  border-radius: 24px;
+  border-radius: 22px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.28);
-  box-shadow: none;
-  padding: 0.72rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+  padding: 0.64rem;
   display: grid;
-  gap: 0.72rem;
+  gap: 0.58rem;
   transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
   outline: none;
   animation: cardIn 0.45s ease both;
   animation-delay: calc(var(--card-index, 0) * 70ms);
-}
-
-.habitat-card:not(.habitat-card--locked) {
-  box-shadow: 0 10px 22px rgba(34, 197, 94, 0.22);
 }
 
 .habitat-card__background,
@@ -125,85 +135,92 @@ defineEmits(['enter'])
 .habitat-card__overlay {
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.22) 100%),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.12));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.44) 0%, rgba(255, 255, 255, 0.2) 100%),
+    linear-gradient(0deg, rgba(15, 23, 42, 0.08), rgba(255, 255, 255, 0.18));
 }
 
 .habitat-card__media {
   position: relative;
-  border-radius: 18px;
-  overflow: hidden;
+  border-radius: 0;
+  overflow: visible;
   aspect-ratio: 1.44 / 1;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
+  background: transparent;
 }
 
 .habitat-card__media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0) 42%, rgba(15, 23, 42, 0.36) 100%);
-  pointer-events: none;
+  content: none;
 }
 
 .habitat-card__glow {
   position: absolute;
   z-index: 1;
   left: 50%;
-  bottom: -18%;
-  width: 56%;
+  bottom: -22%;
+  width: 70%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(254, 240, 138, 0.8) 0%, rgba(250, 204, 21, 0) 70%);
+  background: radial-gradient(circle, rgba(220, 252, 231, 0.78) 0%, rgba(34, 197, 94, 0) 70%);
   transform: translateX(-50%);
   animation: habitatGlow 2.8s ease-in-out infinite;
+}
+
+.habitat-card__rewards {
+  position: absolute;
+  top: 0.48rem;
+  right: 0.48rem;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+}
+
+.habitat-card__reward {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 0.34rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #365314;
+  font-size: 0.88rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.08);
+}
+
+.habitat-card__reward strong {
+  font-size: 0.72rem;
+}
+
+.habitat-card__reward img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
 
 .habitat-card__character {
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: min(48%, 140px);
+  width: min(66%, 190px);
+  max-height: 96%;
   object-fit: contain;
-  filter: drop-shadow(0 9px 12px rgba(15, 23, 42, 0.2));
+  filter: drop-shadow(0 10px 14px rgba(15, 23, 42, 0.18));
   transform: translateX(-50%);
   animation: characterIdle 2.8s ease-in-out infinite;
   z-index: 1;
 }
 
-.habitat-card__level,
-.habitat-card__badge {
-  position: absolute;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  border-radius: 999px;
-  padding: 0.28rem 0.58rem;
-  font-size: 0.76rem;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.habitat-card__level {
-  left: 0.6rem;
-  top: 0.6rem;
-  background: rgba(255, 255, 255, 0.88);
-  color: #0f3560;
-}
-
-.habitat-card__badge {
-  right: 0.6rem;
-  bottom: 0.6rem;
-  background: rgba(22, 163, 74, 0.92);
-  color: #ffffff;
-}
-
 .habitat-card:hover,
 .habitat-card:focus-visible {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 18px 28px rgba(34, 197, 94, 0.32);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 30px rgba(15, 23, 42, 0.16);
 }
 
 .habitat-card:hover .habitat-card__background,
@@ -223,31 +240,6 @@ defineEmits(['enter'])
   filter: grayscale(0.16);
 }
 
-.habitat-card--locked .habitat-card__badge {
-  background: rgba(100, 116, 139, 0.92);
-}
-
-.habitat-card--complete .habitat-card__badge {
-  background: rgba(245, 158, 11, 0.94);
-}
-
-.habitat-card__progress {
-  height: 8px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.46);
-  border: 1px solid rgba(255, 255, 255, 0.42);
-}
-
-.habitat-card__progress span {
-  display: block;
-  height: 100%;
-  min-width: 0;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #facc15 0%, #22c55e 100%);
-  transition: width 0.25s ease;
-}
-
 .habitat-card--locked:hover,
 .habitat-card--locked:focus-visible {
   transform: none;
@@ -256,9 +248,11 @@ defineEmits(['enter'])
 
 .habitat-card__stages {
   overflow: hidden;
-  border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .habitat-card__stages-toggle {
@@ -266,9 +260,9 @@ defineEmits(['enter'])
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  min-height: 48px;
-  padding: 0.58rem 0.68rem;
-  color: #0f3560;
+  min-height: 44px;
+  padding: 0.5rem 0.62rem;
+  color: #14532d;
   cursor: pointer;
   list-style: none;
   outline: none;
@@ -289,7 +283,7 @@ defineEmits(['enter'])
 }
 
 .habitat-card__stages-toggle small {
-  color: #2f7d47;
+  color: #4b7c5a;
   font-size: 0.72rem;
   font-weight: 900;
 }
@@ -300,8 +294,8 @@ defineEmits(['enter'])
   width: 28px;
   height: 28px;
   border-radius: 999px;
-  background: rgba(14, 165, 233, 0.13);
-  color: #0369a1;
+  background: rgba(34, 197, 94, 0.12);
+  color: #166534;
   font-style: normal;
   font-weight: 900;
   transition: transform 0.18s ease;
@@ -313,14 +307,16 @@ defineEmits(['enter'])
 
 .habitat-card__stages-toggle:hover,
 .habitat-card__stages-toggle:focus-visible {
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.32);
 }
 
 :deep(.level-station) {
-  padding: 0.72rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 18px;
-  background: #ffffff;
+  padding: 0.54rem;
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .habitat-card__stage-list {
@@ -336,13 +332,13 @@ defineEmits(['enter'])
   gap: 0.45rem;
   min-height: 44px;
   padding: 0.42rem 0.5rem;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.06);
   border-radius: 14px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.62);
   color: #1f2937;
   text-align: left;
   text-decoration: none;
-  box-shadow: 0 7px 14px rgba(15, 23, 42, 0.06);
+  box-shadow: none;
   transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
@@ -359,8 +355,8 @@ defineEmits(['enter'])
   width: 30px;
   height: 30px;
   border-radius: 999px;
-  background: rgba(14, 165, 233, 0.12);
-  color: #0369a1;
+  background: rgba(34, 197, 94, 0.1);
+  color: #166534;
   font-size: 0.78rem;
   font-weight: 900;
 }
@@ -380,7 +376,7 @@ defineEmits(['enter'])
 }
 
 .stage-chip--current {
-  border-color: rgba(47, 125, 71, 0.45);
+  border-color: rgba(34, 197, 94, 0.4);
   background: #f0fdf4;
 }
 
@@ -443,6 +439,15 @@ defineEmits(['enter'])
 
   .habitat-card__media {
     aspect-ratio: 2 / 1;
+  }
+
+  .habitat-card__character {
+    width: min(58%, 170px);
+    max-height: 98%;
+  }
+
+  .habitat-card__glow {
+    width: 64%;
   }
 
   .habitat-card__stages {

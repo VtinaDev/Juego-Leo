@@ -56,51 +56,51 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import Elefante from '../../assets/characters/Elefante_graduado.png'
+import Elefante from '../../assets/characters/elephant.png'
 import Mono from '../../assets/characters/Mono.png'
-import Oso from '../../assets/characters/Oso.png'
-import Perezoso from '../../assets/characters/Perezoso.png'
-import Zorro from '../../assets/characters/Zorro.png'
+import Oso from '../../assets/characters/Bear.png'
+import Perezoso from '../../assets/characters/Sloth.png'
+import Zorro from '../../assets/characters/Fox.png'
 
 const habitats = [
   {
     id: 'monkey-jungle',
     title: 'Mundo lianas',
-    image: '/images/habitats/monkey-jungle.png',
+    image: '/images-optimized/habitats/monkey-jungle.webp',
     character: Mono
   },
   {
     id: 'sloth-tree',
     title: 'El árbol',
-    image: '/images/habitats/sloth-tree.png',
+    image: '/images-optimized/habitats/sloth-tree.webp',
     character: Perezoso
   },
   {
     id: 'fox-burrow',
     title: 'La Madriguera',
-    image: '/images/habitats/fox-burrow.png',
+    image: '/images-optimized/habitats/fox-burrow.webp',
     character: Zorro
   },
   {
     id: 'bear-honey',
     title: 'El bosque de Miel',
-    image: '/images/habitats/bear-honey.png',
+    image: '/images-optimized/habitats/bear-honey.webp',
     character: Oso
   },
   {
     id: 'elephant-school',
     title: 'La escuela mágica',
-    image: '/images/habitats/elephant-school.png',
+    image: '/images-optimized/habitats/elephant-school.webp',
     character: Elefante
   }
 ]
 
 const habitatFallbacks = {
-  'monkey-jungle': '/images/habitats/isla_lianas.PNG',
-  'sloth-tree': '/images/habitats/arbol.PNG',
-  'fox-burrow': '/images/habitats/madriguera.PNG',
-  'bear-honey': '/images/habitats/santuario.PNG',
-  'elephant-school': '/images/habitats/escuela.PNG'
+  'monkey-jungle': '/images-optimized/habitats/isla_lianas.webp',
+  'sloth-tree': '/images-optimized/habitats/arbol.webp',
+  'fox-burrow': '/images-optimized/habitats/madriguera.webp',
+  'bear-honey': '/images-optimized/habitats/bear-honey.webp',
+  'elephant-school': '/images-optimized/habitats/escuela.webp'
 }
 
 const characterFallbacks = {

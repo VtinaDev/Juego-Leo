@@ -35,6 +35,10 @@ import HabitatCard from '../components/map/HabitatCard.vue'
 import { useGameStore } from '../store/gameStore'
 import { useBillingStore } from '../store/billingStore'
 import { getLevelDefinition } from '../engine/logic/utils/validateTemplates'
+import SlothCharacter from '../assets/characters/Sloth.png'
+import BearCharacter from '../assets/characters/Bear.png'
+import FoxCharacter from '../assets/characters/Fox.png'
+import MonkeyCharacter from '../assets/characters/Mono.png'
 
 const router = useRouter()
 const game = useGameStore()
@@ -51,7 +55,7 @@ const levelBlueprint = [
     characterName: 'Oso perezoso',
     habitatDescription: 'El árbol',
     habitat: '/images-optimized/habitats/sloth-tree.webp',
-    character: '/images-optimized/characters/sloth.webp',
+    character: SlothCharacter,
     fallbackTitle: 'Árbol de la Calma'
   },
   {
@@ -60,7 +64,7 @@ const levelBlueprint = [
     characterName: 'Zorro',
     habitatDescription: 'La Madriguera',
     habitat: '/images-optimized/habitats/fox-burrow.webp',
-    character: '/images-optimized/characters/fox.webp',
+    character: FoxCharacter,
     fallbackTitle: 'Madriguera de Palabras'
   },
   {
@@ -69,7 +73,7 @@ const levelBlueprint = [
     characterName: 'Oso',
     habitatDescription: 'El bosque de Miel',
     habitat: '/images-optimized/habitats/bear-honey.webp',
-    character: '/images-optimized/characters/bear.webp',
+    character: BearCharacter,
     fallbackTitle: 'Bosque de la Miel'
   },
   {
@@ -78,7 +82,7 @@ const levelBlueprint = [
     characterName: 'Mono',
     habitatDescription: 'Mundo lianas',
     habitat: '/images-optimized/habitats/monkey-jungle.webp',
-    character: '/images-optimized/characters/monkey.webp',
+    character: MonkeyCharacter,
     fallbackTitle: 'Jungla de las Letras'
   },
   {
@@ -110,6 +114,15 @@ const levels = computed(() => {
     const percent = totalStages ? Math.round((completedStages / totalStages) * 100) : 0
     const complete = totalStages > 0 && completedStages >= totalStages
     const current = !locked && !complete
+    const rewards = [
+      stars > 0
+        ? {
+            id: 'stars',
+            stars: Array.from({ length: stars }, (_, starIndex) => starIndex + 1),
+            label: `${stars} estrellas obtenidas`
+          }
+        : null
+    ].filter(Boolean)
 
     return {
       ...entry,
@@ -121,6 +134,7 @@ const levels = computed(() => {
       current,
       progressPercent: percent,
       completedStages,
+      rewards,
       stageTotal: totalStages,
       statusLabel: locked ? 'Bloqueado' : complete ? 'Completado' : 'Disponible',
       progressLabel: `${completedStages}/${totalStages || 1} etapas`,
