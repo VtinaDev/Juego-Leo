@@ -10,9 +10,9 @@
     @keydown.self.enter.prevent="$emit('enter', level)"
     @keydown.self.space.prevent="$emit('enter', level)"
   >
-    <img class="habitat-card__background" :src="level.habitat" :alt="`Hábitat ${level.title}`" loading="lazy" />
-    <span class="habitat-card__overlay" aria-hidden="true"></span>
     <div class="habitat-card__media">
+      <img class="habitat-card__background" :src="level.habitat" :alt="`Hábitat ${level.title}`" loading="lazy" />
+      <span class="habitat-card__overlay" aria-hidden="true"></span>
       <div v-if="level.rewards?.length" class="habitat-card__rewards" aria-label="Recompensas obtenidas">
         <span
           v-for="reward in level.rewards"
@@ -38,20 +38,28 @@
         class="habitat-card__character"
         :src="level.character"
         :alt="`Personaje ${level.characterName}`"
+        :style="characterStyle(level)"
         loading="lazy"
       />
     </div>
 
-    <LevelStation
-      :title="level.title"
-      :description="level.description"
-      :stars="level.stars"
-      :locked="level.locked"
-      :level-number="level.levelId"
-      :progress-label="level.progressLabel"
-      :stage-count="level.stageTotal"
-      @enter="$emit('enter', level)"
-    />
+    <div class="habitat-card__body">
+      <div class="habitat-card__meta" aria-label="Estado del nivel">
+        <span>{{ level.locked ? 'Bloqueado' : level.complete ? 'Completado' : 'Ya disponible' }}</span>
+        <span>{{ level.progressLabel }}</span>
+      </div>
+
+      <LevelStation
+        :title="level.title"
+        :description="level.description"
+        :stars="level.stars"
+        :locked="level.locked"
+        :level-number="level.levelId"
+        :progress-label="level.progressLabel"
+        :stage-count="level.stageTotal"
+        @enter="$emit('enter', level)"
+      />
+    </div>
 
     <details v-if="level.stages?.length" class="habitat-card__stages">
       <summary class="habitat-card__stages-toggle">
@@ -97,20 +105,36 @@ defineProps({
 })
 
 defineEmits(['enter'])
+
+function characterStyle(level) {
+  const scale = level.characterScale || 1
+  return {
+    '--character-width-percent': `${58 * scale}%`,
+    '--character-width-max': `${176 * scale}px`,
+    '--character-max-height': `${88 * scale}%`,
+    '--character-mobile-width-percent': `${54 * scale}%`,
+    '--character-mobile-width-max': `${158 * scale}px`,
+    '--character-mobile-max-height': `${86 * scale}%`,
+    '--character-bottom': level.characterBottom || '0',
+    '--character-mobile-bottom': level.characterMobileBottom || level.characterBottom || '0'
+  }
+}
 </script>
 
 <style scoped>
 .habitat-card {
   position: relative;
   isolation: isolate;
-  width: var(--habitat-card-width, clamp(220px, 72vw, 280px));
-  border-radius: 22px;
+  width: var(--habitat-card-width, clamp(240px, 74vw, 300px));
+  aspect-ratio: var(--habitat-card-aspect, auto);
+  border-radius: 8px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
-  padding: 0.64rem;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+  padding: 0;
   display: grid;
-  gap: 0.58rem;
+  grid-template-rows: auto 1fr auto;
+  gap: 0;
   transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
   outline: none;
   animation: cardIn 0.45s ease both;
@@ -121,7 +145,7 @@ defineEmits(['enter'])
 .habitat-card__overlay {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -129,22 +153,22 @@ defineEmits(['enter'])
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 38%;
   transition: transform 0.7s ease, filter 0.35s ease;
 }
 
 .habitat-card__overlay {
-  z-index: -1;
+  z-index: 1;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.44) 0%, rgba(255, 255, 255, 0.2) 100%),
-    linear-gradient(0deg, rgba(15, 23, 42, 0.08), rgba(255, 255, 255, 0.18));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 38%, rgba(15, 23, 42, 0.22) 100%),
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0) 54%);
 }
 
 .habitat-card__media {
   position: relative;
-  border-radius: 0;
-  overflow: visible;
-  aspect-ratio: 1.44 / 1;
-  background: transparent;
+  overflow: hidden;
+  aspect-ratio: 16 / 11;
+  background: #d9f99d;
 }
 
 .habitat-card__media::after {
@@ -153,10 +177,10 @@ defineEmits(['enter'])
 
 .habitat-card__glow {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   left: 50%;
-  bottom: -22%;
-  width: 70%;
+  bottom: -34%;
+  width: 74%;
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(220, 252, 231, 0.78) 0%, rgba(34, 197, 94, 0) 70%);
@@ -166,9 +190,9 @@ defineEmits(['enter'])
 
 .habitat-card__rewards {
   position: absolute;
-  top: 0.48rem;
-  right: 0.48rem;
-  z-index: 3;
+  top: 0.62rem;
+  right: 0.62rem;
+  z-index: 4;
   display: flex;
   align-items: center;
   gap: 0.28rem;
@@ -183,10 +207,8 @@ defineEmits(['enter'])
   height: 30px;
   padding: 0 0.34rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.58);
-  border: 1px solid rgba(255, 255, 255, 0.58);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.72);
   color: #365314;
   font-size: 0.88rem;
   font-weight: 900;
@@ -207,14 +229,47 @@ defineEmits(['enter'])
 .habitat-card__character {
   position: absolute;
   left: 50%;
-  bottom: 0;
-  width: min(66%, 190px);
-  max-height: 96%;
+  bottom: var(--character-bottom, 0);
+  width: min(var(--character-width-percent, 66%), var(--character-width-max, 190px));
+  max-height: var(--character-max-height, 96%);
   object-fit: contain;
   filter: drop-shadow(0 10px 14px rgba(15, 23, 42, 0.18));
   transform: translateX(-50%);
   animation: characterIdle 2.8s ease-in-out infinite;
-  z-index: 1;
+  z-index: 3;
+}
+
+.habitat-card__body {
+  display: grid;
+  gap: 0.58rem;
+  padding: 0.82rem 0.82rem 0.76rem;
+  background: #ffffff;
+}
+
+.habitat-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.habitat-card__meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border-radius: 999px;
+  padding: 0.28rem 0.58rem;
+  background: #f0fdf4;
+  color: #166534;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.habitat-card__meta span:first-child {
+  background: #fff7ed;
+  color: #9a3412;
 }
 
 .habitat-card:hover,
@@ -243,16 +298,15 @@ defineEmits(['enter'])
 .habitat-card--locked:hover,
 .habitat-card--locked:focus-visible {
   transform: none;
-  box-shadow: none;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
 }
 
 .habitat-card__stages {
+  margin: 0 0.82rem 0.82rem;
   overflow: hidden;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.58);
-  border: 1px solid rgba(255, 255, 255, 0.48);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .habitat-card__stages-toggle {
@@ -311,12 +365,35 @@ defineEmits(['enter'])
 }
 
 :deep(.level-station) {
-  padding: 0.54rem;
-  border: 1px solid rgba(255, 255, 255, 0.52);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+:deep(.level-station__number) {
+  margin-bottom: 0.2rem;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+:deep(.level-station__head h3) {
+  color: #111827;
+  font-size: clamp(1rem, 2.4vw, 1.18rem);
+}
+
+:deep(.level-station__description) {
+  color: #475569;
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+:deep(.level-station__btn) {
+  min-height: 42px;
+  border-radius: 999px;
+  background: #92c237;
+  color: #173b0a;
+  box-shadow: none;
 }
 
 .habitat-card__stage-list {
@@ -434,16 +511,17 @@ defineEmits(['enter'])
 @media (max-width: 767px) {
   .habitat-card {
     width: 100%;
-    border-radius: 20px;
+    border-radius: 8px;
   }
 
   .habitat-card__media {
-    aspect-ratio: 2 / 1;
+    aspect-ratio: 16 / 10;
   }
 
   .habitat-card__character {
-    width: min(58%, 170px);
-    max-height: 98%;
+    bottom: var(--character-mobile-bottom, var(--character-bottom, 0));
+    width: min(var(--character-mobile-width-percent, 58%), var(--character-mobile-width-max, 170px));
+    max-height: var(--character-mobile-max-height, 98%);
   }
 
   .habitat-card__glow {
@@ -451,7 +529,7 @@ defineEmits(['enter'])
   }
 
   .habitat-card__stages {
-    border-radius: 14px;
+    border-radius: 8px;
   }
 
   .stage-chip {

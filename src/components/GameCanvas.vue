@@ -11,10 +11,11 @@ import { renderExercise } from '@/engine/visual/renderer'
 import { useExerciseEngine } from '@/engine/logic/ExerciseEngine'
 import { useIllustration } from '@/engine/visual/hooks/useIllustration'
 import { playVoice, stopVoice } from '@/engine/audio/audioManager'
-import Perezoso from '@/assets/characters/Sloth.png'
-import Zorro from '@/assets/characters/Fox.png'
-import Mono from '@/assets/characters/Mono.png'
-import ElefanteGraduado from '@/assets/characters/elephant.png'
+
+const Zorro = '/images/characters/fox.png'
+const Mono = '/images/characters/monkey.png'
+const ElefanteGraduado = '/images/characters/elephant.png'
+const Perezoso = '/images/characters/sloth.png'
 
 const props = defineProps({
   exercise: { type: Object, default: null },

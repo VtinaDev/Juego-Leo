@@ -3,14 +3,18 @@
     <div class="showcase-wave" aria-hidden="true"></div>
 
     <div class="showcase-inner">
-      <header class="showcase-header">
+      <header v-if="showHeader" class="showcase-header">
         <p class="showcase-kicker">Mundo de aventura</p>
         <h2>Entra a la jungla mágica</h2>
       </header>
 
-      <div class="showcase-character-wrap">
+      <div v-if="showCharacter" class="showcase-character-wrap">
         <div :key="`scene-${activeHabitat.id}`" class="showcase-character-scene" :style="sceneStyle(activeHabitat)">
-          <figure :key="activeHabitat.id" class="showcase-character">
+          <figure
+            :key="activeHabitat.id"
+            class="showcase-character"
+            :style="characterScaleStyle(activeHabitat)"
+          >
             <img
               :src="resolvedCharacter(activeHabitat)"
               :alt="`Personaje de ${activeHabitat.title}`"
@@ -22,7 +26,7 @@
         </div>
       </div>
 
-      <div class="showcase-carousel" :class="{ 'is-reduced-motion': prefersReducedMotion }">
+      <div v-if="showCarousel" class="showcase-carousel" :class="{ 'is-reduced-motion': prefersReducedMotion }">
         <div class="showcase-track">
           <article
             v-for="(item, index) in habitatLoop"
@@ -42,6 +46,7 @@
                 class="showcase-card-character"
                 :src="resolvedCharacter(item)"
                 :alt="`Personaje de ${item.title}`"
+                :style="characterScaleStyle(item)"
                 loading="lazy"
                 @error="onCharacterError(item)"
               />
@@ -55,43 +60,74 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import Elefante from '../../assets/characters/elephant.png'
-import Mono from '../../assets/characters/Mono.png'
-import Oso from '../../assets/characters/Bear.png'
-import Perezoso from '../../assets/characters/Sloth.png'
-import Zorro from '../../assets/characters/Fox.png'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+const props = defineProps({
+  showHeader: {
+    type: Boolean,
+    default: true
+  },
+  showCharacter: {
+    type: Boolean,
+    default: true
+  },
+  showCarousel: {
+    type: Boolean,
+    default: true
+  }
+})
+
+const emit = defineEmits(['activeHabitatChange'])
+
+const Elefante = '/images/characters/elephant.png'
+const Mono = '/images/characters/monkey.png'
+const Oso = '/images/characters/bear.png'
+const Perezoso = '/images/characters/sloth.png'
+const Zorro = '/images/characters/fox.png'
+
+const habitatImages = {
+  'monkey-jungle': '/images/habitats/monkey-jungle-current.png',
+  'sloth-tree': '/images/habitats/sloth-tree.png',
+  'fox-burrow': '/images/habitats/fox-burrow.png',
+  'bear-honey': '/images/habitats/bear-honey-current.png',
+  'elephant-school': '/images/habitats/elephant-school-current.png'
+}
 
 const habitats = [
   {
     id: 'monkey-jungle',
     title: 'Mundo lianas',
-    image: '/images-optimized/habitats/monkey-jungle.webp',
-    character: Mono
+    image: habitatImages['monkey-jungle'],
+    character: Mono,
+    characterScale: 1.34
   },
   {
     id: 'sloth-tree',
     title: 'El árbol',
-    image: '/images-optimized/habitats/sloth-tree.webp',
-    character: Perezoso
+    image: habitatImages['sloth-tree'],
+    character: Perezoso,
+    characterScale: 1
   },
   {
     id: 'fox-burrow',
     title: 'La Madriguera',
-    image: '/images-optimized/habitats/fox-burrow.webp',
-    character: Zorro
+    image: habitatImages['fox-burrow'],
+    character: Zorro,
+    characterScale: 1
   },
   {
     id: 'bear-honey',
     title: 'El bosque de Miel',
-    image: '/images-optimized/habitats/bear-honey.webp',
-    character: Oso
+    image: habitatImages['bear-honey'],
+    character: Oso,
+    characterScale: 1
   },
   {
     id: 'elephant-school',
     title: 'La escuela mágica',
-    image: '/images-optimized/habitats/elephant-school.webp',
-    character: Elefante
+    image: habitatImages['elephant-school'],
+    character: Elefante,
+    characterScale: 1.75,
+    characterBottom: '-24%'
   }
 ]
 
@@ -122,8 +158,21 @@ let motionQueryList = null
 const habitatLoop = computed(() => [...habitats, ...habitats])
 const activeHabitat = computed(() => habitats[activeIndex.value] || habitats[0])
 
+watch(
+  activeHabitat,
+  (item) => {
+    if (!props.showCharacter || !item) return
+    emit('activeHabitatChange', {
+      id: item.id,
+      title: item.title,
+      image: item.image
+    })
+  },
+  { immediate: true }
+)
+
 function startCycle() {
-  if (cycleTimer || prefersReducedMotion.value) return
+  if (!props.showCharacter || cycleTimer || prefersReducedMotion.value) return
   cycleTimer = window.setInterval(() => {
     activeIndex.value = (activeIndex.value + 1) % habitats.length
   }, 2500)
@@ -168,6 +217,15 @@ function sceneStyle(item) {
   const fallback = habitatFallbacks[item.id] || item.image
   return {
     backgroundImage: `linear-gradient(180deg, rgba(191, 219, 254, 0.18), rgba(15, 23, 42, 0.08)), url('${item.image}'), url('${fallback}')`
+  }
+}
+
+function characterScaleStyle(item) {
+  const scale = item.characterScale || 1
+  return {
+    '--character-main-width': `${scale * 100}%`,
+    '--character-card-width': `${scale * 42}%`,
+    '--character-card-bottom': item.characterBottom || '0'
   }
 }
 
@@ -240,8 +298,9 @@ onBeforeUnmount(() => {
 }
 
 .showcase-character-scene {
-  width: min(100%, 1040px);
-  min-height: clamp(190px, 28vw, 300px);
+  width: min(100%, 390px);
+  aspect-ratio: 9 / 16;
+  min-height: 0;
   border-radius: 28px;
   border: 2px solid rgba(255, 255, 255, 0.65);
   box-shadow: 0 16px 30px rgba(250, 204, 21, 0.28);
@@ -264,7 +323,7 @@ onBeforeUnmount(() => {
 }
 
 .showcase-character img {
-  width: 100%;
+  width: var(--character-main-width, 100%);
   aspect-ratio: 1 / 1;
   object-fit: contain;
   filter: drop-shadow(0 14px 22px rgba(15, 23, 42, 0.22));
@@ -309,7 +368,7 @@ onBeforeUnmount(() => {
   border-radius: 18px;
   overflow: hidden;
   background: linear-gradient(180deg, #c9edff 0%, #bde8ff 44%, #b1ecbb 100%);
-  aspect-ratio: 1.45 / 1;
+  aspect-ratio: 9 / 16;
 }
 
 .showcase-card-media > img:first-child {
@@ -321,8 +380,8 @@ onBeforeUnmount(() => {
 .showcase-card-character {
   position: absolute;
   right: 4%;
-  bottom: 0;
-  width: 42%;
+  bottom: var(--character-card-bottom, 0);
+  width: var(--character-card-width, 42%);
   aspect-ratio: 1 / 1;
   object-fit: contain;
   filter: drop-shadow(0 8px 12px rgba(15, 23, 42, 0.2));
@@ -403,7 +462,7 @@ onBeforeUnmount(() => {
 
 @media (min-width: 920px) {
   .showcase-carousel {
-    --card-w: clamp(300px, 30vw, 370px);
+    --card-w: clamp(210px, 19vw, 270px);
     --track-gap: 1.4rem;
   }
 

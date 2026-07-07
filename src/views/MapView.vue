@@ -35,10 +35,20 @@ import HabitatCard from '../components/map/HabitatCard.vue'
 import { useGameStore } from '../store/gameStore'
 import { useBillingStore } from '../store/billingStore'
 import { getLevelDefinition } from '../engine/logic/utils/validateTemplates'
-import SlothCharacter from '../assets/characters/Sloth.png'
-import BearCharacter from '../assets/characters/Bear.png'
-import FoxCharacter from '../assets/characters/Fox.png'
-import MonkeyCharacter from '../assets/characters/Mono.png'
+
+const BearCharacter = '/images/characters/bear.png'
+const ElephantCharacter = '/images/characters/elephant.png'
+const FoxCharacter = '/images/characters/fox.png'
+const MonkeyCharacter = '/images/characters/monkey.png'
+const SlothCharacter = '/images/characters/sloth.png'
+
+const habitatImages = {
+  sloth: '/images/habitats/sloth-tree.png',
+  fox: '/images/habitats/fox-burrow.png',
+  bear: '/images/habitats/bear-honey-current.png',
+  monkey: '/images/habitats/monkey-jungle-current.png',
+  elephant: '/images/habitats/elephant-school-current.png'
+}
 
 const router = useRouter()
 const game = useGameStore()
@@ -54,8 +64,11 @@ const levelBlueprint = [
     levelId: 1,
     characterName: 'Oso perezoso',
     habitatDescription: 'El árbol',
-    habitat: '/images-optimized/habitats/sloth-tree.webp',
+    habitat: habitatImages.sloth,
     character: SlothCharacter,
+    characterScale: 1.14,
+    characterBottom: '-6%',
+    characterMobileBottom: '-8%',
     fallbackTitle: 'Árbol de la Calma'
   },
   {
@@ -63,8 +76,11 @@ const levelBlueprint = [
     levelId: 2,
     characterName: 'Zorro',
     habitatDescription: 'La Madriguera',
-    habitat: '/images-optimized/habitats/fox-burrow.webp',
+    habitat: habitatImages.fox,
     character: FoxCharacter,
+    characterScale: 1.1,
+    characterBottom: '-4%',
+    characterMobileBottom: '-6%',
     fallbackTitle: 'Madriguera de Palabras'
   },
   {
@@ -72,8 +88,11 @@ const levelBlueprint = [
     levelId: 3,
     characterName: 'Oso',
     habitatDescription: 'El bosque de Miel',
-    habitat: '/images-optimized/habitats/bear-honey.webp',
+    habitat: habitatImages.bear,
     character: BearCharacter,
+    characterScale: 1.08,
+    characterBottom: '-7%',
+    characterMobileBottom: '-9%',
     fallbackTitle: 'Bosque de la Miel'
   },
   {
@@ -81,8 +100,11 @@ const levelBlueprint = [
     levelId: 4,
     characterName: 'Mono',
     habitatDescription: 'Mundo lianas',
-    habitat: '/images-optimized/habitats/monkey-jungle.webp',
+    habitat: habitatImages.monkey,
     character: MonkeyCharacter,
+    characterScale: 1.02,
+    characterBottom: '-3%',
+    characterMobileBottom: '-5%',
     fallbackTitle: 'Jungla de las Letras'
   },
   {
@@ -90,8 +112,11 @@ const levelBlueprint = [
     levelId: 5,
     characterName: 'Elefante',
     habitatDescription: 'La escuela mágica',
-    habitat: '/images-optimized/habitats/elephant-school.webp',
-    character: '/images-optimized/characters/elephant.webp',
+    habitat: habitatImages.elephant,
+    character: ElephantCharacter,
+    characterScale: 1.08,
+    characterBottom: '-6%',
+    characterMobileBottom: '-8%',
     fallbackTitle: 'Escuela del Elefante Sabio'
   }
 ]
@@ -334,7 +359,7 @@ onBeforeUnmount(() => {
 
 @media (min-width: 980px) {
   .map-view__carousel {
-    --card-w: clamp(330px, 30vw, 390px);
+    --card-w: clamp(220px, 22vw, 280px);
     --track-gap: 1.45rem;
   }
 }

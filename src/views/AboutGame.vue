@@ -36,7 +36,7 @@
         <div class="about-grid">
           <div class="about-dialog">
             <div class="about-dialog-character" aria-hidden="true">
-              <img src="/images-optimized/characters/fox.webp" alt="" />
+              <img :src="characterImages.fox" alt="" />
             </div>
             <article class="about-bubble full-card full-card-1">
               <h2>¿Qué es?</h2>
@@ -49,7 +49,7 @@
 
           <div class="about-dialog about-dialog--reverse">
             <div class="about-dialog-character" aria-hidden="true">
-              <img src="/images-optimized/characters/bear.webp" alt="" />
+              <img :src="characterImages.bear" alt="" />
             </div>
             <article class="about-bubble audience-card">
               <h2>¿A quién acompaña?</h2>
@@ -63,7 +63,7 @@
 
           <div class="about-dialog">
             <div class="about-dialog-character" aria-hidden="true">
-              <img src="/images-optimized/characters/monkey.webp" alt="" />
+              <img :src="characterImages.monkey" alt="" />
             </div>
             <article class="about-bubble stacked-card stacked-card-1">
               <h2>Cómo funciona</h2>
@@ -77,7 +77,7 @@
 
           <div class="about-dialog about-dialog--reverse">
             <div class="about-dialog-character" aria-hidden="true">
-              <img src="/images-optimized/characters/elephant.webp" alt="" />
+              <img :src="ElephantCharacter" alt="" />
             </div>
             <article class="about-bubble stacked-card stacked-card-2">
               <h2>Metodología</h2>
@@ -92,7 +92,7 @@
 
           <div class="about-dialog">
             <div class="about-dialog-character" aria-hidden="true">
-              <img src="/images-optimized/characters/sloth.webp" alt="" />
+              <img :src="characterImages.sloth" alt="" />
             </div>
             <article class="about-bubble full-card full-card-2">
               <h2>Seguridad y bienestar</h2>
@@ -111,6 +111,13 @@
 </template>
 
 <script setup>
+const ElephantCharacter = '/images/characters/elephant.png'
+const characterImages = {
+  fox: '/images/characters/fox.png',
+  bear: '/images/characters/bear.png',
+  monkey: '/images/characters/monkey.png',
+  sloth: '/images/characters/sloth.png'
+}
 </script>
 
 <style scoped>

@@ -81,11 +81,12 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
 import { getLevelDefinition, listLevels } from '../engine/logic/utils/validateTemplates'
-import Perezoso from '../assets/characters/Sloth.png'
-import Zorro from '../assets/characters/Fox.png'
-import Oso from '../assets/characters/Bear.png'
-import Mono from '../assets/characters/Mono.png'
-import Elefante_graduado from '../assets/characters/elephant.png'
+
+const Zorro = '/images/characters/fox.png'
+const Oso = '/images/characters/bear.png'
+const Mono = '/images/characters/monkey.png'
+const Elefante_graduado = '/images/characters/elephant.png'
+const Perezoso = '/images/characters/sloth.png'
 
 const route = useRoute()
 const router = useRouter()
