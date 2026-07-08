@@ -5,7 +5,7 @@
     </div>
     <div class="celebration-card__content">
       <div class="celebration-card__stars" aria-hidden="true">
-        <span v-for="idx in 3" :key="idx">★</span>
+        <img v-for="idx in 3" :key="idx" :src="ICONS.star" alt="" />
       </div>
       <p>{{ message }}</p>
     </div>
@@ -13,6 +13,8 @@
 </template>
 
 <script setup>
+import { ICONS } from '../../constants/icons'
+
 defineProps({
   characterImg: { type: String, required: true },
   message: { type: String, default: '¡Muy bien!' }
@@ -53,10 +55,14 @@ defineProps({
 }
 .celebration-card__stars {
   display: inline-flex;
-  gap: 0.22rem;
-  color: #f59e0b;
-  font-size: 1.15rem;
-  letter-spacing: 0;
+  align-items: center;
+  gap: 0.18rem;
+}
+.celebration-card__stars img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(249, 158, 11, 0.28));
 }
 .celebration-card p {
   margin: 0;

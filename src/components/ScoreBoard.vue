@@ -1,11 +1,11 @@
 <template>
   <div class="scoreboard">
     <div class="metric metric-star">
-      <img class="metric-icon" src="/icons/star.PNG" alt="Estrellas" />
+      <img class="metric-icon" :src="ICONS.star" alt="Estrellas" />
       <strong class="metric-value">{{ stars }}</strong>
     </div>
     <div class="metric metric-trophy">
-      <img class="metric-icon" src="/icons/trophy.png" alt="Trofeo" />
+      <img class="metric-icon" :src="ICONS.trophy" alt="Trofeo" />
       <strong class="metric-value">{{ points }}</strong>
     </div>
     <div class="label">{{ label }}</div>
@@ -13,6 +13,8 @@
 </template>
 
 <script setup>
+import { ICONS } from '../constants/icons'
+
 defineProps({
   stars: { type: Number, default: 0 },
   points: { type: Number, default: 0 },

@@ -22,7 +22,7 @@
 
             <p class="hero-description">
               Para niños a partir de 4 años en adelante. Especialmente pensada para
-              dislexia, TDAH y fatiga cognitiva.
+              lectura inicial y necesidades de apoyo como dislexia, TDA/TDAH y DI.
             </p>
 
             <div class="hero-tags-shell">
@@ -30,7 +30,9 @@
               <div class="hero-tags" aria-label="Áreas clave">
                 <span class="hero-tag hero-tag--blue">Lectura</span>
                 <span class="hero-tag hero-tag--violet">Dislexia</span>
+                <span class="hero-tag hero-tag--green">TDA</span>
                 <span class="hero-tag hero-tag--pink">TDAH</span>
+                <span class="hero-tag hero-tag--amber">DI</span>
               </div>
             </div>
 
@@ -245,10 +247,10 @@ function heroFanCardStyle(index) {
   const depth = count - Math.abs(slot)
 
   return {
-    '--fan-x': `${slot * 72}px`,
-    '--fan-y': `${Math.abs(slot) * 14}px`,
-    '--fan-rotate': `${slot * 11}deg`,
-    '--fan-scale': `${1.08 - Math.abs(slot) * 0.04}`,
+    '--fan-x': `${slot * 88}px`,
+    '--fan-y': `${Math.abs(slot) * 16}px`,
+    '--fan-rotate': `${slot * 12}deg`,
+    '--fan-scale': `${1.14 - Math.abs(slot) * 0.035}`,
     '--fan-z': depth
   }
 }
@@ -319,7 +321,7 @@ onBeforeUnmount(() => {
 }
 
 .hero-grid {
-  --hero-card-height: clamp(360px, 38vw, 430px);
+  --hero-card-height: clamp(430px, 42vw, 500px);
   position: relative;
   z-index: 2;
   min-height: 108vh;
@@ -360,7 +362,7 @@ onBeforeUnmount(() => {
   position: relative;
   width: min(100%, 500px);
   min-height: 0;
-  flex: 0 1 calc(100% - 86px);
+  flex: 0 1 calc(100% - 76px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -371,7 +373,7 @@ onBeforeUnmount(() => {
   isolation: isolate;
   display: block;
   width: 100%;
-  min-height: clamp(258px, 28vw, 326px);
+  min-height: clamp(310px, 32vw, 382px);
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -403,7 +405,7 @@ onBeforeUnmount(() => {
   left: 50%;
   bottom: 0;
   z-index: 2;
-  width: clamp(176px, 19vw, 232px);
+  width: clamp(218px, 23vw, 286px);
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border: 3px solid rgba(255, 255, 255, 0.88);
@@ -419,7 +421,7 @@ onBeforeUnmount(() => {
 }
 
 .hero-character-feature:hover .hero-character-feature-bg {
-  transform: translateX(-50%) rotate(0.4deg) scale(1.02);
+  transform: translateX(-50%) rotate(0.4deg) scale(1.035);
 }
 
 .hero-character-feature::before {
@@ -428,13 +430,10 @@ onBeforeUnmount(() => {
   left: 50%;
   bottom: 0;
   z-index: 3;
-  width: clamp(176px, 19vw, 232px);
+  width: clamp(218px, 23vw, 286px);
   aspect-ratio: 3 / 4;
   border-radius: 24px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.02) 38%, rgba(66, 126, 158, 0.18)),
-    radial-gradient(circle at 16% 14%, rgba(255, 255, 255, 0.62) 0 7%, transparent 8%),
-    radial-gradient(circle at 84% 22%, rgba(255, 238, 152, 0.5) 0 8%, transparent 9%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.02) 38%, rgba(66, 126, 158, 0.18));
   transform: translateX(-50%) rotate(-0.6deg);
   pointer-events: none;
 }
@@ -465,7 +464,7 @@ onBeforeUnmount(() => {
   position: absolute;
   left: 50%;
   bottom: 4%;
-  width: clamp(112px, 12.5vw, 158px);
+  width: clamp(132px, 14.5vw, 184px);
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.82);
@@ -504,9 +503,7 @@ onBeforeUnmount(() => {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 40%),
-    linear-gradient(0deg, rgba(30, 64, 54, 0.14), rgba(255, 255, 255, 0));
+  background: linear-gradient(0deg, rgba(30, 64, 54, 0.14), rgba(255, 255, 255, 0));
   pointer-events: none;
 }
 
@@ -522,28 +519,16 @@ onBeforeUnmount(() => {
 }
 
 .hero-character-glow {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  z-index: 4;
-  width: clamp(176px, 19vw, 232px);
-  aspect-ratio: 3 / 4;
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.38) 0 8%, transparent 22%),
-    radial-gradient(circle at 74% 27%, rgba(255, 244, 170, 0.26) 0 9%, transparent 24%);
-  transform: translateX(-50%) rotate(-0.6deg);
-  animation: heroCharacterSparkle 4.8s ease-in-out infinite;
-  pointer-events: none;
+  display: none;
 }
 
 .hero-character-img {
   position: absolute;
   left: 50%;
-  bottom: 8%;
+  bottom: 9%;
   z-index: 5;
-  width: clamp(148px, 17vw, 212px);
-  max-height: 72%;
+  width: clamp(176px, 20vw, 252px);
+  max-height: 76%;
   object-fit: contain;
   transform: translateX(-50%);
   transform-origin: 50% 85%;
@@ -685,17 +670,25 @@ onBeforeUnmount(() => {
   background: #7a66f5;
 }
 
+.hero-tag--green {
+  background: #22a36b;
+}
+
 .hero-tag--pink {
   background: #e475cd;
+}
+
+.hero-tag--amber {
+  background: #d28a16;
 }
 
 .hero-device-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(0.7rem, 1.5vw, 1rem);
-  width: min(100%, 430px);
-  margin-top: 0;
-  padding-bottom: 0.25rem;
+  gap: clamp(0.55rem, 1.1vw, 0.78rem);
+  width: min(100%, 350px);
+  margin-top: clamp(0.72rem, 1.35vw, 1.05rem);
+  padding-bottom: 0;
 }
 
 .hero-btn {
@@ -704,18 +697,18 @@ onBeforeUnmount(() => {
   width: 100%;
   min-width: 0;
   justify-content: center;
-  min-height: 56px;
+  min-height: 48px;
   font-weight: 900;
-  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+  font-size: clamp(0.86rem, 1.15vw, 0.98rem);
   line-height: 1.1;
-  padding: 0.76rem 0.9rem 0.84rem;
-  border-radius: 18px;
+  padding: 0.62rem 0.76rem 0.68rem;
+  border-radius: 15px;
   border: 2px solid rgba(255, 255, 255, 0.84);
   letter-spacing: 0;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.58);
   box-shadow:
-    0 10px 0 var(--hero-btn-edge),
-    0 16px 24px rgba(66, 98, 120, 0.22),
+    0 7px 0 var(--hero-btn-edge),
+    0 12px 18px rgba(66, 98, 120, 0.18),
     inset 0 2px 0 rgba(255, 255, 255, 0.72),
     inset 0 -2px 0 rgba(255, 255, 255, 0.24);
   transform: translateY(0);
@@ -723,50 +716,30 @@ onBeforeUnmount(() => {
 }
 
 .hero-btn::after {
-  content: '';
-  position: absolute;
-  inset: 3px 5px auto;
-  height: 42%;
-  border-radius: 15px 15px 12px 12px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0));
-  mix-blend-mode: screen;
-  pointer-events: none;
+  content: none;
 }
 
 .hero-btn::before {
-  content: '';
-  position: absolute;
-  left: 14px;
-  top: 11px;
-  width: 9px;
-  height: 9px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 13px 7px 0 rgba(255, 255, 255, 0.48);
-  pointer-events: none;
+  content: none;
 }
 
 .hero-btn--soft {
   --hero-btn-edge: #f3b84f;
-  background:
-    radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.72) 0 10%, transparent 11%),
-    linear-gradient(180deg, #fff2a7 0%, #ffd76f 55%, #ffbd72 100%);
+  background: linear-gradient(180deg, #fff2a7 0%, #ffd76f 55%, #ffbd72 100%);
   color: #8a4b13 !important;
 }
 
 .hero-btn--accent {
   --hero-btn-edge: #65a7df;
-  background:
-    radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.72) 0 10%, transparent 11%),
-    linear-gradient(180deg, #c9f3ff 0%, #8edbff 55%, #9bbcff 100%);
+  background: linear-gradient(180deg, #c9f3ff 0%, #8edbff 55%, #9bbcff 100%);
   color: #17507c !important;
 }
 
 .hero-btn:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow:
-    0 13px 0 var(--hero-btn-edge),
-    0 20px 28px rgba(66, 98, 120, 0.24),
+    0 9px 0 var(--hero-btn-edge),
+    0 16px 22px rgba(66, 98, 120, 0.2),
     inset 0 2px 0 rgba(255, 255, 255, 0.78),
     inset 0 -2px 0 rgba(255, 255, 255, 0.28);
   filter: saturate(1.04) brightness(1.03);
@@ -775,8 +748,8 @@ onBeforeUnmount(() => {
 .hero-btn:active {
   transform: translateY(6px) scale(0.99);
   box-shadow:
-    0 4px 0 var(--hero-btn-edge),
-    0 8px 16px rgba(66, 98, 120, 0.18),
+    0 3px 0 var(--hero-btn-edge),
+    0 7px 13px rgba(66, 98, 120, 0.16),
     inset 0 2px 0 rgba(255, 255, 255, 0.62),
     inset 0 -1px 0 rgba(255, 255, 255, 0.24);
 }
@@ -960,15 +933,16 @@ onBeforeUnmount(() => {
     --hero-card-height: auto;
     grid-template-columns: 1fr;
     padding:
-      7.2rem
+      clamp(9.4rem, 28vw, 12rem)
       1rem
       3.2rem;
-    gap: 0.35rem;
+    gap: 0.85rem;
   }
 
   .hero-content {
     height: auto;
     margin-inline: auto;
+    padding-top: 0.35rem;
     text-align: center;
   }
 
@@ -985,19 +959,19 @@ onBeforeUnmount(() => {
   }
 
   .hero-character-feature {
-    min-height: clamp(250px, 72vw, 318px);
+    min-height: clamp(292px, 84vw, 368px);
   }
 
   .hero-character-feature-bg,
   .hero-character-feature::before,
   .hero-character-glow {
-    width: clamp(158px, 50vw, 208px);
+    width: clamp(194px, 60vw, 250px);
     border-radius: 22px;
   }
 
   .hero-character-img {
-    width: clamp(132px, 42vw, 184px);
-    max-height: 70%;
+    width: clamp(158px, 48vw, 214px);
+    max-height: 74%;
   }
 
   .hero-character-fan {
@@ -1005,7 +979,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-character-fan-card {
-    width: clamp(84px, 27vw, 116px);
+    width: clamp(98px, 31vw, 136px);
   }
 
   .hero-character-meta {
@@ -1036,8 +1010,16 @@ onBeforeUnmount(() => {
   }
 
   .hero-device-actions {
-    width: min(100%, 420px);
+    width: min(100%, 330px);
+    margin-top: 0.82rem;
     padding-bottom: 0.3rem;
+  }
+
+  .hero-btn {
+    min-height: 45px;
+    font-size: 0.86rem;
+    padding: 0.58rem 0.68rem 0.62rem;
+    border-radius: 14px;
   }
 
   .home-learn-sections {

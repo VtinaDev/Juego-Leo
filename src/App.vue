@@ -50,7 +50,7 @@
               @focus="setTip('map', true)"
               @blur="setTip('map', false)"
             >
-              <img class="header-action-img" src="/icons/mapa.PNG" alt="Mapa" />
+              <img class="header-action-img" :src="ICONS.map" alt="Mapa" />
             </RouterLink>
             <span v-if="tooltips.map" class="tooltip tooltip--below" role="status">Mapa</span>
           </div>
@@ -65,7 +65,7 @@
               @focus="setTip('profile', true)"
               @blur="setTip('profile', false)"
             >
-              <img class="header-action-img" src="/icons/perfil.PNG" alt="Perfil" />
+              <img class="header-action-img" :src="ICONS.profile" alt="Perfil" />
             </button>
             <span v-if="tooltips.profile" class="tooltip tooltip--below" role="status">Perfil</span>
           </div>
@@ -204,6 +204,7 @@ import { useAuthStore } from './store/authStore'
 import { useGameStore } from './store/gameStore'
 import AudioToggles from './components/AudioToggles.vue'
 import { unlockAudio, playSfx, getAudioSettings } from './engine/audio/audioManager.js'
+import { ICONS } from './constants/icons'
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()

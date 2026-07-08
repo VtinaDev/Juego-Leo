@@ -10,7 +10,7 @@
         :aria-label="`Repetir: ${message}`"
         @click="$emit('play')"
       >
-        <img src="/icons/audio.PNG" alt="" aria-hidden="true" />
+        <img :src="ICONS.audio" alt="" aria-hidden="true" />
       </button>
       <span class="guided-tutor-card__message">{{ message }}</span>
       <div class="guided-tutor-card__dots" aria-hidden="true">
@@ -26,6 +26,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { ICONS } from '../../constants/icons'
 
 const props = defineProps({
   characterImg: { type: String, required: true },

@@ -1,5 +1,5 @@
 <template>
-  <section class="congrats-shell">
+  <section class="congrats-shell" :style="congratsBackgroundStyle">
     <div class="confetti confetti-a" />
     <div class="confetti confetti-b" />
     <div class="confetti confetti-c" />
@@ -17,7 +17,7 @@
         <div class="congrats-info">
           <p class="lead flex items-center justify-start gap-3 text-left">
             ¡Sigue la aventura!
-            <img src="/icons/celebration.png" alt="Celebración" class="celebration-icon" />
+            <img :src="ICONS.celebration" alt="Celebración" class="celebration-icon" />
           </p>
 
           <div class="pill" :style="{ borderColor: levelColor }">
@@ -34,7 +34,7 @@
               :key="n"
               class="star-img star-img-lg"
               :class="{ active: n <= earnedStars }"
-              src="/icons/star.PNG"
+              :src="ICONS.star"
               alt="Estrella"
             />
             <p class="stars-label">Estrellas obtenidas</p>
@@ -48,7 +48,7 @@
               aria-label="Volver"
               :style="{ borderColor: levelColor }"
             >
-              <img src="/icons/back.PNG" alt="Volver" class="icon-img" />
+              <img :src="ICONS.back" alt="Volver" class="icon-img" />
               <span class="action-label">Repetir etapa</span>
             </button>
             <button
@@ -58,7 +58,7 @@
               :aria-label="primaryLabel"
               :style="{ borderColor: levelColor }"
             >
-              <img src="/icons/next.PNG" alt="Siguiente" class="icon-img" />
+              <img :src="ICONS.next" alt="Siguiente" class="icon-img" />
               <span class="action-label">{{ hasNextTarget ? 'Siguiente etapa' : 'Ir al mapa' }}</span>
             </button>
           </div>
@@ -81,12 +81,21 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useGameStore } from '../store/gameStore'
 import { getLevelDefinition, listLevels } from '../engine/logic/utils/validateTemplates'
+import { ICONS } from '../constants/icons'
 
 const Zorro = '/images/characters/fox.png'
 const Oso = '/images/characters/bear.png'
 const Mono = '/images/characters/monkey.png'
 const Elefante_graduado = '/images/characters/elephant.png'
 const Perezoso = '/images/characters/sloth.png'
+
+const habitatImages = {
+  1: '/images/habitats/sloth-tree.png',
+  2: '/images/habitats/fox-burrow.png',
+  3: '/images/habitats/bear-honey-current.png',
+  4: '/images/habitats/monkey-jungle-current.png',
+  5: '/images/habitats/elephant-school-current.png'
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -167,6 +176,10 @@ const hasNextTarget = computed(() => nextTarget.value !== null)
 
 const levelLabel = computed(() => levelMeta.value?.levelName ?? `Nivel ${levelNumber.value}`)
 const levelColor = computed(() => levelMeta.value?.color ?? '#2563eb')
+const habitatImage = computed(() => habitatImages[levelNumber.value] || habitatImages[1])
+const congratsBackgroundStyle = computed(() => ({
+  backgroundImage: `url('${habitatImage.value}')`
+}))
 const primaryLabel = computed(() =>
   hasNextTarget.value ? 'Ir a la siguiente etapa' : 'Explorar niveles'
 )
@@ -247,9 +260,9 @@ function goToLevels() {
   display: grid;
   place-items: center;
   padding: 2.5rem 1.25rem;
-  background-image: url('@/views/fondo-congrats.PNG');
+  background-color: #ecfccb;
   background-size: cover;
-  background-position: center;
+  background-position: center 38%;
   background-repeat: no-repeat;
   position: relative;
   overflow: hidden;

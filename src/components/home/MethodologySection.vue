@@ -26,29 +26,31 @@
 </template>
 
 <script setup>
+import { ICONS } from '../../constants/icons'
+
 const items = [
   {
-    icon: '/icons/brain.PNG',
+    icon: ICONS.brain,
     title: 'Aprendizaje con calma',
     text: 'Ejercicios cortos y claros que evitan la sobrecarga y la fatiga cognitiva.'
   },
   {
-    icon: '/icons/repeat.PNG',
+    icon: ICONS.repeat,
     title: 'Repetición que da seguridad',
     text: 'Repetimos las actividades con pequeñas variaciones para reforzar sin aburrir.'
   },
   {
-    icon: '/icons/correct.PNG',
+    icon: ICONS.correct,
     title: 'Error mínimo, más confianza',
     text: 'El juego guía al niño para reducir errores y aumentar la sensación de logro.'
   },
   {
-    icon: '/icons/puzzle.PNG',
+    icon: ICONS.puzzle,
     title: 'Lectura paso a paso',
     text: 'Desde palabras simples hasta frases y comprensión lectora, sin saltos bruscos.'
   },
   {
-    icon: '/icons/audio.PNG',
+    icon: ICONS.audio,
     title: 'Apoyo visual y auditivo',
     text: 'Imágenes claras y opción de audio para facilitar la comprensión y la atención.'
   }
@@ -86,9 +88,12 @@ const items = [
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
+  isolation: isolate;
 }
 
 .methodology-card {
+  position: relative;
+  z-index: 0;
   background: rgba(241, 245, 249, 0.86);
   border: 1px solid rgba(34, 197, 94, 0.5);
   border-radius: 18px;
@@ -102,20 +107,22 @@ const items = [
   cursor: pointer;
   transform: scale(1);
   transform-origin: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease, background-color 0.24s ease;
   will-change: transform;
 }
 
 .methodology-card:hover,
 .methodology-card:focus-within {
-  transform: translateY(-2px) scale(1.03);
-  border-color: rgba(34, 197, 94, 0.75);
-  box-shadow: 0 14px 26px rgba(34, 197, 94, 0.26);
+  z-index: 4;
+  transform: translateY(-12px) scale(1.16);
+  border-color: rgba(34, 197, 94, 0.95);
+  background: #ffffff;
+  box-shadow: 0 24px 48px rgba(34, 197, 94, 0.34);
 }
 
 .methodology-card:active {
-  transform: scale(1.06);
-  box-shadow: 0 16px 30px rgba(34, 197, 94, 0.3);
+  transform: translateY(-8px) scale(1.12);
+  box-shadow: 0 20px 40px rgba(34, 197, 94, 0.32);
 }
 
 .methodology-icon {

@@ -2,7 +2,7 @@
   <section class="benefits" aria-labelledby="benefits-title">
     <div class="benefits-inner">
       <div class="benefits-card-banner">
-        <h2 id="benefits-title">Aprender a leer puede ser tranquilo.</h2>
+        <h2 id="benefits-title">Aprender a leer puede ser divertido.</h2>
         <p class="banner-sub">
           Sesiones cortas, guiadas y sin presión, pensadas para el ritmo de cada niño.
         </p>
@@ -23,21 +23,23 @@
 </template>
 
 <script setup>
+import { ICONS } from '../../constants/icons'
+
 const benefitItems = [
   {
     title: 'Sin presión',
     text: 'Sin tiempo límite, sin comparaciones y con reintentos suaves.',
-    icon: '/icons/perfil.PNG'
+    icon: ICONS.profile
   },
   {
     title: '10–15 minutos',
     text: 'Sesiones breves para evitar fatiga y mantener la atención.',
-    icon: '/icons/clock.PNG'
+    icon: ICONS.clock
   },
   {
     title: 'Paso a paso',
     text: 'Progresión gradual: letras, sílabas, palabras y comprensión.',
-    icon: '/icons/puzzle.PNG'
+    icon: ICONS.puzzle
   }
 ]
 </script>
@@ -82,9 +84,12 @@ const benefitItems = [
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
+  isolation: isolate;
 }
 
 .benefit-card {
+  position: relative;
+  z-index: 0;
   background: rgba(241, 245, 249, 0.86);
   border: 1px solid rgba(135, 197, 34, 0.5);
   border-radius: 16px;
@@ -97,20 +102,22 @@ const benefitItems = [
   cursor: pointer;
   transform: scale(1);
   transform-origin: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease, background-color 0.24s ease;
   will-change: transform;
 }
 
 .benefit-card:hover,
 .benefit-card:focus-within {
-  transform: translateY(-2px) scale(1.03);
-  border-color: rgba(140, 197, 34, 0.75);
-  box-shadow: 0 14px 26px rgba(129, 197, 34, 0.26);
+  z-index: 4;
+  transform: translateY(-12px) scale(1.16);
+  border-color: rgba(140, 197, 34, 0.95);
+  background: #ffffff;
+  box-shadow: 0 24px 48px rgba(129, 197, 34, 0.34);
 }
 
 .benefit-card:active {
-  transform: scale(1.06);
-  box-shadow: 0 16px 30px rgba(132, 197, 34, 0.3);
+  transform: translateY(-8px) scale(1.12);
+  box-shadow: 0 20px 40px rgba(132, 197, 34, 0.32);
 }
 
 .benefit-icon {

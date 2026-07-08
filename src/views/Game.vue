@@ -61,14 +61,19 @@
                 <div class="smartick-progress">
                   <div class="avatar-chip" :class="{ 'avatar-chip--celebrate': celebrateAvatar }">
                     <img :src="characterImage" alt="Avatar" />
-                    <span v-if="celebrateAvatar" class="avatar-reward" aria-hidden="true">⭐</span>
+                    <span v-if="celebrateAvatar" class="avatar-reward" aria-hidden="true">
+                      <img :src="ICONS.star" alt="" />
+                    </span>
                   </div>
                   <div class="score-track">
                     <div class="score-stars">
-                      <span
+                      <img
                         v-for="(filled, idx) in starTrack"
                         :key="`star-${idx}`"
-                        :class="['star-dot', { 'star-dot--filled': filled }]"
+                        :src="ICONS.star"
+                        alt=""
+                        aria-hidden="true"
+                        :class="['score-star-icon', { 'score-star-icon--filled': filled }]"
                       />
                     </div>
                     <div class="score-points">{{ game.points || 0 }} pts</div>
@@ -84,13 +89,13 @@
                 </div>
                 <div class="smartick-actions">
                   <RouterLink class="map-only-link" to="/mapview" aria-label="Volver al mapa">
-                    <img src="/icons/mapa.PNG" alt="Mapa" class="map-only-icon" />
+                    <img :src="ICONS.map" alt="Mapa" class="map-only-icon" />
                   </RouterLink>
                   <button class="icon-btn" type="button" @click="handlePrev" aria-label="Anterior">
-                    <img src="/icons/back.PNG" alt="" aria-hidden="true" class="action-icon-img" />
+                    <img :src="ICONS.back" alt="" aria-hidden="true" class="action-icon-img" />
                   </button>
                   <button class="icon-btn" type="button" @click="handleSkip" aria-label="Saltar">
-                    <img src="/icons/next.PNG" alt="" aria-hidden="true" class="action-icon-img" />
+                    <img :src="ICONS.next" alt="" aria-hidden="true" class="action-icon-img" />
                   </button>
                 </div>
               </div>
@@ -853,6 +858,7 @@ import GuidedTutor from '../components/exercises/GuidedTutor.vue'
 import CompleteWordVisual from '../components/exercises/CompleteWordVisual.vue'
 import CelebrationCard from '../components/exercises/CelebrationCard.vue'
 import KaraokeText from '../components/accessibility/KaraokeText.vue'
+import { ICONS } from '../constants/icons'
 
 const Zorro = '/images/characters/fox.png'
 const Oso = '/images/characters/bear.png'
@@ -3397,18 +3403,22 @@ function shuffleArray(arr) {
   align-items: center;
   gap: 0.3rem;
 }
-.star-dot {
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  background: #e2e8f0;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+.score-star-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.24;
+  filter: grayscale(0.35) drop-shadow(0 1px 2px rgba(15, 23, 42, 0.12));
 }
-.star-dot--filled {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  border-color: #f59e0b;
-  box-shadow: 0 6px 12px rgba(249, 158, 11, 0.25);
+.score-star-icon--filled {
+  opacity: 1;
+  filter: drop-shadow(0 6px 10px rgba(249, 158, 11, 0.28));
+}
+.avatar-reward img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 8px rgba(249, 158, 11, 0.3));
 }
 .score-points {
   font-weight: 700;
@@ -3784,8 +3794,8 @@ function shuffleArray(arr) {
     padding: 0.46rem 0.58rem;
   }
   .smartick-card-head {
-    margin-bottom: 0.38rem;
-    padding-bottom: 0.18rem;
+    margin-bottom: 0.55rem;
+    padding-bottom: 0.24rem;
   }
   .smartick-card-content {
     min-height: 0;
@@ -3820,16 +3830,20 @@ function shuffleArray(arr) {
     padding: 0.42rem 0.48rem 0.52rem;
   }
   .game-view.compact-mobile .smartick-card-head {
-    margin-bottom: 0.28rem;
-    padding-bottom: 0.14rem;
+    margin-bottom: 0.48rem;
+    padding-bottom: 0.22rem;
   }
   .smartick-topbar {
     width: 100%;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "progress stage"
+      "actions actions";
     justify-items: stretch;
-    gap: 0.35rem;
+    gap: 0.46rem 0.35rem;
   }
   .smartick-progress {
+    grid-area: progress;
     gap: 0.38rem;
     min-width: 0;
   }
@@ -3840,10 +3854,9 @@ function shuffleArray(arr) {
   .score-stars {
     gap: 0.16rem;
   }
-  .star-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 4px;
+  .score-star-icon {
+    width: 16px;
+    height: 16px;
   }
   .score-points {
     font-size: 0.72rem;
@@ -3851,6 +3864,7 @@ function shuffleArray(arr) {
     white-space: nowrap;
   }
   .smartick-stage {
+    grid-area: stage;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -3865,8 +3879,12 @@ function shuffleArray(arr) {
     line-height: 1;
   }
   .smartick-actions {
-    justify-self: end;
-    gap: 0.28rem;
+    grid-area: actions;
+    justify-self: center;
+    display: inline-flex;
+    justify-content: center;
+    gap: 0.72rem;
+    padding: 0.2rem 0.4rem 0.1rem;
   }
   .game-view.compact-mobile .avatar-chip {
     width: 34px;
@@ -3878,9 +3896,9 @@ function shuffleArray(arr) {
     height: 28px;
   }
   .game-view.compact-mobile .icon-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 13px;
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
   }
   .game-view.compact-mobile .stage-pill {
     padding: 0.18rem 0.45rem;
@@ -3921,7 +3939,7 @@ function shuffleArray(arr) {
     padding: 0.34rem 0.4rem 0.42rem;
   }
   .game-view.ultra-compact-mobile .smartick-card-head {
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.42rem;
     padding-bottom: 0.18rem;
   }
   .game-view.ultra-compact-mobile .stage-pill {
@@ -3965,38 +3983,50 @@ function shuffleArray(arr) {
     max-height: min(118px, 19vh);
   }
   .game-view.compact-mobile .map-only-icon {
-    width: 34px;
-    height: 34px;
+    width: 48px;
+    height: 48px;
   }
   .game-view.compact-mobile .action-icon-img {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
   }
   .game-view.ultra-compact-mobile .icon-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
   }
   .game-view.ultra-compact-mobile .map-only-icon {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
   }
   .game-view.ultra-compact-mobile .action-icon-img {
-    width: 18px;
-    height: 18px;
+    width: 28px;
+    height: 28px;
   }
   .map-only-icon {
-    width: 34px;
-    height: 34px;
+    width: 48px;
+    height: 48px;
+  }
+  .map-only-link {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 10px 18px rgba(15, 23, 42, 0.1);
+  }
+  .game-view.ultra-compact-mobile .map-only-link {
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
   }
   .icon-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 14px;
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
   }
   .action-icon-img {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
   }
 }
 </style>

@@ -25,7 +25,7 @@
             <img
               v-for="star in reward.stars"
               :key="star"
-              src="/icons/star.PNG"
+              :src="ICONS.star"
               alt=""
               aria-hidden="true"
             />
@@ -96,6 +96,7 @@
 
 <script setup>
 import LevelStation from './LevelStation.vue'
+import { ICONS } from '../../constants/icons'
 
 defineProps({
   level: {

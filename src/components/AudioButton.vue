@@ -9,7 +9,7 @@
     <span v-if="isSpeaking">⏸️</span>
     <img
       v-else
-      src="/icons/audio.PNG"
+      :src="ICONS.audio"
       alt=""
       class="audio-button__icon"
       aria-hidden="true"
@@ -21,6 +21,7 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { getAudioSettings, playSfx, playVoice, stopVoice, unlockAudio } from '../engine/audio/audioManager'
 import { getExerciseNarrationText } from '../utils/getExerciseNarrationText'
+import { ICONS } from '../constants/icons'
 
 const props = defineProps<{
   exercise?: any

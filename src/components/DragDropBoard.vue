@@ -31,7 +31,7 @@
         aria-label="Reiniciar"
         title="Reiniciar"
       >
-        <img src="/icons/next.PNG" alt="" aria-hidden="true" />
+        <img :src="ICONS.next" alt="" aria-hidden="true" />
       </button>
       <button
         v-if="!hideSubmit"
@@ -41,7 +41,7 @@
         aria-label="Continuar"
         title="Continuar"
       >
-        <img src="/icons/next.PNG" alt="" aria-hidden="true" />
+        <img :src="ICONS.next" alt="" aria-hidden="true" />
       </button>
     </div>
   </div>
@@ -49,6 +49,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { ICONS } from '../constants/icons'
 
 const props = defineProps({
   prompt: { type: String, default: 'Ordena las palabras' },
