@@ -711,7 +711,7 @@
             "come",
             "manzana"
           ],
-          "image": "/images/niña-manzana.png",
+          "image": "/images/niña-manzana.png",
           "imageAlt": "Niña con una manzana",
           "hint": "Pon las palabras en orden.",
           "onCorrect": "celebrate",
@@ -2014,7 +2014,7 @@
           ],
           "correct": "un plátano",
           "audio": "/audio/app-voice/l3-aq-2.mp3",
-          "image": "/images/platáno.png",
+          "image": "/images/platáno.png",
           "imageAlt": "Mono comiendo un plátano",
           "hint": "Si no escuchas audio, lee el texto 'context'.",
           "onCorrect": "celebrate",
@@ -2080,7 +2080,7 @@
             "Está cantando"
           ],
           "correct": "Está comiendo",
-          "image": "/images/niña-manzana.png",
+          "image": "/images/niña-manzana.png",
           "imageAlt": "Niña con una manzana",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
@@ -2218,7 +2218,7 @@
             "Un tren"
           ],
           "correct": "Una flor",
-          "image": "/images/niña-pinta.PNG",
+          "image": "/images/niña-pinta.PNG",
           "imageAlt": "Niña pintando una flor",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
@@ -2379,7 +2379,7 @@
             "Leche roja"
           ],
           "correct": "Agua",
-          "image": "/images/niña-bebe.png",
+          "image": "/images/niña-bebe.png",
           "imageAlt": "Niña bebiendo agua fresca",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
@@ -2499,7 +2499,7 @@
             "Canta una canción"
           ],
           "correct": "Dibuja una flor",
-          "image": "/images/niña-pinta.PNG",
+          "image": "/images/niña-pinta.PNG",
           "imageAlt": "Sofía dibujando una flor",
           "hint": "Busca el verbo de la frase.",
           "onCorrect": "celebrate",
@@ -2965,7 +2965,7 @@
             "Presente"
           ],
           "correct": "Presente",
-          "image": "/images/niña-manzana.png",
+          "image": "/images/niña-manzana.png",
           "imageAlt": "Niña con una manzana",
           "hint": "Pasa ahora.",
           "onCorrect": "celebrate",
@@ -4114,7 +4114,7 @@
             "comí"
           ],
           "correct": "como",
-          "image": "/images/niña-manzana.png",
+          "image": "/images/niña-manzana.png",
           "imageAlt": "Niña con una manzana",
           "hint": "Ahora indica que la acción ocurre en presente.",
           "onCorrect": "celebrate",
