@@ -1082,6 +1082,14 @@ onBeforeUnmount(() => {
   .home {
     width: 100%;
     max-width: 100vw;
+    background: linear-gradient(
+      180deg,
+      #fff7cf 0%,
+      #fff1b8 34%,
+      #fff9de 58%,
+      #fffdf4 78%,
+      #ffffff 100%
+    );
   }
 
   .hero-stage,
@@ -1091,7 +1099,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-art {
-    background-color: #d6ebff;
+    background-color: #fff7cf;
   }
 
   .hero-grid {
@@ -1204,6 +1212,17 @@ onBeforeUnmount(() => {
     padding-top: 2rem;
     padding-bottom: 2.5rem;
     row-gap: 2.5rem;
+    background: linear-gradient(
+      180deg,
+      #fff9de 0%,
+      #fffbed 18rem,
+      #fffdf8 34rem,
+      #ffffff 100%
+    );
+  }
+
+  .home-learn-sections :deep(.benefits) {
+    background: transparent;
   }
 }
 
