@@ -155,6 +155,33 @@ const benefitItems = [
   }
 }
 
+@media (max-width: 639px) {
+  .benefits {
+    width: 100%;
+    padding: 1.75rem 0.75rem 2rem;
+  }
+
+  .benefits-inner,
+  .benefits-grid,
+  .benefit-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .benefits-card-banner h2 {
+    font-size: clamp(1.3rem, 7vw, 1.6rem);
+    line-height: 1.18;
+  }
+
+  .banner-sub {
+    font-size: 0.94rem;
+  }
+
+  .benefit-card {
+    padding: 1rem;
+  }
+}
+
 @media (min-width: 960px) {
   .benefits-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));

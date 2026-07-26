@@ -96,4 +96,45 @@
   font-weight: 900;
   box-shadow: 0 7px 14px rgba(22, 101, 52, 0.08);
 }
+
+@media (max-width: 639px) {
+  .home-about {
+    width: 100%;
+    min-height: auto;
+    padding: 2.5rem 0.75rem;
+  }
+
+  .home-about__inner,
+  .home-about__content {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .home-about__content {
+    gap: 0.7rem;
+    padding: 1.15rem 0.9rem;
+    border-radius: 18px;
+  }
+
+  .home-about__content h2 {
+    font-size: clamp(1.25rem, 7vw, 1.55rem);
+    overflow-wrap: anywhere;
+  }
+
+  .home-about__content p:not(.home-about__eyebrow) {
+    font-size: 0.94rem;
+    line-height: 1.48;
+  }
+
+  .home-about__points {
+    width: 100%;
+    gap: 0.4rem;
+  }
+
+  .home-about__points span {
+    min-height: 28px;
+    padding: 0.32rem 0.55rem;
+    font-size: 0.72rem;
+  }
+}
 </style>

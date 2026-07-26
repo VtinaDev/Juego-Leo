@@ -1079,10 +1079,15 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 768px) {
+  .home {
+    width: 100%;
+    max-width: 100vw;
+  }
+
   .hero-stage,
   .hero-art,
   .hero-grid {
-    min-height: 112dvh;
+    min-height: 0;
   }
 
   .hero-art {
@@ -1092,14 +1097,18 @@ onBeforeUnmount(() => {
   .hero-grid {
     --hero-card-height: auto;
     grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 100vw;
     padding:
-      clamp(9.4rem, 28vw, 12rem)
-      1rem
-      3.2rem;
-    gap: 0.85rem;
+      clamp(7.6rem, 25vw, 9.4rem)
+      clamp(0.75rem, 4vw, 1rem)
+      2.5rem;
+    gap: 1.1rem;
   }
 
   .hero-content {
+    width: 100%;
+    max-width: 34rem;
     height: auto;
     margin-inline: auto;
     padding-top: 0.35rem;
@@ -1107,10 +1116,11 @@ onBeforeUnmount(() => {
   }
 
   .hero-visual {
-    width: min(100%, 360px);
+    width: min(100%, 340px);
+    max-width: calc(100vw - 1.5rem);
     height: auto;
     margin-inline: auto;
-    margin-top: 0.8rem;
+    margin-top: 0.35rem;
   }
 
   .hero-character-panel {
@@ -1119,7 +1129,7 @@ onBeforeUnmount(() => {
   }
 
   .hero-character-feature {
-    min-height: clamp(292px, 84vw, 368px);
+    min-height: clamp(250px, 78vw, 330px);
   }
 
   .hero-character-feature-bg,
@@ -1136,10 +1146,12 @@ onBeforeUnmount(() => {
 
   .hero-character-fan {
     inset: 0 0 5%;
+    transform: scale(0.72);
+    transform-origin: 50% 100%;
   }
 
   .hero-character-fan-card {
-    width: clamp(98px, 31vw, 136px);
+    width: clamp(94px, 30vw, 126px);
   }
 
   .hero-character-meta {
@@ -1155,10 +1167,14 @@ onBeforeUnmount(() => {
 
   .hero-description {
     margin-inline: auto;
+    max-width: 32rem;
+    font-size: clamp(0.88rem, 4vw, 1rem);
   }
 
   .hero-tags-shell {
+    width: 100%;
     margin-inline: auto;
+    padding: 0.65rem;
   }
 
   .hero-tags {
@@ -1166,7 +1182,8 @@ onBeforeUnmount(() => {
   }
 
   .hero-title {
-    font-size: clamp(1.9rem, 8vw, 2.9rem);
+    font-size: clamp(1.7rem, 8vw, 2.65rem);
+    overflow-wrap: anywhere;
   }
 
   .hero-device-actions {
@@ -1183,9 +1200,49 @@ onBeforeUnmount(() => {
   }
 
   .home-learn-sections {
-    padding-top: 2.75rem;
-    padding-bottom: 3rem;
-    row-gap: 3.25rem;
+    width: 100%;
+    padding-top: 2rem;
+    padding-bottom: 2.5rem;
+    row-gap: 2.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-grid {
+    padding-inline: 0.65rem;
+  }
+
+  .hero-title {
+    font-size: 1.65rem;
+  }
+
+  .hero-character-feature {
+    min-height: 245px;
+  }
+
+  .hero-character-fan {
+    transform: scale(0.62);
+  }
+
+  .hero-character-feature-bg,
+  .hero-character-feature::before,
+  .hero-character-glow {
+    width: min(60vw, 210px);
+  }
+
+  .hero-character-img {
+    width: min(48vw, 176px);
+  }
+
+  .hero-character-meta {
+    max-width: 60%;
+    transform: translateX(calc(-50% - 15px));
+  }
+
+  .hero-character-cue {
+    left: calc(50% + 15px);
+    min-width: 68px;
+    padding-inline: 0.55rem;
   }
 }
 
