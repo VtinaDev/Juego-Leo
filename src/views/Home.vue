@@ -309,6 +309,15 @@ onBeforeUnmount(() => {
   position: relative;
   min-height: 108vh;
   overflow-x: hidden;
+  background: linear-gradient(
+    180deg,
+    #fff7cf 0%,
+    #fff1b8 28%,
+    #fff9de 52%,
+    #fffbed 72%,
+    #fffdf8 88%,
+    #ffffff 100%
+  );
 }
 
 .hero-stage {
@@ -1051,7 +1060,13 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 2;
   margin-top: 0;
-  background: #ffffff;
+  background: linear-gradient(
+    180deg,
+    #fff9de 0%,
+    #fffbed 30%,
+    #fffdf8 68%,
+    #ffffff 100%
+  );
   padding-top: clamp(2.75rem, 6vw, 5rem);
   padding-bottom: clamp(3rem, 7vw, 5.5rem);
   display: grid;
@@ -1060,6 +1075,15 @@ onBeforeUnmount(() => {
 
 .home-learn-sections :deep(.methodology-section) {
   margin-top: 0;
+}
+
+.home-learn-sections :deep(.benefits),
+.home-learn-sections :deep(.home-about) {
+  background-color: transparent;
+}
+
+.home-learn-sections :deep(.home-about) {
+  background-image: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

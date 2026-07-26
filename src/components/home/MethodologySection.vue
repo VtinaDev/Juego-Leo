@@ -356,7 +356,7 @@ const items = [
   width: 108px;
   height: 108px;
   object-fit: contain;
-  filter: drop-shadow(0 12px 16px rgba(15, 23, 42, 0.18));
+  filter: none;
 }
 
 .methodology-carousel__bubble {
@@ -368,7 +368,7 @@ const items = [
   border: 2px solid rgba(14, 165, 233, 0.22);
   border-radius: 20px;
   background: #ffffff;
-  box-shadow: 0 8px 0 rgba(14, 165, 233, 0.14), 0 14px 22px rgba(15, 23, 42, 0.1);
+  box-shadow: none;
   text-align: left;
 }
 
