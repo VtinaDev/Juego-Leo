@@ -935,6 +935,8 @@ function characterStyle(level) {
 @media (max-width: 767px) {
   .habitat-card {
     width: 100%;
+    max-width: 100vw;
+    min-width: 0;
     border-radius: 0;
   }
 
@@ -947,8 +949,11 @@ function characterStyle(level) {
   }
 
   .habitat-card__media {
+    width: 100%;
     min-height: var(--habitat-media-height, 400px);
     height: var(--habitat-media-height, 100dvh);
+    padding: clamp(4.8rem, 14dvh, 7rem) 0.5rem 0.65rem;
+    gap: 0.45rem;
   }
 
   .habitat-card__character {
@@ -963,9 +968,42 @@ function characterStyle(level) {
   }
 
   .habitat-card__habitat-scene {
-    top: 50%;
-    width: clamp(245px, 78vw, 310px);
-    border-radius: 22px;
+    top: auto;
+    flex: 0 1 auto;
+    width: min(
+      calc(100vw - 3.5rem),
+      calc((100dvh - 185px) * 0.6667),
+      310px
+    );
+    max-width: 100%;
+    border-radius: clamp(17px, 5vw, 22px);
+  }
+
+  .habitat-card__bottom {
+    right: 0.5rem;
+    bottom: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .habitat-card__footer {
+    gap: 0.45rem;
+    padding: 0.55rem;
+    border-radius: 13px;
+  }
+
+  .habitat-card__level-copy strong {
+    font-size: clamp(0.72rem, 3.4vw, 0.84rem);
+  }
+
+  .habitat-card__level-copy p {
+    font-size: clamp(0.58rem, 2.8vw, 0.66rem);
+  }
+
+  .habitat-card__image-btn {
+    min-width: 76px;
+    min-height: 32px;
+    padding: 0.35rem 0.55rem;
+    font-size: 0.72rem;
   }
 
   .habitat-card__stages {
@@ -975,6 +1013,50 @@ function characterStyle(level) {
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.58);
     backdrop-filter: blur(12px) saturate(1.04);
+  }
+
+  .habitat-card__level-progress {
+    width: min(
+      calc(100vw - 3.5rem),
+      calc((100dvh - 185px) * 0.6667),
+      310px
+    );
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .habitat-card__level-progress p {
+    gap: 0.4rem;
+  }
+
+  .habitat-card__level-progress p strong {
+    font-size: 0.74rem;
+  }
+
+  .habitat-card__level-progress p span {
+    font-size: 0.6rem;
+  }
+
+  .habitat-card__stage-circles {
+    justify-content: flex-start;
+    max-width: 100%;
+    gap: 0.4rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.15rem 0.1rem 0.25rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .habitat-card__stage-circles::-webkit-scrollbar {
+    display: none;
+  }
+
+  .habitat-card__stage-circles > * {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 0.7rem;
   }
 
   .habitat-card__stages-toggle {
@@ -1038,6 +1120,45 @@ function characterStyle(level) {
 
   .stage-chip small {
     font-size: 0.52rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .habitat-card__media {
+    padding-inline: 0.35rem;
+  }
+
+  .habitat-card__habitat-scene,
+  .habitat-card__level-progress {
+    width: min(
+      calc(100vw - 2.75rem),
+      calc((100dvh - 175px) * 0.6667),
+      285px
+    );
+  }
+
+  .habitat-card__footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .habitat-card__image-btn {
+    width: 100%;
+  }
+}
+
+@media (max-height: 650px) and (max-width: 767px) {
+  .habitat-card__media {
+    padding-top: 4.4rem;
+  }
+
+  .habitat-card__habitat-scene,
+  .habitat-card__level-progress {
+    width: min(calc(100vw - 3.5rem), calc((100dvh - 150px) * 0.6667), 270px);
+  }
+
+  .habitat-card__level-copy p {
+    -webkit-line-clamp: 1;
   }
 }
 

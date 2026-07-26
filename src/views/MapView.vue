@@ -440,6 +440,13 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 767px) {
+  .map-view,
+  .map-view__carousel,
+  .map-view__track {
+    width: 100%;
+    max-width: 100vw;
+  }
+
   .map-view__header-zone {
     width: min(100vw, 390px);
     top: 8.7rem;
@@ -482,6 +489,9 @@ onBeforeUnmount(() => {
   .map-view__card {
     --map-stage-top: 4.55rem;
     --map-badge-top: 8.9rem;
+    width: 100vw;
+    max-width: 100vw;
+    min-width: 100vw;
   }
 
   .map-view__arrow {
@@ -496,6 +506,22 @@ onBeforeUnmount(() => {
 
   .map-view__arrow--next {
     right: 0.45rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .map-view__arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 1.6rem;
+  }
+
+  .map-view__arrow--prev {
+    left: 0.25rem;
+  }
+
+  .map-view__arrow--next {
+    right: 0.25rem;
   }
 }
 
