@@ -1082,10 +1082,6 @@ onBeforeUnmount(() => {
   background-color: transparent;
 }
 
-.home-learn-sections :deep(.home-about) {
-  background-image: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .confetti-dot,
   .btn-cta-pulse,
