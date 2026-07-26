@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '../views/Home.vue'
-import AboutGame from '../views/AboutGame.vue'
 import Congrats from '../views/Congrats.vue'
 import Game from '../views/Game.vue'
 import Levels from '../views/Levels.vue'
@@ -13,7 +12,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', name: 'Home', component: Home },
-    { path: '/aboutgame', name: 'AboutGame', component: AboutGame },
     { path: '/congrats', name: 'Congrats', component: Congrats },
     { path: '/game/:level/:stage', name: 'Game', component: Game },
     { path: '/levels', name: 'Levels', component: Levels },
@@ -21,7 +19,14 @@ const router = createRouter({
     { path: '/profile', name: 'Profile', component: Profile },
     { path: '/subscribe', name: 'Subscribe', component: Subscribe },
   ],
-  scrollBehavior() {
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth'
+      }
+    }
+
     return { top: 0 }
   },
 })

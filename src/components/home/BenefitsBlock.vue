@@ -90,12 +90,12 @@ const benefitItems = [
 .benefit-card {
   position: relative;
   z-index: 0;
-  background: rgba(241, 245, 249, 0.86);
-  border: 1px solid rgba(135, 197, 34, 0.5);
-  border-radius: 16px;
-  padding: 1.1rem 1rem;
-  box-shadow: none;
-  backdrop-filter: blur(1px);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.86);
+  border-radius: 22px;
+  padding: 1.2rem 1.1rem;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+  backdrop-filter: blur(10px);
   display: grid;
   gap: 0.4rem;
   text-align: left;
@@ -109,15 +109,15 @@ const benefitItems = [
 .benefit-card:hover,
 .benefit-card:focus-within {
   z-index: 4;
-  transform: translateY(-12px) scale(1.16);
-  border-color: rgba(140, 197, 34, 0.95);
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(140, 197, 34, 0.58);
   background: #ffffff;
-  box-shadow: 0 24px 48px rgba(129, 197, 34, 0.34);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.11);
 }
 
 .benefit-card:active {
-  transform: translateY(-8px) scale(1.12);
-  box-shadow: 0 20px 40px rgba(132, 197, 34, 0.32);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.09);
 }
 
 .benefit-icon {

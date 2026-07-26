@@ -13,7 +13,7 @@ export const SFX_SOURCES = {
 }
 
 export const MUSIC_SOURCES = {
-  intro: '',
+  intro: '/audio/music/intro-music.mp3',
   nature: ''
 }
 

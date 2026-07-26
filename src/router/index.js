@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../store/authStore'
 
 import Home from '../views/Home.vue'
-import AboutGame from '../views/AboutGame.vue'
 import Congrats from '../views/Congrats.vue'
 import Game from '../views/Game.vue'
 import MapView from '../views/MapView.vue'
@@ -15,7 +14,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', name: 'Home', component: Home },
-    { path: '/aboutgame', name: 'AboutGame', component: AboutGame },
     { path: '/congrats', name: 'Congrats', component: Congrats },
     { path: '/game/:levelId/:stageId',name: 'game',component: Game, meta: { requiresAuth: true } },
     { path: '/mapview', name: 'MapView', component: MapView, meta: { requiresAuth: true } },
@@ -25,7 +23,14 @@ const router = createRouter({
     { path: '/batch-viewer', name: 'batch-viewer', component: BatchViewer },
 
   ],
-  scrollBehavior() {
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth'
+      }
+    }
+
     return { top: 0 }
   },
 })

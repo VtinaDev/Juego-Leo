@@ -50,19 +50,19 @@
 [L1-EL1-CCW-1] Historias para dormir.
 [L1-EL1-CCW-2] Elige la palabra correcta
 [L1-EL1-CCW-2] Guía a los barcos de noche.
-[L2-EL2-MC-1] Encierra el nombre correcto del dibujo: sol
+[L2-EL2-MC-1] Selecciona el nombre correcto del dibujo: sol
 [L2-EL2-MC-1] Fíjate en la vocal que suena en medio (o).
-[L2-EL2-MC-2] Encierra el nombre correcto del dibujo: sapo
+[L2-EL2-MC-2] Selecciona el nombre correcto del dibujo: sapo
 [L2-EL2-MC-2] Escucha el sonido de la primera y la última sílaba: sa-po.
-[L2-EL2-MC-3] Encierra el nombre correcto del dibujo: sopa
+[L2-EL2-MC-3] Selecciona el nombre correcto del dibujo: sopa
 [L2-EL2-MC-3] Busca la sílaba central que suena 'o'.
-[L2-EL2-MC-4] Encierra el nombre correcto del dibujo: mesa
+[L2-EL2-MC-4] Selecciona el nombre correcto del dibujo: mesa
 [L2-EL2-MC-4] Pon atención al sonido de la primera vocal (e).
-[L2-EL2-MC-5] Encierra el nombre correcto del dibujo: oso
+[L2-EL2-MC-5] Selecciona el nombre correcto del dibujo: oso
 [L2-EL2-MC-5] Suena igual al decirlo y escribirlo: o-so.
-[L2-EL2-MC-6] Encierra el nombre correcto del dibujo: pato
+[L2-EL2-MC-6] Selecciona el nombre correcto del dibujo: pato
 [L2-EL2-MC-6] La palabra empieza como 'pa' de pato.
-[L2-EL2-MC-7] Encierra el nombre correcto del dibujo: luna
+[L2-EL2-MC-7] Selecciona el nombre correcto del dibujo: luna
 [L2-EL2-MC-7] Escucha el sonido 'lu-na' al decirlo.
 [L2-EL2-PS-1] Busca parejas que compartan significado.
 [L2-EL2-PS-2] Observa cómo cada palabra describe lo mismo.

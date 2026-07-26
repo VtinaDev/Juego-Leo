@@ -20,8 +20,10 @@
   --font-readable: 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
   --surface-soft: #f8fafc;
   --surface-warm: #fffaf0;
-  --shadow-soft: 0 12px 28px rgba(15, 23, 42, 0.1);
-  --shadow-lifted: 0 18px 36px rgba(15, 23, 42, 0.16);
+  --surface-glass: rgba(255, 255, 255, 0.78);
+  --surface-border: rgba(226, 232, 240, 0.82);
+  --shadow-soft: 0 10px 26px rgba(15, 23, 42, 0.08);
+  --shadow-lifted: 0 16px 34px rgba(15, 23, 42, 0.12);
   --motion-fast: 120ms;
   --motion-standard: 180ms;
   --motion-slow: 320ms;
@@ -89,17 +91,17 @@ a {
   background: linear-gradient(145deg, var(--color-green), #7fc86c);
   border: none;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  box-shadow: 0 8px 18px rgba(74, 157, 97, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: transform var(--motion-standard) var(--ease-soft), box-shadow var(--motion-standard) var(--ease-soft), filter var(--motion-standard) var(--ease-soft);
 }
 .btn:hover {
   transform: translateY(-1px);
   filter: brightness(1.05);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 24px rgba(74, 157, 97, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.66);
 }
 .btn:active {
   transform: translateY(0);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  box-shadow: 0 5px 12px rgba(74, 157, 97, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.58);
 }
 .btn-primary {
   background: linear-gradient(145deg, var(--color-green), #7fc86c);
@@ -153,11 +155,12 @@ a {
 }
 
 .card {
-  background: linear-gradient(180deg, #f8f7e8 0%, #ffffff 80%);
+  background: var(--surface-glass);
   border-radius: var(--radius-md);
-  padding: 0.9rem 1rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  padding: 1rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(12px);
 }
 
 .header-transparent {
@@ -212,6 +215,31 @@ a {
 .header-transparent .btn-icon:active {
   transform: scale(0.94) !important;
   filter: brightness(1.02) !important;
+}
+
+/* Botones planos: conserva color y jerarquía sin relieve 3D. */
+button,
+.btn,
+[role='button'],
+.stage-chip,
+.hero-btn,
+.habitat-card__image-btn {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+button::before,
+button::after,
+.btn::before,
+.btn::after,
+[role='button']::before,
+[role='button']::after,
+.stage-chip::before,
+.hero-btn::before,
+.hero-btn::after,
+.habitat-card__image-btn::before,
+.habitat-card__image-btn::after {
+  box-shadow: none !important;
 }
 
 .footer-wave {

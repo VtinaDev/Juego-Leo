@@ -51,19 +51,19 @@ level,stage,exercise_id,subtype,field,text
 1,6,L1-CCW-1,CHOOSE_CORRECT_WORD,hint,Historias para dormir.
 1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,prompt,Elige la palabra correcta
 1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,hint,Guía a los barcos de noche.
-2,1,L2-MC-1,multiple_choice,question,Encierra el nombre correcto del dibujo: sol
+2,1,L2-MC-1,multiple_choice,question,Selecciona el nombre correcto del dibujo: sol
 2,1,L2-MC-1,multiple_choice,hint,Fíjate en la vocal que suena en medio (o).
-2,1,L2-MC-2,multiple_choice,question,Encierra el nombre correcto del dibujo: sapo
+2,1,L2-MC-2,multiple_choice,question,Selecciona el nombre correcto del dibujo: sapo
 2,1,L2-MC-2,multiple_choice,hint,Escucha el sonido de la primera y la última sílaba: sa-po.
-2,1,L2-MC-3,multiple_choice,question,Encierra el nombre correcto del dibujo: sopa
+2,1,L2-MC-3,multiple_choice,question,Selecciona el nombre correcto del dibujo: sopa
 2,1,L2-MC-3,multiple_choice,hint,Busca la sílaba central que suena 'o'.
-2,1,L2-MC-4,multiple_choice,question,Encierra el nombre correcto del dibujo: mesa
+2,1,L2-MC-4,multiple_choice,question,Selecciona el nombre correcto del dibujo: mesa
 2,1,L2-MC-4,multiple_choice,hint,Pon atención al sonido de la primera vocal (e).
-2,1,L2-MC-5,multiple_choice,question,Encierra el nombre correcto del dibujo: oso
+2,1,L2-MC-5,multiple_choice,question,Selecciona el nombre correcto del dibujo: oso
 2,1,L2-MC-5,multiple_choice,hint,Suena igual al decirlo y escribirlo: o-so.
-2,1,L2-MC-6,multiple_choice,question,Encierra el nombre correcto del dibujo: pato
+2,1,L2-MC-6,multiple_choice,question,Selecciona el nombre correcto del dibujo: pato
 2,1,L2-MC-6,multiple_choice,hint,La palabra empieza como 'pa' de pato.
-2,1,L2-MC-7,multiple_choice,question,Encierra el nombre correcto del dibujo: luna
+2,1,L2-MC-7,multiple_choice,question,Selecciona el nombre correcto del dibujo: luna
 2,1,L2-MC-7,multiple_choice,hint,Escucha el sonido 'lu-na' al decirlo.
 2,2,L2-PS-1,pair_synonyms,hint,Busca parejas que compartan significado.
 2,2,L2-PS-2,pair_synonyms,hint,Observa cómo cada palabra describe lo mismo.

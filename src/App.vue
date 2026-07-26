@@ -87,7 +87,9 @@
       <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-gray-700 text-center space-y-2">
         <div class="flex justify-center gap-4 text-green-700">
           <RouterLink to="/subscribe" class="underline">Suscripción</RouterLink>
-          <RouterLink to="/aboutgame" class="underline">Sobre el juego</RouterLink>
+          <a href="/#sobre-el-juego" class="underline" @click.prevent="goToAboutSection">
+            Sobre el juego
+          </a>
         </div>
         <div class="footer-credits">
           Imágenes: <a href="https://www.pexels.com/photo/parents-teaching-their-child-to-read-in-the-living-room-8054841/" target="_blank" rel="noopener noreferrer">Pexels (familia)</a>,
@@ -223,6 +225,16 @@ const showAuth = ref(false)
 const canInstall = ref(false)
 let deferredPrompt = null
 const showSettings = ref(false)
+
+async function goToAboutSection() {
+  await router.push({ path: '/', hash: '#sobre-el-juego' })
+  window.requestAnimationFrame(() => {
+    document.querySelector('#sobre-el-juego')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+  })
+}
 const tooltips = ref({
   settings: false,
   install: false,
@@ -649,15 +661,25 @@ function setTip(key, value) {
 
 @media (max-width: 768px) {
   :root {
-    --mobile-logo-slot: clamp(112px, 31vw, 172px);
+    --mobile-logo-slot: clamp(92px, 27vw, 136px);
     --mobile-icons-gap: clamp(0.16rem, 1vw, 0.35rem);
-    --mobile-icon-size: clamp(48px, calc((100vw - var(--mobile-logo-slot) - 1.9rem) / 3), 86px);
+    --mobile-icon-size: clamp(46px, calc((100vw - var(--mobile-logo-slot) - 2.2rem) / 3), 60px);
+  }
+  .header-overlay,
+  .header-transparent {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: transparent;
+    border-bottom: 0;
+    box-shadow: none;
+    backdrop-filter: none;
   }
   .header-overlay nav {
     padding-top: max(0.35rem, env(safe-area-inset-top));
   }
   .header-transparent nav {
-    padding: 0.3rem 0.45rem;
+    padding: 0.28rem 0.55rem 0.34rem;
     gap: 0.2rem;
     display: flex;
     flex-wrap: nowrap;
@@ -667,8 +689,8 @@ function setTip(key, value) {
   .brand-logo {
     height: auto;
     width: var(--mobile-logo-slot);
-    min-width: 112px;
-    max-width: 172px;
+    min-width: 92px;
+    max-width: 136px;
   }
   .brand-logo-link {
     margin-right: 0.1rem;
@@ -731,6 +753,21 @@ function setTip(key, value) {
   right: 0;
   z-index: 40;
   background: transparent;
+}
+
+@media (max-width: 768px) {
+  .header-overlay,
+  .header-transparent {
+    position: sticky;
+    top: 0;
+    left: auto;
+    right: auto;
+    z-index: 50;
+    background: transparent;
+    border-bottom: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
 }
 
 </style>

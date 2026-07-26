@@ -156,7 +156,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/select-image-word.mp3"
+          "audio": "/audio/app-voice/l1-iwm-1.mp3"
         },
         {
           "id": "L1-IWM-REF-2",
@@ -178,7 +178,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/select-image-word.mp3"
+          "audio": "/audio/app-voice/l1-iwm-1.mp3"
         },
         {
           "id": "L1-IWM-REF-3",
@@ -200,7 +200,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/select-image-word.mp3"
+          "audio": "/audio/app-voice/l1-iwm-1.mp3"
         },
         {
           "id": "L1-IWM-REF-4",
@@ -222,7 +222,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/select-image-word.mp3"
+          "audio": "/audio/app-voice/l1-iwm-1.mp3"
         }
       ],
       "CHOOSE_CORRECT_WORD": [
@@ -463,28 +463,6 @@
           "onError": "gentleRetry"
         },
         {
-          "id": "L1-CS-REF-1",
-          "type": "complete_sentence",
-          "prompt": "La luna ____ de noche.",
-          "options": [
-            "brilla",
-            "salta"
-          ],
-          "correct": "brilla",
-          "image": "/images/L1/luna.PNG",
-          "imageAlt": "Luna",
-          "hint": "La luna da luz suave.",
-          "onCorrect": "celebrate",
-          "onError": "gentleRetry",
-          "allowRetry": true,
-          "feedbackStyle": "calm",
-          "progressiveHints": true,
-          "calmFeedback": true,
-          "structuredLearning": true,
-          "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/l1-cs-1.mp3"
-        },
-        {
           "id": "L1-CS-REF-2",
           "type": "complete_sentence",
           "prompt": "El sapo ____ cerca del río.",
@@ -504,7 +482,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/l1-cs-1.mp3"
+          "audio": "/audio/app-voice/l3-so-1.mp3"
         },
         {
           "id": "L1-CS-REF-3",
@@ -526,29 +504,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/l1-cs-1.mp3"
-        },
-        {
-          "id": "L1-CS-REF-4",
-          "type": "complete_sentence",
-          "prompt": "La flor ____ en el jardín.",
-          "options": [
-            "crece",
-            "duerme"
-          ],
-          "correct": "crece",
-          "image": "/images/L1/florazul.PNG",
-          "imageAlt": "Flor azul",
-          "hint": "Las flores crecen poco a poco.",
-          "onCorrect": "celebrate",
-          "onError": "gentleRetry",
-          "allowRetry": true,
-          "feedbackStyle": "calm",
-          "progressiveHints": true,
-          "calmFeedback": true,
-          "structuredLearning": true,
-          "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/l1-cs-1.mp3"
+          "audio": "/audio/app-voice/l3-aq-vc-1.mp3"
         }
       ],
       "order_sentence": [
@@ -701,7 +657,8 @@
             "perro",
             "corre"
           ],
-          "image": "/images/L1/nino.PNG",
+          "image": "/images/perro.PNG",
+          "imageAlt": "Perro corriendo",
           "hint": "Pon las palabras en orden.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -726,8 +683,8 @@
             "cocina",
             "sopa"
           ],
-          "image": "/images/L2/sopa.PNG",
-          "imageAlt": "Sopa",
+          "image": "/images/mama.PNG",
+          "imageAlt": "Mamá cocinando sopa",
           "hint": "Pon las palabras en orden.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -754,7 +711,8 @@
             "come",
             "manzana"
           ],
-          "image": "/images/L1/nino.PNG",
+          "image": "/images/niña-manzana.png",
+          "imageAlt": "Niña con una manzana",
           "hint": "Pon las palabras en orden.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -1062,7 +1020,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/prompt-ordena-las-palabras.mp3"
+          "audio": "/audio/app-voice/l1-os-2.mp3"
         },
         {
           "id": "L1-OS-REF-2",
@@ -1089,7 +1047,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/prompt-ordena-las-palabras.mp3"
+          "audio": "/audio/app-voice/l1-os-2.mp3"
         },
         {
           "id": "L1-OS-REF-3",
@@ -1116,7 +1074,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/prompt-ordena-las-palabras.mp3"
+          "audio": "/audio/app-voice/l1-os-2.mp3"
         },
         {
           "id": "L1-OS-REF-4",
@@ -1143,7 +1101,7 @@
           "calmFeedback": true,
           "structuredLearning": true,
           "teachBeforeAssess": true,
-          "audio": "/audio/app-voice/prompt-ordena-las-palabras.mp3"
+          "audio": "/audio/app-voice/l1-os-2.mp3"
         }
       ],
       "read_with_audio": [
@@ -1310,13 +1268,13 @@
         {
           "id": "L2-MC-1",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo.",
+          "question": "Selecciona el nombre correcto del dibujo.",
           "options": [
             "sol",
             "sal"
           ],
           "correct": "sol",
-          "audio": "/audio/app-voice/select-image-word.mp3",
+          "audio": "/audio/app-voice/l2-mc-1.mp3",
           "image": "/images/L2/sol.PNG",
           "imageAlt": "Sol",
           "emoji": "",
@@ -1327,13 +1285,13 @@
         {
           "id": "L2-MC-2",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo.",
+          "question": "Selecciona el nombre correcto del dibujo.",
           "options": [
             "sipo",
             "sapo"
           ],
           "correct": "sapo",
-          "audio": "/audio/app-voice/select-image-word.mp3",
+          "audio": "/audio/app-voice/l2-mc-2.mp3",
           "image": "/images/L2/sapo.PNG",
           "imageAlt": "Sapo",
           "emoji": "",
@@ -1344,13 +1302,13 @@
         {
           "id": "L2-MC-3",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo.",
+          "question": "Selecciona el nombre correcto del dibujo.",
           "options": [
             "sepa",
             "sopa"
           ],
           "correct": "sopa",
-          "audio": "/audio/app-voice/select-image-word.mp3",
+          "audio": "/audio/app-voice/l2-mc-3.mp3",
           "image": "/images/L2/sopa.PNG",
           "imageAlt": "Sopa",
           "emoji": "",
@@ -1361,13 +1319,13 @@
         {
           "id": "L2-MC-4",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo.",
+          "question": "Selecciona el nombre correcto del dibujo.",
           "options": [
             "mesa",
             "misa"
           ],
           "correct": "mesa",
-          "audio": "/audio/app-voice/select-image-word.mp3",
+          "audio": "/audio/app-voice/l2-mc-4.mp3",
           "image": "/images/L2/mesa.PNG",
           "imageAlt": "Mesa",
           "emoji": "",
@@ -1378,13 +1336,13 @@
         {
           "id": "L2-MC-5",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo.",
+          "question": "Selecciona el nombre correcto del dibujo.",
           "options": [
             "osu",
             "oso"
           ],
           "correct": "oso",
-          "audio": "/audio/app-voice/select-image-word.mp3",
+          "audio": "/audio/app-voice/l2-mc-5.mp3",
           "image": "/images/L2/oso.PNG",
           "imageAlt": "Oso",
           "emoji": "",
@@ -1395,13 +1353,13 @@
         {
           "id": "L2-MC-6",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo.",
+          "question": "Selecciona el nombre correcto del dibujo.",
           "options": [
             "mato",
             "pato"
           ],
           "correct": "pato",
-          "audio": "/audio/app-voice/select-image-word.mp3",
+          "audio": "/audio/app-voice/l2-mc-6.mp3",
           "image": "/images/L2/pato.png",
           "imageAlt": "Pato",
           "emoji": "🦆",
@@ -1412,13 +1370,13 @@
         {
           "id": "L2-MC-7",
           "type": "multiple_choice",
-          "question": "Encierra el nombre correcto del dibujo.",
+          "question": "Selecciona el nombre correcto del dibujo.",
           "options": [
             "lupa",
             "luna"
           ],
           "correct": "luna",
-          "audio": "/audio/app-voice/select-image-word.mp3",
+          "audio": "/audio/app-voice/l2-mc-7.mp3",
           "image": "/images/L2/luna.png",
           "imageAlt": "Luna",
           "emoji": "🌙",
@@ -2034,8 +1992,8 @@
           ],
           "correct": "Un conejo",
           "audio": "/audio/app-voice/l3-aq-1.mp3",
-          "image": "/images-optimized/habitats/arbol.webp",
-          "imageAlt": "Bosque como apoyo visual",
+          "image": "/images/conejo-puente.PNG",
+          "imageAlt": "Conejo cruzando un puente",
           "hint": "Lee el contexto si no hay audio disponible.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2056,8 +2014,8 @@
           ],
           "correct": "un plátano",
           "audio": "/audio/app-voice/l3-aq-2.mp3",
-          "image": "/images/characters/monkey.png",
-          "imageAlt": "Mono",
+          "image": "/images/platáno.png",
+          "imageAlt": "Mono comiendo un plátano",
           "hint": "Si no escuchas audio, lee el texto 'context'.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2122,8 +2080,8 @@
             "Está cantando"
           ],
           "correct": "Está comiendo",
-          "image": "/images/L1/nino.PNG",
-          "imageAlt": "Niña",
+          "image": "/images/niña-manzana.png",
+          "imageAlt": "Niña con una manzana",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2145,8 +2103,8 @@
             "Duerme"
           ],
           "correct": "Corre",
-          "image": "/images-optimized/habitats/arbol.webp",
-          "imageAlt": "Parque con árboles",
+          "image": "/images/perro.PNG",
+          "imageAlt": "Perro corriendo en el parque",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2168,8 +2126,8 @@
             "Un mapa"
           ],
           "correct": "Sopa",
-          "image": "/images/L2/sopa.PNG",
-          "imageAlt": "Sopa",
+          "image": "/images/mama.PNG",
+          "imageAlt": "Mamá cocinando sopa",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2260,8 +2218,8 @@
             "Un tren"
           ],
           "correct": "Una flor",
-          "image": "/images/L1/florazul.PNG",
-          "imageAlt": "Flor",
+          "image": "/images/niña-pinta.PNG",
+          "imageAlt": "Niña pintando una flor",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2283,8 +2241,8 @@
             "Baila"
           ],
           "correct": "Lee",
-          "image": "/images/L1/cuento.PNG",
-          "imageAlt": "Lectura",
+          "image": "/images/abuelo-lee.png",
+          "imageAlt": "Abuelo leyendo el periódico",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2352,8 +2310,8 @@
             "Enfadado"
           ],
           "correct": "Contento",
-          "image": "/images/L1/nino.PNG",
-          "imageAlt": "Niño contento",
+          "image": "/images/bebe.png",
+          "imageAlt": "Bebé contento jugando con una pelota",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2375,8 +2333,8 @@
             "Por el mar"
           ],
           "correct": "Por el bosque",
-          "image": "/images-optimized/habitats/arbol.webp",
-          "imageAlt": "Bosque",
+          "image": "/images/familia.png",
+          "imageAlt": "Familia caminando por el bosque",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2398,8 +2356,8 @@
             "Plancha"
           ],
           "correct": "Canta",
-          "image": "/images/L1/colibri.PNG",
-          "imageAlt": "Pájaro",
+          "image": "/images/pajaro.png",
+          "imageAlt": "Pájaro cantando en una rama",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2421,8 +2379,8 @@
             "Leche roja"
           ],
           "correct": "Agua",
-          "image": "/images/L1/rio.PNG",
-          "imageAlt": "Agua del río",
+          "image": "/images/niña-bebe.png",
+          "imageAlt": "Niña bebiendo agua fresca",
           "hint": "Lee la frase corta.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2541,8 +2499,8 @@
             "Canta una canción"
           ],
           "correct": "Dibuja una flor",
-          "image": "/images/L1/florazul.PNG",
-          "imageAlt": "Flor azul",
+          "image": "/images/niña-pinta.PNG",
+          "imageAlt": "Sofía dibujando una flor",
           "hint": "Busca el verbo de la frase.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -2589,8 +2547,8 @@
             "Porque quiere comprar pan"
           ],
           "correct": "Porque le duele una pata",
-          "image": "/images/L1/nino.PNG",
-          "imageAlt": "Niño como apoyo de personaje",
+          "image": "/images/perro.PNG",
+          "imageAlt": "Perro como apoyo visual",
           "hint": "Busca la palabra porque.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -3007,6 +2965,8 @@
             "Presente"
           ],
           "correct": "Presente",
+          "image": "/images/niña-manzana.png",
+          "imageAlt": "Niña con una manzana",
           "hint": "Pasa ahora.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -3029,8 +2989,8 @@
             "Futuro"
           ],
           "correct": "Futuro",
-          "image": "/images/L2/sopa.PNG",
-          "imageAlt": "Sopa",
+          "image": "/images/mama.PNG",
+          "imageAlt": "Mamá cocinando sopa",
           "hint": "Pronto señala futuro.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
@@ -4154,6 +4114,8 @@
             "comí"
           ],
           "correct": "como",
+          "image": "/images/niña-manzana.png",
+          "imageAlt": "Niña con una manzana",
           "hint": "Ahora indica que la acción ocurre en presente.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",

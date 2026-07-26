@@ -13,6 +13,18 @@
         <img :src="ICONS.audio" alt="" aria-hidden="true" />
       </button>
       <span class="guided-tutor-card__message">{{ message }}</span>
+      <div v-if="safeConceptItems.length" class="guided-tutor-card__concepts" aria-label="Mini lección visual">
+        <span
+          v-for="item in safeConceptItems"
+          :key="item.label"
+          class="guided-tutor-card__concept"
+          :class="`guided-tutor-card__concept--${item.tone || 'sky'}`"
+        >
+          <span aria-hidden="true">{{ item.icon }}</span>
+          <strong>{{ item.label }}</strong>
+          <small v-if="item.note">{{ item.note }}</small>
+        </span>
+      </div>
       <div class="guided-tutor-card__dots" aria-hidden="true">
         <span
           v-for="(_, stepIdx) in steps"
@@ -32,12 +44,14 @@ const props = defineProps({
   characterImg: { type: String, required: true },
   step: { type: Object, default: null },
   steps: { type: Array, default: () => [] },
-  stepIndex: { type: Number, default: 0 }
+  stepIndex: { type: Number, default: 0 },
+  conceptItems: { type: Array, default: () => [] }
 })
 
 defineEmits(['play'])
 
 const message = computed(() => props.step?.message || props.step?.label || '')
+const safeConceptItems = computed(() => Array.isArray(props.conceptItems) ? props.conceptItems : [])
 const stepClass = computed(() => {
   const key = String(props.step?.key || 'default').replace(/[^a-z0-9_-]/gi, '')
   return `guided-tutor-card--${key || 'default'}`
@@ -131,6 +145,65 @@ const stepClass = computed(() => {
   font-size: clamp(1.2rem, 4.4vw, 1.72rem);
   line-height: 1.16;
 }
+.guided-tutor-card__concepts {
+  grid-column: 1 / -1;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.72rem;
+}
+.guided-tutor-card__concept {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  padding: 0.46rem 0.42rem;
+  border-radius: 16px;
+  background: #f8fbff;
+  border: 1px solid rgba(14, 165, 233, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  text-align: center;
+}
+.guided-tutor-card__concept > span {
+  color: var(--concept-accent, #0f766e);
+  font-size: clamp(0.78rem, 3.3vw, 0.95rem);
+  font-weight: 950;
+  line-height: 1;
+}
+.guided-tutor-card__concept strong {
+  color: var(--concept-title, #0f172a);
+  font-size: clamp(0.84rem, 3.7vw, 1.02rem);
+  line-height: 1;
+}
+.guided-tutor-card__concept small {
+  color: var(--concept-note, #64748b);
+  font-size: clamp(0.68rem, 3vw, 0.8rem);
+  font-weight: 800;
+  line-height: 1.05;
+}
+.guided-tutor-card__concept--amber {
+  --concept-accent: #ea580c;
+  --concept-title: #b45309;
+  --concept-note: #c2410c;
+  background: #fff7ed;
+  border-color: rgba(251, 146, 60, 0.36);
+}
+.guided-tutor-card__concept--green {
+  --concept-accent: #16a34a;
+  --concept-title: #15803d;
+  --concept-note: #0f766e;
+  background: #f0fdf4;
+  border-color: rgba(34, 197, 94, 0.34);
+}
+.guided-tutor-card__concept--blue {
+  --concept-accent: #0284c7;
+  --concept-title: #2563eb;
+  --concept-note: #0891b2;
+  background: #eff6ff;
+  border-color: rgba(56, 189, 248, 0.34);
+}
 .guided-tutor-card__dots {
   grid-column: 1 / -1;
   display: flex;
@@ -220,6 +293,14 @@ const stepClass = computed(() => {
   .guided-tutor-card__audio img {
     width: 28px;
     height: 28px;
+  }
+  .guided-tutor-card__concepts {
+    gap: 0.32rem;
+    margin-top: 0.6rem;
+  }
+  .guided-tutor-card__concept {
+    padding: 0.4rem 0.24rem;
+    border-radius: 14px;
   }
 }
 </style>

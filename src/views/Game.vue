@@ -117,19 +117,9 @@
               :step="guidedTutor"
               :steps="tutorSteps"
               :step-index="tutorStepIndex"
+              :concept-items="conceptMiniLesson"
               @play="playTutorCue"
             />
-            <div v-if="conceptMiniLesson" class="concept-mini-lesson" aria-label="Mini lección visual">
-              <span
-                v-for="item in conceptMiniLesson"
-                :key="item.label"
-                class="concept-mini-lesson__item"
-              >
-                <span aria-hidden="true">{{ item.icon }}</span>
-                <strong>{{ item.label }}</strong>
-                <small v-if="item.note">{{ item.note }}</small>
-              </span>
-            </div>
             <!-- ========= VISUAL COMÚN (todos los niveles) ========= -->
             <div
               v-if="
@@ -1168,12 +1158,12 @@ const tutorSteps = computed(() => {
 const guidedTutor = computed(() => tutorSteps.value[tutorStepIndex.value] ?? null)
 
 const conceptMiniLesson = computed(() => {
-  if (!current.value || currentStatus.value === 'ok' || Number(level.value) !== 5) return null
+  if (!current.value || currentStatus.value === 'ok' || Number(level.value) !== 5) return []
   if (current.value.type === 'tense_classify') {
     return [
-      { icon: 'Ayer', label: 'Pasado', note: 'Ya ocurrió' },
-      { icon: 'Hoy', label: 'Presente', note: 'Pasa ahora' },
-      { icon: 'Mañana', label: 'Futuro', note: 'Pasará después' }
+      { icon: 'Ayer', label: 'Pasado', note: 'Ya ocurrió', tone: 'amber' },
+      { icon: 'Hoy', label: 'Presente', note: 'Pasa ahora', tone: 'green' },
+      { icon: 'Mañana', label: 'Futuro', note: 'Pasará después', tone: 'blue' }
     ]
   }
   if (current.value.type === 'accent_game' || current.value.id === 'L5-FE-3') {
@@ -1190,7 +1180,7 @@ const conceptMiniLesson = computed(() => {
       { icon: '😌 .', label: 'Punto' }
     ]
   }
-  return null
+  return []
 })
 
 function clearTutorTimers() {
@@ -1735,7 +1725,7 @@ watch(
 )
 
 const EXERCISE_VOICE_CUE_BY_TYPE = {
-  IMAGE_WORD_MATCH: 'select-image-word'
+  IMAGE_WORD_MATCH: 'l1-iwm-1'
 }
 
 const EXERCISE_VOICE_CUE_BY_ID = {
@@ -1743,6 +1733,10 @@ const EXERCISE_VOICE_CUE_BY_ID = {
   'L1-OS-2': 'l1-os-2',
   'L1-OS-3': 'l1-os-3',
   'L1-OS-4': 'l1-os-4',
+  'L1-OS-REF-1': 'l1-os-2',
+  'L1-OS-REF-2': 'l1-os-2',
+  'L1-OS-REF-3': 'l1-os-2',
+  'L1-OS-REF-4': 'l1-os-2',
   'L1-CS-1': 'l1-cs-1',
   'L1-CS-2': 'l1-cs-2',
   'L1-CS-3': 'l1-cs-3',
@@ -1751,17 +1745,19 @@ const EXERCISE_VOICE_CUE_BY_ID = {
   'L1-CS-6': 'l1-cs-6',
   'L1-CS-7': 'l1-cs-7',
   'L1-CS-8': 'l1-cs-8',
+  'L1-CS-REF-2': 'l3-so-1',
+  'L1-CS-REF-3': 'l3-aq-vc-1',
   'L1-QS-1': 'l1-fs-1',
   'L1-QS-2': 'l1-fs-2',
   'L1-QS-3': 'l1-fs-3',
   'L1-QS-4': 'l1-fs-4',
-  'L2-MC-1': 'l1-voc-1',
-  'L2-MC-2': 'l1-voc-2',
-  'L2-MC-3': 'l1-voc-3',
-  'L2-MC-4': 'l1-voc-4',
-  'L2-MC-5': 'l1-voc-5',
-  'L2-MC-6': 'l1-voc-6',
-  'L2-MC-7': 'l1-voc-7',
+  'L2-MC-1': 'l2-mc-1',
+  'L2-MC-2': 'l2-mc-2',
+  'L2-MC-3': 'l2-mc-3',
+  'L2-MC-4': 'l2-mc-4',
+  'L2-MC-5': 'l2-mc-5',
+  'L2-MC-6': 'l2-mc-6',
+  'L2-MC-7': 'l2-mc-7',
   'L2-PA-1': 'l2-pa-1',
   'L2-PA-2': 'l2-pa-2',
   'L2-PS-1': 'l2-ps-1',
@@ -1793,13 +1789,13 @@ const EXERCISE_VOICE_CUE_BY_ID = {
 }
 
 const EXERCISE_VOICE_CUE_BY_QUESTION = {
-  'encierra el nombre correcto del dibujo sol': 'l1-voc-1',
-  'encierra el nombre correcto del dibujo sapo': 'l1-voc-2',
-  'encierra el nombre correcto del dibujo sopa': 'l1-voc-3',
-  'encierra el nombre correcto del dibujo mesa': 'l1-voc-4',
-  'encierra el nombre correcto del dibujo oso': 'l1-voc-5',
-  'encierra el nombre correcto del dibujo pato': 'l1-voc-6',
-  'encierra el nombre correcto del dibujo luna': 'l1-voc-7'
+  'selecciona el nombre correcto del dibujo sol': 'l2-mc-1',
+  'selecciona el nombre correcto del dibujo sapo': 'l2-mc-2',
+  'selecciona el nombre correcto del dibujo sopa': 'l2-mc-3',
+  'selecciona el nombre correcto del dibujo mesa': 'l2-mc-4',
+  'selecciona el nombre correcto del dibujo oso': 'l2-mc-5',
+  'selecciona el nombre correcto del dibujo pato': 'l2-mc-6',
+  'selecciona el nombre correcto del dibujo luna': 'l2-mc-7'
 }
 
 const EXERCISE_VOICE_CUE_BY_TEXT = {

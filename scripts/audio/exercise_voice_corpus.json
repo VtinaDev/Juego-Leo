@@ -1377,7 +1377,7 @@
       "exerciseId": "L2-MC-1",
       "role": "narration",
       "field": "question",
-      "text": "Encierra el nombre correcto del dibujo: sol"
+      "text": "Selecciona el nombre correcto del dibujo: sol"
     },
     {
       "rowId": 126,
@@ -1443,7 +1443,7 @@
       "exerciseId": "L2-MC-2",
       "role": "narration",
       "field": "question",
-      "text": "Encierra el nombre correcto del dibujo: sapo"
+      "text": "Selecciona el nombre correcto del dibujo: sapo"
     },
     {
       "rowId": 132,
@@ -1509,7 +1509,7 @@
       "exerciseId": "L2-MC-3",
       "role": "narration",
       "field": "question",
-      "text": "Encierra el nombre correcto del dibujo: sopa"
+      "text": "Selecciona el nombre correcto del dibujo: sopa"
     },
     {
       "rowId": 138,
@@ -1575,7 +1575,7 @@
       "exerciseId": "L2-MC-4",
       "role": "narration",
       "field": "question",
-      "text": "Encierra el nombre correcto del dibujo: mesa"
+      "text": "Selecciona el nombre correcto del dibujo: mesa"
     },
     {
       "rowId": 144,
@@ -1641,7 +1641,7 @@
       "exerciseId": "L2-MC-5",
       "role": "narration",
       "field": "question",
-      "text": "Encierra el nombre correcto del dibujo: oso"
+      "text": "Selecciona el nombre correcto del dibujo: oso"
     },
     {
       "rowId": 150,
@@ -1707,7 +1707,7 @@
       "exerciseId": "L2-MC-6",
       "role": "narration",
       "field": "question",
-      "text": "Encierra el nombre correcto del dibujo: pato"
+      "text": "Selecciona el nombre correcto del dibujo: pato"
     },
     {
       "rowId": 156,
@@ -1773,7 +1773,7 @@
       "exerciseId": "L2-MC-7",
       "role": "narration",
       "field": "question",
-      "text": "Encierra el nombre correcto del dibujo: luna"
+      "text": "Selecciona el nombre correcto del dibujo: luna"
     },
     {
       "rowId": 162,

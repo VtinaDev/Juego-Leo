@@ -123,43 +123,43 @@ row_id,level,stage,exercise_id,subtype,type,role,field,target_path,text
 122,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,options[1],public/audio/exercises/L1/L1-CCW-2/response_options[1].mp3,feria
 123,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,response,options[2],public/audio/exercises/L1/L1-CCW-2/response_options[2].mp3,foca
 124,1,6,L1-CCW-2,CHOOSE_CORRECT_WORD,CHOOSE_CORRECT_WORD,hint,hint,public/audio/exercises/L1/L1-CCW-2/hint_hint.mp3,Guía a los barcos de noche.
-125,2,1,L2-MC-1,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-1/narration_question.mp3,Encierra el nombre correcto del dibujo: sol
+125,2,1,L2-MC-1,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-1/narration_question.mp3,Selecciona el nombre correcto del dibujo: sol
 126,2,1,L2-MC-1,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-1/response_correct.mp3,sol
 127,2,1,L2-MC-1,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-1/response_options[0].mp3,sol
 128,2,1,L2-MC-1,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-1/response_options[1].mp3,sal
 129,2,1,L2-MC-1,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-1/response_options[2].mp3,sul
 130,2,1,L2-MC-1,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-1/hint_hint.mp3,Fíjate en la vocal que suena en medio (o).
-131,2,1,L2-MC-2,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-2/narration_question.mp3,Encierra el nombre correcto del dibujo: sapo
+131,2,1,L2-MC-2,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-2/narration_question.mp3,Selecciona el nombre correcto del dibujo: sapo
 132,2,1,L2-MC-2,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-2/response_correct.mp3,sapo
 133,2,1,L2-MC-2,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-2/response_options[0].mp3,sipo
 134,2,1,L2-MC-2,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-2/response_options[1].mp3,supo
 135,2,1,L2-MC-2,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-2/response_options[2].mp3,sapo
 136,2,1,L2-MC-2,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-2/hint_hint.mp3,Escucha el sonido de la primera y la última sílaba: sa-po.
-137,2,1,L2-MC-3,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-3/narration_question.mp3,Encierra el nombre correcto del dibujo: sopa
+137,2,1,L2-MC-3,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-3/narration_question.mp3,Selecciona el nombre correcto del dibujo: sopa
 138,2,1,L2-MC-3,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-3/response_correct.mp3,sopa
 139,2,1,L2-MC-3,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-3/response_options[0].mp3,sepa
 140,2,1,L2-MC-3,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-3/response_options[1].mp3,sopa
 141,2,1,L2-MC-3,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-3/response_options[2].mp3,sipa
 142,2,1,L2-MC-3,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-3/hint_hint.mp3,Busca la sílaba central que suena 'o'.
-143,2,1,L2-MC-4,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-4/narration_question.mp3,Encierra el nombre correcto del dibujo: mesa
+143,2,1,L2-MC-4,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-4/narration_question.mp3,Selecciona el nombre correcto del dibujo: mesa
 144,2,1,L2-MC-4,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-4/response_correct.mp3,mesa
 145,2,1,L2-MC-4,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-4/response_options[0].mp3,mesa
 146,2,1,L2-MC-4,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-4/response_options[1].mp3,misa
 147,2,1,L2-MC-4,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-4/response_options[2].mp3,masa
 148,2,1,L2-MC-4,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-4/hint_hint.mp3,Pon atención al sonido de la primera vocal (e).
-149,2,1,L2-MC-5,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-5/narration_question.mp3,Encierra el nombre correcto del dibujo: oso
+149,2,1,L2-MC-5,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-5/narration_question.mp3,Selecciona el nombre correcto del dibujo: oso
 150,2,1,L2-MC-5,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-5/response_correct.mp3,oso
 151,2,1,L2-MC-5,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-5/response_options[0].mp3,osu
 152,2,1,L2-MC-5,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-5/response_options[1].mp3,eso
 153,2,1,L2-MC-5,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-5/response_options[2].mp3,oso
 154,2,1,L2-MC-5,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-5/hint_hint.mp3,Suena igual al decirlo y escribirlo: o-so.
-155,2,1,L2-MC-6,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-6/narration_question.mp3,Encierra el nombre correcto del dibujo: pato
+155,2,1,L2-MC-6,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-6/narration_question.mp3,Selecciona el nombre correcto del dibujo: pato
 156,2,1,L2-MC-6,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-6/response_correct.mp3,pato
 157,2,1,L2-MC-6,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-6/response_options[0].mp3,mato
 158,2,1,L2-MC-6,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-6/response_options[1].mp3,pato
 159,2,1,L2-MC-6,multiple_choice,multiple_choice,response,options[2],public/audio/exercises/L2/L2-MC-6/response_options[2].mp3,gato
 160,2,1,L2-MC-6,multiple_choice,multiple_choice,hint,hint,public/audio/exercises/L2/L2-MC-6/hint_hint.mp3,La palabra empieza como 'pa' de pato.
-161,2,1,L2-MC-7,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-7/narration_question.mp3,Encierra el nombre correcto del dibujo: luna
+161,2,1,L2-MC-7,multiple_choice,multiple_choice,narration,question,public/audio/exercises/L2/L2-MC-7/narration_question.mp3,Selecciona el nombre correcto del dibujo: luna
 162,2,1,L2-MC-7,multiple_choice,multiple_choice,response,correct,public/audio/exercises/L2/L2-MC-7/response_correct.mp3,luna
 163,2,1,L2-MC-7,multiple_choice,multiple_choice,response,options[0],public/audio/exercises/L2/L2-MC-7/response_options[0].mp3,lupa
 164,2,1,L2-MC-7,multiple_choice,multiple_choice,response,options[1],public/audio/exercises/L2/L2-MC-7/response_options[1].mp3,luna

@@ -4,7 +4,7 @@
     <p class="text-lg text-slate-600 mb-4">
       Elige un plan para activar la versión demo y cuéntanos a dónde avisarte cuando lancemos los pagos.
     </p>
-    <div class="grid md:grid-cols-4 gap-4">
+    <div class="grid md:grid-cols-3 gap-4">
       <div class="card">
         <h3 class="text-xl font-bold">Prueba</h3>
         <p class="text-sm" v-if="billing.trialActive">
@@ -33,13 +33,6 @@
         <p class="text-sm">49,99 €/año</p>
         <button class="btn btn-primary mt-3" type="button" @click="openDemo('annual')">
           Suscribirme
-        </button>
-      </div>
-      <div class="card">
-        <h3 class="text-xl font-bold">Vitalicia</h3>
-        <p class="text-sm">89,99 € pago único</p>
-        <button class="btn btn-primary mt-3" type="button" @click="openDemo('lifetime')">
-          Comprar
         </button>
       </div>
     </div>

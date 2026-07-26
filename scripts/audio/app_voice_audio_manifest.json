@@ -283,7 +283,7 @@
   },
   {
     "id": "L2-MC-1",
-    "text": "Encierra el nombre correcto del dibujo.",
+    "text": "Selecciona el nombre correcto del dibujo.",
     "filename": "select-image-word.mp3",
     "category": "level-2"
   },
@@ -1074,12 +1074,6 @@
     "category": "level-1"
   },
   {
-    "id": "L1-CS-REF-1",
-    "text": "La luna brilla de noche.",
-    "filename": "l1-cs-ref-1.mp3",
-    "category": "level-1"
-  },
-  {
     "id": "L1-CS-REF-2",
     "text": "El sapo salta cerca del río.",
     "filename": "l1-cs-ref-2.mp3",
@@ -1089,12 +1083,6 @@
     "id": "L1-CS-REF-3",
     "text": "El niño lee un cuento.",
     "filename": "l1-cs-ref-3.mp3",
-    "category": "level-1"
-  },
-  {
-    "id": "L1-CS-REF-4",
-    "text": "La flor crece en el jardín.",
-    "filename": "l1-cs-ref-4.mp3",
     "category": "level-1"
   },
   {

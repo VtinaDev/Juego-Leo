@@ -19,7 +19,7 @@
     <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-6">
       <!-- 👇 Asegúrate de que este router-view esté presente -->
       <RouterView />
-      <RouterLink to="/aboutgame">Sobre el juego</RouterLink>
+      <RouterLink :to="{ path: '/', hash: '#sobre-el-juego' }">Sobre el juego</RouterLink>
 
     </main>
     
