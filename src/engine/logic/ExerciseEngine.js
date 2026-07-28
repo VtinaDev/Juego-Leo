@@ -7,7 +7,6 @@ import { resolveExerciseAudioRoute } from '../audio/exerciseVoiceRoutes.js'
 import { useCelebration } from '../visual/hooks/useCelebration'
 import { useFeedback } from '../visual/hooks/useFeedback'
 import { useReinforcementVoice } from '../visual/hooks/useReinforcementVoice'
-import { CelebrationController } from '../visual/gsap/CelebrationController'
 
 
 let soundsPreloaded = false
@@ -646,13 +645,6 @@ export function useExerciseEngine(options = {}) {
     stopAllMedia()
     const summary = buildSummary()
     stageSummary.value = summary
-    CelebrationController.play({
-      level: summary.level,
-      stage: summary.stage,
-      summary,
-      stageContext: stageContext.value,
-      meta: meta.value
-    })
     onStageComplete(summary)
     return summary
   }
