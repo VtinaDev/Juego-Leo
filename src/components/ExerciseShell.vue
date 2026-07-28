@@ -22,8 +22,13 @@ defineProps({
 
 <style scoped>
 .exercise-shell {
-  font-family: 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
+  font-family: 'Andika', 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.015em;
+  letter-spacing: 0.035em;
+}
+
+.exercise-shell h2 {
+  font-weight: 600;
 }
 </style>

@@ -3215,14 +3215,24 @@ function shuffleArray(arr) {
  * inputs se conservan para no alterar la corrección de los ejercicios.
  */
 .smartick-card-content {
-  font-family: 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
+  font-family: 'Andika', 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.015em;
+  letter-spacing: 0.035em;
 }
 
 .smartick-card-content :deep(*) {
   font-family: inherit;
+  font-weight: 500 !important;
   text-transform: uppercase !important;
+}
+
+.smartick-card-content :deep(h1),
+.smartick-card-content :deep(h2),
+.smartick-card-content :deep(h3),
+.smartick-card-content :deep(strong),
+.smartick-card-content :deep(b) {
+  font-weight: 600 !important;
 }
 
 .status-banner {
