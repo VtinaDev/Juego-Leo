@@ -737,8 +737,8 @@
             "gato",
             "duerme"
           ],
-          "image": "/images/L1/gato.png",
-          "imageAlt": "Gato",
+          "image": "/images/L1/gato-duerme.png",
+          "imageAlt": "Gato durmiendo",
           "hint": "Pon las palabras en orden.",
           "onCorrect": "celebrate",
           "onError": "gentleRetry",
