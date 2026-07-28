@@ -191,11 +191,7 @@ const { musicEnabled, voiceEnabled } = useAudioSettings()
 const introTrack = 'intro'
 const activeHeroCharacter = computed(() => heroCharacters[activeHeroCharacterIndex.value] || heroCharacters[0])
 const heroBackgroundStyle = computed(() => ({
-  backgroundImage: `
-    radial-gradient(circle at 18% 16%, rgba(255, 245, 184, 0.86) 0%, rgba(255, 245, 184, 0) 36%),
-    radial-gradient(circle at 82% 12%, rgba(255, 252, 218, 0.82) 0%, rgba(255, 252, 218, 0) 34%),
-    linear-gradient(180deg, #fff7cf 0%, #fff1b8 46%, #fff9de 100%)
-  `
+  backgroundImage: 'var(--app-page-gradient)'
 }))
 
 const fanSlots = [0, 1, -1, 2, -2]

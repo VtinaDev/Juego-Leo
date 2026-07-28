@@ -5,6 +5,10 @@
 @tailwind utilities;
 
 :root {
+  --app-page-gradient:
+    radial-gradient(circle at 18% 16%, rgba(255, 245, 184, 0.86) 0%, rgba(255, 245, 184, 0) 36%),
+    radial-gradient(circle at 82% 12%, rgba(255, 252, 218, 0.82) 0%, rgba(255, 252, 218, 0) 34%),
+    linear-gradient(180deg, #fff7cf 0%, #fff1b8 46%, #fff9de 100%);
   --color-text: #0f172a;
   --color-text-muted: #6b7280;
   --color-green-light: #c9efc3;

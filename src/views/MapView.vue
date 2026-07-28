@@ -262,10 +262,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .map-view {
-  --map-hero-background:
-    radial-gradient(circle at 18% 16%, rgba(255, 245, 184, 0.86) 0%, rgba(255, 245, 184, 0) 36%),
-    radial-gradient(circle at 82% 12%, rgba(255, 252, 218, 0.82) 0%, rgba(255, 252, 218, 0) 34%),
-    linear-gradient(180deg, #fff7cf 0%, #fff1b8 46%, #fff9de 100%);
+  --map-hero-background: var(--app-page-gradient);
   min-height: 100dvh;
   padding: 0;
   background: var(--map-hero-background);

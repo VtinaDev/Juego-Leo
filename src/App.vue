@@ -692,6 +692,11 @@ function setTip(key, value) {
     box-shadow: none;
     backdrop-filter: none;
   }
+
+  .header-overlay {
+    background: var(--app-page-gradient);
+    background-attachment: fixed;
+  }
   .header-overlay nav {
     padding-top: max(0.35rem, env(safe-area-inset-top));
   }
@@ -801,10 +806,18 @@ function setTip(key, value) {
     left: auto;
     right: auto;
     z-index: 50;
-    background: transparent;
     border-bottom: 0;
     box-shadow: none;
     backdrop-filter: none;
+  }
+
+  .header-transparent {
+    background: transparent;
+  }
+
+  .header-overlay {
+    background: var(--app-page-gradient);
+    background-attachment: fixed;
   }
 }
 
