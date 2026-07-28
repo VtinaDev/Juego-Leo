@@ -711,7 +711,7 @@
             "come",
             "manzana"
           ],
-          "image": "/images/niña-manzana.png",
+          "image": "/images/L1/niña-manzana.png",
           "imageAlt": "Niña con una manzana",
           "hint": "Pon las palabras en orden.",
           "onCorrect": "celebrate",
