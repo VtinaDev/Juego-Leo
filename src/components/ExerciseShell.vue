@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-5xl mx-auto mt-2 space-y-2 px-2 md:px-4">
+  <section class="exercise-shell max-w-5xl mx-auto mt-2 space-y-2 px-2 md:px-4">
     <div class="text-center">
       <h2 class="text-lg font-bold">{{ title }}</h2>
       <p v-if="instructions" class="text-gray-600 text-sm leading-snug">{{ instructions }}</p>
@@ -19,3 +19,11 @@ defineProps({
   points: Number
 })
 </script>
+
+<style scoped>
+.exercise-shell {
+  font-family: 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+}
+</style>
