@@ -113,7 +113,7 @@
             </div>
             <GuidedTutor
               v-if="guidedTutor"
-              :character-img="characterImage"
+              :character-img="tutorVisualImage"
               :step="guidedTutor"
               :steps="tutorSteps"
               :step-index="tutorStepIndex"
@@ -2082,6 +2082,12 @@ const isHabitatVisualMobile = computed(() => {
   return src.includes('/habitats/')
 })
 const fallbackCharacterImage = computed(() => levelCharacters[level.value] || Perezoso)
+const tutorVisualImage = computed(() => {
+  if (Number(level.value) === 1 && currentImageSrc.value) {
+    return currentImageSrc.value
+  }
+  return characterImage.value
+})
 const hasVisual = computed(() => Boolean(currentImageSrc.value || fallbackCharacterImage.value))
 const imageLoadFailed = ref(false)
 
