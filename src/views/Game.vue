@@ -256,10 +256,10 @@
                   <div class="choice-visual guided-word-visual">
                     <img
                       v-if="current.image"
+                      :key="`${current.id}-${current.image}`"
                       :src="resolveAsset(current.image)"
                       :alt="current.imageAlt || current.question || 'Ilustración del ejercicio'"
                       class="choice-visual-img"
-                      @error="$event.target.style.display = 'none'"
                     />
                     <div v-else class="choice-emoji" aria-hidden="true">{{ current.emoji }}</div>
                   </div>
@@ -401,10 +401,10 @@
             <section v-else-if="current.type === 'CHOOSE_CORRECT_WORD'">
               <div v-if="current.image" class="choice-visual guided-word-visual">
                 <img
+                  :key="`${current.id}-${current.image}`"
                   :src="resolveAsset(current.image)"
                   :alt="current.imageAlt || guidedTargetWord || 'Ilustración'"
                   class="choice-visual-img"
-                  @error="$event.target.style.display = 'none'"
                 />
               </div>
               <div class="options-row" :class="optionLayout(current.options)">
@@ -427,10 +427,10 @@
             <section v-else-if="current.type === 'SYLLABLE_ORDER'">
               <div v-if="current.image" class="choice-visual syllable-order-visual">
                 <img
+                  :key="`${current.id}-${current.image}`"
                   :src="resolveAsset(current.image)"
                   :alt="current.imageAlt || current.hint || 'Ilustración del ejercicio'"
                   class="choice-visual-img"
-                  @error="$event.target.style.display = 'none'"
                 />
               </div>
               <div class="options-row syllable-order-source" :class="optionLayout(current.syllables)">
@@ -483,10 +483,10 @@
             <section v-else-if="current.type === 'IMAGE_WORD_MATCH'">
               <div v-if="current.image" class="choice-visual guided-word-visual">
                 <img
+                  :key="`${current.id}-${current.image}`"
                   :src="resolveAsset(current.image)"
                   :alt="current.imageAlt || guidedTargetWord || 'Ilustración'"
                   class="choice-visual-img"
-                  @error="$event.target.style.display = 'none'"
                 />
               </div>
               <div class="options-row" :class="optionLayout(current.options)">
@@ -540,10 +540,10 @@
                 <template #media v-if="current.image">
                   <div class="choice-visual guided-word-visual">
                     <img
+                      :key="`${current.id}-${current.image}`"
                       :src="resolveAsset(current.image)"
                       :alt="current.imageAlt || current.prompt || 'Ilustración del ejercicio'"
                       class="choice-visual-img"
-                      @error="$event.target.style.display = 'none'"
                     />
                   </div>
                 </template>
@@ -569,10 +569,10 @@
             <section v-else-if="current.type === 'audio_question'">
               <div v-if="current.image" class="choice-visual">
                 <img
+                  :key="`${current.id}-${current.image}`"
                   :src="resolveAsset(current.image)"
                   :alt="current.imageAlt || 'Ilustración del ejercicio'"
                   class="choice-visual-img"
-                  @error="$event.target.style.display = 'none'"
                 />
               </div>
               <div class="options-row" :class="optionLayout(current.options)">
@@ -598,10 +598,10 @@
             <section v-else-if="current.type === 'audio_write'">
               <div v-if="current.image" class="choice-visual">
                 <img
+                  :key="`${current.id}-${current.image}`"
                   :src="resolveAsset(current.image)"
                   :alt="current.imageAlt || current.fallbackText || current.instruction || 'Ilustración del ejercicio'"
                   class="choice-visual-img"
-                  @error="$event.target.style.display = 'none'"
                 />
               </div>
               <textarea
@@ -621,10 +621,10 @@
             <section v-else-if="current.type === 'text_write'">
               <div v-if="current.image" class="choice-visual">
                 <img
+                  :key="`${current.id}-${current.image}`"
                   :src="resolveAsset(current.image)"
                   :alt="current.imageAlt || current.instruction || 'Ilustración del ejercicio'"
                   class="choice-visual-img"
-                  @error="$event.target.style.display = 'none'"
                 />
               </div>
               <div v-if="isLetterBuildExercise" class="letter-build">
