@@ -3207,6 +3207,24 @@ function shuffleArray(arr) {
 .exercise-body {
   position: relative;
 }
+
+/*
+ * Tipografía de iniciación lectora:
+ * mostramos el contenido pedagógico con letra de palo y en mayúsculas.
+ * Es una transformación visual; los valores originales de respuestas e
+ * inputs se conservan para no alterar la corrección de los ejercicios.
+ */
+.smartick-card-content {
+  font-family: 'Lexend', 'Nunito Sans', 'Segoe UI', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+}
+
+.smartick-card-content :deep(*) {
+  font-family: inherit;
+  text-transform: uppercase !important;
+}
+
 .status-banner {
   position: absolute;
   top: -10px;
