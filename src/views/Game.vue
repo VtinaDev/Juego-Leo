@@ -217,10 +217,10 @@
             <section v-else-if="current.type === 'order_sentence'">
               <div v-if="current.image" class="choice-visual">
                 <img
+                  :key="`${current.id}-${current.image}`"
                   :src="resolveAsset(current.image)"
                   :alt="current.imageAlt || current.sentence || current.hint || 'Ilustración del ejercicio'"
                   class="choice-visual-img"
-                  @error="$event.target.style.display = 'none'"
                 />
               </div>
               <DragDropBoard
