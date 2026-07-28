@@ -508,6 +508,23 @@ function setTip(key, value) {
   border-color: rgba(14, 165, 233, 0.35);
  }
 
+ .header-action-btn {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  min-height: 52px;
+  padding: 0.3rem !important;
+  background: transparent !important;
+  box-shadow: none !important;
+ }
+
+ .header-action-img {
+  width: 36px !important;
+  height: 36px !important;
+  object-fit: contain;
+  filter: none !important;
+ }
+
 @keyframes floatIcon {
   0% {
     transform: translateY(0);
@@ -725,12 +742,19 @@ function setTip(key, value) {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    padding: 0.2rem !important;
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
   }
   .header-action-img {
-    filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.35));
+    width: 27px !important;
+    height: 27px !important;
+    filter: none !important;
   }
   .profile-btn {
     position: relative;
@@ -743,6 +767,20 @@ function setTip(key, value) {
     width: var(--mobile-icon-size);
     height: var(--mobile-icon-size);
     font-size: clamp(1.4rem, 4.8vw, 2.2rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .header-action-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+  }
+
+  .header-action-img {
+    width: 24px !important;
+    height: 24px !important;
   }
 }
 
